@@ -146,12 +146,12 @@ _TEXT	SEGMENT
 
 	xor	esi, esi
 	cmp	DWORD PTR ?freeFramePool@fbdFrame@DRAMsimII@@0V?$Queue@VfbdFrame@DRAMsimII@@@2@A, esi
-	jne	SHORT $LN4@operator@187
+	jne	SHORT $LN4@operator@244
 	push	48					; 00000030H
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
 	cmp	eax, esi
-	je	SHORT $LN7@operator@187
+	je	SHORT $LN7@operator@244
 	mov	ecx, 16					; 00000010H
 	mov	DWORD PTR [eax+40], esi
 	mov	DWORD PTR [eax+44], esi
@@ -167,7 +167,7 @@ _TEXT	SEGMENT
 ; 36   : 	assert(size == sizeof(fbdFrame));
 ; 37   : 	return freeFramePool.acquireItem();
 
-$LN7@operator@187:
+$LN7@operator@244:
 	xor	eax, eax
 	pop	esi
 
@@ -178,7 +178,7 @@ $LN7@operator@187:
 ; 36   : 	assert(size == sizeof(fbdFrame));
 ; 37   : 	return freeFramePool.acquireItem();
 
-$LN4@operator@187:
+$LN4@operator@244:
 	mov	esi, OFFSET ?freeFramePool@fbdFrame@DRAMsimII@@0V?$Queue@VfbdFrame@DRAMsimII@@@2@A ; DRAMsimII::fbdFrame::freeFramePool
 	call	?pop@?$Queue@VfbdFrame@DRAMsimII@@@DRAMsimII@@QAEPAVfbdFrame@2@XZ ; DRAMsimII::Queue<DRAMsimII::fbdFrame>::pop
 	pop	esi

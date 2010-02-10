@@ -101,7 +101,7 @@ traces = ['lbm000-trace.gz', 'mcf000-trace.gz', 'milc000-trace.gz']
 dramSimExe = 'dramSimII.opt'
 
 # the path to the DRAMsimII executable
-dramSimPath = '/home/crius/m5/src/mem/DRAMsimII/build'
+dramSimPath = '/home/crius/dramsimii/bin'
 
 # the path to M5/SE executable
 m5Path = '/home/crius/m5/build/ALPHA_SE/'
@@ -119,10 +119,10 @@ m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/asplos/full8'
+outputDir = '/home/crius/results/Cypress'
 
 # the file that describes the base memory settings
-memorySettings = '/home/crius/dramsimii/memoryDefinitions/DDR2-800-4-4-4-25E.xml'
+memorySettings = '/home/crius/dramsimii/memoryDefinitions/DDR2-800-sg125E.xml'
 
 # the command line to pass to the DRAMsimII simulator to modify parameters
 commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
@@ -169,16 +169,33 @@ requests = [5000000]
 #benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
 benchmarks = ['bzip2', 'GemsFDTD']
 
+# per-DIMM cache parameters
+associativity = [8, 16, 32]
+numberSets = [512, 1024, 2048]
+blockSize = [64, 128, 256]
+hitLatency = [5]
+
+traces = ['bzip2003-trace.gz', 'lbm000-trace.gz', 'mcf000-trace.gz']
+
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "tsrf")
+        opts, args = getopt.getopt(sys.argv[1:], "tsrfc")
     except getopt.GetoptError, err:
         print str(err)
-        print "-t for trace, -s for syscall emulation, -r for random, -f for full-system"
+        print "-t for trace, -s for syscall emulation, -r for random, -f for full-system, -c for cache simulation"
         sys.exit(-2)
 
     ds2executable = os.path.join(dramSimPath, dramSimExe)
     executable = os.path.join(m5Path, m5Exe)
+
+    for opt, arg in opts:
+        if opt == '-t' or opt == '-c':
+            if not os.path.exists(ds2executable):
+                print "cannot find DRAMsimII executable: " + ds2executable
+                sys.exit(-3)
+            if not os.access(ds2executable, os.X_OK):
+                print "cannot execute DRAMsimII executable: " + ds2executable
+                sys.exit(-3)
 
     counting = False
     count = 0
@@ -187,6 +204,31 @@ def main():
         if opt != '-f':
             global benchmarks
             benchmarks = ['']
+
+    for opt,arg in opts:
+        print opt
+    count = 0
+    for opt,arg in opts:
+        if opt == '-c':
+            for t in traces:
+                for blkSz in blockSize:
+                    for hitLat in hitLatency:
+                        for assoc in associativity:
+                            for numSets in numberSets:
+                                currentTrace = os.path.join(tracesDir, t)
+                                currentCommandLine = commandLine % (ds2executable, memorySettings, channels[0], ranks[0], banks[0], addressMappingPolicy[0],
+                                                                     commandOrderingAlgorithm[0], 0, perBankQueueDepth[0], 135000000000000, tFAW[0], rowBufferManagementPolicy[0], outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
+                                #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
+                                submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
+                                print currentCommandLine
+                                #sys.exit(0)
+                                #if not counting:
+                                #os.system(submitCommand)
+                                os.system(currentCommandLine)
+                                #else:
+                                count += 1
+        print count
+    #sys.exit(0)
 
     for i in benchmarks:
         for a in channels:
@@ -250,7 +292,26 @@ def main():
                                                         #print submitCommand
                                                         #sys.exit(0)
                                                         #os.system(currentCommandLine)
-                                                        os.system(submitCommand)
+                                                        #os.system(submitCommand)
+
+                                                    # variations of the per-DIMM cache
+                                                    elif opt == '-c':
+                                                        for t in traces:
+                                                            for blkSz in blockSize:
+                                                                for hitLat in hitLatency:
+                                                                    for assoc in associativity:
+                                                                        for numSets in numberSets:
+                                                                            currentTrace = os.path.join(tracesDir, t)
+                                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
+                                                                            #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
+                                                                            submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
+                                                                            print currentCommandLine
+                                                                            #sys.exit(0)
+                                                                            if not counting:
+                                                                                #os.system(submitCommand)
+                                                                                os.system(currentCommandLine)
+                                                                            else:
+                                                                                count += 1
 
                                                 #sys.exit(2)
 

@@ -100,9 +100,9 @@
 		<!--maximum active standby current-->
 		<IDD3N>60</IDD3N>
 		<!--maximum read burst current-->
-		<IDD4R>145</IDD4R>
+		<IDD4R>190</IDD4R>
 		<!--maximum write burst current-->
-		<IDD4W>145</IDD4W>
+		<IDD4W>210</IDD4W>
 		<!--maximum burst refresh current-->
 		<IDD5A>235</IDD5A>
 	</power>

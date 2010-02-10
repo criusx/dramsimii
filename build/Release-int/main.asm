@@ -102,8 +102,8 @@ __ehfuncinfo$_main DD 019930522H
 ; Function compile flags: /Ogtpy
 ; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\main.cpp
 _TEXT	SEGMENT
-_settings$ = -11992					; size = 472
-_ds$139787 = -11520					; size = 11496
+_settings$ = -12080					; size = 496
+_ds$143072 = -11584					; size = 11560
 __$ArrayPad$ = -20					; size = 4
 __$EHRec$ = -12						; size = 12
 _argc$ = 8						; size = 4
@@ -121,16 +121,16 @@ _main	PROC
 	mov	eax, DWORD PTR fs:0
 	push	eax
 	push	ecx
-	mov	eax, 11980				; 00002eccH
+	mov	eax, 12068				; 00002f24H
 	call	__chkstk
 	mov	eax, DWORD PTR ___security_cookie
 	xor	eax, esp
-	mov	DWORD PTR __$ArrayPad$[esp+11996], eax
+	mov	DWORD PTR __$ArrayPad$[esp+12084], eax
 	push	esi
 	mov	eax, DWORD PTR ___security_cookie
 	xor	eax, esp
 	push	eax
-	lea	eax, DWORD PTR __$EHRec$[esp+12004]
+	lea	eax, DWORD PTR __$EHRec$[esp+12092]
 	mov	DWORD PTR fs:0, eax
 	mov	eax, DWORD PTR _argv$[ebp]
 
@@ -139,10 +139,10 @@ _main	PROC
 	push	eax
 	mov	eax, DWORD PTR _argc$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _settings$[esp+12012]
+	lea	ecx, DWORD PTR _settings$[esp+12100]
 	push	ecx
 	call	??0Settings@DRAMsimII@@QAE@HPAPAD@Z	; DRAMsimII::Settings::Settings
-	mov	DWORD PTR __$EHRec$[esp+12012], 0
+	mov	DWORD PTR __$EHRec$[esp+12100], 0
 
 ; 34   : 
 ; 35   : #ifdef DEBUG
@@ -152,7 +152,7 @@ _main	PROC
 ; 39   : #endif
 ; 40   : 	if (settings.systemType == FBD_CONFIG)
 
-	cmp	DWORD PTR _settings$[esp+12220], 1
+	cmp	DWORD PTR _settings$[esp+12308], 1
 	je	SHORT $LN1@main
 
 ; 41   : 	{
@@ -163,24 +163,24 @@ _main	PROC
 ; 46   : 	{
 ; 47   : 		System ds(settings);
 
-	lea	edx, DWORD PTR _settings$[esp+12004]
+	lea	edx, DWORD PTR _settings$[esp+12092]
 	push	edx
-	lea	eax, DWORD PTR _ds$139787[esp+12008]
+	lea	eax, DWORD PTR _ds$143072[esp+12096]
 	push	eax
 	call	??0System@DRAMsimII@@QAE@ABVSettings@1@@Z ; DRAMsimII::System::System
 
 ; 48   : 		ds.runSimulations();
 
-	lea	ecx, DWORD PTR _ds$139787[esp+12004]
+	lea	ecx, DWORD PTR _ds$143072[esp+12092]
 	push	ecx
-	mov	BYTE PTR __$EHRec$[esp+12016], 1
+	mov	BYTE PTR __$EHRec$[esp+12104], 1
 	call	?runSimulations@System@DRAMsimII@@QAEXI@Z ; DRAMsimII::System::runSimulations
 
 ; 49   : 	}
 
-	lea	edx, DWORD PTR _ds$139787[esp+12004]
+	lea	edx, DWORD PTR _ds$143072[esp+12092]
 	push	edx
-	mov	BYTE PTR __$EHRec$[esp+12016], 0
+	mov	BYTE PTR __$EHRec$[esp+12104], 0
 	call	??1System@DRAMsimII@@QAE@XZ
 $LN1@main:
 
@@ -191,17 +191,17 @@ $LN1@main:
 ; 54   : 	//_CrtDumpMemoryLeaks();
 ; 55   : 	return 0;
 
-	lea	esi, DWORD PTR _settings$[esp+12004]
+	lea	esi, DWORD PTR _settings$[esp+12092]
 	call	??1Settings@DRAMsimII@@QAE@XZ
 	xor	eax, eax
 
 ; 56   : }
 
-	mov	ecx, DWORD PTR __$EHRec$[esp+12004]
+	mov	ecx, DWORD PTR __$EHRec$[esp+12092]
 	mov	DWORD PTR fs:0, ecx
 	pop	ecx
 	pop	esi
-	mov	ecx, DWORD PTR __$ArrayPad$[esp+11996]
+	mov	ecx, DWORD PTR __$ArrayPad$[esp+12084]
 	xor	ecx, esp
 	call	@__security_check_cookie@4
 	mov	esp, ebp
@@ -211,14 +211,14 @@ __unwindfunclet$_main$0:
 	lea	esi, DWORD PTR _settings$[ebp]
 	jmp	??1Settings@DRAMsimII@@QAE@XZ
 __unwindfunclet$_main$1:
-	lea	eax, DWORD PTR _ds$139787[ebp]
+	lea	eax, DWORD PTR _ds$143072[ebp]
 	push	eax
 	call	??1System@DRAMsimII@@QAE@XZ
 	ret	0
 __ehhandler$_main:
 	mov	edx, DWORD PTR [esp+8]
-	lea	eax, DWORD PTR [edx-11988]
-	mov	ecx, DWORD PTR [edx-11992]
+	lea	eax, DWORD PTR [edx-12076]
+	mov	ecx, DWORD PTR [edx-12080]
 	xor	ecx, eax
 	call	@__security_check_cookie@4
 	add	eax, 4

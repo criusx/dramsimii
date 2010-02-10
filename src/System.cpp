@@ -86,7 +86,10 @@ nextStats(settings.epoch)
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
+		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
+		"cache[" << settings.cacheSize / 1024.0F << "kB] " <<
+		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize / settings.blockSize / settings.associativity << "]"
+		<< endl;
 
 	systemConfig.powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
@@ -96,7 +99,7 @@ nextStats(settings.epoch)
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
-#ifndef NDEBUG
+#ifndef NDEBUG 
 	systemConfig.timingOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
@@ -336,7 +339,12 @@ void System::doPowerCalculation()
 
 	//#pragma omp for
 
-	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
+	//for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time, systemConfig.powerOutStream));
+
+	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+	{
+		i->doPowerCalculation(time, systemConfig.powerOutStream);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -3641,22 +3641,22 @@ tv468 = -688						; size = 4
 tv466 = -688						; size = 4
 tv462 = -688						; size = 4
 tv268 = -688						; size = 4
-$T213402 = -680						; size = 4
-$T213403 = -668						; size = 8
-$T213404 = -652						; size = 8
-$T213405 = -636						; size = 4
-$T213406 = -624						; size = 32
-$T213407 = -584						; size = 32
-$T213408 = -544						; size = 32
-$T213409 = -504						; size = 32
-$T213410 = -464						; size = 32
-$T213411 = -424						; size = 8
-$T213412 = -408						; size = 32
-$T213413 = -368						; size = 8
-$T213414 = -352						; size = 32
-$T213415 = -312						; size = 8
-$T213416 = -296						; size = 32
-_inFileWithPath$150974 = -64				; size = 32
+$T216064 = -680						; size = 32
+$T216065 = -640						; size = 32
+$T216066 = -600						; size = 32
+$T216067 = -560						; size = 32
+$T216068 = -520						; size = 32
+$T216069 = -480						; size = 8
+$T216070 = -464						; size = 32
+$T216071 = -424						; size = 8
+$T216072 = -408						; size = 32
+$T216073 = -368						; size = 8
+$T216074 = -352						; size = 32
+$T216060 = -312						; size = 4
+$T216061 = -300						; size = 8
+$T216062 = -284						; size = 8
+$T216063 = -268						; size = 4
+_inFileWithPath$153274 = -64				; size = 32
 _this$ = -24						; size = 4
 __$ArrayPad$ = -16					; size = 4
 __$EHRec$ = -12						; size = 12
@@ -3788,8 +3788,8 @@ _systemChannel$ = 16					; size = 4
 	push	edx
 	push	eax
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR $T213402[ebp], eax
-	lea	eax, DWORD PTR $T213402[ebp]
+	mov	DWORD PTR $T216060[ebp], eax
+	lea	eax, DWORD PTR $T216060[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 168				; 000000a8H
@@ -3809,16 +3809,16 @@ _systemChannel$ = 16					; size = 4
 	add	ecx, 5184				; 00001440H
 	call	??0?$uniform_int@H@boost@@QAE@HH@Z	; boost::uniform_int<int>::uniform_int<int>
 	fld	QWORD PTR __real@4020000000000000
-	fstp	QWORD PTR $T213403[ebp]
+	fstp	QWORD PTR $T216061[ebp]
 	mov	eax, DWORD PTR _settings$[ebp]
 	mov	ecx, DWORD PTR [eax+216]
 	mov	DWORD PTR tv565[ebp], ecx
 	mov	DWORD PTR tv565[ebp+4], 0
 	fild	QWORD PTR tv565[ebp]
-	fstp	QWORD PTR $T213404[ebp]
-	lea	edx, DWORD PTR $T213403[ebp]
+	fstp	QWORD PTR $T216062[ebp]
+	lea	edx, DWORD PTR $T216061[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T213404[ebp]
+	lea	eax, DWORD PTR $T216062[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 5200				; 00001450H
@@ -3861,7 +3861,7 @@ _systemChannel$ = 16					; size = 4
 	add	eax, 5200				; 00001450H
 	sub	esp, 48					; 00000030H
 	mov	ecx, esp
-	mov	DWORD PTR $T213405[ebp], esp
+	mov	DWORD PTR $T216063[ebp], esp
 	push	eax
 	call	??0?$normal_distribution@N@boost@@QAE@ABV01@@Z ; boost::normal_distribution<double>::normal_distribution<double>
 	mov	esi, DWORD PTR _this$[ebp]
@@ -4001,21 +4001,21 @@ $LN11@InputStrea:
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 60					; 0000003cH
 	push	eax
-	lea	ecx, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153274[ebp]
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 
 ; 109  : 			// first check the absolute path
 ; 110  : 			if (!exists(inFileWithPath) || !is_regular(inFileWithPath))
 
-	lea	eax, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	eax, DWORD PTR _inFileWithPath$153274[ebp]
 	push	eax
 	call	?exists@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@@Z ; boost::filesystem::exists
 	add	esp, 4
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN9@InputStrea
-	lea	eax, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	eax, DWORD PTR _inFileWithPath$153274[ebp]
 	push	eax
 	call	?is_regular@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@@Z ; boost::filesystem::is_regular
 	add	esp, 4
@@ -4030,7 +4030,7 @@ $LN9@InputStrea:
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 60					; 0000003cH
 	push	eax
-	lea	ecx, DWORD PTR $T213406[ebp]
+	lea	ecx, DWORD PTR $T216064[ebp]
 	push	ecx
 	call	?current_path@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@XZ ; boost::filesystem::current_path
 	add	esp, 4
@@ -4040,7 +4040,7 @@ $LN9@InputStrea:
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	eax, DWORD PTR tv441[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213407[ebp]
+	lea	ecx, DWORD PTR $T216065[ebp]
 	push	ecx
 	call	??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; boost::filesystem::operator/<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	add	esp, 12					; 0000000cH
@@ -4050,27 +4050,27 @@ $LN9@InputStrea:
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	mov	eax, DWORD PTR tv443[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153274[ebp]
 	call	??4?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAEAAV012@ABV012@@Z
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	lea	ecx, DWORD PTR $T213407[ebp]
+	lea	ecx, DWORD PTR $T216065[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	lea	ecx, DWORD PTR $T213406[ebp]
+	lea	ecx, DWORD PTR $T216064[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 
 ; 113  : 
 ; 114  : 				// then check the traceFiles dir
 ; 115  : 				if (!exists(inFileWithPath) || !is_regular(inFileWithPath))
 
-	lea	eax, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	eax, DWORD PTR _inFileWithPath$153274[ebp]
 	push	eax
 	call	?exists@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@@Z ; boost::filesystem::exists
 	add	esp, 4
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN7@InputStrea
-	lea	eax, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	eax, DWORD PTR _inFileWithPath$153274[ebp]
 	push	eax
 	call	?is_regular@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@@Z ; boost::filesystem::is_regular
 	add	esp, 4
@@ -4086,7 +4086,7 @@ $LN7@InputStrea:
 	add	eax, 36					; 00000024H
 	push	eax
 	push	OFFSET ??_C@_0L@JCBAPMDC@traceFiles?$AA@
-	lea	ecx, DWORD PTR $T213408[ebp]
+	lea	ecx, DWORD PTR $T216066[ebp]
 	push	ecx
 	call	?current_path@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@XZ ; boost::filesystem::current_path
 	add	esp, 4
@@ -4096,7 +4096,7 @@ $LN7@InputStrea:
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	mov	eax, DWORD PTR tv445[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213409[ebp]
+	lea	ecx, DWORD PTR $T216067[ebp]
 	push	ecx
 	call	??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@PBD@Z ; boost::filesystem::operator/<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	add	esp, 12					; 0000000cH
@@ -4106,7 +4106,7 @@ $LN7@InputStrea:
 	mov	BYTE PTR __$EHRec$[ebp+8], 6
 	mov	eax, DWORD PTR tv447[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213410[ebp]
+	lea	ecx, DWORD PTR $T216068[ebp]
 	push	ecx
 	call	??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; boost::filesystem::operator/<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	add	esp, 12					; 0000000cH
@@ -4116,29 +4116,29 @@ $LN7@InputStrea:
 	mov	BYTE PTR __$EHRec$[ebp+8], 7
 	mov	eax, DWORD PTR tv449[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153274[ebp]
 	call	??4?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAEAAV012@ABV012@@Z
 	mov	BYTE PTR __$EHRec$[ebp+8], 6
-	lea	ecx, DWORD PTR $T213410[ebp]
+	lea	ecx, DWORD PTR $T216068[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
-	lea	ecx, DWORD PTR $T213409[ebp]
+	lea	ecx, DWORD PTR $T216067[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	lea	ecx, DWORD PTR $T213408[ebp]
+	lea	ecx, DWORD PTR $T216066[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 
 ; 118  : 
 ; 119  : 					if (!exists(inFileWithPath) || !is_regular(inFileWithPath))
 
-	lea	eax, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	eax, DWORD PTR _inFileWithPath$153274[ebp]
 	push	eax
 	call	?exists@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@@Z ; boost::filesystem::exists
 	add	esp, 4
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN5@InputStrea
-	lea	eax, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	eax, DWORD PTR _inFileWithPath$153274[ebp]
 	push	eax
 	call	?is_regular@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@@Z ; boost::filesystem::is_regular
 	add	esp, 4
@@ -4193,7 +4193,7 @@ $LN6@InputStrea:
 ; 125  : 					{
 ; 126  : 						traceFile.push(file_source(inFileWithPath.string().c_str()));
 
-	lea	ecx, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153274[ebp]
 	call	?string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBEABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::string
 	mov	esi, esp
 	mov	ecx, eax
@@ -4202,7 +4202,7 @@ $LN6@InputStrea:
 	call	__RTC_CheckEsp
 	mov	esi, esp
 	push	eax
-	lea	ecx, DWORD PTR $T213412[ebp]
+	lea	ecx, DWORD PTR $T216070[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -4211,9 +4211,9 @@ $LN6@InputStrea:
 	push	-1
 	push	-1
 	push	1
-	lea	eax, DWORD PTR $T213412[ebp]
+	lea	eax, DWORD PTR $T216070[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213411[ebp]
+	lea	ecx, DWORD PTR $T216069[ebp]
 	call	??0?$basic_file_source@D@iostreams@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z ; boost::iostreams::basic_file_source<char>::basic_file_source<char>
 	mov	DWORD PTR tv466[ebp], eax
 	mov	ecx, DWORD PTR tv466[ebp]
@@ -4225,11 +4225,11 @@ $LN6@InputStrea:
 	add	ecx, 92					; 0000005cH
 	call	??$push@U?$basic_file_source@D@iostreams@boost@@@?$chain_client@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@@detail@iostreams@boost@@QAEXABU?$basic_file_source@D@23@HHPAX@Z ; boost::iostreams::detail::chain_client<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> > >::push<boost::iostreams::basic_file_source<char> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 8
-	lea	ecx, DWORD PTR $T213411[ebp]
+	lea	ecx, DWORD PTR $T216069[ebp]
 	call	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213412[ebp]
+	lea	ecx, DWORD PTR $T216070[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -4245,7 +4245,7 @@ $LN8@InputStrea:
 ; 130  : 				{
 ; 131  : 					traceFile.push(file_source(inFileWithPath.string().c_str()));
 
-	lea	ecx, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153274[ebp]
 	call	?string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBEABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::string
 	mov	esi, esp
 	mov	ecx, eax
@@ -4254,7 +4254,7 @@ $LN8@InputStrea:
 	call	__RTC_CheckEsp
 	mov	esi, esp
 	push	eax
-	lea	ecx, DWORD PTR $T213414[ebp]
+	lea	ecx, DWORD PTR $T216072[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -4263,9 +4263,9 @@ $LN8@InputStrea:
 	push	-1
 	push	-1
 	push	1
-	lea	eax, DWORD PTR $T213414[ebp]
+	lea	eax, DWORD PTR $T216072[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213413[ebp]
+	lea	ecx, DWORD PTR $T216071[ebp]
 	call	??0?$basic_file_source@D@iostreams@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z ; boost::iostreams::basic_file_source<char>::basic_file_source<char>
 	mov	DWORD PTR tv468[ebp], eax
 	mov	ecx, DWORD PTR tv468[ebp]
@@ -4277,11 +4277,11 @@ $LN8@InputStrea:
 	add	ecx, 92					; 0000005cH
 	call	??$push@U?$basic_file_source@D@iostreams@boost@@@?$chain_client@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@@detail@iostreams@boost@@QAEXABU?$basic_file_source@D@23@HHPAX@Z ; boost::iostreams::detail::chain_client<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> > >::push<boost::iostreams::basic_file_source<char> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 10		; 0000000aH
-	lea	ecx, DWORD PTR $T213413[ebp]
+	lea	ecx, DWORD PTR $T216071[ebp]
 	call	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213414[ebp]
+	lea	ecx, DWORD PTR $T216072[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -4297,7 +4297,7 @@ $LN10@InputStrea:
 ; 135  : 			{
 ; 136  : 				traceFile.push(file_source(inFileWithPath.string().c_str()));
 
-	lea	ecx, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153274[ebp]
 	call	?string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBEABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::string
 	mov	esi, esp
 	mov	ecx, eax
@@ -4306,7 +4306,7 @@ $LN10@InputStrea:
 	call	__RTC_CheckEsp
 	mov	esi, esp
 	push	eax
-	lea	ecx, DWORD PTR $T213416[ebp]
+	lea	ecx, DWORD PTR $T216074[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -4315,9 +4315,9 @@ $LN10@InputStrea:
 	push	-1
 	push	-1
 	push	1
-	lea	eax, DWORD PTR $T213416[ebp]
+	lea	eax, DWORD PTR $T216074[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213415[ebp]
+	lea	ecx, DWORD PTR $T216073[ebp]
 	call	??0?$basic_file_source@D@iostreams@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z ; boost::iostreams::basic_file_source<char>::basic_file_source<char>
 	mov	DWORD PTR tv470[ebp], eax
 	mov	ecx, DWORD PTR tv470[ebp]
@@ -4329,11 +4329,11 @@ $LN10@InputStrea:
 	add	ecx, 92					; 0000005cH
 	call	??$push@U?$basic_file_source@D@iostreams@boost@@@?$chain_client@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@@detail@iostreams@boost@@QAEXABU?$basic_file_source@D@23@HHPAX@Z ; boost::iostreams::detail::chain_client<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> > >::push<boost::iostreams::basic_file_source<char> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 12		; 0000000cH
-	lea	ecx, DWORD PTR $T213415[ebp]
+	lea	ecx, DWORD PTR $T216073[ebp]
 	call	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213416[ebp]
+	lea	ecx, DWORD PTR $T216074[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -4392,7 +4392,7 @@ $LN1@InputStrea:
 ; 144  : 		}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153274[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 $LN12@InputStrea:
 
@@ -4462,49 +4462,49 @@ __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfigurati
 	add	ecx, 92					; 0000005cH
 	jmp	??_D?$filtering_stream@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Upublic_@23@@iostreams@boost@@QAEXXZ
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$2:
-	lea	ecx, DWORD PTR _inFileWithPath$150974[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153274[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$3:
-	lea	ecx, DWORD PTR $T213406[ebp]
+	lea	ecx, DWORD PTR $T216064[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$4:
-	lea	ecx, DWORD PTR $T213407[ebp]
+	lea	ecx, DWORD PTR $T216065[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$5:
-	lea	ecx, DWORD PTR $T213408[ebp]
+	lea	ecx, DWORD PTR $T216066[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$6:
-	lea	ecx, DWORD PTR $T213409[ebp]
+	lea	ecx, DWORD PTR $T216067[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$7:
-	lea	ecx, DWORD PTR $T213410[ebp]
+	lea	ecx, DWORD PTR $T216068[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$8:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213412[ebp]
+	lea	ecx, DWORD PTR $T216070[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$9:
-	lea	ecx, DWORD PTR $T213411[ebp]
+	lea	ecx, DWORD PTR $T216069[ebp]
 	jmp	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$10:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213414[ebp]
+	lea	ecx, DWORD PTR $T216072[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$11:
-	lea	ecx, DWORD PTR $T213413[ebp]
+	lea	ecx, DWORD PTR $T216071[ebp]
 	jmp	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$12:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213416[ebp]
+	lea	ecx, DWORD PTR $T216074[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z$13:
-	lea	ecx, DWORD PTR $T213415[ebp]
+	lea	ecx, DWORD PTR $T216073[ebp]
 	jmp	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 __ehhandler$??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -4568,7 +4568,7 @@ PUBLIC	??$current_path@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$a
 ; File c:\program files\boost\boost_1_40\boost\filesystem\operations.hpp
 ;	COMDAT ?current_path@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@XZ
 _TEXT	SEGMENT
-$T213475 = -200						; size = 4
+$T216133 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?current_path@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@XZ PROC ; boost::filesystem::current_path, COMDAT
 
@@ -4584,14 +4584,14 @@ ___$ReturnUdt$ = 8					; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T213475[ebp], 0
+	mov	DWORD PTR $T216133[ebp], 0
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 	push	eax
 	call	??$current_path@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@XZ ; boost::filesystem::current_path<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 	add	esp, 4
-	mov	ecx, DWORD PTR $T213475[ebp]
+	mov	ecx, DWORD PTR $T216133[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T213475[ebp], ecx
+	mov	DWORD PTR $T216133[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 	pop	edi
 	pop	esi
@@ -5074,17 +5074,17 @@ tv304 = -512						; size = 4
 tv298 = -512						; size = 4
 tv312 = -508						; size = 4
 tv223 = -508						; size = 4
-$T213503 = -497						; size = 1
-$T213504 = -488						; size = 4
-$T213505 = -476						; size = 8
-$T213506 = -460						; size = 8
-$T213507 = -444						; size = 4
-$T213508 = -432						; size = 32
-$T213509 = -392						; size = 32
-$T213510 = -352						; size = 8
-$T213511 = -336						; size = 32
-_inFileWithPath$151426 = -104				; size = 32
-_cwd$151423 = -64					; size = 32
+$T216161 = -497						; size = 1
+$T216162 = -488						; size = 4
+$T216163 = -476						; size = 8
+$T216164 = -460						; size = 8
+$T216165 = -444						; size = 4
+$T216166 = -432						; size = 32
+$T216167 = -392						; size = 32
+$T216168 = -352						; size = 8
+$T216169 = -336						; size = 32
+_inFileWithPath$153726 = -104				; size = 32
+_cwd$153723 = -64					; size = 32
 _this$ = -24						; size = 4
 __$ArrayPad$ = -16					; size = 4
 __$EHRec$ = -12						; size = 12
@@ -5135,7 +5135,7 @@ _filename$ = 24						; size = 32
 	mov	ecx, DWORD PTR _arrivalDistributionModel$[ebp]
 	mov	DWORD PTR [eax+56], ecx
 	push	1
-	lea	ecx, DWORD PTR $T213503[ebp]
+	lea	ecx, DWORD PTR $T216161[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -5157,8 +5157,8 @@ _filename$ = 24						; size = 32
 	push	edx
 	push	eax
 	call	@_RTC_Check_8_to_4@8
-	mov	DWORD PTR $T213504[ebp], eax
-	lea	eax, DWORD PTR $T213504[ebp]
+	mov	DWORD PTR $T216162[ebp], eax
+	lea	eax, DWORD PTR $T216162[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 168				; 000000a8H
@@ -5178,16 +5178,16 @@ _filename$ = 24						; size = 32
 	add	ecx, 5184				; 00001440H
 	call	??0?$uniform_int@H@boost@@QAE@HH@Z	; boost::uniform_int<int>::uniform_int<int>
 	fld	QWORD PTR __real@4020000000000000
-	fstp	QWORD PTR $T213505[ebp]
+	fstp	QWORD PTR $T216163[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+52]
 	mov	DWORD PTR tv351[ebp], ecx
 	mov	DWORD PTR tv351[ebp+4], 0
 	fild	QWORD PTR tv351[ebp]
-	fstp	QWORD PTR $T213506[ebp]
-	lea	edx, DWORD PTR $T213505[ebp]
+	fstp	QWORD PTR $T216164[ebp]
+	lea	edx, DWORD PTR $T216163[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T213506[ebp]
+	lea	eax, DWORD PTR $T216164[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 5200				; 00001450H
@@ -5230,7 +5230,7 @@ _filename$ = 24						; size = 32
 	add	eax, 5200				; 00001450H
 	sub	esp, 48					; 00000030H
 	mov	ecx, esp
-	mov	DWORD PTR $T213507[ebp], esp
+	mov	DWORD PTR $T216165[ebp], esp
 	push	eax
 	call	??0?$normal_distribution@N@boost@@QAE@ABV01@@Z ; boost::normal_distribution<double>::normal_distribution<double>
 	mov	esi, DWORD PTR _this$[ebp]
@@ -5354,7 +5354,7 @@ $LN4@InputStrea@2:
 ; 178  : 		{
 ; 179  : 			boost::filesystem::path cwd(boost::filesystem::current_path());
 
-	lea	eax, DWORD PTR _cwd$151423[ebp]
+	lea	eax, DWORD PTR _cwd$153723[ebp]
 	push	eax
 	call	?current_path@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@XZ ; boost::filesystem::current_path
 	add	esp, 4
@@ -5366,9 +5366,9 @@ $LN4@InputStrea@2:
 	add	eax, 60					; 0000003cH
 	push	eax
 	push	OFFSET ??_C@_0L@JCBAPMDC@traceFiles?$AA@
-	lea	ecx, DWORD PTR _cwd$151423[ebp]
+	lea	ecx, DWORD PTR _cwd$153723[ebp]
 	push	ecx
-	lea	edx, DWORD PTR $T213508[ebp]
+	lea	edx, DWORD PTR $T216166[ebp]
 	push	edx
 	call	??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@PBD@Z ; boost::filesystem::operator/<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	add	esp, 12					; 0000000cH
@@ -5378,7 +5378,7 @@ $LN4@InputStrea@2:
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	mov	ecx, DWORD PTR tv298[ebp]
 	push	ecx
-	lea	edx, DWORD PTR $T213509[ebp]
+	lea	edx, DWORD PTR $T216167[ebp]
 	push	edx
 	call	??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; boost::filesystem::operator/<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	add	esp, 12					; 0000000cH
@@ -5388,22 +5388,22 @@ $LN4@InputStrea@2:
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	mov	ecx, DWORD PTR tv300[ebp]
 	push	ecx
-	lea	ecx, DWORD PTR _cwd$151423[ebp]
+	lea	ecx, DWORD PTR _cwd$153723[ebp]
 	call	??4?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAEAAV012@ABV012@@Z
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
-	lea	ecx, DWORD PTR $T213509[ebp]
+	lea	ecx, DWORD PTR $T216167[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	lea	ecx, DWORD PTR $T213508[ebp]
+	lea	ecx, DWORD PTR $T216166[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 
 ; 181  : 			string inFileWithPath = cwd.string();
 
-	lea	ecx, DWORD PTR _cwd$151423[ebp]
+	lea	ecx, DWORD PTR _cwd$153723[ebp]
 	call	?string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBEABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::string
 	mov	esi, esp
 	push	eax
-	lea	ecx, DWORD PTR _inFileWithPath$151426[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153726[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -5419,13 +5419,13 @@ $LN4@InputStrea@2:
 ; 189  : 			traceFile.push(file_source(inFileWithPath.c_str()));
 
 	mov	esi, esp
-	lea	ecx, DWORD PTR _inFileWithPath$151426[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153726[ebp]
 	call	DWORD PTR __imp_?c_str@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEPBDXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	esi, esp
 	push	eax
-	lea	ecx, DWORD PTR $T213511[ebp]
+	lea	ecx, DWORD PTR $T216169[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -5434,9 +5434,9 @@ $LN4@InputStrea@2:
 	push	-1
 	push	-1
 	push	1
-	lea	eax, DWORD PTR $T213511[ebp]
+	lea	eax, DWORD PTR $T216169[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213510[ebp]
+	lea	ecx, DWORD PTR $T216168[ebp]
 	call	??0?$basic_file_source@D@iostreams@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z ; boost::iostreams::basic_file_source<char>::basic_file_source<char>
 	mov	DWORD PTR tv312[ebp], eax
 	mov	ecx, DWORD PTR tv312[ebp]
@@ -5448,11 +5448,11 @@ $LN4@InputStrea@2:
 	add	ecx, 92					; 0000005cH
 	call	??$push@U?$basic_file_source@D@iostreams@boost@@@?$chain_client@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@@detail@iostreams@boost@@QAEXABU?$basic_file_source@D@23@HHPAX@Z ; boost::iostreams::detail::chain_client<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> > >::push<boost::iostreams::basic_file_source<char> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 7
-	lea	ecx, DWORD PTR $T213510[ebp]
+	lea	ecx, DWORD PTR $T216168[ebp]
 	call	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 6
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213511[ebp]
+	lea	ecx, DWORD PTR $T216169[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -5510,12 +5510,12 @@ $LN1@InputStrea@2:
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	esi, esp
-	lea	ecx, DWORD PTR _inFileWithPath$151426[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153726[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	lea	ecx, DWORD PTR _cwd$151423[ebp]
+	lea	ecx, DWORD PTR _cwd$153723[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 $LN2@InputStrea@2:
 
@@ -5605,28 +5605,28 @@ __unwindfunclet$??0InputStream@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vect
 	add	ecx, 92					; 0000005cH
 	jmp	??_D?$filtering_stream@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Upublic_@23@@iostreams@boost@@QAEXXZ
 __unwindfunclet$??0InputStream@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IW4DistributionType@01@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$3:
-	lea	ecx, DWORD PTR _cwd$151423[ebp]
+	lea	ecx, DWORD PTR _cwd$153723[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IW4DistributionType@01@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$4:
-	lea	ecx, DWORD PTR $T213508[ebp]
+	lea	ecx, DWORD PTR $T216166[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IW4DistributionType@01@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$5:
-	lea	ecx, DWORD PTR $T213509[ebp]
+	lea	ecx, DWORD PTR $T216167[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??0InputStream@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IW4DistributionType@01@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$6:
 	mov	esi, esp
-	lea	ecx, DWORD PTR _inFileWithPath$151426[ebp]
+	lea	ecx, DWORD PTR _inFileWithPath$153726[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??0InputStream@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IW4DistributionType@01@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$7:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213511[ebp]
+	lea	ecx, DWORD PTR $T216169[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??0InputStream@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IW4DistributionType@01@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$8:
-	lea	ecx, DWORD PTR $T213510[ebp]
+	lea	ecx, DWORD PTR $T216168[ebp]
 	jmp	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 __ehhandler$??0InputStream@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IW4DistributionType@01@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -5661,7 +5661,7 @@ __ehfuncinfo$??0InputStream@DRAMsimII@@QAE@ABV01@@Z DD 019930522H
 xdata$x	ENDS
 ;	COMDAT ??0InputStream@DRAMsimII@@QAE@ABV01@@Z
 _TEXT	SEGMENT
-$T213533 = -221						; size = 1
+$T216191 = -221						; size = 1
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _rhs$ = 8						; size = 4
@@ -5751,7 +5751,7 @@ _rhs$ = 8						; size = 4
 	mov	edx, DWORD PTR [ecx+56]
 	mov	DWORD PTR [eax+56], edx
 	push	1
-	lea	ecx, DWORD PTR $T213533[ebp]
+	lea	ecx, DWORD PTR $T216191[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -5929,7 +5929,7 @@ __ehfuncinfo$??0InputStream@DRAMsimII@@QAE@ABV01@ABVSystemConfiguration@1@ABV?$v
 xdata$x	ENDS
 ;	COMDAT ??0InputStream@DRAMsimII@@QAE@ABV01@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z
 _TEXT	SEGMENT
-$T213547 = -221						; size = 1
+$T216205 = -221						; size = 1
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _rhs$ = 8						; size = 4
@@ -6019,7 +6019,7 @@ _systemChannel$ = 16					; size = 4
 	mov	edx, DWORD PTR [ecx+56]
 	mov	DWORD PTR [eax+56], edx
 	push	1
-	lea	ecx, DWORD PTR $T213547[ebp]
+	lea	ecx, DWORD PTR $T216205[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -6814,7 +6814,7 @@ tv158 = -280						; size = 4
 tv163 = -276						; size = 8
 tv161 = -272						; size = 8
 tv151 = -268						; size = 4
-_j$151584 = -68						; size = 4
+_j$153884 = -68						; size = 4
 _ser$ = -56						; size = 4
 _tmp$ = -44						; size = 4
 _x$ = -32						; size = 4
@@ -6882,14 +6882,14 @@ _xx$ = 8						; size = 4
 
 ; 322  : 	for (unsigned j = 0; j <= 5; j++)
 
-	mov	DWORD PTR _j$151584[ebp], 0
+	mov	DWORD PTR _j$153884[ebp], 0
 	jmp	SHORT $LN3@gammaLn
 $LN2@gammaLn:
-	mov	eax, DWORD PTR _j$151584[ebp]
+	mov	eax, DWORD PTR _j$153884[ebp]
 	add	eax, 1
-	mov	DWORD PTR _j$151584[ebp], eax
+	mov	DWORD PTR _j$153884[ebp], eax
 $LN3@gammaLn:
-	cmp	DWORD PTR _j$151584[ebp], 5
+	cmp	DWORD PTR _j$153884[ebp], 5
 	ja	SHORT $LN1@gammaLn
 
 ; 323  : 		ser += coefficients[j]/++y;
@@ -6898,7 +6898,7 @@ $LN3@gammaLn:
 	fadd	QWORD PTR __real@3ff0000000000000
 	fstp	DWORD PTR _y$[ebp]
 	fld	DWORD PTR _y$[ebp]
-	mov	eax, DWORD PTR _j$151584[ebp]
+	mov	eax, DWORD PTR _j$153884[ebp]
 	fdivr	DWORD PTR ?coefficients@?1??gammaLn@InputStream@DRAMsimII@@QBEMM@Z@4PAMA[eax*4]
 	fadd	DWORD PTR _ser$[ebp]
 	fstp	DWORD PTR _ser$[ebp]
@@ -6949,8 +6949,8 @@ CONST	ENDS
 ;	COMDAT ?boxMuller@InputStream@DRAMsimII@@QBEMMM@Z
 _TEXT	SEGMENT
 tv175 = -256						; size = 4
-_x2$151602 = -56					; size = 4
-_x1$151601 = -44					; size = 4
+_x2$153902 = -56					; size = 4
+_x1$153901 = -44					; size = 4
 _y1$ = -32						; size = 4
 _w$ = -20						; size = 4
 _this$ = -8						; size = 4
@@ -7012,7 +7012,7 @@ $LN5@boxMuller:
 	call	??R?$variate_generator@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@V?$uniform_real@N@3@@boost@@QAENXZ ; boost::variate_generator<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &,boost::uniform_real<double> >::operator()
 	fmul	QWORD PTR __real@4000000000000000
 	fsub	QWORD PTR __real@3ff0000000000000
-	fstp	DWORD PTR _x1$151601[ebp]
+	fstp	DWORD PTR _x1$153901[ebp]
 
 ; 345  : 			x2 = 2.0F * rngGenerator() - 1.0F;
 
@@ -7021,14 +7021,14 @@ $LN5@boxMuller:
 	call	??R?$variate_generator@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@V?$uniform_real@N@3@@boost@@QAENXZ ; boost::variate_generator<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &,boost::uniform_real<double> >::operator()
 	fmul	QWORD PTR __real@4000000000000000
 	fsub	QWORD PTR __real@3ff0000000000000
-	fstp	DWORD PTR _x2$151602[ebp]
+	fstp	DWORD PTR _x2$153902[ebp]
 
 ; 346  : 			w = x1 * x1 + x2 * x2;
 
-	fld	DWORD PTR _x1$151601[ebp]
-	fmul	DWORD PTR _x1$151601[ebp]
-	fld	DWORD PTR _x2$151602[ebp]
-	fmul	DWORD PTR _x2$151602[ebp]
+	fld	DWORD PTR _x1$153901[ebp]
+	fmul	DWORD PTR _x1$153901[ebp]
+	fld	DWORD PTR _x2$153902[ebp]
+	fmul	DWORD PTR _x2$153902[ebp]
 	faddp	ST(1), ST(0)
 	fstp	DWORD PTR _w$[ebp]
 
@@ -7058,13 +7058,13 @@ $LN5@boxMuller:
 
 ; 350  : 		y1 = x1 * w;
 
-	fld	DWORD PTR _x1$151601[ebp]
+	fld	DWORD PTR _x1$153901[ebp]
 	fmul	DWORD PTR _w$[ebp]
 	fstp	DWORD PTR _y1$[ebp]
 
 ; 351  : 		y2 = x2 * w;
 
-	fld	DWORD PTR _x2$151602[ebp]
+	fld	DWORD PTR _x2$153902[ebp]
 	fmul	DWORD PTR _w$[ebp]
 	fstp	DWORD PTR ?y2@?1??boxMuller@InputStream@DRAMsimII@@QBEMMM@Z@4MA
 
@@ -7525,27 +7525,27 @@ tv262 = -556						; size = 4
 tv192 = -556						; size = 4
 tv161 = -556						; size = 4
 tv64 = -556						; size = 4
-$T213609 = -545						; size = 1
-$T213610 = -536						; size = 4
-$T213611 = -524						; size = 4
-$T213612 = -512						; size = 4
-$T213613 = -500						; size = 4
-$T213614 = -488						; size = 4
-$T213617 = -473						; size = 1
-$T213618 = -464						; size = 4
-$T213619 = -452						; size = 4
-$T213620 = -440						; size = 4
-$T213621 = -428						; size = 4
-_type$151706 = -224					; size = 4
-_arrivalTime$151699 = -212				; size = 8
-_input$151697 = -196					; size = 32
-_timestamp$151696 = -156				; size = 8
-_PC$151695 = -140					; size = 8
-_tempPA$151694 = -124					; size = 8
-_type$151666 = -108					; size = 4
-_timestamp$151658 = -96					; size = 8
-_tempPA$151657 = -80					; size = 8
-_input$151655 = -64					; size = 32
+$T216267 = -545						; size = 1
+$T216268 = -536						; size = 4
+$T216269 = -524						; size = 4
+$T216270 = -512						; size = 4
+$T216271 = -500						; size = 4
+$T216272 = -488						; size = 4
+$T216275 = -473						; size = 1
+$T216276 = -464						; size = 4
+$T216277 = -452						; size = 4
+$T216278 = -440						; size = 4
+$T216279 = -428						; size = 4
+_type$154006 = -224					; size = 4
+_arrivalTime$153999 = -212				; size = 8
+_input$153997 = -196					; size = 32
+_timestamp$153996 = -156				; size = 8
+_PC$153995 = -140					; size = 8
+_tempPA$153994 = -124					; size = 8
+_type$153966 = -108					; size = 4
+_timestamp$153958 = -96					; size = 8
+_tempPA$153957 = -80					; size = 8
+_input$153955 = -64					; size = 32
 _this$ = -24						; size = 4
 __$ArrayPad$ = -16					; size = 4
 __$EHRec$ = -12						; size = 12
@@ -7705,12 +7705,12 @@ $LN18@getNextInc:
 ; 460  : 			string input;
 
 	push	1
-	lea	ecx, DWORD PTR $T213609[ebp]
+	lea	ecx, DWORD PTR $T216267[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
 	push	eax
-	lea	ecx, DWORD PTR _input$151655[ebp]
+	lea	ecx, DWORD PTR _input$153955[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@U_Has_debug_it@01@@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -7722,15 +7722,15 @@ $LN18@getNextInc:
 ; 464  : 			traceFile >> hex >> tempPA >> input >> dec >> timestamp;
 
 	mov	esi, esp
-	lea	eax, DWORD PTR _timestamp$151658[ebp]
+	lea	eax, DWORD PTR _timestamp$153958[ebp]
 	push	eax
 	mov	edi, esp
 	push	OFFSET ?dec@std@@YAAAVios_base@1@AAV21@@Z ; std::dec
 	mov	ebx, esp
-	lea	ecx, DWORD PTR _input$151655[ebp]
+	lea	ecx, DWORD PTR _input$153955[ebp]
 	push	ecx
 	mov	eax, esp
-	lea	edx, DWORD PTR _tempPA$151657[ebp]
+	lea	edx, DWORD PTR _tempPA$153957[ebp]
 	push	edx
 	mov	ecx, esp
 	push	OFFSET ?hex@std@@YAAAVios_base@1@AAV21@@Z ; std::hex
@@ -7767,12 +7767,12 @@ $LN18@getNextInc:
 ; 467  : 			//thisEvent.timestamp /= cpuToMemoryRatio;
 ; 468  : 			timestamp *= cpuToMemoryRatio;
 
-	fild	QWORD PTR _timestamp$151658[ebp]
+	fild	QWORD PTR _timestamp$153958[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
 	fmul	DWORD PTR [eax+48]
 	call	__ftol2
-	mov	DWORD PTR _timestamp$151658[ebp], eax
-	mov	DWORD PTR _timestamp$151658[ebp+4], edx
+	mov	DWORD PTR _timestamp$153958[ebp], eax
+	mov	DWORD PTR _timestamp$153958[ebp+4], edx
 
 ; 469  : 			if(!traceFile.good()) /// found starting Hex address
 
@@ -7807,14 +7807,14 @@ $LN18@getNextInc:
 
 ; 472  : 				return false;
 
-	mov	DWORD PTR $T213610[ebp], 0
+	mov	DWORD PTR $T216268[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR _input$151655[ebp]
+	lea	ecx, DWORD PTR _input$153955[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	eax, DWORD PTR $T213610[ebp]
+	mov	eax, DWORD PTR $T216268[ebp]
 	jmp	$LN23@getNextInc
 $LN17@getNextInc:
 
@@ -7824,7 +7824,7 @@ $LN17@getNextInc:
 ; 476  : 
 ; 477  : 			switch (Settings::dramTokenizer(input))
 
-	lea	eax, DWORD PTR _input$151655[ebp]
+	lea	eax, DWORD PTR _input$153955[ebp]
 	push	eax
 	call	?dramTokenizer@Settings@DRAMsimII@@SA?AW4FileIOToken@2@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; DRAMsimII::Settings::dramTokenizer
 	add	esp, 4
@@ -7832,7 +7832,7 @@ $LN17@getNextInc:
 	mov	ecx, DWORD PTR tv161[ebp]
 	sub	ecx, 1
 	mov	DWORD PTR tv161[ebp], ecx
-	cmp	DWORD PTR tv161[ebp], 93		; 0000005dH
+	cmp	DWORD PTR tv161[ebp], 97		; 00000061H
 	ja	$LN10@getNextInc
 	mov	edx, DWORD PTR tv161[ebp]
 	movzx	eax, BYTE PTR $LN33@getNextInc[edx]
@@ -7843,7 +7843,7 @@ $LN14@getNextInc:
 ; 479  : 			case FETCH:
 ; 480  : 				type = Transaction::IFETCH_TRANSACTION;
 
-	mov	DWORD PTR _type$151666[ebp], 0
+	mov	DWORD PTR _type$153966[ebp], 0
 
 ; 481  : 				break;
 
@@ -7853,7 +7853,7 @@ $LN13@getNextInc:
 ; 482  : 			case MEM_RD:
 ; 483  : 				type = Transaction::READ_TRANSACTION;
 
-	mov	DWORD PTR _type$151666[ebp], 2
+	mov	DWORD PTR _type$153966[ebp], 2
 
 ; 484  : 				break;
 
@@ -7863,7 +7863,7 @@ $LN12@getNextInc:
 ; 485  : 			case MEM_WR:
 ; 486  : 				type = Transaction::WRITE_TRANSACTION;
 
-	mov	DWORD PTR _type$151666[ebp], 1
+	mov	DWORD PTR _type$153966[ebp], 1
 
 ; 487  : 				break;
 
@@ -7877,7 +7877,7 @@ $LN11@getNextInc:
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
 	push	eax
 	mov	edi, esp
-	lea	ecx, DWORD PTR _input$151655[ebp]
+	lea	ecx, DWORD PTR _input$153955[ebp]
 	push	ecx
 	push	OFFSET ??_C@_0BF@CEJMJFKN@Unknown?5Token?5Found?5?$AA@
 	mov	edx, DWORD PTR __imp_?cerr@std@@3V?$basic_ostream@DU?$char_traits@D@std@@@1@A
@@ -7896,14 +7896,14 @@ $LN11@getNextInc:
 
 ; 490  : 				return NULL;
 
-	mov	DWORD PTR $T213611[ebp], 0
+	mov	DWORD PTR $T216269[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR _input$151655[ebp]
+	lea	ecx, DWORD PTR _input$153955[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	eax, DWORD PTR $T213611[ebp]
+	mov	eax, DWORD PTR $T216269[ebp]
 	jmp	$LN23@getNextInc
 
 ; 491  : 				break;			
@@ -7915,7 +7915,7 @@ $LN10@getNextInc:
 ; 493  : 				cerr << "Unexpected transaction type: " << input;
 
 	mov	esi, esp
-	lea	eax, DWORD PTR _input$151655[ebp]
+	lea	eax, DWORD PTR _input$153955[ebp]
 	push	eax
 	push	OFFSET ??_C@_0BO@HCCIPKHE@Unexpected?5transaction?5type?3?5?$AA@
 	mov	ecx, DWORD PTR __imp_?cerr@std@@3V?$basic_ostream@DU?$char_traits@D@std@@@1@A
@@ -7945,27 +7945,27 @@ $LN15@getNextInc:
 	push	112					; 00000070H
 	call	??2Transaction@DRAMsimII@@SAPAXI@Z	; DRAMsimII::Transaction::operator new
 	add	esp, 4
-	mov	DWORD PTR $T213614[ebp], eax
+	mov	DWORD PTR $T216272[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	cmp	DWORD PTR $T213614[ebp], 0
+	cmp	DWORD PTR $T216272[ebp], 0
 	je	SHORT $LN25@getNextInc
 	push	-1
 	mov	eax, DWORD PTR _transactionID$[ebp]
 	push	eax
 	push	0
 	push	0
-	mov	ecx, DWORD PTR _tempPA$151657[ebp+4]
+	mov	ecx, DWORD PTR _tempPA$153957[ebp+4]
 	push	ecx
-	mov	edx, DWORD PTR _tempPA$151657[ebp]
+	mov	edx, DWORD PTR _tempPA$153957[ebp]
 	push	edx
 	push	8
-	mov	eax, DWORD PTR _timestamp$151658[ebp+4]
+	mov	eax, DWORD PTR _timestamp$153958[ebp+4]
 	push	eax
-	mov	ecx, DWORD PTR _timestamp$151658[ebp]
+	mov	ecx, DWORD PTR _timestamp$153958[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _type$151666[ebp]
+	mov	edx, DWORD PTR _type$153966[ebp]
 	push	edx
-	mov	ecx, DWORD PTR $T213614[ebp]
+	mov	ecx, DWORD PTR $T216272[ebp]
 	call	??0Transaction@DRAMsimII@@QAE@W4TransactionType@01@_JI_K_KHI@Z ; DRAMsimII::Transaction::Transaction
 	mov	DWORD PTR tv192[ebp], eax
 	jmp	SHORT $LN26@getNextInc
@@ -7973,17 +7973,17 @@ $LN25@getNextInc:
 	mov	DWORD PTR tv192[ebp], 0
 $LN26@getNextInc:
 	mov	eax, DWORD PTR tv192[ebp]
-	mov	DWORD PTR $T213613[ebp], eax
+	mov	DWORD PTR $T216271[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	mov	ecx, DWORD PTR $T213613[ebp]
-	mov	DWORD PTR $T213612[ebp], ecx
+	mov	ecx, DWORD PTR $T216271[ebp]
+	mov	DWORD PTR $T216270[ebp], ecx
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR _input$151655[ebp]
+	lea	ecx, DWORD PTR _input$153955[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	eax, DWORD PTR $T213612[ebp]
+	mov	eax, DWORD PTR $T216270[ebp]
 	jmp	$LN23@getNextInc
 
 ; 499  : 		}
@@ -8043,12 +8043,12 @@ $LN8@getNextInc:
 ; 524  : 			string input;
 
 	push	1
-	lea	ecx, DWORD PTR $T213617[ebp]
+	lea	ecx, DWORD PTR $T216275[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
 	push	eax
-	lea	ecx, DWORD PTR _input$151697[ebp]
+	lea	ecx, DWORD PTR _input$153997[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@U_Has_debug_it@01@@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -8057,21 +8057,21 @@ $LN8@getNextInc:
 ; 525  : 			traceFile >> hex >> tempPA >> input >> dec >> timestamp >> hex >> PC;
 
 	mov	esi, esp
-	lea	eax, DWORD PTR _PC$151695[ebp]
+	lea	eax, DWORD PTR _PC$153995[ebp]
 	push	eax
 	mov	edi, esp
 	push	OFFSET ?hex@std@@YAAAVios_base@1@AAV21@@Z ; std::hex
 	mov	ebx, esp
-	lea	ecx, DWORD PTR _timestamp$151696[ebp]
+	lea	ecx, DWORD PTR _timestamp$153996[ebp]
 	push	ecx
 	mov	eax, esp
 	push	OFFSET ?dec@std@@YAAAVios_base@1@AAV21@@Z ; std::dec
 	mov	ecx, esp
-	lea	edx, DWORD PTR _input$151697[ebp]
+	lea	edx, DWORD PTR _input$153997[ebp]
 	push	edx
 	mov	edx, esp
 	mov	DWORD PTR tv547[ebp], esi
-	lea	esi, DWORD PTR _tempPA$151694[ebp]
+	lea	esi, DWORD PTR _tempPA$153994[ebp]
 	push	esi
 	mov	esi, esp
 	push	OFFSET ?hex@std@@YAAAVios_base@1@AAV21@@Z ; std::hex
@@ -8119,7 +8119,7 @@ $LN8@getNextInc:
 ; 526  : 			//cerr << "warn: timestamp adjusted incorrectly to compensate for older trace files" << endl;
 ; 527  : 			tick arrivalTime = (timestamp * 1E-10) * systemConfig.Frequency();
 
-	fld	QWORD PTR _timestamp$151696[ebp]
+	fld	QWORD PTR _timestamp$153996[ebp]
 	fmul	QWORD PTR __real@3ddb7cdfd9d7bdbb
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+4]
@@ -8127,8 +8127,8 @@ $LN8@getNextInc:
 	call	?Frequency@SystemConfiguration@DRAMsimII@@QBENXZ ; DRAMsimII::SystemConfiguration::Frequency
 	fmul	QWORD PTR tv557[ebp]
 	call	__ftol2
-	mov	DWORD PTR _arrivalTime$151699[ebp], eax
-	mov	DWORD PTR _arrivalTime$151699[ebp+4], edx
+	mov	DWORD PTR _arrivalTime$153999[ebp], eax
+	mov	DWORD PTR _arrivalTime$153999[ebp+4], edx
 
 ; 528  : 
 ; 529  : 			if (!traceFile.good()) /// found starting Hex address
@@ -8164,14 +8164,14 @@ $LN8@getNextInc:
 
 ; 532  : 				return NULL;
 
-	mov	DWORD PTR $T213618[ebp], 0
+	mov	DWORD PTR $T216276[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR _input$151697[ebp]
+	lea	ecx, DWORD PTR _input$153997[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	eax, DWORD PTR $T213618[ebp]
+	mov	eax, DWORD PTR $T216276[ebp]
 	jmp	$LN23@getNextInc
 $LN7@getNextInc:
 
@@ -8181,7 +8181,7 @@ $LN7@getNextInc:
 ; 536  : 
 ; 537  : 			switch (Settings::dramTokenizer(input))
 
-	lea	eax, DWORD PTR _input$151697[ebp]
+	lea	eax, DWORD PTR _input$153997[ebp]
 	push	eax
 	call	?dramTokenizer@Settings@DRAMsimII@@SA?AW4FileIOToken@2@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; DRAMsimII::Settings::dramTokenizer
 	add	esp, 4
@@ -8197,7 +8197,7 @@ $LN4@getNextInc:
 ; 539  : 			case MEM_RD:
 ; 540  : 				type = Transaction::READ_TRANSACTION;
 
-	mov	DWORD PTR _type$151706[ebp], 2
+	mov	DWORD PTR _type$154006[ebp], 2
 
 ; 541  : 				break;
 
@@ -8207,7 +8207,7 @@ $LN3@getNextInc:
 ; 542  : 			case MEM_WR:
 ; 543  : 				type = Transaction::WRITE_TRANSACTION;
 
-	mov	DWORD PTR _type$151706[ebp], 1
+	mov	DWORD PTR _type$154006[ebp], 1
 
 ; 544  : 				break;
 
@@ -8218,7 +8218,7 @@ $LN2@getNextInc:
 ; 546  : 				cerr << "Unexpected transaction type: " << input;
 
 	mov	esi, esp
-	lea	eax, DWORD PTR _input$151697[ebp]
+	lea	eax, DWORD PTR _input$153997[ebp]
 	push	eax
 	push	OFFSET ??_C@_0BO@HCCIPKHE@Unexpected?5transaction?5type?3?5?$AA@
 	mov	ecx, DWORD PTR __imp_?cerr@std@@3V?$basic_ostream@DU?$char_traits@D@std@@@1@A
@@ -8248,29 +8248,29 @@ $LN5@getNextInc:
 	push	112					; 00000070H
 	call	??2Transaction@DRAMsimII@@SAPAXI@Z	; DRAMsimII::Transaction::operator new
 	add	esp, 4
-	mov	DWORD PTR $T213621[ebp], eax
+	mov	DWORD PTR $T216279[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	cmp	DWORD PTR $T213621[ebp], 0
+	cmp	DWORD PTR $T216279[ebp], 0
 	je	SHORT $LN27@getNextInc
 	mov	eax, DWORD PTR _transactionID$[ebp]
 	push	eax
 	push	0
-	mov	ecx, DWORD PTR _PC$151695[ebp+4]
+	mov	ecx, DWORD PTR _PC$153995[ebp+4]
 	push	ecx
-	mov	edx, DWORD PTR _PC$151695[ebp]
+	mov	edx, DWORD PTR _PC$153995[ebp]
 	push	edx
-	mov	eax, DWORD PTR _tempPA$151694[ebp+4]
+	mov	eax, DWORD PTR _tempPA$153994[ebp+4]
 	push	eax
-	mov	ecx, DWORD PTR _tempPA$151694[ebp]
+	mov	ecx, DWORD PTR _tempPA$153994[ebp]
 	push	ecx
 	push	8
-	mov	edx, DWORD PTR _arrivalTime$151699[ebp+4]
+	mov	edx, DWORD PTR _arrivalTime$153999[ebp+4]
 	push	edx
-	mov	eax, DWORD PTR _arrivalTime$151699[ebp]
+	mov	eax, DWORD PTR _arrivalTime$153999[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _type$151706[ebp]
+	mov	ecx, DWORD PTR _type$154006[ebp]
 	push	ecx
-	mov	ecx, DWORD PTR $T213621[ebp]
+	mov	ecx, DWORD PTR $T216279[ebp]
 	call	??0Transaction@DRAMsimII@@QAE@W4TransactionType@01@_JI_K_KHI@Z ; DRAMsimII::Transaction::Transaction
 	mov	DWORD PTR tv285[ebp], eax
 	jmp	SHORT $LN28@getNextInc
@@ -8278,17 +8278,17 @@ $LN27@getNextInc:
 	mov	DWORD PTR tv285[ebp], 0
 $LN28@getNextInc:
 	mov	edx, DWORD PTR tv285[ebp]
-	mov	DWORD PTR $T213620[ebp], edx
+	mov	DWORD PTR $T216278[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	mov	eax, DWORD PTR $T213620[ebp]
-	mov	DWORD PTR $T213619[ebp], eax
+	mov	eax, DWORD PTR $T216278[ebp]
+	mov	DWORD PTR $T216277[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR _input$151697[ebp]
+	lea	ecx, DWORD PTR _input$153997[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	eax, DWORD PTR $T213619[ebp]
+	mov	eax, DWORD PTR $T216277[ebp]
 	jmp	SHORT $LN23@getNextInc
 
 ; 552  : 		}
@@ -8545,30 +8545,34 @@ $LN33@getNextInc:
 	DB	4
 	DB	4
 	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	4
 	DB	3
 _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?getNextIncomingTransaction@InputStream@DRAMsimII@@QAEPAVTransaction@2@I@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR _input$151655[ebp]
+	lea	ecx, DWORD PTR _input$153955[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?getNextIncomingTransaction@InputStream@DRAMsimII@@QAEPAVTransaction@2@I@Z$1:
-	mov	eax, DWORD PTR $T213614[ebp]
+	mov	eax, DWORD PTR $T216272[ebp]
 	push	eax
 	call	??3Transaction@DRAMsimII@@SAXPAX@Z	; DRAMsimII::Transaction::operator delete
 	pop	ecx
 	ret	0
 __unwindfunclet$?getNextIncomingTransaction@InputStream@DRAMsimII@@QAEPAVTransaction@2@I@Z$2:
 	mov	esi, esp
-	lea	ecx, DWORD PTR _input$151697[ebp]
+	lea	ecx, DWORD PTR _input$153997[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?getNextIncomingTransaction@InputStream@DRAMsimII@@QAEPAVTransaction@2@I@Z$3:
-	mov	eax, DWORD PTR $T213621[ebp]
+	mov	eax, DWORD PTR $T216279[ebp]
 	push	eax
 	call	??3Transaction@DRAMsimII@@SAXPAX@Z	; DRAMsimII::Transaction::operator delete
 	pop	ecx
@@ -8711,8 +8715,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv86 = -292						; size = 4
 tv89 = -288						; size = 4
-$T213656 = -280						; size = 4
-$T213657 = -268						; size = 4
+$T216314 = -280						; size = 4
+$T216315 = -268						; size = 4
 _first$ = -64						; size = 4
 _lowerValue$ = -52					; size = 32
 __$ArrayPad$ = -16					; size = 4
@@ -8720,7 +8724,7 @@ __$EHRec$ = -12						; size = 12
 _value$ = 8						; size = 4
 ?dramTokenizer@Settings@DRAMsimII@@SA?AW4FileIOToken@2@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z PROC ; DRAMsimII::Settings::dramTokenizer, COMDAT
 
-; 143  : 		{
+; 151  : 		{
 
 	push	ebp
 	mov	ebp, esp
@@ -8743,7 +8747,7 @@ _value$ = 8						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 
-; 144  : 			std::string lowerValue = value;
+; 152  : 			std::string lowerValue = value;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _value$[ebp]
@@ -8754,12 +8758,12 @@ _value$ = 8						; size = 4
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 
-; 145  : 			//std::transform(lowerValue.begin(),lowerValue.end(),lowerValue.begin(),std::ptr_fun((int (*)( int))std::tolower));
-; 146  : 			//std::transform(lowerValue.begin(), lowerValue.end(), lowerValue.begin(), std::tolower);
-; 147  : 			boost::algorithm::to_lower(lowerValue);
+; 153  : 			//std::transform(lowerValue.begin(),lowerValue.end(),lowerValue.begin(),std::ptr_fun((int (*)( int))std::tolower));
+; 154  : 			//std::transform(lowerValue.begin(), lowerValue.end(), lowerValue.begin(), std::tolower);
+; 155  : 			boost::algorithm::to_lower(lowerValue);
 
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213656[ebp]
+	lea	ecx, DWORD PTR $T216314[ebp]
 	call	DWORD PTR __imp_??0locale@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -8775,18 +8779,18 @@ _value$ = 8						; size = 4
 	add	esp, 8
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213656[ebp]
+	lea	ecx, DWORD PTR $T216314[ebp]
 	call	DWORD PTR __imp_??1locale@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 148  : 
-; 149  : 			FileIOToken first = unknown_token;
+; 156  : 
+; 157  : 			FileIOToken first = unknown_token;
 
-	mov	DWORD PTR _first$[ebp], 94		; 0000005eH
+	mov	DWORD PTR _first$[ebp], 98		; 00000062H
 
-; 150  : 			
-; 151  : 			if (!tokenize(lowerValue,first))
+; 158  : 			
+; 159  : 			if (!tokenize(lowerValue,first))
 
 	lea	eax, DWORD PTR _first$[ebp]
 	push	eax
@@ -8798,7 +8802,7 @@ _value$ = 8						; size = 4
 	test	edx, edx
 	jne	SHORT $LN1@dramTokeni
 
-; 152  : 				std::cerr << "warn: unknown token: " << std::endl;
+; 160  : 				std::cerr << "warn: unknown token: " << std::endl;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
@@ -8814,20 +8818,20 @@ _value$ = 8						; size = 4
 	call	__RTC_CheckEsp
 $LN1@dramTokeni:
 
-; 153  : 
-; 154  : 			return first;
+; 161  : 
+; 162  : 			return first;
 
 	mov	eax, DWORD PTR _first$[ebp]
-	mov	DWORD PTR $T213657[ebp], eax
+	mov	DWORD PTR $T216315[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
 	lea	ecx, DWORD PTR _lowerValue$[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	eax, DWORD PTR $T213657[ebp]
+	mov	eax, DWORD PTR $T216315[ebp]
 
-; 155  : 		}
+; 163  : 		}
 
 	push	edx
 	mov	ecx, ebp
@@ -8892,7 +8896,7 @@ __unwindfunclet$?dramTokenizer@Settings@DRAMsimII@@SA?AW4FileIOToken@2@ABV?$basi
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?dramTokenizer@Settings@DRAMsimII@@SA?AW4FileIOToken@2@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z$1:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213656[ebp]
+	lea	ecx, DWORD PTR $T216314[ebp]
 	call	DWORD PTR __imp_??1locale@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -8948,20 +8952,20 @@ tv169 = -344						; size = 4
 tv166 = -344						; size = 4
 tv175 = -340						; size = 4
 tv95 = -340						; size = 4
-$T213673 = -332						; size = 4
-$T213674 = -317						; size = 1
-$T213675 = -308						; size = 12
-$T213676 = -285						; size = 1
-$T213677 = -273						; size = 1
-_result$130320 = -72					; size = 12
-_lowerNodeName$130192 = -52				; size = 32
+$T216331 = -332						; size = 4
+$T216332 = -317						; size = 1
+$T216333 = -308						; size = 12
+$T216334 = -285						; size = 1
+$T216335 = -273						; size = 1
+_result$130349 = -72					; size = 12
+_lowerNodeName$130221 = -52				; size = 32
 __$ArrayPad$ = -16					; size = 4
 __$EHRec$ = -12						; size = 12
 _nodeName$ = 8						; size = 4
 _token$ = 12						; size = 4
 ?tokenize@Settings@DRAMsimII@@SA_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAW4FileIOToken@2@@Z PROC ; DRAMsimII::Settings::tokenize, COMDAT
 
-; 449  : 		{
+; 469  : 		{
 
 	push	ebp
 	mov	ebp, esp
@@ -8984,7 +8988,7 @@ _token$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 
-; 450  : 			if (nodeName.length() == 0)
+; 470  : 			if (nodeName.length() == 0)
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _nodeName$[ebp]
@@ -8994,21 +8998,21 @@ _token$ = 12						; size = 4
 	test	eax, eax
 	jne	SHORT $LN6@tokenize
 
-; 451  : 			{
-; 452  : 				token = unknown_token;
+; 471  : 			{
+; 472  : 				token = unknown_token;
 
 	mov	eax, DWORD PTR _token$[ebp]
-	mov	DWORD PTR [eax], 94			; 0000005eH
+	mov	DWORD PTR [eax], 98			; 00000062H
 
-; 453  : 				return true;
+; 473  : 				return true;
 
 	mov	al, 1
 	jmp	$LN7@tokenize
 	jmp	$LN7@tokenize
 $LN6@tokenize:
 
-; 454  : 			}
-; 455  : 			else if (nodeName.length() > 1 && nodeName.at(0) == '/' && nodeName.at(1) == '/')
+; 474  : 			}
+; 475  : 			else if (nodeName.length() > 1 && nodeName.at(0) == '/' && nodeName.at(1) == '/')
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _nodeName$[ebp]
@@ -9036,40 +9040,40 @@ $LN6@tokenize:
 	cmp	eax, 47					; 0000002fH
 	jne	SHORT $LN4@tokenize
 
-; 456  : 			{
-; 457  : 				token = comment_token;
+; 476  : 			{
+; 477  : 				token = comment_token;
 
 	mov	eax, DWORD PTR _token$[ebp]
-	mov	DWORD PTR [eax], 26			; 0000001aH
+	mov	DWORD PTR [eax], 30			; 0000001eH
 
-; 458  : 				return true;
+; 478  : 				return true;
 
 	mov	al, 1
 	jmp	$LN7@tokenize
 
-; 459  : 			}				
-; 460  : 			else
+; 479  : 			}				
+; 480  : 			else
 
 	jmp	$LN7@tokenize
 $LN4@tokenize:
 
-; 461  : 			{
-; 462  : 				std::string lowerNodeName = nodeName;
+; 481  : 			{
+; 482  : 				std::string lowerNodeName = nodeName;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _nodeName$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _lowerNodeName$130192[ebp]
+	lea	ecx, DWORD PTR _lowerNodeName$130221[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 
-; 463  : 				//std::transform(lowerNodeName.begin(),lowerNodeName.end(),lowerNodeName.begin(),std::ptr_fun((int (*)( int))std::tolower));
-; 464  : 				boost::algorithm::to_lower(lowerNodeName);
+; 483  : 				//std::transform(lowerNodeName.begin(),lowerNodeName.end(),lowerNodeName.begin(),std::ptr_fun((int (*)( int))std::tolower));
+; 484  : 				boost::algorithm::to_lower(lowerNodeName);
 
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213673[ebp]
+	lea	ecx, DWORD PTR $T216331[ebp]
 	call	DWORD PTR __imp_??0locale@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -9079,32 +9083,32 @@ $LN4@tokenize:
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	ecx, DWORD PTR tv166[ebp]
 	push	ecx
-	lea	edx, DWORD PTR _lowerNodeName$130192[ebp]
+	lea	edx, DWORD PTR _lowerNodeName$130221[ebp]
 	push	edx
 	call	??$to_lower@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@algorithm@boost@@YAXAAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABVlocale@3@@Z ; boost::algorithm::to_lower<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 8
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213673[ebp]
+	lea	ecx, DWORD PTR $T216331[ebp]
 	call	DWORD PTR __imp_??1locale@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 465  : 
-; 466  : 				std::map<std::string, FileIOToken>::iterator result = tokenizeMap.find(lowerNodeName);
+; 485  : 
+; 486  : 				std::map<std::string, FileIOToken>::iterator result = tokenizeMap.find(lowerNodeName);
 
-	lea	eax, DWORD PTR _lowerNodeName$130192[ebp]
+	lea	eax, DWORD PTR _lowerNodeName$130221[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _result$130320[ebp]
+	lea	ecx, DWORD PTR _result$130349[ebp]
 	push	ecx
 	mov	ecx, OFFSET ?tokenizeMap@Settings@DRAMsimII@@0V?$map@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@@std@@A ; DRAMsimII::Settings::tokenizeMap
 	call	?find@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::find
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 
-; 467  : 
-; 468  : 				if (result != tokenizeMap.end())
+; 487  : 
+; 488  : 				if (result != tokenizeMap.end())
 
-	lea	eax, DWORD PTR $T213675[ebp]
+	lea	eax, DWORD PTR $T216333[ebp]
 	push	eax
 	mov	ecx, OFFSET ?tokenizeMap@Settings@DRAMsimII@@0V?$map@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@@std@@A ; DRAMsimII::Settings::tokenizeMap
 	call	?end@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::end
@@ -9114,54 +9118,54 @@ $LN4@tokenize:
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	edx, DWORD PTR tv169[ebp]
 	push	edx
-	lea	ecx, DWORD PTR _result$130320[ebp]
+	lea	ecx, DWORD PTR _result$130349[ebp]
 	call	??9const_iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QBE_NABV012@@Z ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::const_iterator::operator!=
-	mov	BYTE PTR $T213674[ebp], al
+	mov	BYTE PTR $T216332[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	lea	ecx, DWORD PTR $T213675[ebp]
+	lea	ecx, DWORD PTR $T216333[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
-	movzx	eax, BYTE PTR $T213674[ebp]
+	movzx	eax, BYTE PTR $T216332[ebp]
 	test	eax, eax
 	je	SHORT $LN2@tokenize
 
-; 469  : 				{
-; 470  : 					token = result->second;
+; 489  : 				{
+; 490  : 					token = result->second;
 
-	lea	ecx, DWORD PTR _result$130320[ebp]
+	lea	ecx, DWORD PTR _result$130349[ebp]
 	call	??Citerator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QBEPAU?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@2@XZ ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::iterator::operator->
 	mov	ecx, DWORD PTR _token$[ebp]
 	mov	edx, DWORD PTR [eax+32]
 	mov	DWORD PTR [ecx], edx
 
-; 471  : 					return true;
+; 491  : 					return true;
 
-	mov	BYTE PTR $T213676[ebp], 1
+	mov	BYTE PTR $T216334[ebp], 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _result$130320[ebp]
+	lea	ecx, DWORD PTR _result$130349[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR _lowerNodeName$130192[ebp]
+	lea	ecx, DWORD PTR _lowerNodeName$130221[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	al, BYTE PTR $T213676[ebp]
+	mov	al, BYTE PTR $T216334[ebp]
 	jmp	SHORT $LN7@tokenize
 
-; 472  : 				}
-; 473  : 				else
+; 492  : 				}
+; 493  : 				else
 
 	jmp	SHORT $LN1@tokenize
 $LN2@tokenize:
 
-; 474  : 					std::cerr << lowerNodeName << " failed" << std::endl;
+; 494  : 					std::cerr << lowerNodeName << " failed" << std::endl;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
 	push	eax
 	push	OFFSET ??_C@_07OCDKBNAP@?5failed?$AA@
 	mov	edi, esp
-	lea	ecx, DWORD PTR _lowerNodeName$130192[ebp]
+	lea	ecx, DWORD PTR _lowerNodeName$130221[ebp]
 	push	ecx
 	mov	edx, DWORD PTR __imp_?cerr@std@@3V?$basic_ostream@DU?$char_traits@D@std@@@1@A
 	push	edx
@@ -9178,23 +9182,23 @@ $LN2@tokenize:
 	call	__RTC_CheckEsp
 $LN1@tokenize:
 
-; 475  : 					return false;
+; 495  : 					return false;
 
-	mov	BYTE PTR $T213677[ebp], 0
+	mov	BYTE PTR $T216335[ebp], 0
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _result$130320[ebp]
+	lea	ecx, DWORD PTR _result$130349[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR _lowerNodeName$130192[ebp]
+	lea	ecx, DWORD PTR _lowerNodeName$130221[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	al, BYTE PTR $T213677[ebp]
+	mov	al, BYTE PTR $T216335[ebp]
 $LN7@tokenize:
 
-; 476  : 			}
-; 477  : 		}
+; 496  : 			}
+; 497  : 		}
 
 	push	edx
 	mov	ecx, ebp
@@ -9257,21 +9261,21 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?tokenize@Settings@DRAMsimII@@SA_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAW4FileIOToken@2@@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR _lowerNodeName$130192[ebp]
+	lea	ecx, DWORD PTR _lowerNodeName$130221[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?tokenize@Settings@DRAMsimII@@SA_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAW4FileIOToken@2@@Z$1:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T213673[ebp]
+	lea	ecx, DWORD PTR $T216331[ebp]
 	call	DWORD PTR __imp_??1locale@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?tokenize@Settings@DRAMsimII@@SA_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAW4FileIOToken@2@@Z$2:
-	lea	ecx, DWORD PTR _result$130320[ebp]
+	lea	ecx, DWORD PTR _result$130349[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?tokenize@Settings@DRAMsimII@@SA_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAW4FileIOToken@2@@Z$3:
-	lea	ecx, DWORD PTR $T213675[ebp]
+	lea	ecx, DWORD PTR $T216333[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 __ehhandler$?tokenize@Settings@DRAMsimII@@SA_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAW4FileIOToken@2@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -10266,17 +10270,17 @@ tv646 = -364						; size = 8
 tv545 = -364						; size = 8
 tv378 = -360						; size = 4
 tv251 = -360						; size = 4
-$T213744 = -352						; size = 8
-$T213745 = -336						; size = 8
-$T213752 = -320						; size = 4
-$T213753 = -308						; size = 4
-_nextTime$152088 = -104					; size = 4
-_nextColumn$152085 = -92				; size = 4
-_burstLength$152084 = -80				; size = 4
-_nextType$152083 = -68					; size = 4
-_nextRow$152081 = -56					; size = 4
-_nextBank$152075 = -44					; size = 4
-_nextRank$152073 = -32					; size = 4
+$T216402 = -352						; size = 8
+$T216403 = -336						; size = 8
+$T216410 = -320						; size = 4
+$T216411 = -308						; size = 4
+_nextTime$154388 = -104					; size = 4
+_nextColumn$154385 = -92				; size = 4
+_burstLength$154384 = -80				; size = 4
+_nextType$154383 = -68					; size = 4
+_nextRow$154381 = -56					; size = 4
+_nextBank$154375 = -44					; size = 4
+_nextRank$154373 = -32					; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _transactionID$ = 8					; size = 4
@@ -10395,7 +10399,7 @@ $LN15@getNextRan:
 	call	??A?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBEABVChannel@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator[]
 	mov	ecx, eax
 	call	?getLastRankID@Channel@DRAMsimII@@QBEIXZ ; DRAMsimII::Channel::getLastRankID
-	mov	DWORD PTR _nextRank$152073[ebp], eax
+	mov	DWORD PTR _nextRank$154373[ebp], eax
 
 ; 629  : 
 ; 630  : 		if (rankLocality < rngGenerator())
@@ -10427,7 +10431,7 @@ $LN15@getNextRan:
 	mov	eax, esi
 	xor	edx, edx
 	div	ecx
-	mov	eax, DWORD PTR _nextRank$152073[ebp]
+	mov	eax, DWORD PTR _nextRank$154373[ebp]
 	lea	esi, DWORD PTR [eax+edx+1]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+4]
@@ -10436,7 +10440,7 @@ $LN15@getNextRan:
 	mov	eax, esi
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _nextRank$152073[ebp], edx
+	mov	DWORD PTR _nextRank$154373[ebp], edx
 $LN14@getNextRan:
 
 ; 634  : 		}
@@ -10444,7 +10448,7 @@ $LN14@getNextRan:
 ; 636  : 
 ; 637  : 		unsigned nextBank = channel[nextChannel].getRank(nextRank).getLastBankID();
 
-	mov	eax, DWORD PTR _nextRank$152073[ebp]
+	mov	eax, DWORD PTR _nextRank$154373[ebp]
 	push	eax
 	mov	ecx, DWORD PTR ?nextChannel@?4??getNextRandomRequest@InputStream@DRAMsimII@@QAEPAVTransaction@3@I@Z@4IA
 	push	ecx
@@ -10455,7 +10459,7 @@ $LN14@getNextRan:
 	call	?getRank@Channel@DRAMsimII@@QBEABVRank@2@I@Z ; DRAMsimII::Channel::getRank
 	mov	ecx, eax
 	call	?getLastBankID@Rank@DRAMsimII@@QBEIXZ	; DRAMsimII::Rank::getLastBankID
-	mov	DWORD PTR _nextBank$152075[ebp], eax
+	mov	DWORD PTR _nextBank$154375[ebp], eax
 
 ; 638  : 
 ; 639  : 		if (bankLocality < rngGenerator())
@@ -10487,7 +10491,7 @@ $LN14@getNextRan:
 	mov	eax, esi
 	xor	edx, edx
 	div	ecx
-	mov	eax, DWORD PTR _nextBank$152075[ebp]
+	mov	eax, DWORD PTR _nextBank$154375[ebp]
 	lea	esi, DWORD PTR [eax+edx+1]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+4]
@@ -10496,7 +10500,7 @@ $LN14@getNextRan:
 	mov	eax, esi
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _nextBank$152075[ebp], edx
+	mov	DWORD PTR _nextBank$154375[ebp], edx
 $LN13@getNextRan:
 
 ; 643  : 		}
@@ -10506,7 +10510,7 @@ $LN13@getNextRan:
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+4]
 	call	?getBankCount@SystemConfiguration@DRAMsimII@@QBEIXZ ; DRAMsimII::SystemConfiguration::getBankCount
-	cmp	DWORD PTR _nextBank$152075[ebp], eax
+	cmp	DWORD PTR _nextBank$154375[ebp], eax
 	jb	SHORT $LN20@getNextRan
 	mov	ecx, DWORD PTR ?__LINE__Var@?1??getNextRandomRequest@InputStream@DRAMsimII@@QAEPAVTransaction@3@I@Z@4JA
 	add	ecx, 36					; 00000024H
@@ -10523,9 +10527,9 @@ $LN20@getNextRan:
 ; 646  : 
 ; 647  : 		unsigned nextRow = channel[nextChannel].getRank(nextRank).bank[nextBank].getOpenRowID();
 
-	mov	eax, DWORD PTR _nextBank$152075[ebp]
+	mov	eax, DWORD PTR _nextBank$154375[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _nextRank$152073[ebp]
+	mov	ecx, DWORD PTR _nextRank$154373[ebp]
 	push	ecx
 	mov	edx, DWORD PTR ?nextChannel@?4??getNextRandomRequest@InputStream@DRAMsimII@@QAEPAVTransaction@3@I@Z@4IA
 	push	edx
@@ -10534,12 +10538,12 @@ $LN20@getNextRan:
 	call	??A?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBEABVChannel@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator[]
 	mov	ecx, eax
 	call	?getRank@Channel@DRAMsimII@@QBEABVRank@2@I@Z ; DRAMsimII::Channel::getRank
-	add	eax, 340				; 00000154H
+	add	eax, 388				; 00000184H
 	mov	ecx, eax
 	call	??A?$vector@VBank@DRAMsimII@@V?$allocator@VBank@DRAMsimII@@@std@@@std@@QBEABVBank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Bank,std::allocator<DRAMsimII::Bank> >::operator[]
 	mov	ecx, eax
 	call	?getOpenRowID@Bank@DRAMsimII@@QBEIXZ	; DRAMsimII::Bank::getOpenRowID
-	mov	DWORD PTR _nextRow$152081[ebp], eax
+	mov	DWORD PTR _nextRow$154381[ebp], eax
 
 ; 648  : 
 ; 649  : 		if (rowLocality < rngGenerator())
@@ -10571,7 +10575,7 @@ $LN20@getNextRan:
 	mov	eax, esi
 	xor	edx, edx
 	div	ecx
-	mov	eax, DWORD PTR _nextRow$152081[ebp]
+	mov	eax, DWORD PTR _nextRow$154381[ebp]
 	lea	esi, DWORD PTR [eax+edx+1]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+4]
@@ -10580,7 +10584,7 @@ $LN20@getNextRan:
 	mov	eax, esi
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _nextRow$152081[ebp], edx
+	mov	DWORD PTR _nextRow$154381[ebp], edx
 $LN12@getNextRan:
 
 ; 653  : 		}
@@ -10604,7 +10608,7 @@ $LN21@getNextRan:
 	mov	DWORD PTR tv226[ebp], 1
 $LN22@getNextRan:
 	mov	ecx, DWORD PTR tv226[ebp]
-	mov	DWORD PTR _nextType$152083[ebp], ecx
+	mov	DWORD PTR _nextType$154383[ebp], ecx
 
 ; 657  : 
 ; 658  : 		unsigned burstLength = (shortBurstRatio > rngGenerator()) ? 4 : 8;
@@ -10625,7 +10629,7 @@ $LN23@getNextRan:
 	mov	DWORD PTR tv233[ebp], 8
 $LN24@getNextRan:
 	mov	ecx, DWORD PTR tv233[ebp]
-	mov	DWORD PTR _burstLength$152084[ebp], ecx
+	mov	DWORD PTR _burstLength$154384[ebp], ecx
 
 ; 659  : 
 ; 660  : 		unsigned nextColumn = rngIntGenerator() & (systemConfig.getColumnCount() - 1);
@@ -10639,7 +10643,7 @@ $LN24@getNextRan:
 	call	?getColumnCount@SystemConfiguration@DRAMsimII@@QBEIXZ ; DRAMsimII::SystemConfiguration::getColumnCount
 	sub	eax, 1
 	and	esi, eax
-	mov	DWORD PTR _nextColumn$152085[ebp], esi
+	mov	DWORD PTR _nextColumn$154385[ebp], esi
 
 ; 661  : 
 ; 662  : 		assert(arrivalThreshold <= 1.0F);
@@ -10665,7 +10669,7 @@ $LN25@getNextRan:
 ; 663  : 
 ; 664  : 		unsigned nextTime = 0;
 
-	mov	DWORD PTR _nextTime$152088[ebp], 0
+	mov	DWORD PTR _nextTime$154388[ebp], 0
 
 ; 665  : 
 ; 666  : 		switch (interarrivalDistributionModel)
@@ -10701,18 +10705,18 @@ $LN9@getNextRan:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 5296				; 000014b0H
 	call	??R?$variate_generator@V?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@V?$normal_distribution@N@3@@boost@@QAENXZ ; boost::variate_generator<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566>,boost::normal_distribution<double> >::operator()
-	fstp	QWORD PTR $T213744[ebp]
+	fstp	QWORD PTR $T216402[ebp]
 	fldz
-	fstp	QWORD PTR $T213745[ebp]
-	lea	eax, DWORD PTR $T213744[ebp]
+	fstp	QWORD PTR $T216403[ebp]
+	lea	eax, DWORD PTR $T216402[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213745[ebp]
+	lea	ecx, DWORD PTR $T216403[ebp]
 	push	ecx
 	call	??$max@N@std@@YAABNABN0@Z		; std::max<double>
 	add	esp, 8
 	fld	QWORD PTR [eax]
 	call	__ftol2_sse
-	mov	DWORD PTR _nextTime$152088[ebp], eax
+	mov	DWORD PTR _nextTime$154388[ebp], eax
 
 ; 685  : 			break;
 
@@ -10792,9 +10796,9 @@ $LN5@getNextRan:
 ; 696  : 				{
 ; 697  : 					nextTime++;
 
-	mov	eax, DWORD PTR _nextTime$152088[ebp]
+	mov	eax, DWORD PTR _nextTime$154388[ebp]
 	add	eax, 1
-	mov	DWORD PTR _nextTime$152088[ebp], eax
+	mov	DWORD PTR _nextTime$154388[ebp], eax
 $LN4@getNextRan:
 
 ; 698  : 				}
@@ -10821,7 +10825,7 @@ $LN3@getNextRan:
 	call	?abs@@YANN@Z				; abs
 	add	esp, 8
 	call	__ftol2_sse
-	mov	DWORD PTR _nextTime$152088[ebp], eax
+	mov	DWORD PTR _nextTime$154388[ebp], eax
 $LN10@getNextRan:
 
 ; 705  : 			break;
@@ -10847,7 +10851,7 @@ $LN2@getNextRan:
 ; 712  : 
 ; 713  : 		time += nextTime;
 
-	mov	eax, DWORD PTR _nextTime$152088[ebp]
+	mov	eax, DWORD PTR _nextTime$154388[ebp]
 	xor	ecx, ecx
 	mov	edx, DWORD PTR _this$[ebp]
 	add	eax, DWORD PTR [edx+24]
@@ -10860,13 +10864,13 @@ $LN2@getNextRan:
 ; 714  : 
 ; 715  : 		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
 
-	mov	eax, DWORD PTR _nextColumn$152085[ebp]
+	mov	eax, DWORD PTR _nextColumn$154385[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _nextRow$152081[ebp]
+	mov	ecx, DWORD PTR _nextRow$154381[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _nextBank$152075[ebp]
+	mov	edx, DWORD PTR _nextBank$154375[ebp]
 	push	edx
-	mov	eax, DWORD PTR _nextRank$152073[ebp]
+	mov	eax, DWORD PTR _nextRank$154373[ebp]
 	push	eax
 	mov	ecx, DWORD PTR ?nextChannel@?4??getNextRandomRequest@InputStream@DRAMsimII@@QAEPAVTransaction@3@I@Z@4IA
 	push	ecx
@@ -10990,9 +10994,9 @@ $LN31@getNextRan:
 	push	112					; 00000070H
 	call	??2Transaction@DRAMsimII@@SAPAXI@Z	; DRAMsimII::Transaction::operator new
 	add	esp, 4
-	mov	DWORD PTR $T213753[ebp], eax
+	mov	DWORD PTR $T216411[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	cmp	DWORD PTR $T213753[ebp], 0
+	cmp	DWORD PTR $T216411[ebp], 0
 	je	SHORT $LN32@getNextRan
 	mov	eax, DWORD PTR _transactionID$[ebp]
 	push	eax
@@ -11000,16 +11004,16 @@ $LN31@getNextRan:
 	push	0
 	push	0
 	push	OFFSET ?nextAddress@?BM@??getNextRandomRequest@InputStream@DRAMsimII@@QAEPAVTransaction@3@I@Z@4VAddress@3@A
-	mov	ecx, DWORD PTR _burstLength$152084[ebp]
+	mov	ecx, DWORD PTR _burstLength$154384[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [edx+28]
 	push	eax
 	mov	ecx, DWORD PTR [edx+24]
 	push	ecx
-	mov	edx, DWORD PTR _nextType$152083[ebp]
+	mov	edx, DWORD PTR _nextType$154383[ebp]
 	push	edx
-	mov	ecx, DWORD PTR $T213753[ebp]
+	mov	ecx, DWORD PTR $T216411[ebp]
 	call	??0Transaction@DRAMsimII@@QAE@W4TransactionType@01@_JIABVAddress@1@_KHI@Z ; DRAMsimII::Transaction::Transaction
 	mov	DWORD PTR tv378[ebp], eax
 	jmp	SHORT $LN33@getNextRan
@@ -11017,9 +11021,9 @@ $LN32@getNextRan:
 	mov	DWORD PTR tv378[ebp], 0
 $LN33@getNextRan:
 	mov	eax, DWORD PTR tv378[ebp]
-	mov	DWORD PTR $T213752[ebp], eax
+	mov	DWORD PTR $T216410[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	mov	eax, DWORD PTR $T213752[ebp]
+	mov	eax, DWORD PTR $T216410[ebp]
 	jmp	SHORT $LN1@getNextRan
 
 ; 724  : 	}
@@ -11063,7 +11067,7 @@ __unwindfunclet$?getNextRandomRequest@InputStream@DRAMsimII@@QAEPAVTransaction@2
 	mov	DWORD PTR ?$S1@?BM@??getNextRandomRequest@InputStream@DRAMsimII@@QAEPAVTransaction@3@I@Z@4IA, eax
 	ret	0
 __unwindfunclet$?getNextRandomRequest@InputStream@DRAMsimII@@QAEPAVTransaction@2@I@Z$1:
-	mov	eax, DWORD PTR $T213753[ebp]
+	mov	eax, DWORD PTR $T216411[ebp]
 	push	eax
 	call	??3Transaction@DRAMsimII@@SAXPAX@Z	; DRAMsimII::Transaction::operator delete
 	pop	ecx
@@ -11444,7 +11448,7 @@ _this$ = -8						; size = 4
 ?getOpenRowID@Bank@DRAMsimII@@QBEIXZ PROC		; DRAMsimII::Bank::getOpenRowID, COMDAT
 ; _this$ = ecx
 
-; 91   : 		unsigned getOpenRowID() const { return openRowID; }
+; 94   : 		unsigned getOpenRowID() const { return openRowID; }
 
 	push	ebp
 	mov	ebp, esp
@@ -11477,7 +11481,7 @@ _this$ = -8						; size = 4
 ?getLastBankID@Rank@DRAMsimII@@QBEIXZ PROC		; DRAMsimII::Rank::getLastBankID, COMDAT
 ; _this$ = ecx
 
-; 110  : 		unsigned getLastBankID() const { return lastBankID; }
+; 111  : 		unsigned getLastBankID() const { return lastBankID; }
 
 	push	ebp
 	mov	ebp, esp
@@ -11530,7 +11534,7 @@ _rankNum$ = 8						; size = 4
 	mov	eax, DWORD PTR _rankNum$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 360				; 00000168H
+	add	ecx, 392				; 00000188H
 	call	??A?$vector@VRank@DRAMsimII@@V?$allocator@VRank@DRAMsimII@@@std@@@std@@QBEABVRank@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Rank,std::allocator<DRAMsimII::Rank> >::operator[]
 	pop	edi
 	pop	esi
@@ -11688,10 +11692,10 @@ tv344 = -284						; size = 4
 tv224 = -284						; size = 4
 tv342 = -280						; size = 4
 tv83 = -280						; size = 4
-$T213802 = -272						; size = 12
-$T213803 = -249						; size = 1
-$T213804 = -240						; size = 12
-_i$152264 = -28						; size = 12
+$T216460 = -272						; size = 12
+$T216461 = -249						; size = 1
+$T216462 = -240						; size = 12
+_i$154564 = -28						; size = 12
 __$EHRec$ = -12						; size = 12
 _os$ = 8						; size = 4
 _is$ = 12						; size = 4
@@ -11763,7 +11767,7 @@ _is$ = 12						; size = 4
 
 ; 736  : 	for (vector<Channel>::const_iterator i = is.channel.begin(); i != is.channel.end(); i++)
 
-	lea	eax, DWORD PTR _i$152264[ebp]
+	lea	eax, DWORD PTR _i$154564[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _is$[ebp]
 	mov	ecx, DWORD PTR [ecx+8]
@@ -11772,14 +11776,14 @@ _is$ = 12						; size = 4
 	jmp	SHORT $LN3@operator@2
 $LN2@operator@2:
 	push	0
-	lea	eax, DWORD PTR $T213802[ebp]
+	lea	eax, DWORD PTR $T216460[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _i$152264[ebp]
+	lea	ecx, DWORD PTR _i$154564[ebp]
 	call	??E?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z ; std::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator++
-	lea	ecx, DWORD PTR $T213802[ebp]
+	lea	ecx, DWORD PTR $T216460[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN3@operator@2:
-	lea	eax, DWORD PTR $T213804[ebp]
+	lea	eax, DWORD PTR $T216462[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _is$[ebp]
 	mov	ecx, DWORD PTR [ecx+8]
@@ -11790,13 +11794,13 @@ $LN3@operator@2:
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	eax, DWORD PTR tv224[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _i$152264[ebp]
+	lea	ecx, DWORD PTR _i$154564[ebp]
 	call	??9?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator!=
-	mov	BYTE PTR $T213803[ebp], al
+	mov	BYTE PTR $T216461[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T213804[ebp]
+	lea	ecx, DWORD PTR $T216462[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
-	movzx	ecx, BYTE PTR $T213803[ebp]
+	movzx	ecx, BYTE PTR $T216461[ebp]
 	test	ecx, ecx
 	je	SHORT $LN1@operator@2
 
@@ -11806,7 +11810,7 @@ $LN3@operator@2:
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
 	push	eax
-	lea	ecx, DWORD PTR _i$152264[ebp]
+	lea	ecx, DWORD PTR _i$154564[ebp]
 	call	??D?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBEABVChannel@DRAMsimII@@XZ ; std::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator*
 	push	eax
 	mov	ecx, DWORD PTR _os$[ebp]
@@ -11823,7 +11827,7 @@ $LN1@operator@2:
 ; 739  : 	}
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _i$152264[ebp]
+	lea	ecx, DWORD PTR _i$154564[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 
 ; 740  : 	os << is.channelLocality << " " << is.rankLocality << " " << is.bankLocality << " " <<
@@ -12050,10 +12054,10 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVInputStream@0@@Z$0:
-	lea	ecx, DWORD PTR _i$152264[ebp]
+	lea	ecx, DWORD PTR _i$154564[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVInputStream@0@@Z$2:
-	lea	ecx, DWORD PTR $T213804[ebp]
+	lea	ecx, DWORD PTR $T216462[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVInputStream@0@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -12400,7 +12404,7 @@ __ehfuncinfo$??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator
 xdata$x	ENDS
 ;	COMDAT ??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
 _TEXT	SEGMENT
-$T213833 = -221						; size = 1
+$T216491 = -221						; size = 1
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _s$ = 8							; size = 4
@@ -12432,7 +12436,7 @@ _s$ = 8							; size = 4
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 	push	1
-	lea	ecx, DWORD PTR $T213833[ebp]
+	lea	ecx, DWORD PTR $T216491[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -13011,7 +13015,7 @@ __ehfuncinfo$??0?$filtering_stream@Uinput@iostreams@boost@@DU?$char_traits@D@std
 xdata$x	ENDS
 ;	COMDAT ??0?$filtering_stream@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Upublic_@23@@iostreams@boost@@QAE@XZ
 _TEXT	SEGMENT
-$T213848 = -224						; size = 4
+$T216506 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _$initVBases$ = 8					; size = 4
@@ -13042,7 +13046,7 @@ _$initVBases$ = 8					; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T213848[ebp], 0
+	mov	DWORD PTR $T216506[ebp], 0
 	cmp	DWORD PTR _$initVBases$[ebp], 0
 	je	SHORT $LN1@filtering_
 	mov	eax, DWORD PTR _this$[ebp]
@@ -13054,9 +13058,9 @@ _$initVBases$ = 8					; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	mov	eax, DWORD PTR $T213848[ebp]
+	mov	eax, DWORD PTR $T216506[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T213848[ebp], eax
+	mov	DWORD PTR $T216506[ebp], eax
 $LN1@filtering_:
 	push	0
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -13086,10 +13090,10 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??0?$filtering_stream@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Upublic_@23@@iostreams@boost@@QAE@XZ$0:
-	mov	eax, DWORD PTR $T213848[ebp]
+	mov	eax, DWORD PTR $T216506[ebp]
 	and	eax, 1
 	je	$LN5@filtering_
-	and	DWORD PTR $T213848[ebp], -2		; fffffffeH
+	and	DWORD PTR $T216506[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 24					; 00000018H
 	mov	esi, esp
@@ -13677,7 +13681,7 @@ PUBLIC	??0?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0J
 ; File c:\program files\boost\boost_1_40\boost\random\variate_generator.hpp
 ;	COMDAT ??0?$variate_generator@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@V?$uniform_real@N@3@@boost@@QAE@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@1@V?$uniform_real@N@1@@Z
 _TEXT	SEGMENT
-$T213888 = -212						; size = 4
+$T216546 = -212						; size = 4
 _this$ = -8						; size = 4
 _e$ = 8							; size = 4
 _d$ = 12						; size = 16
@@ -13701,7 +13705,7 @@ _d$ = 12						; size = 16
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _e$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213888[ebp]
+	lea	ecx, DWORD PTR $T216546[ebp]
 	call	??0?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@QAE@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@23@@Z ; boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &>::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &>
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -13771,7 +13775,7 @@ PUBLIC	??0?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??0?$variate_generator@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@V?$uniform_int@H@3@@boost@@QAE@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@1@V?$uniform_int@H@1@@Z
 _TEXT	SEGMENT
-$T213893 = -212						; size = 4
+$T216551 = -212						; size = 4
 _this$ = -8						; size = 4
 _e$ = 8							; size = 4
 _d$ = 12						; size = 12
@@ -13795,7 +13799,7 @@ _d$ = 12						; size = 12
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _e$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T213893[ebp]
+	lea	ecx, DWORD PTR $T216551[ebp]
 	call	??0?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@QAE@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@23@@Z ; boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &>::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &>
 	mov	ecx, DWORD PTR [eax]
 	push	ecx
@@ -13865,7 +13869,7 @@ PUBLIC	??0?$pass_through_engine@V?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJA
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??0?$variate_generator@V?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@V?$normal_distribution@N@3@@boost@@QAE@V?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@1@V?$normal_distribution@N@1@@Z
 _TEXT	SEGMENT
-$T213898 = -5204					; size = 4996
+$T216556 = -5204					; size = 4996
 _this$ = -8						; size = 4
 _e$ = 8							; size = 4996
 _d$ = 5004						; size = 48
@@ -13894,7 +13898,7 @@ _d$ = 5004						; size = 48
 	mov	ecx, 1249				; 000004e1H
 	mov	edi, esp
 	rep movsd
-	lea	ecx, DWORD PTR $T213898[ebp]
+	lea	ecx, DWORD PTR $T216556[ebp]
 	call	??0?$pass_through_engine@V?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@QAE@V?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@23@@Z ; boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> >::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> >
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -13960,7 +13964,7 @@ PUBLIC	??0iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xtree
 ;	COMDAT ?end@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T213904 = -212						; size = 4
+$T216562 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::end, COMDAT
@@ -13981,7 +13985,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T213904[ebp], 0
+	mov	DWORD PTR $T216562[ebp], 0
 
 ; 566  : 		return (_TREE_ITERATOR(_Myhead));
 
@@ -13992,9 +13996,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::iterator::iterator
-	mov	eax, DWORD PTR $T213904[ebp]
+	mov	eax, DWORD PTR $T216562[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T213904[ebp], eax
+	mov	DWORD PTR $T216562[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 567  : 		}
@@ -14057,10 +14061,10 @@ tv171 = -316						; size = 4
 tv147 = -312						; size = 4
 tv155 = -308						; size = 4
 tv65 = -304						; size = 4
-$T213908 = -296						; size = 4
-$T213909 = -284						; size = 12
-$T213911 = -264						; size = 12
-$T213914 = -244						; size = 4
+$T216566 = -296						; size = 4
+$T216567 = -284						; size = 12
+$T216569 = -264						; size = 12
+$T216572 = -244						; size = 4
 __Where$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -14093,7 +14097,7 @@ __Keyval$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T213914[ebp], 0
+	mov	DWORD PTR $T216572[ebp], 0
 
 ; 978  : 		iterator _Where = lower_bound(_Keyval);
 
@@ -14110,7 +14114,7 @@ __Keyval$ = 12						; size = 4
 ; 981  : 				_Keyval, _Key(_Where._Mynode()))
 ; 982  : 					? end() : _Where);
 
-	lea	eax, DWORD PTR $T213909[ebp]
+	lea	eax, DWORD PTR $T216567[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::end
@@ -14118,9 +14122,9 @@ __Keyval$ = 12						; size = 4
 	mov	ecx, DWORD PTR tv65[ebp]
 	mov	DWORD PTR tv155[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	mov	edx, DWORD PTR $T213914[ebp]
+	mov	edx, DWORD PTR $T216572[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T213914[ebp], edx
+	mov	DWORD PTR $T216572[ebp], edx
 	mov	eax, DWORD PTR tv155[ebp]
 	push	eax
 	lea	ecx, DWORD PTR __Where$[ebp]
@@ -14150,7 +14154,7 @@ __Keyval$ = 12						; size = 4
 	mov	DWORD PTR tv147[ebp], eax
 	jmp	SHORT $LN4@find
 $LN3@find:
-	lea	ecx, DWORD PTR $T213911[ebp]
+	lea	ecx, DWORD PTR $T216569[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::end
@@ -14158,35 +14162,35 @@ $LN3@find:
 	mov	edx, DWORD PTR tv171[ebp]
 	mov	DWORD PTR tv160[ebp], edx
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
-	mov	eax, DWORD PTR $T213914[ebp]
+	mov	eax, DWORD PTR $T216572[ebp]
 	or	eax, 2
-	mov	DWORD PTR $T213914[ebp], eax
+	mov	DWORD PTR $T216572[ebp], eax
 	mov	ecx, DWORD PTR tv160[ebp]
 	mov	DWORD PTR tv147[ebp], ecx
 $LN4@find:
 	mov	edx, DWORD PTR tv147[ebp]
-	mov	DWORD PTR $T213908[ebp], edx
-	mov	eax, DWORD PTR $T213908[ebp]
+	mov	DWORD PTR $T216566[ebp], edx
+	mov	eax, DWORD PTR $T216566[ebp]
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T213914[ebp]
+	mov	ecx, DWORD PTR $T216572[ebp]
 	or	ecx, 4
-	mov	DWORD PTR $T213914[ebp], ecx
+	mov	DWORD PTR $T216572[ebp], ecx
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
-	mov	edx, DWORD PTR $T213914[ebp]
+	mov	edx, DWORD PTR $T216572[ebp]
 	and	edx, 2
 	je	SHORT $LN12@find
-	and	DWORD PTR $T213914[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T213911[ebp]
+	and	DWORD PTR $T216572[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T216569[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN12@find:
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	mov	eax, DWORD PTR $T213914[ebp]
+	mov	eax, DWORD PTR $T216572[ebp]
 	and	eax, 1
 	je	SHORT $LN13@find
-	and	DWORD PTR $T213914[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T213909[ebp]
+	and	DWORD PTR $T216572[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T216567[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN13@find:
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
@@ -14238,28 +14242,28 @@ __unwindfunclet$?find@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?find@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z$1:
-	mov	eax, DWORD PTR $T213914[ebp]
+	mov	eax, DWORD PTR $T216572[ebp]
 	and	eax, 1
 	je	$LN7@find
-	and	DWORD PTR $T213914[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T213909[ebp]
+	and	DWORD PTR $T216572[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T216567[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN7@find:
 	ret	0
 __unwindfunclet$?find@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z$2:
-	mov	eax, DWORD PTR $T213914[ebp]
+	mov	eax, DWORD PTR $T216572[ebp]
 	and	eax, 2
 	je	$LN9@find
-	and	DWORD PTR $T213914[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T213911[ebp]
+	and	DWORD PTR $T216572[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T216569[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN9@find:
 	ret	0
 __unwindfunclet$?find@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z$3:
-	mov	eax, DWORD PTR $T213914[ebp]
+	mov	eax, DWORD PTR $T216572[ebp]
 	and	eax, 4
 	je	$LN11@find
-	and	DWORD PTR $T213914[ebp], -5		; fffffffbH
+	and	DWORD PTR $T216572[ebp], -5		; fffffffbH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN11@find:
@@ -14558,7 +14562,7 @@ $LN1@operator@4:
 ; 770  : 		return (*(_Myfirst + _Pos));
 
 	mov	eax, DWORD PTR __Pos$[ebp]
-	imul	eax, 152				; 00000098H
+	imul	eax, 160				; 000000a0H
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	eax, DWORD PTR [ecx+8]
 
@@ -14711,7 +14715,7 @@ $LN1@operator@5:
 ; 770  : 		return (*(_Myfirst + _Pos));
 
 	mov	eax, DWORD PTR __Pos$[ebp]
-	imul	eax, 360				; 00000168H
+	imul	eax, 408				; 00000198H
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	eax, DWORD PTR [ecx+8]
 
@@ -14779,7 +14783,7 @@ PUBLIC	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRA
 ; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 ;	COMDAT ?begin@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T213950 = -212						; size = 4
+$T216608 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::begin, COMDAT
@@ -14800,7 +14804,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T213950[ebp], 0
+	mov	DWORD PTR $T216608[ebp], 0
 
 ; 646  : 		return (const_iterator(_Myfirst, this));
 
@@ -14811,9 +14815,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@PAVChannel@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
-	mov	eax, DWORD PTR $T213950[ebp]
+	mov	eax, DWORD PTR $T216608[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T213950[ebp], eax
+	mov	DWORD PTR $T216608[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 647  : 		}
@@ -14832,7 +14836,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T213955 = -212						; size = 4
+$T216613 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@XZ PROC ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::end, COMDAT
@@ -14853,7 +14857,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T213955[ebp], 0
+	mov	DWORD PTR $T216613[ebp], 0
 
 ; 656  : 		return (const_iterator(_Mylast, this));
 
@@ -14864,9 +14868,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@PAVChannel@DRAMsimII@@PBV_Container_base_secure@1@@Z ; std::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
-	mov	eax, DWORD PTR $T213955[ebp]
+	mov	eax, DWORD PTR $T216613[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T213955[ebp], eax
+	mov	DWORD PTR $T216613[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 657  : 		}
@@ -15019,7 +15023,7 @@ $LN1@operator@6:
 ; 770  : 		return (*(_Myfirst + _Pos));
 
 	mov	eax, DWORD PTR __Pos$[ebp]
-	imul	eax, 408				; 00000198H
+	imul	eax, 440				; 000001b8H
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	eax, DWORD PTR [ecx+8]
 
@@ -15201,7 +15205,7 @@ __ehfuncinfo$??E?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChann
 xdata$x	ENDS
 ;	COMDAT ??E?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z
 _TEXT	SEGMENT
-$T213968 = -244						; size = 4
+$T216626 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -15234,7 +15238,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T213968[ebp], 0
+	mov	DWORD PTR $T216626[ebp], 0
 
 ; 131  : 		_Myt _Tmp = *this;
 
@@ -15255,9 +15259,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T213968[ebp]
+	mov	ecx, DWORD PTR $T216626[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T213968[ebp], ecx
+	mov	DWORD PTR $T216626[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -15305,10 +15309,10 @@ __unwindfunclet$??E?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VCh
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??E?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T213968[ebp]
+	mov	eax, DWORD PTR $T216626[ebp]
 	and	eax, 1
 	je	$LN5@operator@8
-	and	DWORD PTR $T213968[ebp], -2		; fffffffeH
+	and	DWORD PTR $T216626[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN5@operator@8:
@@ -16539,7 +16543,7 @@ __ehfuncinfo$??0?$filtering_stream_base@V?$chain@Uinput@iostreams@boost@@DU?$cha
 xdata$x	ENDS
 ;	COMDAT ??0?$filtering_stream_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@Upublic_@23@@detail@iostreams@boost@@IAE@XZ
 _TEXT	SEGMENT
-$T214066 = -224						; size = 4
+$T216724 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _$initVBases$ = 8					; size = 4
@@ -16570,7 +16574,7 @@ _$initVBases$ = 8					; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T214066[ebp], 0
+	mov	DWORD PTR $T216724[ebp], 0
 	cmp	DWORD PTR _$initVBases$[ebp], 0
 	je	SHORT $LN1@filtering_@3
 	mov	eax, DWORD PTR _this$[ebp]
@@ -16582,9 +16586,9 @@ _$initVBases$ = 8					; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	mov	eax, DWORD PTR $T214066[ebp]
+	mov	eax, DWORD PTR $T216724[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T214066[ebp], eax
+	mov	DWORD PTR $T216724[ebp], eax
 $LN1@filtering_@3:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??0?$access_control@V?$chain_client@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@@detail@iostreams@boost@@Upublic_@34@U?$pub_@V?$chain_client@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@@detail@iostreams@boost@@@234@@iostreams@boost@@QAE@XZ ; boost::iostreams::access_control<boost::iostreams::detail::chain_client<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> > >,boost::iostreams::public_,boost::iostreams::detail::pub_<boost::iostreams::detail::chain_client<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> > > > >::access_control<boost::iostreams::detail::chain_client<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> > >,boost::iostreams::public_,boost::iostreams::detail::pub_<boost::iostreams::detail::chain_client<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> > > > >
@@ -16633,10 +16637,10 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??0?$filtering_stream_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@Upublic_@23@@detail@iostreams@boost@@IAE@XZ$0:
-	mov	eax, DWORD PTR $T214066[ebp]
+	mov	eax, DWORD PTR $T216724[ebp]
 	and	eax, 1
 	je	$LN5@filtering_@3
-	and	DWORD PTR $T214066[ebp], -2		; fffffffeH
+	and	DWORD PTR $T216724[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 24					; 00000018H
 	mov	esi, esp
@@ -16846,7 +16850,7 @@ PUBLIC	??R?$subtract@H$00@detail@random@boost@@QAEIHH@Z ; boost::random::detail:
 ; File c:\program files\boost\boost_1_40\boost\random\uniform_int.hpp
 ;	COMDAT ?init@?$uniform_int@H@boost@@AAEXXZ
 _TEXT	SEGMENT
-$T214086 = -209						; size = 1
+$T216744 = -209						; size = 1
 _this$ = -8						; size = 4
 ?init@?$uniform_int@H@boost@@AAEXXZ PROC		; boost::uniform_int<int>::init, COMDAT
 ; _this$ = ecx
@@ -16870,14 +16874,14 @@ _this$ = -8						; size = 4
 ; 253  :     _range = random::detail::subtract<result_type>()(_max, _min);
 
 	xor	eax, eax
-	mov	BYTE PTR $T214086[ebp], al
+	mov	BYTE PTR $T216744[ebp], al
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+4]
 	push	ecx
-	lea	ecx, DWORD PTR $T214086[ebp]
+	lea	ecx, DWORD PTR $T216744[ebp]
 	call	??R?$subtract@H$00@detail@random@boost@@QAEIHH@Z ; boost::random::detail::subtract<int,1>::operator()
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [edx+8], eax
@@ -17146,7 +17150,7 @@ PUBLIC	?_Lbound@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?lower_bound@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z
 _TEXT	SEGMENT
-$T214102 = -212						; size = 4
+$T216760 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 __Keyval$ = 12						; size = 4
@@ -17168,7 +17172,7 @@ __Keyval$ = 12						; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T214102[ebp], 0
+	mov	DWORD PTR $T216760[ebp], 0
 
 ; 1004 : 		return (_TREE_ITERATOR(_Lbound(_Keyval)));
 
@@ -17181,9 +17185,9 @@ __Keyval$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@W4FileIOToken@DRAMsimII@@@std@@@2@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,enum DRAMsimII::FileIOToken,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,enum DRAMsimII::FileIOToken> >,0> >::iterator::iterator
-	mov	edx, DWORD PTR $T214102[ebp]
+	mov	edx, DWORD PTR $T216760[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T214102[ebp], edx
+	mov	DWORD PTR $T216760[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1005 : 		}
@@ -17572,7 +17576,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR [eax+12]
 	sub	eax, DWORD PTR [ecx+8]
 	cdq
-	mov	ecx, 152				; 00000098H
+	mov	ecx, 160				; 000000a0H
 	idiv	ecx
 
 ; 727  : 		}
@@ -17615,7 +17619,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR [eax+12]
 	sub	eax, DWORD PTR [ecx+8]
 	cdq
-	mov	ecx, 360				; 00000168H
+	mov	ecx, 408				; 00000198H
 	idiv	ecx
 
 ; 727  : 		}
@@ -17658,7 +17662,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR [eax+12]
 	sub	eax, DWORD PTR [ecx+8]
 	cdq
-	mov	ecx, 408				; 00000198H
+	mov	ecx, 440				; 000001b8H
 	idiv	ecx
 
 ; 727  : 		}
@@ -18044,7 +18048,7 @@ $LN2@operator@11:
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+8]
-	add	ecx, 408				; 00000198H
+	add	ecx, 440				; 000001b8H
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [edx+8], ecx
 
@@ -18673,8 +18677,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv72 = -256						; size = 4
 tv73 = -252						; size = 4
-$T214168 = -244						; size = 4
-$T214169 = -232						; size = 12
+$T216826 = -244						; size = 4
+$T216827 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?front@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ PROC ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::front, COMDAT
@@ -18707,7 +18711,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 640  : 		return (*begin());
 
-	lea	eax, DWORD PTR $T214169[ebp]
+	lea	eax, DWORD PTR $T216827[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::begin
@@ -18717,11 +18721,11 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	mov	ecx, DWORD PTR tv72[ebp]
 	call	??D?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator*
-	mov	DWORD PTR $T214168[ebp], eax
+	mov	DWORD PTR $T216826[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T214169[ebp]
+	lea	ecx, DWORD PTR $T216827[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T214168[ebp]
+	mov	eax, DWORD PTR $T216826[ebp]
 
 ; 641  : 		}
 
@@ -18741,7 +18745,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?front@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ$0:
-	lea	ecx, DWORD PTR $T214169[ebp]
+	lea	ecx, DWORD PTR $T216827[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$?front@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -20061,8 +20065,8 @@ xdata$x	ENDS
 ;	COMDAT ??0?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@IAE@XZ
 _TEXT	SEGMENT
 tv73 = -244						; size = 4
-$T214239 = -236						; size = 4
-$T214240 = -224						; size = 4
+$T216897 = -236						; size = 4
+$T216898 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ??0?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@IAE@XZ PROC ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>, COMDAT
@@ -20095,11 +20099,11 @@ __$EHRec$ = -12						; size = 12
 	push	44					; 0000002cH
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
-	mov	DWORD PTR $T214240[ebp], eax
+	mov	DWORD PTR $T216898[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	cmp	DWORD PTR $T214240[ebp], 0
+	cmp	DWORD PTR $T216898[ebp], 0
 	je	SHORT $LN3@chain_base
-	mov	ecx, DWORD PTR $T214240[ebp]
+	mov	ecx, DWORD PTR $T216898[ebp]
 	call	??0chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAE@XZ ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_impl::chain_impl
 	mov	DWORD PTR tv73[ebp], eax
 	jmp	SHORT $LN4@chain_base
@@ -20107,9 +20111,9 @@ $LN3@chain_base:
 	mov	DWORD PTR tv73[ebp], 0
 $LN4@chain_base:
 	mov	eax, DWORD PTR tv73[ebp]
-	mov	DWORD PTR $T214239[ebp], eax
+	mov	DWORD PTR $T216897[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	mov	ecx, DWORD PTR $T214239[ebp]
+	mov	ecx, DWORD PTR $T216897[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$?0Uchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@?$shared_ptr@Uchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@boost@@QAE@PAUchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@1@@Z ; boost::shared_ptr<boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_impl>::shared_ptr<boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_impl><boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_impl>
@@ -20130,7 +20134,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??0?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@IAE@XZ$0:
-	mov	eax, DWORD PTR $T214240[ebp]
+	mov	eax, DWORD PTR $T216898[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -20189,7 +20193,7 @@ PUBLIC	?_Nextnode@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@io
 ; File c:\program files\microsoft visual studio 9.0\vc\include\list
 ;	COMDAT ?begin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ
 _TEXT	SEGMENT
-$T214256 = -212						; size = 4
+$T216914 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ PROC ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::begin, COMDAT
@@ -20210,7 +20214,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T214256[ebp], 0
+	mov	DWORD PTR $T216914[ebp], 0
 
 ; 534  : 		return (iterator(_Nextnode(_Myhead), this));
 
@@ -20225,9 +20229,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@PAU_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@2@PBV12@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::_Iterator<1>
-	mov	ecx, DWORD PTR $T214256[ebp]
+	mov	ecx, DWORD PTR $T216914[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T214256[ebp], ecx
+	mov	DWORD PTR $T216914[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 535  : 		}
@@ -21237,7 +21241,7 @@ __ehfuncinfo$??0?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iost
 xdata$x	ENDS
 ;	COMDAT ??0?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 _TEXT	SEGMENT
-$T214304 = -224						; size = 4
+$T216962 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ??0?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ PROC ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >, COMDAT
@@ -21269,7 +21273,7 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR _this$[ebp], ecx
 	push	ecx
 	mov	ecx, esp
-	mov	DWORD PTR $T214304[ebp], esp
+	mov	DWORD PTR $T216962[ebp], esp
 	call	??0?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@QAE@XZ ; std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??0?$_List_val@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@1@@Z ; std::_List_val<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_List_val<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >
@@ -21348,7 +21352,7 @@ _this$ = -8						; size = 4
 _TEXT	ENDS
 ;	COMDAT ?max@?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@QBEKXZ
 _TEXT	SEGMENT
-_j$161875 = -32						; size = 4
+_j$164269 = -32						; size = 4
 _res$ = -20						; size = 4
 _this$ = -8						; size = 4
 ?max@?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@QBEKXZ PROC ; boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566>::max, COMDAT
@@ -21377,20 +21381,20 @@ _this$ = -8						; size = 4
 
 ; 114  :     for(int j = 0; j < w; ++j)
 
-	mov	DWORD PTR _j$161875[ebp], 0
+	mov	DWORD PTR _j$164269[ebp], 0
 	jmp	SHORT $LN3@max
 $LN2@max:
-	mov	eax, DWORD PTR _j$161875[ebp]
+	mov	eax, DWORD PTR _j$164269[ebp]
 	add	eax, 1
-	mov	DWORD PTR _j$161875[ebp], eax
+	mov	DWORD PTR _j$164269[ebp], eax
 $LN3@max:
-	cmp	DWORD PTR _j$161875[ebp], 32		; 00000020H
+	cmp	DWORD PTR _j$164269[ebp], 32		; 00000020H
 	jge	SHORT $LN1@max
 
 ; 115  :       res |= (1u << j);
 
 	mov	eax, 1
-	mov	ecx, DWORD PTR _j$161875[ebp]
+	mov	ecx, DWORD PTR _j$164269[ebp]
 	shl	eax, cl
 	or	eax, DWORD PTR _res$[ebp]
 	mov	DWORD PTR _res$[ebp], eax
@@ -22032,7 +22036,7 @@ PUBLIC	??0?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostr
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??0?$_List_val@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@1@@Z
 _TEXT	SEGMENT
-$T214369 = -212						; size = 4
+$T217027 = -212						; size = 4
 _this$ = -8						; size = 4
 __Al$ = 8						; size = 1
 ??0?$_List_val@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@1@@Z PROC ; std::_List_val<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_List_val<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >, COMDAT
@@ -22055,7 +22059,7 @@ __Al$ = 8						; size = 1
 	mov	DWORD PTR _this$[ebp], ecx
 	push	ecx
 	mov	ecx, esp
-	mov	DWORD PTR $T214369[ebp], esp
+	mov	DWORD PTR $T217027[ebp], esp
 	lea	eax, DWORD PTR __Al$[ebp]
 	push	eax
 	call	??0?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@QAE@ABV01@@Z ; std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>
@@ -22252,7 +22256,7 @@ PUBLIC	??0?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostr
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??0?$_List_ptr@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@IAE@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@1@@Z
 _TEXT	SEGMENT
-$T214384 = -212						; size = 4
+$T217042 = -212						; size = 4
 _this$ = -8						; size = 4
 __Al$ = 8						; size = 1
 ??0?$_List_ptr@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@IAE@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@1@@Z PROC ; std::_List_ptr<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_List_ptr<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >, COMDAT
@@ -22275,7 +22279,7 @@ __Al$ = 8						; size = 1
 	mov	DWORD PTR _this$[ebp], ecx
 	push	ecx
 	mov	ecx, esp
-	mov	DWORD PTR $T214384[ebp], esp
+	mov	DWORD PTR $T217042[ebp], esp
 	lea	eax, DWORD PTR __Al$[ebp]
 	push	eax
 	call	??0?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@QAE@ABV01@@Z ; std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>
@@ -22528,7 +22532,7 @@ PUBLIC	??0?$_Container_base_aux_alloc_empty@V?$allocator@PAV?$linked_streambuf@D
 ; File c:\program files\microsoft visual studio 9.0\vc\include\list
 ;	COMDAT ??0?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@IAE@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@1@@Z
 _TEXT	SEGMENT
-$T214398 = -212						; size = 4
+$T217056 = -212						; size = 4
 _this$ = -8						; size = 4
 __Al$ = 8						; size = 1
 ??0?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@IAE@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@1@@Z PROC ; std::_List_nod<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_List_nod<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >, COMDAT
@@ -22551,7 +22555,7 @@ __Al$ = 8						; size = 1
 	mov	DWORD PTR _this$[ebp], ecx
 	push	ecx
 	mov	ecx, esp
-	mov	DWORD PTR $T214398[ebp], esp
+	mov	DWORD PTR $T217056[ebp], esp
 	lea	eax, DWORD PTR __Al$[ebp]
 	push	eax
 	call	??0?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@QAE@ABV01@@Z ; std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>
@@ -22816,11 +22820,11 @@ tv133 = -476						; size = 4
 tv131 = -476						; size = 4
 tv142 = -472						; size = 4
 tv141 = -472						; size = 4
-$T214410 = -461						; size = 1
-$T214411 = -452						; size = 92
-$T214412 = -352						; size = 32
-$T214413 = -312						; size = 32
-$T214419 = -272						; size = 4
+$T217068 = -461						; size = 1
+$T217069 = -452						; size = 92
+$T217070 = -352						; size = 32
+$T217071 = -312						; size = 32
+$T217077 = -272						; size = 4
 _ec$ = -68						; size = 8
 _ph$ = -52						; size = 32
 __$ArrayPad$ = -16					; size = 4
@@ -22850,12 +22854,12 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T214419[ebp], 0
+	mov	DWORD PTR $T217077[ebp], 0
 
 ; 529  :       typename Path::external_string_type ph;
 
 	push	1
-	lea	ecx, DWORD PTR $T214410[ebp]
+	lea	ecx, DWORD PTR $T217068[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -22887,7 +22891,7 @@ ___$ReturnUdt$ = 8					; size = 4
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0CA@PLMEELJH@boost?3?3filesystem?3?3current_path?$AA@
-	lea	ecx, DWORD PTR $T214412[ebp]
+	lea	ecx, DWORD PTR $T217070[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -22896,9 +22900,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	eax
 	mov	ecx, DWORD PTR _ec$[ebp]
 	push	ecx
-	lea	edx, DWORD PTR $T214412[ebp]
+	lea	edx, DWORD PTR $T217070[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T214411[ebp]
+	lea	ecx, DWORD PTR $T217069[ebp]
 	call	??0?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Verror_code@system@2@@Z ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 	mov	DWORD PTR tv141[ebp], eax
 	mov	eax, DWORD PTR tv141[ebp]
@@ -22908,11 +22912,11 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	ecx
 	call	??$throw_exception@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YAXABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z ; boost::throw_exception<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	lea	ecx, DWORD PTR $T214411[ebp]
+	lea	ecx, DWORD PTR $T217069[ebp]
 	call	??1?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@UAE@XZ ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::~basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214412[ebp]
+	lea	ecx, DWORD PTR $T217070[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -22922,7 +22926,7 @@ $LN1@current_pa:
 
 	lea	eax, DWORD PTR _ph$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214413[ebp]
+	lea	ecx, DWORD PTR $T217071[ebp]
 	push	ecx
 	call	?to_internal@path_traits@filesystem@boost@@SA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV45@@Z ; boost::filesystem::path_traits::to_internal
 	add	esp, 8
@@ -22934,12 +22938,12 @@ $LN1@current_pa:
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
-	mov	ecx, DWORD PTR $T214419[ebp]
+	mov	ecx, DWORD PTR $T217077[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T214419[ebp], ecx
+	mov	DWORD PTR $T217077[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214413[ebp]
+	lea	ecx, DWORD PTR $T217071[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -23006,24 +23010,24 @@ __unwindfunclet$??$current_path@V?$basic_path@V?$basic_string@DU?$char_traits@D@
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??$current_path@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@XZ$1:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214412[ebp]
+	lea	ecx, DWORD PTR $T217070[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??$current_path@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@XZ$2:
-	lea	ecx, DWORD PTR $T214411[ebp]
+	lea	ecx, DWORD PTR $T217069[ebp]
 	jmp	??1?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@UAE@XZ ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::~basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 __unwindfunclet$??$current_path@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@XZ$3:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214413[ebp]
+	lea	ecx, DWORD PTR $T217071[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??$current_path@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@XZ$4:
-	mov	eax, DWORD PTR $T214419[ebp]
+	mov	eax, DWORD PTR $T217077[ebp]
 	and	eax, 1
 	je	$LN9@current_pa
-	and	DWORD PTR $T214419[ebp], -2		; fffffffeH
+	and	DWORD PTR $T217077[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 $LN9@current_pa:
@@ -23113,7 +23117,7 @@ _TEXT	SEGMENT
 _TEXT	ENDS
 ;	COMDAT ?to_internal@path_traits@filesystem@boost@@SA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV45@@Z
 _TEXT	SEGMENT
-$T214438 = -200						; size = 4
+$T217096 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _src$ = 12						; size = 4
 ?to_internal@path_traits@filesystem@boost@@SA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV45@@Z PROC ; boost::filesystem::path_traits::to_internal, COMDAT
@@ -23130,7 +23134,7 @@ _src$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T214438[ebp], 0
+	mov	DWORD PTR $T217096[ebp], 0
 	mov	esi, esp
 	mov	eax, DWORD PTR _src$[ebp]
 	push	eax
@@ -23138,9 +23142,9 @@ _src$ = 12						; size = 4
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	ecx, DWORD PTR $T214438[ebp]
+	mov	ecx, DWORD PTR $T217096[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T214438[ebp], ecx
+	mov	DWORD PTR $T217096[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 	pop	edi
 	pop	esi
@@ -23188,9 +23192,9 @@ tv94 = -420						; size = 4
 tv91 = -420						; size = 4
 tv131 = -416						; size = 4
 tv95 = -416						; size = 4
-$T214442 = -408						; size = 32
-$T214443 = -368						; size = 92
-$T214444 = -268						; size = 32
+$T217100 = -408						; size = 32
+$T217101 = -368						; size = 92
+$T217102 = -268						; size = 32
 _result$ = -36						; size = 4
 _ec$ = -24						; size = 8
 __$EHRec$ = -12						; size = 12
@@ -23228,7 +23232,7 @@ _ph$ = 8						; size = 4
 
 	lea	eax, DWORD PTR _ec$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214442[ebp]
+	lea	ecx, DWORD PTR $T217100[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _ph$[ebp]
 	call	?external_file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::external_file_string
@@ -23244,7 +23248,7 @@ _ph$ = 8						; size = 4
 	add	esp, 12					; 0000000cH
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214442[ebp]
+	lea	ecx, DWORD PTR $T217100[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -23261,7 +23265,7 @@ _ph$ = 8						; size = 4
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0BK@LKDJBKKI@boost?3?3filesystem?3?3exists?$AA@
-	lea	ecx, DWORD PTR $T214444[ebp]
+	lea	ecx, DWORD PTR $T217102[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -23272,9 +23276,9 @@ _ph$ = 8						; size = 4
 	push	ecx
 	mov	edx, DWORD PTR _ph$[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T214444[ebp]
+	lea	eax, DWORD PTR $T217102[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214443[ebp]
+	lea	ecx, DWORD PTR $T217101[ebp]
 	call	??0?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@Verror_code@system@2@@Z ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 	mov	DWORD PTR tv131[ebp], eax
 	mov	ecx, DWORD PTR tv131[ebp]
@@ -23284,11 +23288,11 @@ _ph$ = 8						; size = 4
 	push	edx
 	call	??$throw_exception@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YAXABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z ; boost::throw_exception<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T214443[ebp]
+	lea	ecx, DWORD PTR $T217101[ebp]
 	call	??1?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@UAE@XZ ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::~basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214444[ebp]
+	lea	ecx, DWORD PTR $T217102[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -23350,18 +23354,18 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$??$exists@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214442[ebp]
+	lea	ecx, DWORD PTR $T217100[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??$exists@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@@Z$1:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214444[ebp]
+	lea	ecx, DWORD PTR $T217102[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??$exists@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@@Z$2:
-	lea	ecx, DWORD PTR $T214443[ebp]
+	lea	ecx, DWORD PTR $T217101[ebp]
 	jmp	??1?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@UAE@XZ ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::~basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 __ehhandler$??$exists@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -23523,9 +23527,9 @@ tv94 = -420						; size = 4
 tv91 = -420						; size = 4
 tv131 = -416						; size = 4
 tv95 = -416						; size = 4
-$T214468 = -408						; size = 32
-$T214469 = -368						; size = 92
-$T214470 = -268						; size = 32
+$T217126 = -408						; size = 32
+$T217127 = -368						; size = 92
+$T217128 = -268						; size = 32
 _result$ = -36						; size = 4
 _ec$ = -24						; size = 8
 __$EHRec$ = -12						; size = 12
@@ -23563,7 +23567,7 @@ _ph$ = 8						; size = 4
 
 	lea	eax, DWORD PTR _ec$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214468[ebp]
+	lea	ecx, DWORD PTR $T217126[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _ph$[ebp]
 	call	?external_file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::external_file_string
@@ -23579,7 +23583,7 @@ _ph$ = 8						; size = 4
 	add	esp, 12					; 0000000cH
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214468[ebp]
+	lea	ecx, DWORD PTR $T217126[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -23596,7 +23600,7 @@ _ph$ = 8						; size = 4
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0BO@JCBFFKAC@boost?3?3filesystem?3?3is_regular?$AA@
-	lea	ecx, DWORD PTR $T214470[ebp]
+	lea	ecx, DWORD PTR $T217128[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -23607,9 +23611,9 @@ _ph$ = 8						; size = 4
 	push	ecx
 	mov	edx, DWORD PTR _ph$[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T214470[ebp]
+	lea	eax, DWORD PTR $T217128[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214469[ebp]
+	lea	ecx, DWORD PTR $T217127[ebp]
 	call	??0?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@Verror_code@system@2@@Z ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 	mov	DWORD PTR tv131[ebp], eax
 	mov	ecx, DWORD PTR tv131[ebp]
@@ -23619,11 +23623,11 @@ _ph$ = 8						; size = 4
 	push	edx
 	call	??$throw_exception@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YAXABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z ; boost::throw_exception<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T214469[ebp]
+	lea	ecx, DWORD PTR $T217127[ebp]
 	call	??1?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@UAE@XZ ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::~basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214470[ebp]
+	lea	ecx, DWORD PTR $T217128[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -23685,18 +23689,18 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$??$is_regular@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214468[ebp]
+	lea	ecx, DWORD PTR $T217126[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??$is_regular@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@@Z$1:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214470[ebp]
+	lea	ecx, DWORD PTR $T217128[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??$is_regular@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@@Z$2:
-	lea	ecx, DWORD PTR $T214469[ebp]
+	lea	ecx, DWORD PTR $T217127[ebp]
 	jmp	??1?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@UAE@XZ ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::~basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >
 __ehhandler$??$is_regular@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@YA_NABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -23749,7 +23753,7 @@ PUBLIC	??$_Debug_lt@NN@std@@YA_NABN0PB_WI@Z		; std::_Debug_lt<double,double>
 ;	COMDAT ??$max@N@std@@YAABNABN0@Z
 _TEXT	SEGMENT
 tv71 = -208						; size = 4
-$T214488 = -200						; size = 4
+$T217146 = -200						; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$max@N@std@@YAABNABN0@Z PROC				; std::max<double>, COMDAT
@@ -23788,8 +23792,8 @@ $LN3@max@2:
 	mov	DWORD PTR tv71[ebp], ecx
 $LN4@max@2:
 	mov	edx, DWORD PTR tv71[ebp]
-	mov	DWORD PTR $T214488[ebp], edx
-	mov	eax, DWORD PTR $T214488[ebp]
+	mov	DWORD PTR $T217146[ebp], edx
+	mov	eax, DWORD PTR $T217146[ebp]
 
 ; 3385 : 	}
 
@@ -23874,8 +23878,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv75 = -260						; size = 4
 tv76 = -256						; size = 4
-$T214495 = -248						; size = 4
-$T214496 = -236						; size = 28
+$T217153 = -248						; size = 4
+$T217154 = -236						; size = 28
 __$EHRec$ = -12						; size = 12
 _Input$ = 8						; size = 4
 _Loc$ = 12						; size = 4
@@ -23910,13 +23914,13 @@ _Loc$ = 12						; size = 4
 
 	mov	eax, DWORD PTR _Loc$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214495[ebp]
+	lea	ecx, DWORD PTR $T217153[ebp]
 	call	??0?$to_lowerF@D@detail@algorithm@boost@@QAE@ABVlocale@std@@@Z ; boost::algorithm::detail::to_lowerF<char>::to_lowerF<char>
 	mov	ecx, DWORD PTR [eax]
 	push	ecx
 	mov	edx, DWORD PTR _Input$[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T214496[ebp]
+	lea	eax, DWORD PTR $T217154[ebp]
 	push	eax
 	call	??$as_literal@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; boost::as_literal<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 8
@@ -23929,7 +23933,7 @@ _Loc$ = 12						; size = 4
 	call	??$transform_range@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@U?$to_lowerF@D@detail@algorithm@2@@detail@algorithm@boost@@YAXABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@U?$to_lowerF@D@012@@Z ; boost::algorithm::detail::transform_range<boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >,boost::algorithm::detail::to_lowerF<char> >
 	add	esp, 8
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T214496[ebp]
+	lea	ecx, DWORD PTR $T217154[ebp]
 	call	??1?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QAE@XZ
 
 ; 99   :         }
@@ -23950,7 +23954,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$to_lower@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@algorithm@boost@@YAXAAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABVlocale@3@@Z$0:
-	lea	ecx, DWORD PTR $T214496[ebp]
+	lea	ecx, DWORD PTR $T217154[ebp]
 	jmp	??1?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QAE@XZ
 __ehhandler$??$to_lower@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@algorithm@boost@@YAXAAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABVlocale@3@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -24019,11 +24023,11 @@ tv136 = -324						; size = 4
 tv134 = -324						; size = 4
 tv289 = -321						; size = 1
 tv282 = -321						; size = 1
-$T214508 = -316						; size = 4
-$T214509 = -304						; size = 4
-$T214510 = -292						; size = 4
-$T214511 = -280						; size = 4
-$T214512 = -268						; size = 4
+$T217166 = -316						; size = 4
+$T217167 = -304						; size = 4
+$T217168 = -292						; size = 4
+$T217169 = -280						; size = 4
+$T217170 = -268						; size = 4
 __Ok$ = -64						; size = 8
 __Pad$ = -48						; size = 4
 __Count$ = -36						; size = 4
@@ -24210,18 +24214,18 @@ $LN10@operator@17:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv284[ebp], eax
 	mov	ecx, DWORD PTR tv284[ebp]
-	mov	DWORD PTR $T214508[ebp], ecx
+	mov	DWORD PTR $T217166[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv285[ebp], eax
 	mov	edx, DWORD PTR tv285[ebp]
-	mov	DWORD PTR $T214509[ebp], edx
+	mov	DWORD PTR $T217167[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T214508[ebp]
+	lea	eax, DWORD PTR $T217166[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214509[ebp]
+	lea	ecx, DWORD PTR $T217167[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -24335,18 +24339,18 @@ $LN4@operator@17:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv291[ebp], eax
 	mov	ecx, DWORD PTR tv291[ebp]
-	mov	DWORD PTR $T214510[ebp], ecx
+	mov	DWORD PTR $T217168[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv292[ebp], eax
 	mov	edx, DWORD PTR tv292[ebp]
-	mov	DWORD PTR $T214511[ebp], edx
+	mov	DWORD PTR $T217169[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T214510[ebp]
+	lea	eax, DWORD PTR $T217168[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214511[ebp]
+	lea	ecx, DWORD PTR $T217169[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -24428,11 +24432,11 @@ $LN13@operator@17:
 ; 781  : 	return (_Ostr);
 
 	mov	eax, DWORD PTR __Ostr$[ebp]
-	mov	DWORD PTR $T214512[ebp], eax
+	mov	DWORD PTR $T217170[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	lea	ecx, DWORD PTR __Ok$[ebp]
 	call	??1sentry@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAE@XZ ; std::basic_ostream<char,std::char_traits<char> >::sentry::~sentry
-	mov	eax, DWORD PTR $T214512[ebp]
+	mov	eax, DWORD PTR $T217170[ebp]
 
 ; 782  : 	}
 
@@ -24943,9 +24947,9 @@ tv84 = -312						; size = 4
 tv90 = -308						; size = 4
 tv82 = -304						; size = 4
 tv89 = -300						; size = 4
-$T214556 = -292						; size = 32
-$T214557 = -252						; size = 32
-$T214561 = -212						; size = 4
+$T217214 = -292						; size = 32
+$T217215 = -252						; size = 32
+$T217219 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 _lhs$ = 12						; size = 4
@@ -24973,13 +24977,13 @@ _rhs$ = 16						; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T214561[ebp], 0
+	mov	DWORD PTR $T217219[ebp], 0
 
 ; 548  :           basic_path<String, Traits>( rhs ); }
 
 	mov	eax, DWORD PTR _rhs$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214557[ebp]
+	lea	ecx, DWORD PTR $T217215[ebp]
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	DWORD PTR tv89[ebp], eax
 	mov	ecx, DWORD PTR tv89[ebp]
@@ -24989,7 +24993,7 @@ _rhs$ = 16						; size = 4
 	push	edx
 	mov	eax, DWORD PTR _lhs$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214556[ebp]
+	lea	ecx, DWORD PTR $T217214[ebp]
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@ABV012@@Z
 	mov	DWORD PTR tv90[ebp], eax
 	mov	ecx, DWORD PTR tv90[ebp]
@@ -25000,14 +25004,14 @@ _rhs$ = 16						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@ABV012@@Z
-	mov	edx, DWORD PTR $T214561[ebp]
+	mov	edx, DWORD PTR $T217219[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T214561[ebp], edx
+	mov	DWORD PTR $T217219[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T214556[ebp]
+	lea	ecx, DWORD PTR $T217214[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T214557[ebp]
+	lea	ecx, DWORD PTR $T217215[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 	mov	ecx, DWORD PTR __$EHRec$[ebp]
@@ -25026,16 +25030,16 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z$0:
-	lea	ecx, DWORD PTR $T214557[ebp]
+	lea	ecx, DWORD PTR $T217215[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z$1:
-	lea	ecx, DWORD PTR $T214556[ebp]
+	lea	ecx, DWORD PTR $T217214[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z$2:
-	mov	eax, DWORD PTR $T214561[ebp]
+	mov	eax, DWORD PTR $T217219[ebp]
 	and	eax, 1
 	je	$LN6@operator@18
-	and	DWORD PTR $T214561[ebp], -2		; fffffffeH
+	and	DWORD PTR $T217219[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 $LN6@operator@18:
@@ -25074,9 +25078,9 @@ tv84 = -312						; size = 4
 tv90 = -308						; size = 4
 tv82 = -304						; size = 4
 tv89 = -300						; size = 4
-$T214571 = -292						; size = 32
-$T214572 = -252						; size = 32
-$T214576 = -212						; size = 4
+$T217229 = -292						; size = 32
+$T217230 = -252						; size = 32
+$T217234 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 _lhs$ = 12						; size = 4
@@ -25104,13 +25108,13 @@ _rhs$ = 16						; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T214576[ebp], 0
+	mov	DWORD PTR $T217234[ebp], 0
 
 ; 542  :           basic_path<String, Traits>( rhs ); }
 
 	mov	eax, DWORD PTR _rhs$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214572[ebp]
+	lea	ecx, DWORD PTR $T217230[ebp]
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@PBD@Z ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	DWORD PTR tv89[ebp], eax
 	mov	ecx, DWORD PTR tv89[ebp]
@@ -25120,7 +25124,7 @@ _rhs$ = 16						; size = 4
 	push	edx
 	mov	eax, DWORD PTR _lhs$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214571[ebp]
+	lea	ecx, DWORD PTR $T217229[ebp]
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@ABV012@@Z
 	mov	DWORD PTR tv90[ebp], eax
 	mov	ecx, DWORD PTR tv90[ebp]
@@ -25131,14 +25135,14 @@ _rhs$ = 16						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@ABV012@@Z
-	mov	edx, DWORD PTR $T214576[ebp]
+	mov	edx, DWORD PTR $T217234[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T214576[ebp], edx
+	mov	DWORD PTR $T217234[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T214571[ebp]
+	lea	ecx, DWORD PTR $T217229[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T214572[ebp]
+	lea	ecx, DWORD PTR $T217230[ebp]
 	call	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 	mov	ecx, DWORD PTR __$EHRec$[ebp]
@@ -25157,16 +25161,16 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@PBD@Z$0:
-	lea	ecx, DWORD PTR $T214572[ebp]
+	lea	ecx, DWORD PTR $T217230[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@PBD@Z$1:
-	lea	ecx, DWORD PTR $T214571[ebp]
+	lea	ecx, DWORD PTR $T217229[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 __unwindfunclet$??$?KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@YA?AV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@01@ABV201@PBD@Z$2:
-	mov	eax, DWORD PTR $T214576[ebp]
+	mov	eax, DWORD PTR $T217234[ebp]
 	and	eax, 1
 	je	$LN6@operator@19
-	and	DWORD PTR $T214576[ebp], -2		; fffffffeH
+	and	DWORD PTR $T217234[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::~basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 $LN6@operator@19:
@@ -25607,9 +25611,9 @@ tv151 = -256						; size = 4
 tv156 = -252						; size = 4
 tv147 = -248						; size = 4
 tv155 = -244						; size = 4
-$T214611 = -236						; size = 4
-$T214612 = -224						; size = 4
-$T214613 = -212						; size = 4
+$T217269 = -236						; size = 4
+$T217270 = -224						; size = 4
+$T217271 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
@@ -25649,7 +25653,7 @@ __Right$ = 12						; size = 4
 	jne	$LN3@operator@20
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T214611[ebp], esp
+	mov	DWORD PTR $T217269[ebp], esp
 	push	eax
 	mov	ecx, DWORD PTR __Right$[ebp]
 	call	?begin@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::begin
@@ -25659,7 +25663,7 @@ __Right$ = 12						; size = 4
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	sub	esp, 12					; 0000000cH
 	mov	edx, esp
-	mov	DWORD PTR $T214612[ebp], esp
+	mov	DWORD PTR $T217270[ebp], esp
 	push	edx
 	mov	ecx, DWORD PTR __Left$[ebp]
 	call	?end@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::end
@@ -25669,7 +25673,7 @@ __Right$ = 12						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T214613[ebp], esp
+	mov	DWORD PTR $T217271[ebp], esp
 	push	ecx
 	mov	ecx, DWORD PTR __Left$[ebp]
 	call	?begin@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::begin
@@ -25707,10 +25711,10 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$?8VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YA_NABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0@Z$0:
-	mov	ecx, DWORD PTR $T214611[ebp]
+	mov	ecx, DWORD PTR $T217269[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$?8VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YA_NABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0@Z$1:
-	mov	ecx, DWORD PTR $T214612[ebp]
+	mov	ecx, DWORD PTR $T217270[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$?8VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YA_NABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -26369,7 +26373,7 @@ __TI2?AVbad_alloc@std@@ DD 00H
 xdata$x	ENDS
 ;	COMDAT ??$_Allocate@U_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@YAPAU_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@0@IPAU120@@Z
 _TEXT	SEGMENT
-$T214652 = -208						; size = 12
+$T217310 = -208						; size = 12
 __Count$ = 8						; size = 4
 ___formal$ = 12						; size = 4
 ??$_Allocate@U_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@YAPAU_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@0@IPAU120@@Z PROC ; std::_Allocate<std::_List_nod<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Node>, COMDAT
@@ -26409,10 +26413,10 @@ $LN3@Allocate:
 ; 40   : 		_THROW_NCEE(std::bad_alloc, NULL);
 
 	push	0
-	lea	ecx, DWORD PTR $T214652[ebp]
+	lea	ecx, DWORD PTR $T217310[ebp]
 	call	??0bad_alloc@std@@QAE@PBD@Z		; std::bad_alloc::bad_alloc
 	push	OFFSET __TI2?AVbad_alloc@std@@
-	lea	eax, DWORD PTR $T214652[ebp]
+	lea	eax, DWORD PTR $T217310[ebp]
 	push	eax
 	call	__CxxThrowException@8
 $LN2@Allocate:
@@ -26691,7 +26695,7 @@ PUBLIC	??2@YAPAXIPAX@Z					; operator new
 ;	COMDAT ??$_Construct@PAU_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@PAU123@@std@@YAXPAPAU_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@0@ABQAU120@@Z
 _TEXT	SEGMENT
 tv68 = -220						; size = 4
-$T214664 = -212						; size = 4
+$T217322 = -212						; size = 4
 __Vptr$ = -8						; size = 4
 __Ptr$ = 8						; size = 4
 __Val$ = 12						; size = 4
@@ -26722,14 +26726,14 @@ __Val$ = 12						; size = 4
 	push	4
 	call	??2@YAPAXIPAX@Z				; operator new
 	add	esp, 8
-	mov	DWORD PTR $T214664[ebp], eax
-	cmp	DWORD PTR $T214664[ebp], 0
+	mov	DWORD PTR $T217322[ebp], eax
+	cmp	DWORD PTR $T217322[ebp], 0
 	je	SHORT $LN3@Construct
-	mov	ecx, DWORD PTR $T214664[ebp]
+	mov	ecx, DWORD PTR $T217322[ebp]
 	mov	edx, DWORD PTR __Val$[ebp]
 	mov	eax, DWORD PTR [edx]
 	mov	DWORD PTR [ecx], eax
-	mov	ecx, DWORD PTR $T214664[ebp]
+	mov	ecx, DWORD PTR $T217322[ebp]
 	mov	DWORD PTR tv68[ebp], ecx
 	jmp	SHORT $LN1@Construct
 $LN3@Construct:
@@ -27081,7 +27085,7 @@ __ehfuncinfo$??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator
 xdata$x	ENDS
 ;	COMDAT ??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@PBD@Z
 _TEXT	SEGMENT
-$T214697 = -221						; size = 1
+$T217355 = -221						; size = 1
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _s$ = 8							; size = 4
@@ -27113,7 +27117,7 @@ _s$ = 8							; size = 4
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 	push	1
-	lea	ecx, DWORD PTR $T214697[ebp]
+	lea	ecx, DWORD PTR $T217355[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -27225,8 +27229,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv75 = -276						; size = 4
 tv80 = -272						; size = 4
-$T214709 = -264						; size = 32
-$T214712 = -224						; size = 4
+$T217367 = -264						; size = 32
+$T217370 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -27257,8 +27261,8 @@ ___$ReturnUdt$ = 8					; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T214712[ebp], 0
-	lea	eax, DWORD PTR $T214709[ebp]
+	mov	DWORD PTR $T217370[ebp], 0
+	lea	eax, DWORD PTR $T217367[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::file_string
@@ -27274,12 +27278,12 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	ecx
 	call	?to_external@path_traits@filesystem@boost@@SA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@23@ABV45@@Z ; boost::filesystem::path_traits::to_external
 	add	esp, 12					; 0000000cH
-	mov	edx, DWORD PTR $T214712[ebp]
+	mov	edx, DWORD PTR $T217370[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T214712[ebp], edx
+	mov	DWORD PTR $T217370[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214709[ebp]
+	lea	ecx, DWORD PTR $T217367[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -27301,15 +27305,15 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?external_file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214709[ebp]
+	lea	ecx, DWORD PTR $T217367[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?external_file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ$1:
-	mov	eax, DWORD PTR $T214712[ebp]
+	mov	eax, DWORD PTR $T217370[ebp]
 	and	eax, 1
 	je	$LN5@external_f
-	and	DWORD PTR $T214712[ebp], -2		; fffffffeH
+	and	DWORD PTR $T217370[ebp], -2		; fffffffeH
 	mov	esi, esp
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
@@ -27330,7 +27334,7 @@ text$x	ENDS
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?to_external@path_traits@filesystem@boost@@SA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@23@ABV45@@Z
 _TEXT	SEGMENT
-$T214723 = -200						; size = 4
+$T217381 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ___formal$ = 12						; size = 4
 _src$ = 16						; size = 4
@@ -27348,7 +27352,7 @@ _src$ = 16						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T214723[ebp], 0
+	mov	DWORD PTR $T217381[ebp], 0
 	mov	esi, esp
 	mov	eax, DWORD PTR _src$[ebp]
 	push	eax
@@ -27356,9 +27360,9 @@ _src$ = 16						; size = 4
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	ecx, DWORD PTR $T214723[ebp]
+	mov	ecx, DWORD PTR $T217381[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T214723[ebp], ecx
+	mov	DWORD PTR $T217381[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 	pop	edi
 	pop	esi
@@ -27395,9 +27399,9 @@ __ehfuncinfo$?file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?
 xdata$x	ENDS
 ;	COMDAT ?file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ
 _TEXT	SEGMENT
-$T214728 = -313						; size = 1
-$T214731 = -304						; size = 4
-_pos$162668 = -100					; size = 4
+$T217386 = -313						; size = 1
+$T217389 = -304						; size = 4
+_pos$165062 = -100					; size = 4
 _s$ = -88						; size = 32
 _in_root$ = -45						; size = 1
 _root_dir_start$ = -36					; size = 4
@@ -27433,7 +27437,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T214731[ebp], 0
+	mov	DWORD PTR $T217389[ebp], 0
 
 ; 1286 : #   ifdef BOOST_WINDOWS_PATH
 ; 1287 :       // for Windows, use the alternate separator, and bypass extra 
@@ -27468,7 +27472,7 @@ ___$ReturnUdt$ = 8					; size = 4
 ; 1293 :       String s;
 
 	push	1
-	lea	ecx, DWORD PTR $T214728[ebp]
+	lea	ecx, DWORD PTR $T217386[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -27481,22 +27485,22 @@ ___$ReturnUdt$ = 8					; size = 4
 
 ; 1294 :       for ( typename string_type::size_type pos( 0 );
 
-	mov	DWORD PTR _pos$162668[ebp], 0
+	mov	DWORD PTR _pos$165062[ebp], 0
 	jmp	SHORT $LN10@file_strin
 $LN9@file_strin:
 
 ; 1295 :         pos != m_path.size(); ++pos )
 
-	mov	eax, DWORD PTR _pos$162668[ebp]
+	mov	eax, DWORD PTR _pos$165062[ebp]
 	add	eax, 1
-	mov	DWORD PTR _pos$162668[ebp], eax
+	mov	DWORD PTR _pos$165062[ebp], eax
 $LN10@file_strin:
 	mov	esi, esp
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	DWORD PTR __imp_?size@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEIXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	cmp	DWORD PTR _pos$162668[ebp], eax
+	cmp	DWORD PTR _pos$165062[ebp], eax
 	je	$LN8@file_strin
 
 ; 1296 :       {
@@ -27508,7 +27512,7 @@ $LN10@file_strin:
 ; 1302 :             || !detail::is_separator<path_type>( m_path[2] )
 ; 1303 :              ) )
 
-	cmp	DWORD PTR _pos$162668[ebp], 0
+	cmp	DWORD PTR _pos$165062[ebp], 0
 	jne	$LN7@file_strin
 	mov	esi, esp
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -27560,9 +27564,9 @@ $LN6@file_strin:
 ; 1304 :         {
 ; 1305 :           ++pos;
 
-	mov	eax, DWORD PTR _pos$162668[ebp]
+	mov	eax, DWORD PTR _pos$165062[ebp]
 	add	eax, 1
-	mov	DWORD PTR _pos$162668[ebp], eax
+	mov	DWORD PTR _pos$165062[ebp], eax
 
 ; 1306 :           s += path_alt_separator<path_type>::value;
 
@@ -27625,7 +27629,7 @@ $LN7@file_strin:
 	cmp	eax, 92					; 0000005cH
 	jne	SHORT $LN5@file_strin
 	mov	esi, esp
-	mov	eax, DWORD PTR _pos$162668[ebp]
+	mov	eax, DWORD PTR _pos$165062[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	DWORD PTR __imp_??A?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEABDI@Z
@@ -27642,7 +27646,7 @@ $LN5@file_strin:
 ; 1320 :         if ( m_path[pos] == slash<path_type>::value )
 
 	mov	esi, esp
-	mov	eax, DWORD PTR _pos$162668[ebp]
+	mov	eax, DWORD PTR _pos$165062[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	DWORD PTR __imp_??A?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEABDI@Z
@@ -27669,7 +27673,7 @@ $LN3@file_strin:
 ; 1323 :           s += m_path[pos];
 
 	mov	esi, esp
-	mov	eax, DWORD PTR _pos$162668[ebp]
+	mov	eax, DWORD PTR _pos$165062[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	DWORD PTR __imp_??A?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEABDI@Z
@@ -27688,11 +27692,11 @@ $LN2@file_strin:
 ; 1325 :         if ( pos > root_dir_start
 ; 1326 :           && m_path[pos] == slash<path_type>::value )
 
-	mov	eax, DWORD PTR _pos$162668[ebp]
+	mov	eax, DWORD PTR _pos$165062[ebp]
 	cmp	eax, DWORD PTR _root_dir_start$[ebp]
 	jbe	SHORT $LN1@file_strin
 	mov	esi, esp
-	mov	eax, DWORD PTR _pos$162668[ebp]
+	mov	eax, DWORD PTR _pos$165062[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	DWORD PTR __imp_??A?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEABDI@Z
@@ -27724,9 +27728,9 @@ $LN8@file_strin:
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	ecx, DWORD PTR $T214731[ebp]
+	mov	ecx, DWORD PTR $T217389[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T214731[ebp], ecx
+	mov	DWORD PTR $T217389[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	esi, esp
 	lea	ecx, DWORD PTR _s$[ebp]
@@ -27782,10 +27786,10 @@ __unwindfunclet$?file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ$1:
-	mov	eax, DWORD PTR $T214731[ebp]
+	mov	eax, DWORD PTR $T217389[ebp]
 	and	eax, 1
 	je	$LN15@file_strin
-	and	DWORD PTR $T214731[ebp], -2		; fffffffeH
+	and	DWORD PTR $T217389[ebp], -2		; fffffffeH
 	mov	esi, esp
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
@@ -27874,7 +27878,7 @@ PUBLIC	??R?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0
 ;	COMDAT ??R?$backward_compatible_uniform_01@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@N@detail@boost@@QAENXZ
 _TEXT	SEGMENT
 tv75 = -228						; size = 8
-_result$167222 = -24					; size = 8
+_result$169686 = -24					; size = 8
 _this$ = -8						; size = 4
 ??R?$backward_compatible_uniform_01@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@N@detail@boost@@QAENXZ PROC ; boost::detail::backward_compatible_uniform_01<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &>,double>::operator(), COMDAT
 ; _this$ = ecx
@@ -27910,19 +27914,19 @@ $LN3@operator@22:
 	fild	QWORD PTR tv75[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
 	fmul	QWORD PTR [eax+8]
-	fstp	QWORD PTR _result$167222[ebp]
+	fstp	QWORD PTR _result$169686[ebp]
 
 ; 104  :       if (result < result_type(1))
 
 	fld1
-	fcomp	QWORD PTR _result$167222[ebp]
+	fcomp	QWORD PTR _result$169686[ebp]
 	fnstsw	ax
 	test	ah, 65					; 00000041H
 	jne	SHORT $LN1@operator@22
 
 ; 105  :         return result;
 
-	fld	QWORD PTR _result$167222[ebp]
+	fld	QWORD PTR _result$169686[ebp]
 	jmp	SHORT $LN2@operator@22
 $LN1@operator@22:
 
@@ -27949,7 +27953,7 @@ PUBLIC	??R?$pass_through_engine@V?$pass_through_engine@V?$mersenne_twister@K$0CA
 ;	COMDAT ??R?$backward_compatible_uniform_01@V?$pass_through_engine@V?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@N@detail@boost@@QAENXZ
 _TEXT	SEGMENT
 tv75 = -228						; size = 8
-_result$167229 = -24					; size = 8
+_result$169693 = -24					; size = 8
 _this$ = -8						; size = 4
 ??R?$backward_compatible_uniform_01@V?$pass_through_engine@V?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@N@detail@boost@@QAENXZ PROC ; boost::detail::backward_compatible_uniform_01<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> >,double>::operator(), COMDAT
 ; _this$ = ecx
@@ -27985,19 +27989,19 @@ $LN3@operator@23:
 	fild	QWORD PTR tv75[ebp]
 	mov	eax, DWORD PTR _this$[ebp]
 	fmul	QWORD PTR [eax+5000]
-	fstp	QWORD PTR _result$167229[ebp]
+	fstp	QWORD PTR _result$169693[ebp]
 
 ; 104  :       if (result < result_type(1))
 
 	fld1
-	fcomp	QWORD PTR _result$167229[ebp]
+	fcomp	QWORD PTR _result$169693[ebp]
 	fnstsw	ax
 	test	ah, 65					; 00000041H
 	jne	SHORT $LN1@operator@23
 
 ; 105  :         return result;
 
-	fld	QWORD PTR _result$167229[ebp]
+	fld	QWORD PTR _result$169693[ebp]
 	jmp	SHORT $LN2@operator@23
 $LN1@operator@23:
 
@@ -28565,8 +28569,8 @@ tv141 = -280						; size = 4
 tv145 = -276						; size = 4
 tv143 = -276						; size = 4
 tv144 = -273						; size = 1
-$T214769 = -268						; size = 32
-$T214770 = -228						; size = 4
+$T217427 = -268						; size = 32
+$T217428 = -228						; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 ?what@system_error@system@boost@@UBEPBDXZ PROC		; boost::system::system_error::what, COMDAT
@@ -28662,7 +28666,7 @@ $LN1@what:
 
 ; 68   :             m_what += m_error_code.message();
 
-	lea	eax, DWORD PTR $T214769[ebp]
+	lea	eax, DWORD PTR $T217427[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 44					; 0000002cH
@@ -28681,7 +28685,7 @@ $LN1@what:
 	call	__RTC_CheckEsp
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214769[ebp]
+	lea	ecx, DWORD PTR $T217427[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -28697,7 +28701,7 @@ __catch$?what@system_error@system@boost@@UBEPBDXZ$0:
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?what@runtime_error@std@@UBEPBDXZ	; std::runtime_error::what
-	mov	DWORD PTR $T214770[ebp], eax
+	mov	DWORD PTR $T217428[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	mov	eax, $LN11@what
 	ret	0
@@ -28707,7 +28711,7 @@ $LN7@what:
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	jmp	SHORT $LN10@what
 $LN11@what:
-	mov	eax, DWORD PTR $T214770[ebp]
+	mov	eax, DWORD PTR $T217428[ebp]
 	jmp	SHORT $LN5@what
 $LN10@what:
 
@@ -28741,7 +28745,7 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?what@system_error@system@boost@@UBEPBDXZ$2:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214769[ebp]
+	lea	ecx, DWORD PTR $T217427[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -28760,7 +28764,7 @@ PUBLIC	?value@error_code@system@boost@@QBEHXZ		; boost::system::error_code::valu
 ; File c:\program files\boost\boost_1_40\boost\system\error_code.hpp
 ;	COMDAT ?message@error_code@system@boost@@QBE?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ
 _TEXT	SEGMENT
-$T214788 = -212						; size = 4
+$T217446 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?message@error_code@system@boost@@QBE?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ PROC ; boost::system::error_code::message, COMDAT
@@ -28781,7 +28785,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T214788[ebp], 0
+	mov	DWORD PTR $T217446[ebp], 0
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?value@error_code@system@boost@@QBEHXZ	; boost::system::error_code::value
 	mov	esi, esp
@@ -28797,9 +28801,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	call	eax
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	ecx, DWORD PTR $T214788[ebp]
+	mov	ecx, DWORD PTR $T217446[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T214788[ebp], ecx
+	mov	DWORD PTR $T217446[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 	pop	edi
 	pop	esi
@@ -28972,9 +28976,9 @@ tv141 = -304						; size = 4
 tv144 = -301						; size = 1
 tv140 = -301						; size = 1
 tv139 = -301						; size = 1
-$T214796 = -296						; size = 32
-$T214797 = -256						; size = 32
-$T214798 = -216						; size = 4
+$T217454 = -296						; size = 32
+$T217455 = -256						; size = 32
+$T217456 = -216						; size = 4
 __$EHRec$ = -16						; size = 16
 _sys_err_what$ = 8					; size = 4
 _path1_arg$ = 12					; size = 4
@@ -29055,7 +29059,7 @@ _target$ = 20						; size = 4
 
 ; 637  :               target += path1_arg.file_string();
 
-	lea	eax, DWORD PTR $T214796[ebp]
+	lea	eax, DWORD PTR $T217454[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _path1_arg$[ebp]
 	call	?file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::file_string
@@ -29072,7 +29076,7 @@ _target$ = 20						; size = 4
 	call	__RTC_CheckEsp
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214796[ebp]
+	lea	ecx, DWORD PTR $T217454[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -29109,7 +29113,7 @@ $LN2@what@3:
 
 ; 643  :               target += path2_arg.file_string();
 
-	lea	eax, DWORD PTR $T214797[ebp]
+	lea	eax, DWORD PTR $T217455[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _path2_arg$[ebp]
 	call	?file_string@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QBE?BV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::file_string
@@ -29126,7 +29130,7 @@ $LN2@what@3:
 	call	__RTC_CheckEsp
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214797[ebp]
+	lea	ecx, DWORD PTR $T217455[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -29161,7 +29165,7 @@ __catch$?what@detail@filesystem@boost@@YAPBDPBDABV?$basic_path@V?$basic_string@D
 ; 651  :           return sys_err_what;
 
 	mov	eax, DWORD PTR _sys_err_what$[ebp]
-	mov	DWORD PTR $T214798[ebp], eax
+	mov	DWORD PTR $T217456[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	mov	eax, $LN12@what@3
 	ret	0
@@ -29180,7 +29184,7 @@ $LN12@what@3:
 ; 650  :         {
 ; 651  :           return sys_err_what;
 
-	mov	eax, DWORD PTR $T214798[ebp]
+	mov	eax, DWORD PTR $T217456[ebp]
 $LN5@what@3:
 
 ; 653  :       }
@@ -29202,13 +29206,13 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?what@detail@filesystem@boost@@YAPBDPBDABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@23@1AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z$2:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214796[ebp]
+	lea	ecx, DWORD PTR $T217454[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?what@detail@filesystem@boost@@YAPBDPBDABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@23@1AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z$3:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214797[ebp]
+	lea	ecx, DWORD PTR $T217455[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -29855,12 +29859,12 @@ tv141 = -336						; size = 4
 tv162 = -332						; size = 4
 tv136 = -328						; size = 4
 tv160 = -324						; size = 4
-$T214850 = -313						; size = 1
-$T214851 = -304						; size = 12
-$T214852 = -284						; size = 12
-$T214853 = -264						; size = 12
-$T214854 = -244						; size = 12
-$T214857 = -224						; size = 4
+$T217508 = -313						; size = 1
+$T217509 = -304						; size = 12
+$T217510 = -284						; size = 12
+$T217511 = -264						; size = 12
+$T217512 = -244						; size = 12
+$T217515 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?m_append_separator_if_needed@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@AAEXXZ PROC ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::m_append_separator_if_needed, COMDAT
@@ -29890,7 +29894,7 @@ __$EHRec$ = -12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T214857[ebp], 0
+	mov	DWORD PTR $T217515[ebp], 0
 
 ; 1070 :       if (
 ; 1071 : #       ifdef BOOST_WINDOWS_PATH
@@ -29899,10 +29903,10 @@ __$EHRec$ = -12						; size = 12
 ; 1074 :         *(m_path.end()-1) != slash<path_type>::value )
 
 	push	1
-	lea	eax, DWORD PTR $T214852[ebp]
+	lea	eax, DWORD PTR $T217510[ebp]
 	push	eax
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T214851[ebp]
+	lea	ecx, DWORD PTR $T217509[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	DWORD PTR __imp_?end@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@2@XZ
@@ -29912,28 +29916,28 @@ __$EHRec$ = -12						; size = 12
 	mov	edx, DWORD PTR tv160[ebp]
 	mov	DWORD PTR tv136[ebp], edx
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	mov	eax, DWORD PTR $T214857[ebp]
+	mov	eax, DWORD PTR $T217515[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T214857[ebp], eax
+	mov	DWORD PTR $T217515[ebp], eax
 	mov	ecx, DWORD PTR tv136[ebp]
 	call	??G?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV01@H@Z ; std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >::operator-
 	mov	DWORD PTR tv162[ebp], eax
 	mov	ecx, DWORD PTR tv162[ebp]
 	mov	DWORD PTR tv141[ebp], ecx
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	mov	edx, DWORD PTR $T214857[ebp]
+	mov	edx, DWORD PTR $T217515[ebp]
 	or	edx, 2
-	mov	DWORD PTR $T214857[ebp], edx
+	mov	DWORD PTR $T217515[ebp], edx
 	mov	ecx, DWORD PTR tv141[ebp]
 	call	??D?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEAADXZ ; std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >::operator*
 	movsx	eax, BYTE PTR [eax]
 	cmp	eax, 58					; 0000003aH
 	je	$LN4@m_append_s
 	push	1
-	lea	ecx, DWORD PTR $T214854[ebp]
+	lea	ecx, DWORD PTR $T217512[ebp]
 	push	ecx
 	mov	esi, esp
-	lea	edx, DWORD PTR $T214853[ebp]
+	lea	edx, DWORD PTR $T217511[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	DWORD PTR __imp_?end@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@2@XZ
@@ -29943,18 +29947,18 @@ __$EHRec$ = -12						; size = 12
 	mov	eax, DWORD PTR tv164[ebp]
 	mov	DWORD PTR tv146[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
-	mov	ecx, DWORD PTR $T214857[ebp]
+	mov	ecx, DWORD PTR $T217515[ebp]
 	or	ecx, 4
-	mov	DWORD PTR $T214857[ebp], ecx
+	mov	DWORD PTR $T217515[ebp], ecx
 	mov	ecx, DWORD PTR tv146[ebp]
 	call	??G?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV01@H@Z ; std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >::operator-
 	mov	DWORD PTR tv166[ebp], eax
 	mov	edx, DWORD PTR tv166[ebp]
 	mov	DWORD PTR tv151[ebp], edx
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
-	mov	eax, DWORD PTR $T214857[ebp]
+	mov	eax, DWORD PTR $T217515[ebp]
 	or	eax, 8
-	mov	DWORD PTR $T214857[ebp], eax
+	mov	DWORD PTR $T217515[ebp], eax
 	mov	ecx, DWORD PTR tv151[ebp]
 	call	??D?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEAADXZ ; std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >::operator*
 	movsx	ecx, BYTE PTR [eax]
@@ -29967,40 +29971,40 @@ $LN4@m_append_s:
 $LN5@m_append_s:
 	mov	ecx, DWORD PTR tv94[ebp]
 	call	@_RTC_Check_4_to_1@4
-	mov	BYTE PTR $T214850[ebp], al
+	mov	BYTE PTR $T217508[ebp], al
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
-	mov	edx, DWORD PTR $T214857[ebp]
+	mov	edx, DWORD PTR $T217515[ebp]
 	and	edx, 8
 	je	SHORT $LN14@m_append_s
-	and	DWORD PTR $T214857[ebp], -9		; fffffff7H
-	lea	ecx, DWORD PTR $T214854[ebp]
+	and	DWORD PTR $T217515[ebp], -9		; fffffff7H
+	lea	ecx, DWORD PTR $T217512[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN14@m_append_s:
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	mov	eax, DWORD PTR $T214857[ebp]
+	mov	eax, DWORD PTR $T217515[ebp]
 	and	eax, 4
 	je	SHORT $LN15@m_append_s
-	and	DWORD PTR $T214857[ebp], -5		; fffffffbH
-	lea	ecx, DWORD PTR $T214853[ebp]
+	and	DWORD PTR $T217515[ebp], -5		; fffffffbH
+	lea	ecx, DWORD PTR $T217511[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN15@m_append_s:
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	mov	ecx, DWORD PTR $T214857[ebp]
+	mov	ecx, DWORD PTR $T217515[ebp]
 	and	ecx, 2
 	je	SHORT $LN16@m_append_s
-	and	DWORD PTR $T214857[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T214852[ebp]
+	and	DWORD PTR $T217515[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T217510[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN16@m_append_s:
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	mov	edx, DWORD PTR $T214857[ebp]
+	mov	edx, DWORD PTR $T217515[ebp]
 	and	edx, 1
 	je	SHORT $LN17@m_append_s
-	and	DWORD PTR $T214857[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T214851[ebp]
+	and	DWORD PTR $T217515[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T217509[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN17@m_append_s:
-	movzx	eax, BYTE PTR $T214850[ebp]
+	movzx	eax, BYTE PTR $T217508[ebp]
 	test	eax, eax
 	je	SHORT $LN2@m_append_s
 
@@ -30034,38 +30038,38 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?m_append_separator_if_needed@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@AAEXXZ$0:
-	mov	eax, DWORD PTR $T214857[ebp]
+	mov	eax, DWORD PTR $T217515[ebp]
 	and	eax, 1
 	je	$LN7@m_append_s
-	and	DWORD PTR $T214857[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T214851[ebp]
+	and	DWORD PTR $T217515[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T217509[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN7@m_append_s:
 	ret	0
 __unwindfunclet$?m_append_separator_if_needed@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@AAEXXZ$1:
-	mov	eax, DWORD PTR $T214857[ebp]
+	mov	eax, DWORD PTR $T217515[ebp]
 	and	eax, 2
 	je	$LN9@m_append_s
-	and	DWORD PTR $T214857[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T214852[ebp]
+	and	DWORD PTR $T217515[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T217510[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN9@m_append_s:
 	ret	0
 __unwindfunclet$?m_append_separator_if_needed@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@AAEXXZ$2:
-	mov	eax, DWORD PTR $T214857[ebp]
+	mov	eax, DWORD PTR $T217515[ebp]
 	and	eax, 4
 	je	$LN11@m_append_s
-	and	DWORD PTR $T214857[ebp], -5		; fffffffbH
-	lea	ecx, DWORD PTR $T214853[ebp]
+	and	DWORD PTR $T217515[ebp], -5		; fffffffbH
+	lea	ecx, DWORD PTR $T217511[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN11@m_append_s:
 	ret	0
 __unwindfunclet$?m_append_separator_if_needed@?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@AAEXXZ$3:
-	mov	eax, DWORD PTR $T214857[ebp]
+	mov	eax, DWORD PTR $T217515[ebp]
 	and	eax, 8
 	je	$LN13@m_append_s
-	and	DWORD PTR $T214857[ebp], -9		; fffffff7H
-	lea	ecx, DWORD PTR $T214854[ebp]
+	and	DWORD PTR $T217515[ebp], -9		; fffffff7H
+	lea	ecx, DWORD PTR $T217512[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN13@m_append_s:
 	ret	0
@@ -30318,7 +30322,7 @@ __ehfuncinfo$??G?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@
 xdata$x	ENDS
 ;	COMDAT ??G?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV01@H@Z
 _TEXT	SEGMENT
-$T214885 = -244						; size = 4
+$T217543 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -30351,7 +30355,7 @@ __Off$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T214885[ebp], 0
+	mov	DWORD PTR $T217543[ebp], 0
 
 ; 422  : 		_Myt _Tmp = *this;
 
@@ -30370,9 +30374,9 @@ __Off$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T214885[ebp]
+	mov	ecx, DWORD PTR $T217543[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T214885[ebp], ecx
+	mov	DWORD PTR $T217543[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
@@ -30419,10 +30423,10 @@ __unwindfunclet$??G?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@s
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??G?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T214885[ebp]
+	mov	eax, DWORD PTR $T217543[ebp]
 	and	eax, 1
 	je	$LN5@operator@26
-	and	DWORD PTR $T214885[ebp], -2		; fffffffeH
+	and	DWORD PTR $T217543[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN5@operator@26:
@@ -30978,7 +30982,7 @@ EXTRN	__imp_?find@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Q
 ;	COMDAT ??$root_directory_start@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@detail@filesystem@boost@@YAIABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@I@Z
 _TEXT	SEGMENT
 tv139 = -208						; size = 4
-_pos$170313 = -8					; size = 4
+_pos$172777 = -8					; size = 4
 _s$ = 8							; size = 4
 _size$ = 12						; size = 4
 ??$root_directory_start@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@detail@filesystem@boost@@YAIABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@I@Z PROC ; boost::filesystem::detail::root_directory_start<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>, COMDAT
@@ -31108,14 +31112,14 @@ $LN3@root_direc:
 	call	DWORD PTR __imp_?find@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEIDI@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR _pos$170313[ebp], eax
+	mov	DWORD PTR _pos$172777[ebp], eax
 
 ; 887  :           return pos < size ? pos : String::npos;
 
-	mov	eax, DWORD PTR _pos$170313[ebp]
+	mov	eax, DWORD PTR _pos$172777[ebp]
 	cmp	eax, DWORD PTR _size$[ebp]
 	jae	SHORT $LN7@root_direc
-	mov	ecx, DWORD PTR _pos$170313[ebp]
+	mov	ecx, DWORD PTR _pos$172777[ebp]
 	mov	DWORD PTR tv139[ebp], ecx
 	jmp	SHORT $LN8@root_direc
 $LN7@root_direc:
@@ -31209,8 +31213,8 @@ tv128 = -256						; size = 4
 tv142 = -252						; size = 4
 tv143 = -248						; size = 4
 tv69 = -248						; size = 4
-$T214927 = -240						; size = 4
-$T214928 = -228						; size = 4
+$T217585 = -240						; size = 4
+$T217586 = -228						; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 _what_arg$ = 8						; size = 4
@@ -31273,11 +31277,11 @@ _ec$ = 16						; size = 8
 	add	esp, 4
 	mov	DWORD PTR tv69[ebp], eax
 	mov	eax, DWORD PTR tv69[ebp]
-	mov	DWORD PTR $T214928[ebp], eax
+	mov	DWORD PTR $T217586[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 3
-	cmp	DWORD PTR $T214928[ebp], 0
+	cmp	DWORD PTR $T217586[ebp], 0
 	je	SHORT $LN4@basic_file
-	mov	ecx, DWORD PTR $T214928[ebp]
+	mov	ecx, DWORD PTR $T217586[ebp]
 	call	??0m_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@XZ
 	mov	DWORD PTR tv142[ebp], eax
 	mov	ecx, DWORD PTR tv142[ebp]
@@ -31287,9 +31291,9 @@ $LN4@basic_file:
 	mov	DWORD PTR tv128[ebp], 0
 $LN5@basic_file:
 	mov	edx, DWORD PTR tv128[ebp]
-	mov	DWORD PTR $T214927[ebp], edx
+	mov	DWORD PTR $T217585[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+12], 2
-	mov	eax, DWORD PTR $T214927[ebp]
+	mov	eax, DWORD PTR $T217585[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 84					; 00000054H
@@ -31350,7 +31354,7 @@ __unwindfunclet$??0?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$ch
 	add	ecx, 84					; 00000054H
 	jmp	??1?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAE@XZ
 __unwindfunclet$??0?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@12@Verror_code@system@2@@Z$4:
-	mov	eax, DWORD PTR $T214928[ebp]
+	mov	eax, DWORD PTR $T217586[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -31382,7 +31386,7 @@ __ehfuncinfo$??0system_error@system@boost@@QAE@Verror_code@12@ABV?$basic_string@
 xdata$x	ENDS
 ;	COMDAT ??0system_error@system@boost@@QAE@Verror_code@12@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
 _TEXT	SEGMENT
-$T214949 = -221						; size = 1
+$T217607 = -221						; size = 1
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _ec$ = 8						; size = 8
@@ -31427,7 +31431,7 @@ _what_arg$ = 16						; size = 4
 	mov	edx, DWORD PTR _ec$[ebp+4]
 	mov	DWORD PTR [eax+48], edx
 	push	1
-	lea	ecx, DWORD PTR $T214949[ebp]
+	lea	ecx, DWORD PTR $T217607[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -31603,8 +31607,8 @@ _TEXT	SEGMENT
 tv128 = -256						; size = 4
 tv137 = -252						; size = 4
 tv69 = -248						; size = 4
-$T214970 = -240						; size = 4
-$T214971 = -228						; size = 4
+$T217628 = -240						; size = 4
+$T217629 = -228						; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 _what_arg$ = 8						; size = 4
@@ -31666,11 +31670,11 @@ _ec$ = 12						; size = 8
 	add	esp, 4
 	mov	DWORD PTR tv69[ebp], eax
 	mov	eax, DWORD PTR tv69[ebp]
-	mov	DWORD PTR $T214971[ebp], eax
+	mov	DWORD PTR $T217629[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 3
-	cmp	DWORD PTR $T214971[ebp], 0
+	cmp	DWORD PTR $T217629[ebp], 0
 	je	SHORT $LN4@basic_file@2
-	mov	ecx, DWORD PTR $T214971[ebp]
+	mov	ecx, DWORD PTR $T217629[ebp]
 	call	??0m_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@XZ
 	mov	DWORD PTR tv137[ebp], eax
 	mov	ecx, DWORD PTR tv137[ebp]
@@ -31680,9 +31684,9 @@ $LN4@basic_file@2:
 	mov	DWORD PTR tv128[ebp], 0
 $LN5@basic_file@2:
 	mov	edx, DWORD PTR tv128[ebp]
-	mov	DWORD PTR $T214970[ebp], edx
+	mov	DWORD PTR $T217628[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+12], 2
-	mov	eax, DWORD PTR $T214970[ebp]
+	mov	eax, DWORD PTR $T217628[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 84					; 00000054H
@@ -31732,7 +31736,7 @@ __unwindfunclet$??0?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$ch
 	add	ecx, 84					; 00000054H
 	jmp	??1?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAE@XZ
 __unwindfunclet$??0?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Verror_code@system@2@@Z$4:
-	mov	eax, DWORD PTR $T214971[ebp]
+	mov	eax, DWORD PTR $T217629[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -31910,8 +31914,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv79 = -456						; size = 4
 tv80 = -452						; size = 4
-$T214992 = -444						; size = 112
-$T214993 = -324						; size = 116
+$T217650 = -444						; size = 112
+$T217651 = -324						; size = 116
 __$EHRec$ = -12						; size = 12
 _e$ = 8							; size = 4
 ??$throw_exception@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YAXABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z PROC ; boost::throw_exception<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >, COMDAT
@@ -31953,7 +31957,7 @@ _e$ = 8							; size = 4
 
 	mov	eax, DWORD PTR _e$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214992[ebp]
+	lea	ecx, DWORD PTR $T217650[ebp]
 	push	ecx
 	call	??$enable_error_info@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YA?AU?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@0@ABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z ; boost::enable_error_info<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >
 	add	esp, 8
@@ -31963,16 +31967,16 @@ _e$ = 8							; size = 4
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	mov	eax, DWORD PTR tv79[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T214993[ebp]
+	lea	ecx, DWORD PTR $T217651[ebp]
 	push	ecx
 	call	??$enable_current_exception@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@boost@@YA?AV?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@0@ABU?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@20@@Z ; boost::enable_current_exception<boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > > >
 	add	esp, 8
 	push	OFFSET __TI8?AV?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@
-	lea	edx, DWORD PTR $T214993[ebp]
+	lea	edx, DWORD PTR $T217651[ebp]
 	push	edx
 	call	__CxxThrowException@8
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T214992[ebp]
+	lea	ecx, DWORD PTR $T217650[ebp]
 	call	??1?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@UAE@XZ ; boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >::~error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >
 $LN2@throw_exce:
 
@@ -31997,7 +32001,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$throw_exception@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YAXABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z$0:
-	lea	ecx, DWORD PTR $T214992[ebp]
+	lea	ecx, DWORD PTR $T217650[ebp]
 	jmp	??1?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@UAE@XZ ; boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >::~error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >
 __ehhandler$??$throw_exception@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YAXABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -32569,8 +32573,8 @@ PUBLIC	??$is_char_ptr@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@s
 _TEXT	SEGMENT
 tv86 = -224						; size = 4
 tv85 = -220						; size = 4
-$T215030 = -212						; size = 4
-$T215033 = -200						; size = 4
+$T217688 = -212						; size = 4
+$T217691 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
 ??$as_literal@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z PROC ; boost::as_literal<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >, COMDAT
@@ -32587,13 +32591,13 @@ _r$ = 12						; size = 4
 	mov	ecx, 56					; 00000038H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215033[ebp], 0
+	mov	DWORD PTR $T217691[ebp], 0
 
 ; 102  :         return range_detail::make_range( r, range_detail::is_char_ptr(r) );
 
 	sub	esp, 32					; 00000020H
 	mov	ecx, esp
-	mov	DWORD PTR $T215030[ebp], esp
+	mov	DWORD PTR $T217688[ebp], esp
 	mov	esi, esp
 	mov	eax, DWORD PTR _r$[ebp]
 	push	eax
@@ -32612,9 +32616,9 @@ _r$ = 12						; size = 4
 	push	eax
 	call	??$make_range@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YA?AV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@1@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@J@Z ; boost::range_detail::make_range<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 12					; 0000000cH
-	mov	ecx, DWORD PTR $T215033[ebp]
+	mov	ecx, DWORD PTR $T217691[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215033[ebp], ecx
+	mov	DWORD PTR $T217691[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 103  :     }
@@ -32657,10 +32661,10 @@ tv146 = -276						; size = 4
 tv152 = -272						; size = 4
 tv142 = -268						; size = 4
 tv151 = -264						; size = 4
-$T215040 = -256						; size = 12
-$T215037 = -236						; size = 4
-$T215038 = -224						; size = 4
-$T215039 = -212						; size = 4
+$T217695 = -256						; size = 4
+$T217696 = -244						; size = 4
+$T217697 = -232						; size = 4
+$T217698 = -220						; size = 12
 __$EHRec$ = -12						; size = 12
 _Input$ = 8						; size = 4
 _Functor$ = 12						; size = 4
@@ -32698,7 +32702,7 @@ _Functor$ = 12						; size = 4
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215037[ebp], esp
+	mov	DWORD PTR $T217695[ebp], esp
 	mov	edx, DWORD PTR _Input$[ebp]
 	push	edx
 	push	ecx
@@ -32710,7 +32714,7 @@ _Functor$ = 12						; size = 4
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215038[ebp], esp
+	mov	DWORD PTR $T217696[ebp], esp
 	mov	edx, DWORD PTR _Input$[ebp]
 	push	edx
 	push	ecx
@@ -32722,20 +32726,20 @@ _Functor$ = 12						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215039[ebp], esp
+	mov	DWORD PTR $T217697[ebp], esp
 	mov	edx, DWORD PTR _Input$[ebp]
 	push	edx
 	push	ecx
 	call	??$begin@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@@Z ; boost::begin<boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > > >
 	add	esp, 8
 	mov	DWORD PTR tv149[ebp], eax
-	lea	eax, DWORD PTR $T215040[ebp]
+	lea	eax, DWORD PTR $T217698[ebp]
 	push	eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	call	??$transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@@Z ; std::transform<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >,std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >,boost::algorithm::detail::to_lowerF<char> >
 	add	esp, 44					; 0000002cH
 	mov	DWORD PTR tv143[ebp], eax
-	lea	ecx, DWORD PTR $T215040[ebp]
+	lea	ecx, DWORD PTR $T217698[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 
 ; 100  :             }
@@ -32756,10 +32760,10 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$transform_range@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@U?$to_lowerF@D@detail@algorithm@2@@detail@algorithm@boost@@YAXABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@U?$to_lowerF@D@012@@Z$0:
-	mov	ecx, DWORD PTR $T215037[ebp]
+	mov	ecx, DWORD PTR $T217695[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$transform_range@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@U?$to_lowerF@D@detail@algorithm@2@@detail@algorithm@boost@@YAXABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@U?$to_lowerF@D@012@@Z$1:
-	mov	ecx, DWORD PTR $T215038[ebp]
+	mov	ecx, DWORD PTR $T217696[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __ehhandler$??$transform_range@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@U?$to_lowerF@D@detail@algorithm@2@@detail@algorithm@boost@@YAXABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@U?$to_lowerF@D@012@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -32790,8 +32794,8 @@ xdata$x	ENDS
 ;	COMDAT ?open@?$basic_file@D@iostreams@boost@@QAEXABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HH@Z
 _TEXT	SEGMENT
 tv75 = -244						; size = 4
-$T215053 = -236						; size = 4
-$T215054 = -224						; size = 4
+$T217711 = -236						; size = 4
+$T217712 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _path$ = 8						; size = 4
@@ -32830,16 +32834,16 @@ _base_mode$ = 16					; size = 4
 	push	80					; 00000050H
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
-	mov	DWORD PTR $T215054[ebp], eax
+	mov	DWORD PTR $T217712[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	cmp	DWORD PTR $T215054[ebp], 0
+	cmp	DWORD PTR $T217712[ebp], 0
 	je	SHORT $LN3@open
 	mov	eax, DWORD PTR _mode$[ebp]
 	or	eax, DWORD PTR _base_mode$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _path$[ebp]
 	push	ecx
-	mov	ecx, DWORD PTR $T215054[ebp]
+	mov	ecx, DWORD PTR $T217712[ebp]
 	call	??0impl@?$basic_file@D@iostreams@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z ; boost::iostreams::basic_file<char>::impl::impl
 	mov	DWORD PTR tv75[ebp], eax
 	jmp	SHORT $LN4@open
@@ -32847,9 +32851,9 @@ $LN3@open:
 	mov	DWORD PTR tv75[ebp], 0
 $LN4@open:
 	mov	edx, DWORD PTR tv75[ebp]
-	mov	DWORD PTR $T215053[ebp], edx
+	mov	DWORD PTR $T217711[ebp], edx
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	mov	eax, DWORD PTR $T215053[ebp]
+	mov	eax, DWORD PTR $T217711[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??$reset@Uimpl@?$basic_file@D@iostreams@boost@@@?$shared_ptr@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@QAEXPAUimpl@?$basic_file@D@iostreams@1@@Z ; boost::shared_ptr<boost::iostreams::basic_file<char>::impl>::reset<boost::iostreams::basic_file<char>::impl>
@@ -32872,7 +32876,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?open@?$basic_file@D@iostreams@boost@@QAEXABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HH@Z$0:
-	mov	eax, DWORD PTR $T215054[ebp]
+	mov	eax, DWORD PTR $T217712[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -33258,12 +33262,12 @@ tv159 = -292						; size = 4
 tv167 = -288						; size = 4
 tv155 = -284						; size = 4
 tv166 = -280						; size = 4
-$T215094 = -269						; size = 1
-$T215095 = -257						; size = 1
-$T215096 = -245						; size = 1
-$T215097 = -236						; size = 4
-$T215098 = -224						; size = 4
-$T215099 = -212						; size = 4
+$T217752 = -269						; size = 1
+$T217753 = -257						; size = 1
+$T217754 = -245						; size = 1
+$T217755 = -236						; size = 4
+$T217756 = -224						; size = 4
+$T217757 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First1$ = 8						; size = 12
 __Last1$ = 20						; size = 12
@@ -33297,14 +33301,14 @@ __First2$ = 32						; size = 12
 ; 3057 : 		_Iter_random(_First1, _First2), _STD _Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T215095[ebp], al
-	movzx	ecx, BYTE PTR $T215095[ebp]
+	mov	BYTE PTR $T217753[ebp], al
+	movzx	ecx, BYTE PTR $T217753[ebp]
 	push	ecx
 	lea	edx, DWORD PTR __First2$[ebp]
 	push	edx
 	lea	eax, DWORD PTR __First1$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T215096[ebp]
+	lea	ecx, DWORD PTR $T217754[ebp]
 	push	ecx
 	call	??$_Iter_random@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V12@@std@@YA?AUrandom_access_iterator_tag@0@ABV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0@Z ; std::_Iter_random<std::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,std::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> > >
 	add	esp, 12					; 0000000cH
@@ -33312,7 +33316,7 @@ __First2$ = 32						; size = 12
 	push	edx
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215097[ebp], esp
+	mov	DWORD PTR $T217755[ebp], esp
 	lea	eax, DWORD PTR __First2$[ebp]
 	push	eax
 	call	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -33322,7 +33326,7 @@ __First2$ = 32						; size = 12
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	sub	esp, 12					; 0000000cH
 	mov	edx, esp
-	mov	DWORD PTR $T215098[ebp], esp
+	mov	DWORD PTR $T217756[ebp], esp
 	lea	eax, DWORD PTR __Last1$[ebp]
 	push	eax
 	push	edx
@@ -33334,7 +33338,7 @@ __First2$ = 32						; size = 12
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	sub	esp, 12					; 0000000cH
 	mov	edx, esp
-	mov	DWORD PTR $T215099[ebp], esp
+	mov	DWORD PTR $T217757[ebp], esp
 	lea	eax, DWORD PTR __First1$[ebp]
 	push	eax
 	push	edx
@@ -33346,7 +33350,7 @@ __First2$ = 32						; size = 12
 	add	esp, 44					; 0000002cH
 	mov	BYTE PTR tv156[ebp], al
 	mov	cl, BYTE PTR tv156[ebp]
-	mov	BYTE PTR $T215094[ebp], cl
+	mov	BYTE PTR $T217752[ebp], cl
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First1$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -33356,7 +33360,7 @@ __First2$ = 32						; size = 12
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __First2$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	al, BYTE PTR $T215094[ebp]
+	mov	al, BYTE PTR $T217752[ebp]
 
 ; 3058 : 	}
 
@@ -33385,10 +33389,10 @@ __unwindfunclet$??$equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$alloca
 	lea	ecx, DWORD PTR __First1$[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V12@@std@@YA_NV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@00@Z$3:
-	mov	ecx, DWORD PTR $T215097[ebp]
+	mov	ecx, DWORD PTR $T217755[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V12@@std@@YA_NV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@00@Z$4:
-	mov	ecx, DWORD PTR $T215098[ebp]
+	mov	ecx, DWORD PTR $T217756[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V12@@std@@YA_NV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@00@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -33411,21 +33415,21 @@ EXTRN	__imp_?max@?$numeric_limits@I@std@@SAIXZ:PROC
 ; File c:\program files\boost\boost_1_40\boost\random\uniform_int.hpp
 ;	COMDAT ??$generate@V?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@@?$uniform_int@H@boost@@CAHAAV?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@1@HHI@Z
 _TEXT	SEGMENT
-$T215114 = -397						; size = 1
-$T215115 = -385						; size = 1
-$T215116 = -373						; size = 1
-$T215117 = -361						; size = 1
-$T215118 = -352						; size = 12
-$T215119 = -329						; size = 1
-$T215120 = -317						; size = 1
-$T215121 = -305						; size = 1
-_result$177966 = -104					; size = 4
-_bucket_size$177954 = -92				; size = 4
-_result_increment$177516 = -80				; size = 4
-_mult$177507 = -68					; size = 4
-_result$177506 = -56					; size = 4
-_limit$177501 = -44					; size = 4
-_v$177472 = -32						; size = 4
+$T217772 = -397						; size = 1
+$T217773 = -385						; size = 1
+$T217774 = -373						; size = 1
+$T217775 = -361						; size = 1
+$T217776 = -352						; size = 12
+$T217777 = -329						; size = 1
+$T217778 = -317						; size = 1
+$T217779 = -305						; size = 1
+_result$180430 = -104					; size = 4
+_bucket_size$180418 = -92				; size = 4
+_result_increment$179980 = -80				; size = 4
+_mult$179971 = -68					; size = 4
+_result$179970 = -56					; size = 4
+_limit$179965 = -44					; size = 4
+_v$179936 = -32						; size = 4
 _brange$ = -20						; size = 4
 _bmin$ = -8						; size = 4
 _eng$ = 8						; size = 4
@@ -33461,14 +33465,14 @@ _range$ = 20						; size = 4
 ; 104  :       random::detail::subtract<base_result>()((eng.max)(), (eng.min)());
 
 	xor	eax, eax
-	mov	BYTE PTR $T215114[ebp], al
+	mov	BYTE PTR $T217772[ebp], al
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	?min@?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QBEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::min
 	push	eax
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	?max@?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QBEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::max
 	push	eax
-	lea	ecx, DWORD PTR $T215114[ebp]
+	lea	ecx, DWORD PTR $T217772[ebp]
 	call	??R?$subtract@K$0A@@detail@random@boost@@QAEKKK@Z ; boost::random::detail::subtract<unsigned long,0>::operator()
 	mov	DWORD PTR _brange$[ebp], eax
 
@@ -33496,25 +33500,25 @@ $LN23@generate:
 ; 111  :       base_unsigned v = random::detail::subtract<base_result>()(eng(), bmin);
 
 	xor	eax, eax
-	mov	BYTE PTR $T215115[ebp], al
+	mov	BYTE PTR $T217773[ebp], al
 	mov	ecx, DWORD PTR _bmin$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	??R?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QAEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::operator()
 	push	eax
-	lea	ecx, DWORD PTR $T215115[ebp]
+	lea	ecx, DWORD PTR $T217773[ebp]
 	call	??R?$subtract@K$0A@@detail@random@boost@@QAEKKK@Z ; boost::random::detail::subtract<unsigned long,0>::operator()
-	mov	DWORD PTR _v$177472[ebp], eax
+	mov	DWORD PTR _v$179936[ebp], eax
 
 ; 112  :       return random::detail::add<base_unsigned, result_type>()(v, min_value);
 
 	xor	eax, eax
-	mov	BYTE PTR $T215116[ebp], al
+	mov	BYTE PTR $T217774[ebp], al
 	mov	ecx, DWORD PTR _min_value$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _v$177472[ebp]
+	mov	edx, DWORD PTR _v$179936[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T215116[ebp]
+	lea	ecx, DWORD PTR $T217774[ebp]
 	call	??R?$add@KH$00@detail@random@boost@@QAEHKH@Z ; boost::random::detail::add<unsigned long,int,1>::operator()
 	jmp	$LN24@generate
 	jmp	$LN24@generate
@@ -33551,7 +33555,7 @@ $LN18@generate:
 	mov	eax, DWORD PTR _range$[ebp]
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _limit$177501[ebp], eax
+	mov	DWORD PTR _limit$179965[ebp], eax
 
 ; 124  :           if(range % (range_type(brange)+1) == range_type(brange))
 
@@ -33565,9 +33569,9 @@ $LN18@generate:
 
 ; 125  :             ++limit;
 
-	mov	eax, DWORD PTR _limit$177501[ebp]
+	mov	eax, DWORD PTR _limit$179965[ebp]
 	add	eax, 1
-	mov	DWORD PTR _limit$177501[ebp], eax
+	mov	DWORD PTR _limit$179965[ebp], eax
 $LN15@generate:
 
 ; 126  :         } else {
@@ -33583,7 +33587,7 @@ $LN16@generate:
 	add	ecx, 1
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _limit$177501[ebp], eax
+	mov	DWORD PTR _limit$179965[ebp], eax
 $LN14@generate:
 
 ; 128  :         }
@@ -33592,11 +33596,11 @@ $LN14@generate:
 ; 131  :         // For every power of (brange+1), we determine a random factor
 ; 132  :         range_type result = range_type(0);
 
-	mov	DWORD PTR _result$177506[ebp], 0
+	mov	DWORD PTR _result$179970[ebp], 0
 
 ; 133  :         range_type mult = range_type(1);
 
-	mov	DWORD PTR _mult$177507[ebp], 1
+	mov	DWORD PTR _mult$179971[ebp], 1
 $LN13@generate:
 
 ; 134  : 
@@ -33605,8 +33609,8 @@ $LN13@generate:
 ; 137  :         //  mult <= range
 ; 138  :         while(mult <= limit) {
 
-	mov	eax, DWORD PTR _mult$177507[ebp]
-	cmp	eax, DWORD PTR _limit$177501[ebp]
+	mov	eax, DWORD PTR _mult$179971[ebp]
+	cmp	eax, DWORD PTR _limit$179965[ebp]
 	ja	SHORT $LN12@generate
 
 ; 139  :           // Postcondition: result <= range, thus no overflow
@@ -33632,26 +33636,26 @@ $LN13@generate:
 ; 159  :           result += random::detail::subtract<base_result>()(eng(), bmin) * mult;
 
 	xor	eax, eax
-	mov	BYTE PTR $T215117[ebp], al
+	mov	BYTE PTR $T217775[ebp], al
 	mov	ecx, DWORD PTR _bmin$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	??R?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QAEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::operator()
 	push	eax
-	lea	ecx, DWORD PTR $T215117[ebp]
+	lea	ecx, DWORD PTR $T217775[ebp]
 	call	??R?$subtract@K$0A@@detail@random@boost@@QAEKKK@Z ; boost::random::detail::subtract<unsigned long,0>::operator()
-	imul	eax, DWORD PTR _mult$177507[ebp]
-	add	eax, DWORD PTR _result$177506[ebp]
-	mov	DWORD PTR _result$177506[ebp], eax
+	imul	eax, DWORD PTR _mult$179971[ebp]
+	add	eax, DWORD PTR _result$179970[ebp]
+	mov	DWORD PTR _result$179970[ebp], eax
 
 ; 160  : 
 ; 161  :           // equivalent to (mult * (brange+1)) == range+1, but avoids overflow.
 ; 162  :           if(mult * range_type(brange) == range - mult + 1) {
 
-	mov	eax, DWORD PTR _mult$177507[ebp]
+	mov	eax, DWORD PTR _mult$179971[ebp]
 	imul	eax, DWORD PTR _brange$[ebp]
 	mov	ecx, DWORD PTR _range$[ebp]
-	sub	ecx, DWORD PTR _mult$177507[ebp]
+	sub	ecx, DWORD PTR _mult$179971[ebp]
 	add	ecx, 1
 	cmp	eax, ecx
 	jne	SHORT $LN11@generate
@@ -33660,7 +33664,7 @@ $LN13@generate:
 ; 164  :               // the generator's range.
 ; 165  :               return(result);
 
-	mov	eax, DWORD PTR _result$177506[ebp]
+	mov	eax, DWORD PTR _result$179970[ebp]
 	jmp	$LN24@generate
 $LN11@generate:
 
@@ -33681,8 +33685,8 @@ $LN11@generate:
 
 	mov	eax, DWORD PTR _brange$[ebp]
 	add	eax, 1
-	imul	eax, DWORD PTR _mult$177507[ebp]
-	mov	DWORD PTR _mult$177507[ebp], eax
+	imul	eax, DWORD PTR _mult$179971[ebp]
+	mov	DWORD PTR _mult$179971[ebp], eax
 
 ; 180  :         }
 
@@ -33721,14 +33725,14 @@ $LN12@generate:
 	push	eax
 	mov	eax, DWORD PTR _range$[ebp]
 	xor	edx, edx
-	div	DWORD PTR _mult$177507[ebp]
+	div	DWORD PTR _mult$179971[ebp]
 	push	eax
 	push	0
-	lea	ecx, DWORD PTR $T215118[ebp]
+	lea	ecx, DWORD PTR $T217776[ebp]
 	call	??0?$uniform_int@I@boost@@QAE@II@Z	; boost::uniform_int<unsigned int>::uniform_int<unsigned int>
 	mov	ecx, eax
 	call	??$?RV?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@@?$uniform_int@I@boost@@QAEIAAV?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@1@@Z ; boost::uniform_int<unsigned int>::operator()<boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> > >
-	mov	DWORD PTR _result_increment$177516[ebp], eax
+	mov	DWORD PTR _result_increment$179980[ebp], eax
 
 ; 208  :         if((std::numeric_limits<range_type>::max)() / mult < result_increment) {
 
@@ -33737,8 +33741,8 @@ $LN12@generate:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	xor	edx, edx
-	div	DWORD PTR _mult$177507[ebp]
-	cmp	eax, DWORD PTR _result_increment$177516[ebp]
+	div	DWORD PTR _mult$179971[ebp]
+	cmp	eax, DWORD PTR _result_increment$179980[ebp]
 	jae	SHORT $LN10@generate
 
 ; 209  :           // The multiplcation would overflow.  Reject immediately.
@@ -33750,21 +33754,21 @@ $LN10@generate:
 ; 211  :         }
 ; 212  :         result_increment *= mult;
 
-	mov	eax, DWORD PTR _result_increment$177516[ebp]
-	imul	eax, DWORD PTR _mult$177507[ebp]
-	mov	DWORD PTR _result_increment$177516[ebp], eax
+	mov	eax, DWORD PTR _result_increment$179980[ebp]
+	imul	eax, DWORD PTR _mult$179971[ebp]
+	mov	DWORD PTR _result_increment$179980[ebp], eax
 
 ; 213  :         // unsigned integers are guaranteed to wrap on overflow.
 ; 214  :         result += result_increment;
 
-	mov	eax, DWORD PTR _result$177506[ebp]
-	add	eax, DWORD PTR _result_increment$177516[ebp]
-	mov	DWORD PTR _result$177506[ebp], eax
+	mov	eax, DWORD PTR _result$179970[ebp]
+	add	eax, DWORD PTR _result_increment$179980[ebp]
+	mov	DWORD PTR _result$179970[ebp], eax
 
 ; 215  :         if(result < result_increment) {
 
-	mov	eax, DWORD PTR _result$177506[ebp]
-	cmp	eax, DWORD PTR _result_increment$177516[ebp]
+	mov	eax, DWORD PTR _result$179970[ebp]
+	cmp	eax, DWORD PTR _result_increment$179980[ebp]
 	jae	SHORT $LN9@generate
 
 ; 216  :           // The addition overflowed.  Reject.
@@ -33776,7 +33780,7 @@ $LN9@generate:
 ; 218  :         }
 ; 219  :         if(result > range) {
 
-	mov	eax, DWORD PTR _result$177506[ebp]
+	mov	eax, DWORD PTR _result$179970[ebp]
 	cmp	eax, DWORD PTR _range$[ebp]
 	jbe	SHORT $LN8@generate
 
@@ -33790,12 +33794,12 @@ $LN8@generate:
 ; 223  :         return random::detail::add<range_type, result_type>()(result, min_value);
 
 	xor	eax, eax
-	mov	BYTE PTR $T215119[ebp], al
+	mov	BYTE PTR $T217777[ebp], al
 	mov	ecx, DWORD PTR _min_value$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _result$177506[ebp]
+	mov	edx, DWORD PTR _result$179970[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T215119[ebp]
+	lea	ecx, DWORD PTR $T217777[ebp]
 	call	??R?$add@IH$00@detail@random@boost@@QAEHIH@Z ; boost::random::detail::add<unsigned int,int,1>::operator()
 	jmp	$LN24@generate
 
@@ -33829,7 +33833,7 @@ $LN19@generate:
 	mov	eax, DWORD PTR _brange$[ebp]
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _bucket_size$177954[ebp], eax
+	mov	DWORD PTR _bucket_size$180418[ebp], eax
 
 ; 233  :         if(brange % (static_cast<base_unsigned>(range)+1) == static_cast<base_unsigned>(range)) {
 
@@ -33843,9 +33847,9 @@ $LN19@generate:
 
 ; 234  :           ++bucket_size;
 
-	mov	eax, DWORD PTR _bucket_size$177954[ebp]
+	mov	eax, DWORD PTR _bucket_size$180418[ebp]
 	add	eax, 1
-	mov	DWORD PTR _bucket_size$177954[ebp], eax
+	mov	DWORD PTR _bucket_size$180418[ebp], eax
 $LN5@generate:
 
 ; 235  :         }
@@ -33862,7 +33866,7 @@ $LN6@generate:
 	add	ecx, 1
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _bucket_size$177954[ebp], eax
+	mov	DWORD PTR _bucket_size$180418[ebp], eax
 $LN3@generate:
 
 ; 238  :       }
@@ -33871,40 +33875,40 @@ $LN3@generate:
 ; 241  :           random::detail::subtract<base_result>()(eng(), bmin);
 
 	xor	eax, eax
-	mov	BYTE PTR $T215120[ebp], al
+	mov	BYTE PTR $T217778[ebp], al
 	mov	ecx, DWORD PTR _bmin$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	??R?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QAEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::operator()
 	push	eax
-	lea	ecx, DWORD PTR $T215120[ebp]
+	lea	ecx, DWORD PTR $T217778[ebp]
 	call	??R?$subtract@K$0A@@detail@random@boost@@QAEKKK@Z ; boost::random::detail::subtract<unsigned long,0>::operator()
-	mov	DWORD PTR _result$177966[ebp], eax
+	mov	DWORD PTR _result$180430[ebp], eax
 
 ; 242  :         result /= bucket_size;
 
-	mov	eax, DWORD PTR _result$177966[ebp]
+	mov	eax, DWORD PTR _result$180430[ebp]
 	xor	edx, edx
-	div	DWORD PTR _bucket_size$177954[ebp]
-	mov	DWORD PTR _result$177966[ebp], eax
+	div	DWORD PTR _bucket_size$180418[ebp]
+	mov	DWORD PTR _result$180430[ebp], eax
 
 ; 243  :         // result and range are non-negative, and result is possibly larger
 ; 244  :         // than range, so the cast is safe
 ; 245  :         if(result <= static_cast<base_unsigned>(range))
 
-	mov	eax, DWORD PTR _result$177966[ebp]
+	mov	eax, DWORD PTR _result$180430[ebp]
 	cmp	eax, DWORD PTR _range$[ebp]
 	ja	SHORT $LN1@generate
 
 ; 246  :           return random::detail::add<base_unsigned, result_type>()(result, min_value);
 
 	xor	eax, eax
-	mov	BYTE PTR $T215121[ebp], al
+	mov	BYTE PTR $T217779[ebp], al
 	mov	ecx, DWORD PTR _min_value$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _result$177966[ebp]
+	mov	edx, DWORD PTR _result$180430[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T215121[ebp]
+	lea	ecx, DWORD PTR $T217779[ebp]
 	call	??R?$add@KH$00@detail@random@boost@@QAEHKH@Z ; boost::random::detail::add<unsigned long,int,1>::operator()
 	jmp	SHORT $LN24@generate
 $LN1@generate:
@@ -33963,8 +33967,8 @@ _TEXT	SEGMENT
 tv75 = -256						; size = 4
 tv83 = -252						; size = 4
 tv81 = -248						; size = 4
-$T215126 = -240						; size = 4
-$T215127 = -228						; size = 4
+$T217784 = -240						; size = 4
+$T217785 = -228						; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 _p$ = 8							; size = 4
@@ -34014,13 +34018,13 @@ _p$ = 8							; size = 4
 	add	esp, 4
 	mov	DWORD PTR tv81[ebp], eax
 	mov	eax, DWORD PTR tv81[ebp]
-	mov	DWORD PTR $T215127[ebp], eax
+	mov	DWORD PTR $T217785[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 1
-	cmp	DWORD PTR $T215127[ebp], 0
+	cmp	DWORD PTR $T217785[ebp], 0
 	je	SHORT $LN4@shared_cou@2
 	mov	ecx, DWORD PTR _p$[ebp]
 	push	ecx
-	mov	ecx, DWORD PTR $T215127[ebp]
+	mov	ecx, DWORD PTR $T217785[ebp]
 	call	??0?$sp_counted_impl_p@Uchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@boost@@QAE@PAUchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@1iostreams@2@@Z ; boost::detail::sp_counted_impl_p<boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_impl>::sp_counted_impl_p<boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_impl>
 	mov	DWORD PTR tv83[ebp], eax
 	mov	edx, DWORD PTR tv83[ebp]
@@ -34030,10 +34034,10 @@ $LN4@shared_cou@2:
 	mov	DWORD PTR tv75[ebp], 0
 $LN5@shared_cou@2:
 	mov	eax, DWORD PTR tv75[ebp]
-	mov	DWORD PTR $T215126[ebp], eax
+	mov	DWORD PTR $T217784[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR $T215126[ebp]
+	mov	edx, DWORD PTR $T217784[ebp]
 	mov	DWORD PTR [ecx], edx
 
 ; 88   :         }
@@ -34097,7 +34101,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$?0Uchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@shared_count@detail@boost@@QAE@PAUchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@1iostreams@2@@Z$2:
-	mov	eax, DWORD PTR $T215127[ebp]
+	mov	eax, DWORD PTR $T217785[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -34247,7 +34251,7 @@ __ehfuncinfo$??0m_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?
 xdata$x	ENDS
 ;	COMDAT ??0m_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@XZ
 _TEXT	SEGMENT
-$T215148 = -221						; size = 1
+$T217806 = -221						; size = 1
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ??0m_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAE@XZ PROC ; boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp::m_imp, COMDAT
@@ -34282,7 +34286,7 @@ __$EHRec$ = -12						; size = 12
 	call	??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	push	1
-	lea	ecx, DWORD PTR $T215148[ebp]
+	lea	ecx, DWORD PTR $T217806[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -34330,7 +34334,7 @@ text$x	ENDS
 ; File c:\program files\boost\boost_1_40\boost\filesystem\path.hpp
 ;	COMDAT ??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ
 _TEXT	SEGMENT
-$T215160 = -209						; size = 1
+$T217818 = -209						; size = 1
 _this$ = -8						; size = 4
 ??0?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@QAE@XZ PROC ; boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits>, COMDAT
 ; _this$ = ecx
@@ -34351,7 +34355,7 @@ _this$ = -8						; size = 4
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 	push	1
-	lea	ecx, DWORD PTR $T215160[ebp]
+	lea	ecx, DWORD PTR $T217818[ebp]
 	call	??0_Has_debug_it@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@_N@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::_Has_debug_it::_Has_debug_it
 	mov	esi, esp
 	movzx	eax, BYTE PTR [eax]
@@ -35194,7 +35198,7 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv71 = -240						; size = 4
 tv72 = -236						; size = 4
-$T215218 = -228						; size = 8
+$T217876 = -228						; size = 8
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?reset@?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAEXXZ PROC ; boost::shared_ptr<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>::reset, COMDAT
@@ -35229,7 +35233,7 @@ __$EHRec$ = -12						; size = 12
 
 	mov	eax, DWORD PTR _this$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T215218[ebp]
+	lea	ecx, DWORD PTR $T217876[ebp]
 	call	??0?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAE@XZ ; boost::shared_ptr<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>::shared_ptr<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>
 	mov	DWORD PTR tv72[ebp], eax
 	mov	ecx, DWORD PTR tv72[ebp]
@@ -35238,7 +35242,7 @@ __$EHRec$ = -12						; size = 12
 	mov	ecx, DWORD PTR tv71[ebp]
 	call	?swap@?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAEXAAV12@@Z ; boost::shared_ptr<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>::swap
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T215218[ebp]
+	lea	ecx, DWORD PTR $T217876[ebp]
 	call	??1?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAE@XZ
 
 ; 387  :     }
@@ -35259,7 +35263,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?reset@?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAEXXZ$0:
-	lea	ecx, DWORD PTR $T215218[ebp]
+	lea	ecx, DWORD PTR $T217876[ebp]
 	jmp	??1?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAE@XZ
 __ehhandler$?reset@?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -35523,8 +35527,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv77 = -248						; size = 4
 tv76 = -244						; size = 4
-$T215238 = -236						; size = 4
-$T215239 = -224						; size = 4
+$T217896 = -236						; size = 4
+$T217897 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?clone@?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@EBEPBVclone_base@23@XZ PROC ; boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > > >::clone, COMDAT
@@ -35560,14 +35564,14 @@ __$EHRec$ = -12						; size = 12
 	push	116					; 00000074H
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
-	mov	DWORD PTR $T215239[ebp], eax
+	mov	DWORD PTR $T217897[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	cmp	DWORD PTR $T215239[ebp], 0
+	cmp	DWORD PTR $T217897[ebp], 0
 	je	SHORT $LN3@clone
 	mov	eax, DWORD PTR _this$[ebp]
 	sub	eax, 112				; 00000070H
 	push	eax
-	mov	ecx, DWORD PTR $T215239[ebp]
+	mov	ecx, DWORD PTR $T217897[ebp]
 	call	??0?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@QAE@ABV012@@Z
 	mov	DWORD PTR tv76[ebp], eax
 	jmp	SHORT $LN4@clone
@@ -35575,11 +35579,11 @@ $LN3@clone:
 	mov	DWORD PTR tv76[ebp], 0
 $LN4@clone:
 	mov	ecx, DWORD PTR tv76[ebp]
-	mov	DWORD PTR $T215238[ebp], ecx
+	mov	DWORD PTR $T217896[ebp], ecx
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	cmp	DWORD PTR $T215238[ebp], 0
+	cmp	DWORD PTR $T217896[ebp], 0
 	je	SHORT $LN5@clone
-	mov	edx, DWORD PTR $T215238[ebp]
+	mov	edx, DWORD PTR $T217896[ebp]
 	add	edx, 112				; 00000070H
 	mov	DWORD PTR tv77[ebp], edx
 	jmp	SHORT $LN6@clone
@@ -35606,7 +35610,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?clone@?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@EBEPBVclone_base@23@XZ$0:
-	mov	eax, DWORD PTR $T215239[ebp]
+	mov	eax, DWORD PTR $T217897[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -35624,7 +35628,7 @@ text$x	ENDS
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?rethrow@?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@EBEXXZ
 _TEXT	SEGMENT
-$T215253 = -324						; size = 116
+$T217911 = -324						; size = 116
 _this$ = -8						; size = 4
 ?rethrow@?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@EBEXXZ PROC ; boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > > >::rethrow, COMDAT
 ; _this$ = ecx
@@ -35650,10 +35654,10 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR _this$[ebp]
 	sub	eax, 112				; 00000070H
 	push	eax
-	lea	ecx, DWORD PTR $T215253[ebp]
+	lea	ecx, DWORD PTR $T217911[ebp]
 	call	??0?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@QAE@ABV012@@Z
 	push	OFFSET __TI8?AV?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@
-	lea	ecx, DWORD PTR $T215253[ebp]
+	lea	ecx, DWORD PTR $T217911[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 $LN2@rethrow:
@@ -36239,8 +36243,8 @@ _TEXT	ENDS
 ;	COMDAT ?destroy@sp_counted_base@detail@boost@@UAEXXZ
 _TEXT	SEGMENT
 tv70 = -232						; size = 4
-$T215279 = -224						; size = 4
-$T215280 = -212						; size = 4
+$T217937 = -224						; size = 4
+$T217938 = -212						; size = 4
 _this$ = -8						; size = 4
 ?destroy@sp_counted_base@detail@boost@@UAEXXZ PROC	; boost::detail::sp_counted_base::destroy, COMDAT
 ; _this$ = ecx
@@ -36264,16 +36268,16 @@ _this$ = -8						; size = 4
 ; 66   :         delete this;
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR $T215280[ebp], eax
-	mov	ecx, DWORD PTR $T215280[ebp]
-	mov	DWORD PTR $T215279[ebp], ecx
-	cmp	DWORD PTR $T215279[ebp], 0
+	mov	DWORD PTR $T217938[ebp], eax
+	mov	ecx, DWORD PTR $T217938[ebp]
+	mov	DWORD PTR $T217937[ebp], ecx
+	cmp	DWORD PTR $T217937[ebp], 0
 	je	SHORT $LN3@destroy
 	mov	esi, esp
 	push	1
-	mov	edx, DWORD PTR $T215279[ebp]
+	mov	edx, DWORD PTR $T217937[ebp]
 	mov	eax, DWORD PTR [edx]
-	mov	ecx, DWORD PTR $T215279[ebp]
+	mov	ecx, DWORD PTR $T217937[ebp]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
@@ -36654,7 +36658,7 @@ PUBLIC	??R?$subtract@I$0A@@detail@random@boost@@QAEIII@Z ; boost::random::detail
 ; File c:\program files\boost\boost_1_40\boost\random\uniform_int.hpp
 ;	COMDAT ?init@?$uniform_int@I@boost@@AAEXXZ
 _TEXT	SEGMENT
-$T215302 = -209						; size = 1
+$T217960 = -209						; size = 1
 _this$ = -8						; size = 4
 ?init@?$uniform_int@I@boost@@AAEXXZ PROC		; boost::uniform_int<unsigned int>::init, COMDAT
 ; _this$ = ecx
@@ -36678,14 +36682,14 @@ _this$ = -8						; size = 4
 ; 253  :     _range = random::detail::subtract<result_type>()(_max, _min);
 
 	xor	eax, eax
-	mov	BYTE PTR $T215302[ebp], al
+	mov	BYTE PTR $T217960[ebp], al
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx]
 	push	edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+4]
 	push	ecx
-	lea	ecx, DWORD PTR $T215302[ebp]
+	lea	ecx, DWORD PTR $T217960[ebp]
 	call	??R?$subtract@I$0A@@detail@random@boost@@QAEIII@Z ; boost::random::detail::subtract<unsigned int,0>::operator()
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [edx+8], eax
@@ -36765,7 +36769,7 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv78 = -240						; size = 4
 tv79 = -236						; size = 4
-$T215308 = -228						; size = 8
+$T217966 = -228						; size = 8
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _p$ = 8							; size = 4
@@ -36822,7 +36826,7 @@ $LN3@reset:
 	push	eax
 	mov	ecx, DWORD PTR _p$[ebp]
 	push	ecx
-	lea	ecx, DWORD PTR $T215308[ebp]
+	lea	ecx, DWORD PTR $T217966[ebp]
 	call	??$?0Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAE@PAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@1@@Z ; boost::shared_ptr<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>::shared_ptr<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp><boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>
 	mov	DWORD PTR tv79[ebp], eax
 	mov	edx, DWORD PTR tv79[ebp]
@@ -36831,7 +36835,7 @@ $LN3@reset:
 	mov	ecx, DWORD PTR tv78[ebp]
 	call	?swap@?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAEXAAV12@@Z ; boost::shared_ptr<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>::swap
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T215308[ebp]
+	lea	ecx, DWORD PTR $T217966[ebp]
 	call	??1?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAE@XZ
 
 ; 393  :     }
@@ -36852,7 +36856,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$reset@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAEXPAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@1@@Z$0:
-	lea	ecx, DWORD PTR $T215308[ebp]
+	lea	ecx, DWORD PTR $T217966[ebp]
 	jmp	??1?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAE@XZ
 __ehhandler$??$reset@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@?$shared_ptr@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@QAEXPAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@1@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -36869,7 +36873,7 @@ PUBLIC	??0?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic
 ; File c:\program files\boost\boost_1_40\boost\exception\exception.hpp
 ;	COMDAT ??$enable_error_info@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YA?AU?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@0@ABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z
 _TEXT	SEGMENT
-$T215319 = -200						; size = 4
+$T217977 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _x$ = 12						; size = 4
 ??$enable_error_info@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YA?AU?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@0@ABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z PROC ; boost::enable_error_info<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >, COMDAT
@@ -36886,7 +36890,7 @@ _x$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215319[ebp], 0
+	mov	DWORD PTR $T217977[ebp], 0
 
 ; 316  :         typedef typename exception_detail::enable_error_info_return_type<T>::type rt;
 ; 317  :         return rt(x);
@@ -36895,9 +36899,9 @@ _x$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@QAE@ABV?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@2@@Z ; boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > >
-	mov	ecx, DWORD PTR $T215319[ebp]
+	mov	ecx, DWORD PTR $T217977[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215319[ebp], ecx
+	mov	DWORD PTR $T217977[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 318  :         }
@@ -36917,7 +36921,7 @@ PUBLIC	??0?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$enable_current_exception@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@boost@@YA?AV?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@0@ABU?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@20@@Z
 _TEXT	SEGMENT
-$T215324 = -200						; size = 4
+$T217982 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _x$ = 12						; size = 4
 ??$enable_current_exception@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@boost@@YA?AV?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@0@ABU?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@20@@Z PROC ; boost::enable_current_exception<boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > > >, COMDAT
@@ -36934,7 +36938,7 @@ _x$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215324[ebp], 0
+	mov	DWORD PTR $T217982[ebp], 0
 
 ; 392  :         return exception_detail::clone_impl<T>(x);
 
@@ -36942,9 +36946,9 @@ _x$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$clone_impl@U?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@exception_detail@boost@@@exception_detail@boost@@QAE@ABU?$error_info_injector@V?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@12@@Z ; boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > > >::clone_impl<boost::exception_detail::error_info_injector<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> > > >
-	mov	ecx, DWORD PTR $T215324[ebp]
+	mov	ecx, DWORD PTR $T217982[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215324[ebp], ecx
+	mov	DWORD PTR $T217982[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 393  :         }
@@ -36964,7 +36968,7 @@ _x$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$is_char_ptr@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YAJV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
 _TEXT	SEGMENT
-$T215328 = -200						; size = 4
+$T217986 = -200						; size = 4
 ___formal$ = 8						; size = 32
 ??$is_char_ptr@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YAJV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z PROC ; boost::range_detail::is_char_ptr<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >, COMDAT
 
@@ -36983,13 +36987,13 @@ ___formal$ = 8						; size = 32
 
 ; 79   :             return 0L;
 
-	mov	DWORD PTR $T215328[ebp], 0
+	mov	DWORD PTR $T217986[ebp], 0
 	mov	esi, esp
 	lea	ecx, DWORD PTR ___formal$[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	eax, DWORD PTR $T215328[ebp]
+	mov	eax, DWORD PTR $T217986[ebp]
 
 ; 80   :         }
 
@@ -37008,7 +37012,7 @@ PUBLIC	??$make_iterator_range@V?$basic_string@DU?$char_traits@D@std@@V?$allocato
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$make_range@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YA?AV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@1@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@J@Z
 _TEXT	SEGMENT
-$T215333 = -200						; size = 4
+$T217991 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
 ___formal$ = 16						; size = 4
@@ -37026,7 +37030,7 @@ ___formal$ = 16						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215333[ebp], 0
+	mov	DWORD PTR $T217991[ebp], 0
 
 ; 93   :             return boost::make_iterator_range( r );
 
@@ -37036,9 +37040,9 @@ ___formal$ = 16						; size = 4
 	push	ecx
 	call	??$make_iterator_range@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; boost::make_iterator_range<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 8
-	mov	edx, DWORD PTR $T215333[ebp]
+	mov	edx, DWORD PTR $T217991[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T215333[ebp], edx
+	mov	DWORD PTR $T217991[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 94   :         }
@@ -37059,7 +37063,7 @@ PUBLIC	??$range_begin@$$CBV?$iterator_range@V?$_String_iterator@DU?$char_traits@
 ; File c:\program files\boost\boost_1_40\boost\range\begin.hpp
 ;	COMDAT ??$begin@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@@Z
 _TEXT	SEGMENT
-$T215338 = -200						; size = 4
+$T217996 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
 ??$begin@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@@Z PROC ; boost::begin<boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > > >, COMDAT
@@ -37076,7 +37080,7 @@ _r$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215338[ebp], 0
+	mov	DWORD PTR $T217996[ebp], 0
 
 ; 109  : #if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564)) && \
 ; 110  :     !BOOST_WORKAROUND(__GNUC__, < 3) \
@@ -37091,9 +37095,9 @@ _r$ = 12						; size = 4
 	push	ecx
 	call	??$range_begin@$$CBV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@1@@Z ; boost::range_detail::range_begin<boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > > const >
 	add	esp, 8
-	mov	edx, DWORD PTR $T215338[ebp]
+	mov	edx, DWORD PTR $T217996[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T215338[ebp], edx
+	mov	DWORD PTR $T217996[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 115  : }
@@ -37114,7 +37118,7 @@ PUBLIC	??$range_end@$$CBV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@
 ; File c:\program files\boost\boost_1_40\boost\range\end.hpp
 ;	COMDAT ??$end@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@@Z
 _TEXT	SEGMENT
-$T215343 = -200						; size = 4
+$T218001 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
 ??$end@V?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@@Z PROC ; boost::end<boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > > >, COMDAT
@@ -37131,7 +37135,7 @@ _r$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215343[ebp], 0
+	mov	DWORD PTR $T218001[ebp], 0
 
 ; 105  : #if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564)) && \
 ; 106  :     !BOOST_WORKAROUND(__GNUC__, < 3) \
@@ -37146,9 +37150,9 @@ _r$ = 12						; size = 4
 	push	ecx
 	call	??$range_end@$$CBV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@1@@Z ; boost::range_detail::range_end<boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > > const >
 	add	esp, 8
-	mov	edx, DWORD PTR $T215343[ebp]
+	mov	edx, DWORD PTR $T218001[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T215343[ebp], edx
+	mov	DWORD PTR $T218001[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 111  : }
@@ -37199,12 +37203,12 @@ tv163 = -292						; size = 4
 tv175 = -288						; size = 4
 tv159 = -284						; size = 4
 tv174 = -280						; size = 4
-$T215347 = -269						; size = 1
-$T215348 = -257						; size = 1
-$T215349 = -248						; size = 4
-$T215350 = -236						; size = 4
-$T215351 = -224						; size = 4
-$T215359 = -212						; size = 4
+$T218005 = -269						; size = 1
+$T218006 = -257						; size = 1
+$T218007 = -248						; size = 4
+$T218008 = -236						; size = 4
+$T218009 = -224						; size = 4
+$T218017 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 __First$ = 12						; size = 12
@@ -37234,21 +37238,21 @@ __Func$ = 48						; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T215359[ebp], 0
+	mov	DWORD PTR $T218017[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
 
 ; 695  : 	return _Transform(_CHECKED_BASE(_First), _CHECKED_BASE(_Last), _Dest, _Func,
 ; 696  : 		_Iter_random(_First, _Dest), _STD _Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T215347[ebp], al
-	movzx	ecx, BYTE PTR $T215347[ebp]
+	mov	BYTE PTR $T218005[ebp], al
+	movzx	ecx, BYTE PTR $T218005[ebp]
 	push	ecx
 	lea	edx, DWORD PTR __Dest$[ebp]
 	push	edx
 	lea	eax, DWORD PTR __First$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T215348[ebp]
+	lea	ecx, DWORD PTR $T218006[ebp]
 	push	ecx
 	call	??$_Iter_random@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@@std@@YA?AUrandom_access_iterator_tag@0@ABV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@0@Z ; std::_Iter_random<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >,std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 12					; 0000000cH
@@ -37258,7 +37262,7 @@ __Func$ = 48						; size = 4
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215349[ebp], esp
+	mov	DWORD PTR $T218007[ebp], esp
 	lea	edx, DWORD PTR __Dest$[ebp]
 	push	edx
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
@@ -37268,7 +37272,7 @@ __Func$ = 48						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215350[ebp], esp
+	mov	DWORD PTR $T218008[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	push	ecx
@@ -37280,7 +37284,7 @@ __Func$ = 48						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215351[ebp], esp
+	mov	DWORD PTR $T218009[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	push	ecx
@@ -37293,9 +37297,9 @@ __Func$ = 48						; size = 4
 	call	??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Transform<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >,std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >,boost::algorithm::detail::to_lowerF<char> >
 	add	esp, 52					; 00000034H
 	mov	DWORD PTR tv160[ebp], eax
-	mov	ecx, DWORD PTR $T215359[ebp]
+	mov	ecx, DWORD PTR $T218017[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215359[ebp], ecx
+	mov	DWORD PTR $T218017[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
@@ -37334,16 +37338,16 @@ __unwindfunclet$??$transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$alloc
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@@Z$3:
-	mov	ecx, DWORD PTR $T215349[ebp]
+	mov	ecx, DWORD PTR $T218007[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@@Z$4:
-	mov	ecx, DWORD PTR $T215350[ebp]
+	mov	ecx, DWORD PTR $T218008[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@@Z$6:
-	mov	eax, DWORD PTR $T215359[ebp]
+	mov	eax, DWORD PTR $T218017[ebp]
 	and	eax, 1
 	je	$LN10@transform
-	and	DWORD PTR $T215359[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218017[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN10@transform:
@@ -37378,7 +37382,7 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv78 = -240						; size = 4
 tv79 = -236						; size = 4
-$T215370 = -228						; size = 8
+$T218028 = -228						; size = 8
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _p$ = 8							; size = 4
@@ -37435,7 +37439,7 @@ $LN3@reset@2:
 	push	eax
 	mov	ecx, DWORD PTR _p$[ebp]
 	push	ecx
-	lea	ecx, DWORD PTR $T215370[ebp]
+	lea	ecx, DWORD PTR $T218028[ebp]
 	call	??$?0Uimpl@?$basic_file@D@iostreams@boost@@@?$shared_ptr@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@QAE@PAUimpl@?$basic_file@D@iostreams@1@@Z ; boost::shared_ptr<boost::iostreams::basic_file<char>::impl>::shared_ptr<boost::iostreams::basic_file<char>::impl><boost::iostreams::basic_file<char>::impl>
 	mov	DWORD PTR tv79[ebp], eax
 	mov	edx, DWORD PTR tv79[ebp]
@@ -37444,7 +37448,7 @@ $LN3@reset@2:
 	mov	ecx, DWORD PTR tv78[ebp]
 	call	?swap@?$shared_ptr@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@QAEXAAV12@@Z ; boost::shared_ptr<boost::iostreams::basic_file<char>::impl>::swap
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T215370[ebp]
+	lea	ecx, DWORD PTR $T218028[ebp]
 	call	??1?$shared_ptr@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@QAE@XZ
 
 ; 393  :     }
@@ -37465,7 +37469,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$reset@Uimpl@?$basic_file@D@iostreams@boost@@@?$shared_ptr@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@QAEXPAUimpl@?$basic_file@D@iostreams@1@@Z$0:
-	lea	ecx, DWORD PTR $T215370[ebp]
+	lea	ecx, DWORD PTR $T218028[ebp]
 	jmp	??1?$shared_ptr@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@QAE@XZ
 __ehhandler$??$reset@Uimpl@?$basic_file@D@iostreams@boost@@@?$shared_ptr@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@QAEXPAUimpl@?$basic_file@D@iostreams@1@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -37561,8 +37565,8 @@ _TEXT	SEGMENT
 tv157 = -244						; size = 4
 tv142 = -244						; size = 4
 tv135 = -244						; size = 4
-$T215383 = -236						; size = 4
-$T215384 = -224						; size = 4
+$T218041 = -236						; size = 4
+$T218042 = -224						; size = 4
 _buf$ = -20						; size = 4
 _this$ = -8						; size = 4
 ?pop@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ PROC ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::pop, COMDAT
@@ -37660,16 +37664,16 @@ $LN3@pop:
 ; 574  :     delete buf;
 
 	mov	eax, DWORD PTR _buf$[ebp]
-	mov	DWORD PTR $T215384[ebp], eax
-	mov	ecx, DWORD PTR $T215384[ebp]
-	mov	DWORD PTR $T215383[ebp], ecx
-	cmp	DWORD PTR $T215383[ebp], 0
+	mov	DWORD PTR $T218042[ebp], eax
+	mov	ecx, DWORD PTR $T218042[ebp]
+	mov	DWORD PTR $T218041[ebp], ecx
+	cmp	DWORD PTR $T218041[ebp], 0
 	je	SHORT $LN7@pop
 	mov	esi, esp
 	push	1
-	mov	edx, DWORD PTR $T215383[ebp]
+	mov	edx, DWORD PTR $T218041[ebp]
 	mov	eax, DWORD PTR [edx]
-	mov	ecx, DWORD PTR $T215383[ebp]
+	mov	ecx, DWORD PTR $T218041[ebp]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
@@ -37766,7 +37770,7 @@ PUBLIC	??$_Checked_base@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocat
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 ;	COMDAT ??$_Checked_base@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@AAV10@@Z
 _TEXT	SEGMENT
-$T215393 = -212						; size = 4
+$T218051 = -212						; size = 4
 __Base_tag$ = -5					; size = 1
 ___$ReturnUdt$ = 8					; size = 4
 __It$ = 12						; size = 4
@@ -37784,7 +37788,7 @@ __It$ = 12						; size = 4
 	mov	ecx, 54					; 00000036H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215393[ebp], 0
+	mov	DWORD PTR $T218051[ebp], 0
 
 ; 1164 : 		typename _Checked_iterator_base_helper<_Iter>::_Checked_iterator_base_type_tag _Base_tag;
 ; 1165 : 		return _Checked_base(_It, _Base_tag);
@@ -37797,9 +37801,9 @@ __It$ = 12						; size = 4
 	push	edx
 	call	??$_Checked_base@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@AAV10@U_Unchanged_checked_iterator_base_type_tag@0@@Z ; std::_Checked_base<std::_Vector_const_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> > >
 	add	esp, 12					; 0000000cH
-	mov	eax, DWORD PTR $T215393[ebp]
+	mov	eax, DWORD PTR $T218051[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T215393[ebp], eax
+	mov	DWORD PTR $T218051[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1166 : 	}
@@ -37933,12 +37937,12 @@ tv164 = -312						; size = 4
 tv172 = -308						; size = 4
 tv160 = -304						; size = 4
 tv68 = -300						; size = 4
-$T215405 = -289						; size = 1
-$T215406 = -277						; size = 1
-$T215407 = -265						; size = 1
-$T215408 = -256						; size = 4
-$T215409 = -244						; size = 4
-$T215410 = -232						; size = 4
+$T218063 = -289						; size = 1
+$T218064 = -277						; size = 1
+$T218065 = -265						; size = 1
+$T218066 = -256						; size = 4
+$T218067 = -244						; size = 4
+$T218068 = -232						; size = 4
 __Last2$ = -28						; size = 12
 __$EHRec$ = -12						; size = 12
 __First1$ = 8						; size = 12
@@ -37989,14 +37993,14 @@ ___formal$ = 48						; size = 1
 ; 3046 : 		forward_iterator_tag(), _Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T215406[ebp], al
-	movzx	ecx, BYTE PTR $T215406[ebp]
+	mov	BYTE PTR $T218064[ebp], al
+	movzx	ecx, BYTE PTR $T218064[ebp]
 	push	ecx
-	movzx	edx, BYTE PTR $T215407[ebp]
+	movzx	edx, BYTE PTR $T218065[ebp]
 	push	edx
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T215408[ebp], esp
+	mov	DWORD PTR $T218066[ebp], esp
 	lea	ecx, DWORD PTR __First2$[ebp]
 	push	ecx
 	push	eax
@@ -38008,7 +38012,7 @@ ___formal$ = 48						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215409[ebp], esp
+	mov	DWORD PTR $T218067[ebp], esp
 	lea	eax, DWORD PTR __Last1$[ebp]
 	push	eax
 	call	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -38018,7 +38022,7 @@ ___formal$ = 48						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215410[ebp], esp
+	mov	DWORD PTR $T218068[ebp], esp
 	lea	edx, DWORD PTR __First1$[ebp]
 	push	edx
 	call	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
@@ -38028,7 +38032,7 @@ ___formal$ = 48						; size = 1
 	add	esp, 44					; 0000002cH
 	mov	BYTE PTR tv161[ebp], al
 	mov	al, BYTE PTR tv161[ebp]
-	mov	BYTE PTR $T215405[ebp], al
+	mov	BYTE PTR $T218063[ebp], al
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	lea	ecx, DWORD PTR __Last2$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -38041,7 +38045,7 @@ ___formal$ = 48						; size = 1
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __First2$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	al, BYTE PTR $T215405[ebp]
+	mov	al, BYTE PTR $T218063[ebp]
 
 ; 3047 : 	}
 
@@ -38096,10 +38100,10 @@ __unwindfunclet$??$_Equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$alloc
 	lea	ecx, DWORD PTR __Last2$[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V12@@std@@YA_NV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@00Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$4:
-	mov	ecx, DWORD PTR $T215408[ebp]
+	mov	ecx, DWORD PTR $T218066[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$_Equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V12@@std@@YA_NV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@00Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$5:
-	mov	ecx, DWORD PTR $T215409[ebp]
+	mov	ecx, DWORD PTR $T218067[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V12@@std@@YA_NV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@00Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -38173,8 +38177,8 @@ PUBLIC	??_Gchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_tra
 ;	COMDAT ??$checked_delete@Uchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@boost@@YAXPAUchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@0@@Z
 _TEXT	SEGMENT
 tv68 = -220						; size = 4
-$T215431 = -212						; size = 4
-$T215432 = -200						; size = 4
+$T218089 = -212						; size = 4
+$T218090 = -200						; size = 4
 _x$ = 8							; size = 4
 ??$checked_delete@Uchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@boost@@YAXPAUchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@0@@Z PROC ; boost::checked_delete<boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_impl>, COMDAT
 
@@ -38197,13 +38201,13 @@ _x$ = 8							; size = 4
 ; 34   :     delete x;
 
 	mov	eax, DWORD PTR _x$[ebp]
-	mov	DWORD PTR $T215432[ebp], eax
-	mov	ecx, DWORD PTR $T215432[ebp]
-	mov	DWORD PTR $T215431[ebp], ecx
-	cmp	DWORD PTR $T215431[ebp], 0
+	mov	DWORD PTR $T218090[ebp], eax
+	mov	ecx, DWORD PTR $T218090[ebp]
+	mov	DWORD PTR $T218089[ebp], ecx
+	cmp	DWORD PTR $T218089[ebp], 0
 	je	SHORT $LN3@checked_de
 	push	1
-	mov	ecx, DWORD PTR $T215431[ebp]
+	mov	ecx, DWORD PTR $T218089[ebp]
 	call	??_Gchain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEPAXI@Z
 	mov	DWORD PTR tv68[ebp], eax
 	jmp	SHORT $LN1@checked_de
@@ -38228,13 +38232,13 @@ $LN1@checked_de:
 _TEXT	ENDS
 ;	COMDAT ?twist@?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@AAEXH@Z
 _TEXT	SEGMENT
-_y$179476 = -116					; size = 4
-_y$179475 = -104					; size = 4
-_j$179471 = -92						; size = 4
-_y$179470 = -80						; size = 4
-_j$179466 = -68						; size = 4
-_y$179463 = -56						; size = 4
-_j$179459 = -44						; size = 4
+_y$181997 = -116					; size = 4
+_y$181996 = -104					; size = 4
+_j$181992 = -92						; size = 4
+_y$181991 = -80						; size = 4
+_j$181987 = -68						; size = 4
+_y$181984 = -56						; size = 4
+_j$181980 = -44						; size = 4
 _lower_mask$ = -32					; size = 4
 _upper_mask$ = -20					; size = 4
 _this$ = -8						; size = 4
@@ -38274,43 +38278,43 @@ _block$ = 8						; size = 4
 
 ; 236  :     for(int j = n; j < 2*n; j++) {
 
-	mov	DWORD PTR _j$179459[ebp], 624		; 00000270H
+	mov	DWORD PTR _j$181980[ebp], 624		; 00000270H
 	jmp	SHORT $LN11@twist
 $LN10@twist:
-	mov	eax, DWORD PTR _j$179459[ebp]
+	mov	eax, DWORD PTR _j$181980[ebp]
 	add	eax, 1
-	mov	DWORD PTR _j$179459[ebp], eax
+	mov	DWORD PTR _j$181980[ebp], eax
 $LN11@twist:
-	cmp	DWORD PTR _j$179459[ebp], 1248		; 000004e0H
+	cmp	DWORD PTR _j$181980[ebp], 1248		; 000004e0H
 	jge	SHORT $LN9@twist
 
 ; 237  :       UIntType y = (x[j-n] & upper_mask) | (x[j-(n-1)] & lower_mask);
 
-	mov	eax, DWORD PTR _j$179459[ebp]
+	mov	eax, DWORD PTR _j$181980[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+eax*4-2496]
 	and	edx, -2147483648			; 80000000H
-	mov	eax, DWORD PTR _j$179459[ebp]
+	mov	eax, DWORD PTR _j$181980[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [ecx+eax*4-2492]
 	and	eax, 2147483647				; 7fffffffH
 	or	edx, eax
-	mov	DWORD PTR _y$179463[ebp], edx
+	mov	DWORD PTR _y$181984[ebp], edx
 
 ; 238  :       x[j] = x[j-(n-m)] ^ (y >> 1) ^ (y&1 ? a : 0);
 
-	mov	eax, DWORD PTR _y$179463[ebp]
+	mov	eax, DWORD PTR _y$181984[ebp]
 	shr	eax, 1
-	mov	ecx, DWORD PTR _j$179459[ebp]
+	mov	ecx, DWORD PTR _j$181980[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
 	xor	eax, DWORD PTR [edx+ecx*4-908]
-	mov	ecx, DWORD PTR _y$179463[ebp]
+	mov	ecx, DWORD PTR _y$181984[ebp]
 	and	ecx, 1
 	neg	ecx
 	sbb	ecx, ecx
 	and	ecx, -1727483681			; 9908b0dfH
 	xor	eax, ecx
-	mov	edx, DWORD PTR _j$179459[ebp]
+	mov	edx, DWORD PTR _j$181980[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [ecx+edx*4], eax
 
@@ -38330,43 +38334,43 @@ $LN12@twist:
 ; 242  :     {  // extra scope for MSVC brokenness w.r.t. for scope
 ; 243  :       for(int j = 0; j < n-m; j++) {
 
-	mov	DWORD PTR _j$179466[ebp], 0
+	mov	DWORD PTR _j$181987[ebp], 0
 	jmp	SHORT $LN6@twist
 $LN5@twist:
-	mov	eax, DWORD PTR _j$179466[ebp]
+	mov	eax, DWORD PTR _j$181987[ebp]
 	add	eax, 1
-	mov	DWORD PTR _j$179466[ebp], eax
+	mov	DWORD PTR _j$181987[ebp], eax
 $LN6@twist:
-	cmp	DWORD PTR _j$179466[ebp], 227		; 000000e3H
+	cmp	DWORD PTR _j$181987[ebp], 227		; 000000e3H
 	jge	SHORT $LN4@twist
 
 ; 244  :         UIntType y = (x[j+n] & upper_mask) | (x[j+n+1] & lower_mask);
 
-	mov	eax, DWORD PTR _j$179466[ebp]
+	mov	eax, DWORD PTR _j$181987[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+eax*4+2496]
 	and	edx, -2147483648			; 80000000H
-	mov	eax, DWORD PTR _j$179466[ebp]
+	mov	eax, DWORD PTR _j$181987[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [ecx+eax*4+2500]
 	and	eax, 2147483647				; 7fffffffH
 	or	edx, eax
-	mov	DWORD PTR _y$179470[ebp], edx
+	mov	DWORD PTR _y$181991[ebp], edx
 
 ; 245  :         x[j] = x[j+n+m] ^ (y >> 1) ^ (y&1 ? a : 0);
 
-	mov	eax, DWORD PTR _y$179470[ebp]
+	mov	eax, DWORD PTR _y$181991[ebp]
 	shr	eax, 1
-	mov	ecx, DWORD PTR _j$179466[ebp]
+	mov	ecx, DWORD PTR _j$181987[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
 	xor	eax, DWORD PTR [edx+ecx*4+4084]
-	mov	ecx, DWORD PTR _y$179470[ebp]
+	mov	ecx, DWORD PTR _y$181991[ebp]
 	and	ecx, 1
 	neg	ecx
 	sbb	ecx, ecx
 	and	ecx, -1727483681			; 9908b0dfH
 	xor	eax, ecx
-	mov	edx, DWORD PTR _j$179466[ebp]
+	mov	edx, DWORD PTR _j$181987[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [ecx+edx*4], eax
 
@@ -38379,43 +38383,43 @@ $LN4@twist:
 ; 248  :     
 ; 249  :     for(int j = n-m; j < n-1; j++) {
 
-	mov	DWORD PTR _j$179471[ebp], 227		; 000000e3H
+	mov	DWORD PTR _j$181992[ebp], 227		; 000000e3H
 	jmp	SHORT $LN3@twist
 $LN2@twist:
-	mov	eax, DWORD PTR _j$179471[ebp]
+	mov	eax, DWORD PTR _j$181992[ebp]
 	add	eax, 1
-	mov	DWORD PTR _j$179471[ebp], eax
+	mov	DWORD PTR _j$181992[ebp], eax
 $LN3@twist:
-	cmp	DWORD PTR _j$179471[ebp], 623		; 0000026fH
+	cmp	DWORD PTR _j$181992[ebp], 623		; 0000026fH
 	jge	SHORT $LN1@twist
 
 ; 250  :       UIntType y = (x[j+n] & upper_mask) | (x[j+n+1] & lower_mask);
 
-	mov	eax, DWORD PTR _j$179471[ebp]
+	mov	eax, DWORD PTR _j$181992[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+eax*4+2496]
 	and	edx, -2147483648			; 80000000H
-	mov	eax, DWORD PTR _j$179471[ebp]
+	mov	eax, DWORD PTR _j$181992[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR [ecx+eax*4+2500]
 	and	eax, 2147483647				; 7fffffffH
 	or	edx, eax
-	mov	DWORD PTR _y$179475[ebp], edx
+	mov	DWORD PTR _y$181996[ebp], edx
 
 ; 251  :       x[j] = x[j-(n-m)] ^ (y >> 1) ^ (y&1 ? a : 0);
 
-	mov	eax, DWORD PTR _y$179475[ebp]
+	mov	eax, DWORD PTR _y$181996[ebp]
 	shr	eax, 1
-	mov	ecx, DWORD PTR _j$179471[ebp]
+	mov	ecx, DWORD PTR _j$181992[ebp]
 	mov	edx, DWORD PTR _this$[ebp]
 	xor	eax, DWORD PTR [edx+ecx*4-908]
-	mov	ecx, DWORD PTR _y$179475[ebp]
+	mov	ecx, DWORD PTR _y$181996[ebp]
 	and	ecx, 1
 	neg	ecx
 	sbb	ecx, ecx
 	and	ecx, -1727483681			; 9908b0dfH
 	xor	eax, ecx
-	mov	edx, DWORD PTR _j$179471[ebp]
+	mov	edx, DWORD PTR _j$181992[ebp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [ecx+edx*4], eax
 
@@ -38434,15 +38438,15 @@ $LN1@twist:
 	mov	eax, DWORD PTR [edx]
 	and	eax, 2147483647				; 7fffffffH
 	or	ecx, eax
-	mov	DWORD PTR _y$179476[ebp], ecx
+	mov	DWORD PTR _y$181997[ebp], ecx
 
 ; 255  :     x[n-1] = x[m-1] ^ (y >> 1) ^ (y&1 ? a : 0);
 
-	mov	eax, DWORD PTR _y$179476[ebp]
+	mov	eax, DWORD PTR _y$181997[ebp]
 	shr	eax, 1
 	mov	ecx, DWORD PTR _this$[ebp]
 	xor	eax, DWORD PTR [ecx+1584]
-	mov	edx, DWORD PTR _y$179476[ebp]
+	mov	edx, DWORD PTR _y$181997[ebp]
 	and	edx, 1
 	neg	edx
 	sbb	edx, edx
@@ -38472,7 +38476,7 @@ $LN13@twist:
 _TEXT	ENDS
 ;	COMDAT ??$swap@PAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@std@@YAXAAPAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@0@Z
 _TEXT	SEGMENT
-__Tmp$179483 = -8					; size = 4
+__Tmp$182004 = -8					; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$swap@PAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@std@@YAXAAPAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@0@Z PROC ; std::swap<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp *>, COMDAT
@@ -38501,7 +38505,7 @@ __Right$ = 12						; size = 4
 
 	mov	eax, DWORD PTR __Left$[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Tmp$179483[ebp], ecx
+	mov	DWORD PTR __Tmp$182004[ebp], ecx
 
 ; 21   : 
 ; 22   : 		_Left = _Right;
@@ -38514,7 +38518,7 @@ __Right$ = 12						; size = 4
 ; 23   : 		_Right = _Tmp;
 
 	mov	eax, DWORD PTR __Right$[ebp]
-	mov	ecx, DWORD PTR __Tmp$179483[ebp]
+	mov	ecx, DWORD PTR __Tmp$182004[ebp]
 	mov	DWORD PTR [eax], ecx
 $LN2@swap:
 
@@ -38592,8 +38596,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv74 = -256						; size = 4
 tv75 = -252						; size = 4
-$T215443 = -244						; size = 4
-$T215444 = -232						; size = 12
+$T218101 = -244						; size = 4
+$T218102 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ PROC ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::back, COMDAT
@@ -38626,7 +38630,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 650  : 		return (*(--end()));
 
-	lea	eax, DWORD PTR $T215444[ebp]
+	lea	eax, DWORD PTR $T218102[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::end
@@ -38638,11 +38642,11 @@ __$EHRec$ = -12						; size = 12
 	call	??F?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAV012@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator--
 	mov	ecx, eax
 	call	??D?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator*
-	mov	DWORD PTR $T215443[ebp], eax
+	mov	DWORD PTR $T218101[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T215444[ebp]
+	lea	ecx, DWORD PTR $T218102[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T215443[ebp]
+	mov	eax, DWORD PTR $T218101[ebp]
 
 ; 651  : 		}
 
@@ -38662,7 +38666,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ$0:
-	lea	ecx, DWORD PTR $T215444[ebp]
+	lea	ecx, DWORD PTR $T218102[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$?back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -38695,9 +38699,9 @@ tv129 = -284						; size = 4
 tv128 = -280						; size = 4
 tv94 = -276						; size = 4
 tv131 = -272						; size = 4
-$T215454 = -264						; size = 4
-$T215455 = -252						; size = 12
-$T215456 = -232						; size = 12
+$T218112 = -264						; size = 4
+$T218113 = -252						; size = 12
+$T218114 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?pop_back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEXXZ PROC ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::pop_back, COMDAT
@@ -38730,7 +38734,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 675  : 		erase(--end());
 
-	lea	eax, DWORD PTR $T215455[ebp]
+	lea	eax, DWORD PTR $T218113[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::end
@@ -38742,19 +38746,19 @@ __$EHRec$ = -12						; size = 12
 	call	??F?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAV012@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator--
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215454[ebp], esp
+	mov	DWORD PTR $T218112[ebp], esp
 	push	eax
 	call	??0?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
 	mov	DWORD PTR tv128[ebp], eax
-	lea	edx, DWORD PTR $T215456[ebp]
+	lea	edx, DWORD PTR $T218114[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::erase
 	mov	DWORD PTR tv129[ebp], eax
-	lea	ecx, DWORD PTR $T215456[ebp]
+	lea	ecx, DWORD PTR $T218114[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T215455[ebp]
+	lea	ecx, DWORD PTR $T218113[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 
 ; 676  : 		}
@@ -38775,7 +38779,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?pop_back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEXXZ$0:
-	lea	ecx, DWORD PTR $T215455[ebp]
+	lea	ecx, DWORD PTR $T218113[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$?pop_back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -38863,7 +38867,7 @@ __ehfuncinfo$??H?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChann
 xdata$x	ENDS
 ;	COMDAT ??H?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV01@H@Z
 _TEXT	SEGMENT
-$T215472 = -244						; size = 4
+$T218130 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -38896,7 +38900,7 @@ __Off$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T215472[ebp], 0
+	mov	DWORD PTR $T218130[ebp], 0
 
 ; 170  : 		_Myt _Tmp = *this;
 
@@ -38915,9 +38919,9 @@ __Off$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T215472[ebp]
+	mov	ecx, DWORD PTR $T218130[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215472[ebp], ecx
+	mov	DWORD PTR $T218130[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -38964,10 +38968,10 @@ __unwindfunclet$??H?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VCh
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 __unwindfunclet$??H?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T215472[ebp]
+	mov	eax, DWORD PTR $T218130[ebp]
 	and	eax, 1
 	je	$LN5@operator@31
-	and	DWORD PTR $T215472[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218130[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
 $LN5@operator@31:
@@ -39026,7 +39030,7 @@ __Right$ = 8						; size = 4
 	mov	eax, DWORD PTR [eax+8]
 	sub	eax, DWORD PTR [ecx+8]
 	cdq
-	mov	ecx, 408				; 00000198H
+	mov	ecx, 440				; 000001b8H
 	idiv	ecx
 
 ; 195  : 		}
@@ -39737,20 +39741,20 @@ tv245 = -484						; size = 4
 tv254 = -480						; size = 4
 tv251 = -480						; size = 4
 tv71 = -480						; size = 4
-$T215527 = -469						; size = 1
-$T215528 = -460						; size = 4
-$T215529 = -448						; size = 4
-$T215530 = -436						; size = 4
-$T215531 = -424						; size = 4
-$T215532 = -412						; size = 4
-$T215533 = -400						; size = 4
-$T215534 = -388						; size = 4
-$T215535 = -376						; size = 4
-$T215536 = -364						; size = 4
-$T215537 = -352						; size = 4
-$T215538 = -340						; size = 4
-$T215539 = -328						; size = 4
-_null$182989 = -124					; size = 88
+$T218185 = -469						; size = 1
+$T218186 = -460						; size = 4
+$T218187 = -448						; size = 4
+$T218188 = -436						; size = 4
+$T218189 = -424						; size = 4
+$T218190 = -412						; size = 4
+$T218191 = -400						; size = 4
+$T218192 = -388						; size = 4
+$T218193 = -376						; size = 4
+$T218194 = -364						; size = 4
+$T218195 = -352						; size = 4
+$T218196 = -340						; size = 4
+$T218197 = -328						; size = 4
+_null$185510 = -124					; size = 88
 _this$ = -28						; size = 4
 __$ArrayPad$ = -20					; size = 4
 __$EHRec$ = -16						; size = 16
@@ -39802,7 +39806,7 @@ __$EHRec$ = -16						; size = 16
 
 ; 313  :                     stream_buffer< basic_null_device<Ch, Mode> > null;
 
-	lea	ecx, DWORD PTR _null$182989[ebp]
+	lea	ecx, DWORD PTR _null$185510[ebp]
 	call	??0?$stream_buffer@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@QAE@XZ ; boost::iostreams::stream_buffer<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::stream_buffer<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>
 	mov	DWORD PTR __$EHRec$[ebp+12], 0
 
@@ -39816,17 +39820,17 @@ __$EHRec$ = -16						; size = 16
 ; 315  :                         null.open(basic_null_device<Ch, Mode>());
 
 	xor	eax, eax
-	mov	BYTE PTR $T215527[ebp], al
+	mov	BYTE PTR $T218185[ebp], al
 	push	-1
 	push	-1
-	lea	ecx, DWORD PTR $T215527[ebp]
+	lea	ecx, DWORD PTR $T218185[ebp]
 	push	ecx
-	lea	ecx, DWORD PTR _null$182989[ebp]
+	lea	ecx, DWORD PTR _null$185510[ebp]
 	call	?open@?$stream_buffer@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@QAEXABV?$basic_null_device@DUinput@iostreams@boost@@@23@HH@Z ; boost::iostreams::stream_buffer<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::open
 
 ; 316  :                         set_next(links_.back(), &null);
 
-	lea	eax, DWORD PTR _null$182989[ebp]
+	lea	eax, DWORD PTR _null$185510[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::back
@@ -39857,7 +39861,7 @@ $LN3@close@3:
 ; 323  :                         );
 
 	push	1
-	lea	ecx, DWORD PTR $T215528[ebp]
+	lea	ecx, DWORD PTR $T218186[ebp]
 	call	??0closer@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAE@H@Z ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::closer::closer
 	mov	DWORD PTR tv71[ebp], eax
 	mov	eax, DWORD PTR tv71[ebp]
@@ -39865,7 +39869,7 @@ $LN3@close@3:
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	edx, esp
-	mov	DWORD PTR $T215529[ebp], esp
+	mov	DWORD PTR $T218187[ebp], esp
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?rend@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@2@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::rend
@@ -39875,12 +39879,12 @@ $LN3@close@3:
 	mov	BYTE PTR __$EHRec$[ebp+12], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215530[ebp], esp
+	mov	DWORD PTR $T218188[ebp], esp
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?rbegin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@2@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::rbegin
 	mov	DWORD PTR tv234[ebp], eax
-	lea	edx, DWORD PTR $T215531[ebp]
+	lea	edx, DWORD PTR $T218189[ebp]
 	push	edx
 	mov	BYTE PTR __$EHRec$[ebp+12], 1
 	call	??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@0U34012@@Z ; boost::iostreams::detail::execute_foreach<std::reverse_iterator<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1> >,boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::closer>
@@ -39902,7 +39906,7 @@ __catch$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char
 ; 329  :                             );
 
 	push	2
-	lea	ecx, DWORD PTR $T215532[ebp]
+	lea	ecx, DWORD PTR $T218190[ebp]
 	call	??0closer@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAE@H@Z ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::closer::closer
 	mov	DWORD PTR tv251[ebp], eax
 	mov	eax, DWORD PTR tv251[ebp]
@@ -39910,7 +39914,7 @@ __catch$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	edx, esp
-	mov	DWORD PTR $T215533[ebp], esp
+	mov	DWORD PTR $T218191[ebp], esp
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::end
@@ -39920,12 +39924,12 @@ __catch$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char
 	mov	BYTE PTR __$EHRec$[ebp+12], 5
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215534[ebp], esp
+	mov	DWORD PTR $T218192[ebp], esp
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::begin
 	mov	DWORD PTR tv240[ebp], eax
-	lea	edx, DWORD PTR $T215535[ebp]
+	lea	edx, DWORD PTR $T218193[ebp]
 	push	edx
 	mov	BYTE PTR __$EHRec$[ebp+12], 4
 	call	??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@0U34012@@Z ; boost::iostreams::detail::execute_foreach<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>,boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::closer>
@@ -39963,13 +39967,13 @@ __tryend$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$cha
 ; 336  :                     );
 
 	push	2
-	lea	ecx, DWORD PTR $T215536[ebp]
+	lea	ecx, DWORD PTR $T218194[ebp]
 	call	??0closer@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAE@H@Z ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::closer::closer
 	mov	eax, DWORD PTR [eax]
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215537[ebp], esp
+	mov	DWORD PTR $T218195[ebp], esp
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::end
@@ -39979,12 +39983,12 @@ __tryend$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$cha
 	mov	BYTE PTR __$EHRec$[ebp+12], 7
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T215538[ebp], esp
+	mov	DWORD PTR $T218196[ebp], esp
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::begin
 	mov	DWORD PTR tv248[ebp], eax
-	lea	ecx, DWORD PTR $T215539[ebp]
+	lea	ecx, DWORD PTR $T218197[ebp]
 	push	ecx
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	call	??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@0U34012@@Z ; boost::iostreams::detail::execute_foreach<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>,boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::closer>
@@ -39993,7 +39997,7 @@ __tryend$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$cha
 ; 337  :                 }
 
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
-	lea	ecx, DWORD PTR _null$182989[ebp]
+	lea	ecx, DWORD PTR _null$185510[ebp]
 	call	??1?$stream_buffer@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@UAE@XZ ; boost::iostreams::stream_buffer<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::~stream_buffer<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>
 $LN6@close@3:
 
@@ -40039,16 +40043,16 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ$4:
-	lea	ecx, DWORD PTR _null$182989[ebp]
+	lea	ecx, DWORD PTR _null$185510[ebp]
 	jmp	??1?$stream_buffer@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@UAE@XZ ; boost::iostreams::stream_buffer<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::~stream_buffer<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>
 __unwindfunclet$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ$5:
-	mov	ecx, DWORD PTR $T215529[ebp]
+	mov	ecx, DWORD PTR $T218187[ebp]
 	jmp	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 __unwindfunclet$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ$7:
-	mov	ecx, DWORD PTR $T215533[ebp]
+	mov	ecx, DWORD PTR $T218191[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ$9:
-	mov	ecx, DWORD PTR $T215537[ebp]
+	mov	ecx, DWORD PTR $T218195[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$?close@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -40819,7 +40823,7 @@ _next$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ
 _TEXT	SEGMENT
-$T215627 = -212						; size = 4
+$T218285 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ PROC ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::end, COMDAT
@@ -40840,7 +40844,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T215627[ebp], 0
+	mov	DWORD PTR $T218285[ebp], 0
 
 ; 544  : 		return (iterator(_Myhead, this));
 
@@ -40851,9 +40855,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@PAU_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@2@PBV12@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::_Iterator<1>
-	mov	eax, DWORD PTR $T215627[ebp]
+	mov	eax, DWORD PTR $T218285[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T215627[ebp], eax
+	mov	DWORD PTR $T218285[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 545  : 		}
@@ -40891,9 +40895,9 @@ _TEXT	SEGMENT
 tv90 = -272						; size = 4
 tv88 = -268						; size = 4
 tv87 = -264						; size = 4
-$T215631 = -256						; size = 12
-$T215632 = -236						; size = 4
-$T215636 = -224						; size = 4
+$T218289 = -256						; size = 12
+$T218290 = -236						; size = 4
+$T218294 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -40924,18 +40928,18 @@ ___$ReturnUdt$ = 8					; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T215636[ebp], 0
+	mov	DWORD PTR $T218294[ebp], 0
 
 ; 586  : 		return (reverse_iterator(end()));
 
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T215632[ebp], esp
+	mov	DWORD PTR $T218290[ebp], esp
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::end
 	mov	DWORD PTR tv87[ebp], eax
-	lea	ecx, DWORD PTR $T215631[ebp]
+	lea	ecx, DWORD PTR $T218289[ebp]
 	call	??0?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@1@@Z ; std::reverse_iterator<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1> >::reverse_iterator<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1> >
 	mov	DWORD PTR tv88[ebp], eax
 	mov	ecx, DWORD PTR tv88[ebp]
@@ -40945,11 +40949,11 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@ABV01@@Z
-	mov	eax, DWORD PTR $T215636[ebp]
+	mov	eax, DWORD PTR $T218294[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T215636[ebp], eax
+	mov	DWORD PTR $T218294[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T215631[ebp]
+	lea	ecx, DWORD PTR $T218289[ebp]
 	call	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
@@ -40971,13 +40975,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?rbegin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@2@XZ$1:
-	lea	ecx, DWORD PTR $T215631[ebp]
+	lea	ecx, DWORD PTR $T218289[ebp]
 	jmp	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 __unwindfunclet$?rbegin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@2@XZ$2:
-	mov	eax, DWORD PTR $T215636[ebp]
+	mov	eax, DWORD PTR $T218294[ebp]
 	and	eax, 1
 	je	$LN6@rbegin
-	and	DWORD PTR $T215636[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218294[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 $LN6@rbegin:
@@ -41012,9 +41016,9 @@ _TEXT	SEGMENT
 tv90 = -272						; size = 4
 tv88 = -268						; size = 4
 tv87 = -264						; size = 4
-$T215646 = -256						; size = 12
-$T215647 = -236						; size = 4
-$T215651 = -224						; size = 4
+$T218304 = -256						; size = 12
+$T218305 = -236						; size = 4
+$T218309 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -41045,18 +41049,18 @@ ___$ReturnUdt$ = 8					; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T215651[ebp], 0
+	mov	DWORD PTR $T218309[ebp], 0
 
 ; 596  : 		return (reverse_iterator(begin()));
 
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T215647[ebp], esp
+	mov	DWORD PTR $T218305[ebp], esp
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::begin
 	mov	DWORD PTR tv87[ebp], eax
-	lea	ecx, DWORD PTR $T215646[ebp]
+	lea	ecx, DWORD PTR $T218304[ebp]
 	call	??0?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@1@@Z ; std::reverse_iterator<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1> >::reverse_iterator<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1> >
 	mov	DWORD PTR tv88[ebp], eax
 	mov	ecx, DWORD PTR tv88[ebp]
@@ -41066,11 +41070,11 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@ABV01@@Z
-	mov	eax, DWORD PTR $T215651[ebp]
+	mov	eax, DWORD PTR $T218309[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T215651[ebp], eax
+	mov	DWORD PTR $T218309[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T215646[ebp]
+	lea	ecx, DWORD PTR $T218304[ebp]
 	call	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
@@ -41092,13 +41096,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?rend@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@2@XZ$1:
-	lea	ecx, DWORD PTR $T215646[ebp]
+	lea	ecx, DWORD PTR $T218304[ebp]
 	jmp	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 __unwindfunclet$?rend@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@2@XZ$2:
-	mov	eax, DWORD PTR $T215651[ebp]
+	mov	eax, DWORD PTR $T218309[ebp]
 	and	eax, 1
 	je	$LN6@rend
-	and	DWORD PTR $T215651[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218309[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 $LN6@rend:
@@ -41150,9 +41154,9 @@ tv178 = -280						; size = 4
 tv175 = -280						; size = 4
 tv184 = -276						; size = 4
 tv177 = -276						; size = 4
-$T215661 = -268						; size = 12
-$T215662 = -248						; size = 4
-$T215667 = -236						; size = 4
+$T218319 = -268						; size = 12
+$T218320 = -248						; size = 4
+$T218325 = -236						; size = 4
 __Pnode$ = -32						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -41185,7 +41189,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T215667[ebp], 0
+	mov	DWORD PTR $T218325[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 787  : 
@@ -41216,7 +41220,7 @@ $LN3@erase:
 ; 791  : 		_Nodeptr _Pnode = (_Where++)._Mynode();
 
 	push	0
-	lea	eax, DWORD PTR $T215661[ebp]
+	lea	eax, DWORD PTR $T218319[ebp]
 	push	eax
 	lea	ecx, DWORD PTR __Where$[ebp]
 	call	??E?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV012@H@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Const_iterator<1>::operator++
@@ -41228,7 +41232,7 @@ $LN3@erase:
 	call	?_Mynode@?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBEPAU_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@3@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Const_iterator<1>::_Mynode
 	mov	DWORD PTR __Pnode$[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T215661[ebp]
+	lea	ecx, DWORD PTR $T218319[ebp]
 	call	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 
 ; 792  : 		_Orphan_ptr(*this, _Pnode);
@@ -41320,7 +41324,7 @@ $LN1@erase:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215662[ebp], esp
+	mov	DWORD PTR $T218320[ebp], esp
 	lea	eax, DWORD PTR __Where$[ebp]
 	push	eax
 	call	??0?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
@@ -41330,9 +41334,9 @@ $LN1@erase:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Make_iter
 	mov	DWORD PTR tv178[ebp], eax
-	mov	edx, DWORD PTR $T215667[ebp]
+	mov	edx, DWORD PTR $T218325[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T215667[ebp], edx
+	mov	DWORD PTR $T218325[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
 	call	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
@@ -41359,13 +41363,13 @@ __unwindfunclet$?erase@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@deta
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z$1:
-	lea	ecx, DWORD PTR $T215661[ebp]
+	lea	ecx, DWORD PTR $T218319[ebp]
 	jmp	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z$3:
-	mov	eax, DWORD PTR $T215667[ebp]
+	mov	eax, DWORD PTR $T218325[ebp]
 	and	eax, 1
 	je	$LN10@erase
-	and	DWORD PTR $T215667[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218325[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 $LN10@erase:
@@ -41491,7 +41495,7 @@ $LN3@operator@32:
 ; 161  : 		_SCL_SECURE_VALIDATE_RANGE(
 
 	mov	esi, DWORD PTR __Off$[ebp]
-	imul	esi, 408				; 00000198H
+	imul	esi, 440				; 000001b8H
 	mov	eax, DWORD PTR _this$[ebp]
 	add	esi, DWORD PTR [eax+8]
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -41499,7 +41503,7 @@ $LN3@operator@32:
 	cmp	esi, DWORD PTR [eax+12]
 	ja	SHORT $LN1@operator@32
 	mov	esi, DWORD PTR __Off$[ebp]
-	imul	esi, 408				; 00000198H
+	imul	esi, 440				; 000001b8H
 	mov	eax, DWORD PTR _this$[ebp]
 	add	esi, DWORD PTR [eax+8]
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -41542,7 +41546,7 @@ $LN2@operator@32:
 ; 164  : 		_Myptr += _Off;
 
 	mov	eax, DWORD PTR __Off$[ebp]
-	imul	eax, 408				; 00000198H
+	imul	eax, 440				; 000001b8H
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	eax, DWORD PTR [ecx+8]
 	mov	edx, DWORD PTR _this$[ebp]
@@ -41587,11 +41591,11 @@ xdata$x	ENDS
 ;	COMDAT ?reset@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ
 _TEXT	SEGMENT
 tv142 = -296						; size = 4
-$T215681 = -288						; size = 4
-$T215682 = -276						; size = 4
-_buf$183475 = -72					; size = 4
-_last$183445 = -60					; size = 12
-_first$183443 = -40					; size = 12
+$T218339 = -288						; size = 4
+$T218340 = -276						; size = 4
+_buf$185996 = -72					; size = 4
+_last$185966 = -60					; size = 12
+_first$185964 = -40					; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?reset@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ PROC ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::chain_impl::reset, COMDAT
@@ -41625,7 +41629,7 @@ __$EHRec$ = -12						; size = 12
 ; 341  :                 typedef typename list_type::iterator iterator;
 ; 342  :                 for ( iterator first = links_.begin(),
 
-	lea	eax, DWORD PTR _first$183443[ebp]
+	lea	eax, DWORD PTR _first$185964[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::begin
@@ -41633,7 +41637,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 343  :                                last = links_.end();
 
-	lea	eax, DWORD PTR _last$183445[ebp]
+	lea	eax, DWORD PTR _last$185966[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::end
@@ -41644,12 +41648,12 @@ $LN4@reset@3:
 ; 344  :                       first != last;
 ; 345  :                       ++first )
 
-	lea	ecx, DWORD PTR _first$183443[ebp]
+	lea	ecx, DWORD PTR _first$185964[ebp]
 	call	??E?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAV012@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator++
 $LN5@reset@3:
-	lea	eax, DWORD PTR _last$183445[ebp]
+	lea	eax, DWORD PTR _last$185966[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _first$183443[ebp]
+	lea	ecx, DWORD PTR _first$185964[ebp]
 	call	??9?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBE_NABV012@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Const_iterator<1>::operator!=
 	movzx	ecx, al
 	test	ecx, ecx
@@ -41673,7 +41677,7 @@ $LN1@reset@3:
 ; 350  :                         set_auto_close(*first, false);
 
 	push	0
-	lea	ecx, DWORD PTR _first$183443[ebp]
+	lea	ecx, DWORD PTR _first$185964[ebp]
 	call	??D?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator*
 	mov	eax, DWORD PTR [eax]
 	push	eax
@@ -41684,31 +41688,31 @@ $LN2@reset@3:
 ; 351  :                     }
 ; 352  :                     streambuf_type* buf = 0;
 
-	mov	DWORD PTR _buf$183475[ebp], 0
+	mov	DWORD PTR _buf$185996[ebp], 0
 
 ; 353  :                     std::swap(buf, *first);
 
-	lea	ecx, DWORD PTR _first$183443[ebp]
+	lea	ecx, DWORD PTR _first$185964[ebp]
 	call	??D?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator*
 	push	eax
-	lea	eax, DWORD PTR _buf$183475[ebp]
+	lea	eax, DWORD PTR _buf$185996[ebp]
 	push	eax
 	call	??$swap@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@YAXAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@0@Z ; std::swap<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>
 	add	esp, 8
 
 ; 354  :                     delete buf;
 
-	mov	eax, DWORD PTR _buf$183475[ebp]
-	mov	DWORD PTR $T215682[ebp], eax
-	mov	ecx, DWORD PTR $T215682[ebp]
-	mov	DWORD PTR $T215681[ebp], ecx
-	cmp	DWORD PTR $T215681[ebp], 0
+	mov	eax, DWORD PTR _buf$185996[ebp]
+	mov	DWORD PTR $T218340[ebp], eax
+	mov	ecx, DWORD PTR $T218340[ebp]
+	mov	DWORD PTR $T218339[ebp], ecx
+	cmp	DWORD PTR $T218339[ebp], 0
 	je	SHORT $LN8@reset@3
 	mov	esi, esp
 	push	1
-	mov	edx, DWORD PTR $T215681[ebp]
+	mov	edx, DWORD PTR $T218339[ebp]
 	mov	eax, DWORD PTR [edx]
-	mov	ecx, DWORD PTR $T215681[ebp]
+	mov	ecx, DWORD PTR $T218339[ebp]
 	mov	edx, DWORD PTR [eax]
 	call	edx
 	cmp	esi, esp
@@ -41724,10 +41728,10 @@ $LN9@reset@3:
 	jmp	$LN4@reset@3
 $LN3@reset@3:
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _last$183445[ebp]
+	lea	ecx, DWORD PTR _last$185966[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _first$183443[ebp]
+	lea	ecx, DWORD PTR _first$185964[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 
 ; 356  :                 links_.clear();
@@ -41807,10 +41811,10 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?reset@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ$0:
-	lea	ecx, DWORD PTR _first$183443[ebp]
+	lea	ecx, DWORD PTR _first$185964[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$?reset@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ$1:
-	lea	ecx, DWORD PTR _last$183445[ebp]
+	lea	ecx, DWORD PTR _last$185966[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$?reset@chain_impl@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -42247,7 +42251,7 @@ PUBLIC	??$wrap@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?open@?$stream_buffer@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@QAEXABV?$basic_null_device@DUinput@iostreams@boost@@@23@HH@Z
 _TEXT	SEGMENT
-$T215721 = -209						; size = 1
+$T218379 = -209						; size = 1
 _this$ = -8						; size = 4
 _t$ = 8							; size = 4
 _buffer_size$ = 12					; size = 4
@@ -42275,12 +42279,12 @@ _pback_size$ = 16					; size = 4
 	push	eax
 	call	??$wrap@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@detail@iostreams@boost@@YA?AV?$basic_null_device@DUinput@iostreams@boost@@@12@ABV312@PAX@Z ; boost::iostreams::detail::wrap<boost::iostreams::basic_null_device<char,boost::iostreams::input> >
 	add	esp, 8
-	mov	BYTE PTR $T215721[ebp], al
+	mov	BYTE PTR $T218379[ebp], al
 	mov	ecx, DWORD PTR _pback_size$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _buffer_size$[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T215721[ebp]
+	lea	eax, DWORD PTR $T218379[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?open_impl@?$stream_buffer@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@AAEXABV?$basic_null_device@DUinput@iostreams@boost@@@23@HH@Z ; boost::iostreams::stream_buffer<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::open_impl
@@ -42808,7 +42812,7 @@ __ehfuncinfo$?_Make_iter@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@de
 xdata$x	ENDS
 ;	COMDAT ?_Make_iter@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z
 _TEXT	SEGMENT
-$T215765 = -224						; size = 4
+$T218423 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -42840,7 +42844,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T215765[ebp], 0
+	mov	DWORD PTR $T218423[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 554  : 		return (iterator(_Where._Ptr, this));
@@ -42851,9 +42855,9 @@ __Where$ = 12						; size = 12
 	push	ecx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@PAU_Node@?$_List_nod@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@2@PBV12@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::_Iterator<1>
-	mov	edx, DWORD PTR $T215765[ebp]
+	mov	edx, DWORD PTR $T218423[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T215765[ebp], edx
+	mov	DWORD PTR $T218423[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
 	call	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
@@ -42880,10 +42884,10 @@ __unwindfunclet$?_Make_iter@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z$1:
-	mov	eax, DWORD PTR $T215765[ebp]
+	mov	eax, DWORD PTR $T218423[ebp]
 	and	eax, 1
 	je	$LN5@Make_iter
-	and	DWORD PTR $T215765[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218423[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 $LN5@Make_iter:
@@ -42961,7 +42965,7 @@ __ehfuncinfo$??E?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_trai
 xdata$x	ENDS
 ;	COMDAT ??E?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV012@H@Z
 _TEXT	SEGMENT
-$T215779 = -244						; size = 4
+$T218437 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -42994,7 +42998,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T215779[ebp], 0
+	mov	DWORD PTR $T218437[ebp], 0
 
 ; 256  : 			_Myt_iter _Tmp = *this;
 
@@ -43015,9 +43019,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T215779[ebp]
+	mov	ecx, DWORD PTR $T218437[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215779[ebp], ecx
+	mov	DWORD PTR $T218437[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
@@ -43065,10 +43069,10 @@ __unwindfunclet$??E?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_t
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$??E?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV012@H@Z$1:
-	mov	eax, DWORD PTR $T215779[ebp]
+	mov	eax, DWORD PTR $T218437[ebp]
 	and	eax, 1
 	je	$LN5@operator@33
-	and	DWORD PTR $T215779[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218437[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 $LN5@operator@33:
@@ -43369,8 +43373,8 @@ __ehfuncinfo$?open_impl@?$stream_buffer@V?$basic_null_device@DUinput@iostreams@b
 xdata$x	ENDS
 ;	COMDAT ?open_impl@?$stream_buffer@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@AAEXABV?$basic_null_device@DUinput@iostreams@boost@@@23@HH@Z
 _TEXT	SEGMENT
-$T215799 = -304						; size = 44
-$T215800 = -252						; size = 32
+$T218457 = -304						; size = 44
+$T218458 = -252						; size = 32
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _t$ = 8							; size = 4
@@ -43416,20 +43420,20 @@ _pback_size$ = 16					; size = 4
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0N@DLOMBLKD@already?5open?$AA@
-	lea	ecx, DWORD PTR $T215800[ebp]
+	lea	ecx, DWORD PTR $T218458[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	lea	eax, DWORD PTR $T215800[ebp]
+	lea	eax, DWORD PTR $T218458[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T215799[ebp]
+	lea	ecx, DWORD PTR $T218457[ebp]
 	call	??0failure@ios_base@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z ; std::ios_base::failure::failure
-	lea	ecx, DWORD PTR $T215799[ebp]
+	lea	ecx, DWORD PTR $T218457[ebp]
 	call	??1failure@ios_base@std@@UAE@XZ		; std::ios_base::failure::~failure
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T215800[ebp]
+	lea	ecx, DWORD PTR $T218458[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -43465,7 +43469,7 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?open_impl@?$stream_buffer@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@AAEXABV?$basic_null_device@DUinput@iostreams@boost@@@23@HH@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T215800[ebp]
+	lea	ecx, DWORD PTR $T218458[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -43752,7 +43756,7 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv93 = -236						; size = 4
 tv92 = -232						; size = 4
-$T215822 = -224						; size = 4
+$T218480 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __Right$ = 8						; size = 12
@@ -43786,7 +43790,7 @@ __Right$ = 8						; size = 12
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215822[ebp], esp
+	mov	DWORD PTR $T218480[ebp], esp
 	lea	eax, DWORD PTR __Right$[ebp]
 	push	eax
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
@@ -44653,8 +44657,8 @@ PUBLIC	??$?0V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@?$ite
 ; File c:\program files\boost\boost_1_40\boost\range\iterator_range.hpp
 ;	COMDAT ??$make_iterator_range@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
 _TEXT	SEGMENT
-$T215872 = -209						; size = 1
-$T215874 = -200						; size = 4
+$T218530 = -209						; size = 1
+$T218532 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
 ??$make_iterator_range@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@0@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z PROC ; boost::make_iterator_range<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >, COMDAT
@@ -44671,22 +44675,22 @@ _r$ = 12						; size = 4
 	mov	ecx, 54					; 00000036H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215874[ebp], 0
+	mov	DWORD PTR $T218532[ebp], 0
 
 ; 562  :            return iterator_range< BOOST_DEDUCED_TYPENAME range_iterator<ForwardRange>::type >
 ; 563  :                 ( r, iterator_range_detail::range_tag() );
 
 	xor	eax, eax
-	mov	BYTE PTR $T215872[ebp], al
-	movzx	ecx, BYTE PTR $T215872[ebp]
+	mov	BYTE PTR $T218530[ebp], al
+	movzx	ecx, BYTE PTR $T218530[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _r$[ebp]
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??$?0V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QAE@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Urange_tag@iterator_range_detail@1@@Z ; boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > ><std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
-	mov	eax, DWORD PTR $T215874[ebp]
+	mov	eax, DWORD PTR $T218532[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T215874[ebp], eax
+	mov	DWORD PTR $T218532[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 564  :         }
@@ -44707,7 +44711,7 @@ PUBLIC	?begin@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$all
 ; File c:\program files\boost\boost_1_40\boost\range\begin.hpp
 ;	COMDAT ??$range_begin@$$CBV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@1@@Z
 _TEXT	SEGMENT
-$T215879 = -200						; size = 4
+$T218537 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _c$ = 12						; size = 4
 ??$range_begin@$$CBV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@1@@Z PROC ; boost::range_detail::range_begin<boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > > const >, COMDAT
@@ -44724,7 +44728,7 @@ _c$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215879[ebp], 0
+	mov	DWORD PTR $T218537[ebp], 0
 
 ; 44   :         //
 ; 45   :         // If you get a compile-error here, it is most likely because
@@ -44737,9 +44741,9 @@ _c$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR _c$[ebp]
 	call	?begin@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QBE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >::begin
-	mov	ecx, DWORD PTR $T215879[ebp]
+	mov	ecx, DWORD PTR $T218537[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215879[ebp], ecx
+	mov	DWORD PTR $T218537[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 50   :     }
@@ -44760,7 +44764,7 @@ PUBLIC	?end@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$alloc
 ; File c:\program files\boost\boost_1_40\boost\range\end.hpp
 ;	COMDAT ??$range_end@$$CBV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@1@@Z
 _TEXT	SEGMENT
-$T215884 = -200						; size = 4
+$T218542 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _c$ = 12						; size = 4
 ??$range_end@$$CBV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@ABV?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@1@@Z PROC ; boost::range_detail::range_end<boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > > const >, COMDAT
@@ -44777,7 +44781,7 @@ _c$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215884[ebp], 0
+	mov	DWORD PTR $T218542[ebp], 0
 
 ; 45   :             //
 ; 46   :             // If you get a compile-error here, it is most likely because
@@ -44790,9 +44794,9 @@ _c$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR _c$[ebp]
 	call	?end@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QBE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ ; boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >::end
-	mov	ecx, DWORD PTR $T215884[ebp]
+	mov	ecx, DWORD PTR $T218542[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215884[ebp], ecx
+	mov	DWORD PTR $T218542[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 51   :         }
@@ -44813,7 +44817,7 @@ PUBLIC	??$_Checked_base@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 ;	COMDAT ??$_Checked_base@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@AAV10@@Z
 _TEXT	SEGMENT
-$T215889 = -212						; size = 4
+$T218547 = -212						; size = 4
 __Base_tag$ = -5					; size = 1
 ___$ReturnUdt$ = 8					; size = 4
 __It$ = 12						; size = 4
@@ -44831,7 +44835,7 @@ __It$ = 12						; size = 4
 	mov	ecx, 54					; 00000036H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T215889[ebp], 0
+	mov	DWORD PTR $T218547[ebp], 0
 
 ; 1164 : 		typename _Checked_iterator_base_helper<_Iter>::_Checked_iterator_base_type_tag _Base_tag;
 ; 1165 : 		return _Checked_base(_It, _Base_tag);
@@ -44844,9 +44848,9 @@ __It$ = 12						; size = 4
 	push	edx
 	call	??$_Checked_base@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@AAV10@U_Unchanged_checked_iterator_base_type_tag@0@@Z ; std::_Checked_base<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 12					; 0000000cH
-	mov	eax, DWORD PTR $T215889[ebp]
+	mov	eax, DWORD PTR $T218547[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T215889[ebp], eax
+	mov	DWORD PTR $T218547[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1166 : 	}
@@ -44983,13 +44987,13 @@ tv176 = -332						; size = 4
 tv189 = -328						; size = 4
 tv172 = -324						; size = 4
 tv68 = -320						; size = 4
-$T215901 = -309						; size = 1
-$T215902 = -297						; size = 1
-$T215903 = -288						; size = 4
-$T215904 = -276						; size = 4
-$T215905 = -264						; size = 4
-$T215906 = -252						; size = 12
-$T215916 = -232						; size = 4
+$T218559 = -309						; size = 1
+$T218560 = -297						; size = 1
+$T218561 = -288						; size = 4
+$T218562 = -276						; size = 4
+$T218563 = -264						; size = 4
+$T218564 = -252						; size = 12
+$T218574 = -232						; size = 4
 __Result$ = -28						; size = 12
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -45022,7 +45026,7 @@ ___formal$ = 56						; size = 1
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T215916[ebp], 0
+	mov	DWORD PTR $T218574[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
 
 ; 681  : 	// for range checked iterators, this will make sure there is enough space
@@ -45043,16 +45047,16 @@ ___formal$ = 56						; size = 1
 ; 684  : 		forward_iterator_tag(), _Range_checked_iterator_tag());
 
 	xor	eax, eax
-	mov	BYTE PTR $T215901[ebp], al
-	movzx	ecx, BYTE PTR $T215901[ebp]
+	mov	BYTE PTR $T218559[ebp], al
+	movzx	ecx, BYTE PTR $T218559[ebp]
 	push	ecx
-	movzx	edx, BYTE PTR $T215902[ebp]
+	movzx	edx, BYTE PTR $T218560[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Func$[ebp]
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215903[ebp], esp
+	mov	DWORD PTR $T218561[ebp], esp
 	lea	edx, DWORD PTR __Dest$[ebp]
 	push	edx
 	push	ecx
@@ -45064,7 +45068,7 @@ ___formal$ = 56						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215904[ebp], esp
+	mov	DWORD PTR $T218562[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
@@ -45074,18 +45078,18 @@ ___formal$ = 56						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 6
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T215905[ebp], esp
+	mov	DWORD PTR $T218563[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
 	mov	DWORD PTR tv179[ebp], eax
-	lea	eax, DWORD PTR $T215906[ebp]
+	lea	eax, DWORD PTR $T218564[ebp]
 	push	eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	call	??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@Uforward_iterator_tag@2@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@Uforward_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Transform<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >,std::_String_iterator<char,std::char_traits<char>,std::allocator<char> >,boost::algorithm::detail::to_lowerF<char>,std::forward_iterator_tag>
 	add	esp, 52					; 00000034H
 	mov	DWORD PTR tv173[ebp], eax
-	lea	ecx, DWORD PTR $T215906[ebp]
+	lea	ecx, DWORD PTR $T218564[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 
 ; 685  : 	return (_Result);
@@ -45094,9 +45098,9 @@ ___formal$ = 56						; size = 1
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T215916[ebp]
+	mov	ecx, DWORD PTR $T218574[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215916[ebp], ecx
+	mov	DWORD PTR $T218574[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	lea	ecx, DWORD PTR __Result$[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
@@ -45165,16 +45169,16 @@ __unwindfunclet$??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allo
 	lea	ecx, DWORD PTR __Result$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$4:
-	mov	ecx, DWORD PTR $T215903[ebp]
+	mov	ecx, DWORD PTR $T218561[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$5:
-	mov	ecx, DWORD PTR $T215904[ebp]
+	mov	ecx, DWORD PTR $T218562[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@Urandom_access_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$8:
-	mov	eax, DWORD PTR $T215916[ebp]
+	mov	eax, DWORD PTR $T218574[ebp]
 	and	eax, 1
 	je	$LN12@Transform
-	and	DWORD PTR $T215916[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218574[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN12@Transform:
@@ -45207,7 +45211,7 @@ __ehfuncinfo$??H?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@
 xdata$x	ENDS
 ;	COMDAT ??H?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV01@H@Z
 _TEXT	SEGMENT
-$T215931 = -244						; size = 4
+$T218589 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -45240,7 +45244,7 @@ __Off$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T215931[ebp], 0
+	mov	DWORD PTR $T218589[ebp], 0
 
 ; 411  : 		_Myt _Tmp = *this;
 
@@ -45259,9 +45263,9 @@ __Off$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T215931[ebp]
+	mov	ecx, DWORD PTR $T218589[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T215931[ebp], ecx
+	mov	DWORD PTR $T218589[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
@@ -45308,10 +45312,10 @@ __unwindfunclet$??H?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@s
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??H?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV01@H@Z$1:
-	mov	eax, DWORD PTR $T215931[ebp]
+	mov	eax, DWORD PTR $T218589[ebp]
 	and	eax, 1
 	je	$LN5@operator@37
-	and	DWORD PTR $T215931[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218589[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN5@operator@37:
@@ -45553,13 +45557,13 @@ tv138 = -412						; size = 4
 tv93 = -412						; size = 4
 tv88 = -412						; size = 4
 tv84 = -412						; size = 4
-$T215955 = -404						; size = 44
-$T215956 = -352						; size = 32
-$T215963 = -312						; size = 4
-$T215964 = -300						; size = 4
-$T215967 = -288						; size = 4
-_last$186913 = -84					; size = 12
-_first$186911 = -64					; size = 12
+$T218613 = -404						; size = 44
+$T218614 = -352						; size = 32
+$T218621 = -312						; size = 4
+$T218622 = -300						; size = 4
+$T218625 = -288						; size = 4
+_last$189434 = -84					; size = 12
+_first$189432 = -64					; size = 12
 _buf$ = -44						; size = 4
 _prev$ = -32						; size = 4
 _this$ = -20						; size = 4
@@ -45617,22 +45621,22 @@ _pback_size$ = 16					; size = 4
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0P@HJKEEELA@chain?5complete?$AA@
-	lea	ecx, DWORD PTR $T215956[ebp]
+	lea	ecx, DWORD PTR $T218614[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	lea	eax, DWORD PTR $T215956[ebp]
+	lea	eax, DWORD PTR $T218614[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T215955[ebp]
+	lea	ecx, DWORD PTR $T218613[ebp]
 	call	??0logic_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z ; std::logic_error::logic_error
 	push	OFFSET __TI2?AVlogic_error@std@@
-	lea	ecx, DWORD PTR $T215955[ebp]
+	lea	ecx, DWORD PTR $T218613[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T215956[ebp]
+	lea	ecx, DWORD PTR $T218614[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -45703,9 +45707,9 @@ $LN14@push_impl:
 	push	96					; 00000060H
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
-	mov	DWORD PTR $T215964[ebp], eax
+	mov	DWORD PTR $T218622[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	cmp	DWORD PTR $T215964[ebp], 0
+	cmp	DWORD PTR $T218622[ebp], 0
 	je	SHORT $LN15@push_impl
 	mov	eax, DWORD PTR _pback_size$[ebp]
 	push	eax
@@ -45713,7 +45717,7 @@ $LN14@push_impl:
 	push	ecx
 	mov	edx, DWORD PTR _t$[ebp]
 	push	edx
-	mov	ecx, DWORD PTR $T215964[ebp]
+	mov	ecx, DWORD PTR $T218622[ebp]
 	call	??0?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@QAE@ABU?$basic_file_source@D@12@HH@Z ; boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>
 	mov	DWORD PTR tv138[ebp], eax
 	jmp	SHORT $LN16@push_impl
@@ -45721,9 +45725,9 @@ $LN15@push_impl:
 	mov	DWORD PTR tv138[ebp], 0
 $LN16@push_impl:
 	mov	eax, DWORD PTR tv138[ebp]
-	mov	DWORD PTR $T215963[ebp], eax
+	mov	DWORD PTR $T218621[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	mov	ecx, DWORD PTR $T215963[ebp]
+	mov	ecx, DWORD PTR $T218621[ebp]
 	push	ecx
 	lea	ecx, DWORD PTR _buf$[ebp]
 	call	??0?$auto_ptr@V?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@@std@@QAE@PAV?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@@Z ; std::auto_ptr<boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input> >::auto_ptr<boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input> >
@@ -45733,8 +45737,8 @@ $LN16@push_impl:
 
 	lea	ecx, DWORD PTR _buf$[ebp]
 	call	?get@?$auto_ptr@V?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@@std@@QBEPAV?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@XZ ; std::auto_ptr<boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input> >::get
-	mov	DWORD PTR $T215967[ebp], eax
-	lea	eax, DWORD PTR $T215967[ebp]
+	mov	DWORD PTR $T218625[ebp], eax
+	lea	eax, DWORD PTR $T218625[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?list@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@XZ ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::list
@@ -45766,7 +45770,7 @@ $LN16@push_impl:
 
 ; 253  :             for ( iterator first = list().begin(),
 
-	lea	eax, DWORD PTR _first$186911[ebp]
+	lea	eax, DWORD PTR _first$189432[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?list@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@XZ ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::list
@@ -45776,7 +45780,7 @@ $LN16@push_impl:
 
 ; 254  :                            last = list().end();
 
-	lea	eax, DWORD PTR _last$186913[ebp]
+	lea	eax, DWORD PTR _last$189434[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?list@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@XZ ; boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::list
@@ -45789,12 +45793,12 @@ $LN3@push_impl:
 ; 255  :                   first != last;
 ; 256  :                   ++first )
 
-	lea	ecx, DWORD PTR _first$186911[ebp]
+	lea	ecx, DWORD PTR _first$189432[ebp]
 	call	??E?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAV012@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator++
 $LN4@push_impl:
-	lea	eax, DWORD PTR _last$186913[ebp]
+	lea	eax, DWORD PTR _last$189434[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _first$186911[ebp]
+	lea	ecx, DWORD PTR _first$189432[ebp]
 	call	??9?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBE_NABV012@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Const_iterator<1>::operator!=
 	movzx	ecx, al
 	test	ecx, ecx
@@ -45803,7 +45807,7 @@ $LN4@push_impl:
 ; 257  :             {
 ; 258  :                 (*first)->set_needs_close();
 
-	lea	ecx, DWORD PTR _first$186911[ebp]
+	lea	ecx, DWORD PTR _first$189432[ebp]
 	call	??D?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator*
 	mov	ecx, DWORD PTR [eax]
 	call	?set_needs_close@?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@IAEXXZ ; boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> >::set_needs_close
@@ -45813,10 +45817,10 @@ $LN2@push_impl:
 ; 259  :             }
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	lea	ecx, DWORD PTR _last$186913[ebp]
+	lea	ecx, DWORD PTR _last$189434[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	lea	ecx, DWORD PTR _first$186911[ebp]
+	lea	ecx, DWORD PTR _first$189432[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 $LN5@push_impl:
 
@@ -45908,12 +45912,12 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$??$push_impl@U?$basic_file_source@D@iostreams@boost@@@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEXABU?$basic_file_source@D@23@HH@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T215956[ebp]
+	lea	ecx, DWORD PTR $T218614[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$??$push_impl@U?$basic_file_source@D@iostreams@boost@@@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEXABU?$basic_file_source@D@23@HH@Z$1:
-	mov	eax, DWORD PTR $T215964[ebp]
+	mov	eax, DWORD PTR $T218622[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -45922,10 +45926,10 @@ __unwindfunclet$??$push_impl@U?$basic_file_source@D@iostreams@boost@@@?$chain_ba
 	lea	ecx, DWORD PTR _buf$[ebp]
 	jmp	??1?$auto_ptr@V?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@@std@@QAE@XZ ; std::auto_ptr<boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input> >::~auto_ptr<boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input> >
 __unwindfunclet$??$push_impl@U?$basic_file_source@D@iostreams@boost@@@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEXABU?$basic_file_source@D@23@HH@Z$3:
-	lea	ecx, DWORD PTR _first$186911[ebp]
+	lea	ecx, DWORD PTR _first$189432[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$push_impl@U?$basic_file_source@D@iostreams@boost@@@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEXABU?$basic_file_source@D@23@HH@Z$4:
-	lea	ecx, DWORD PTR _last$186913[ebp]
+	lea	ecx, DWORD PTR _last$189434[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$??$push_impl@U?$basic_file_source@D@iostreams@boost@@@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEXABU?$basic_file_source@D@23@HH@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -46312,7 +46316,7 @@ text$x	ENDS
 ; File c:\program files\microsoft visual studio 9.0\vc\include\utility
 ;	COMDAT ??$swap@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@YAXAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@0@Z
 _TEXT	SEGMENT
-__Tmp$186921 = -8					; size = 4
+__Tmp$189442 = -8					; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$swap@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@YAXAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@0@Z PROC ; std::swap<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *>, COMDAT
@@ -46341,7 +46345,7 @@ __Right$ = 12						; size = 4
 
 	mov	eax, DWORD PTR __Left$[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Tmp$186921[ebp], ecx
+	mov	DWORD PTR __Tmp$189442[ebp], ecx
 
 ; 21   : 
 ; 22   : 		_Left = _Right;
@@ -46354,7 +46358,7 @@ __Right$ = 12						; size = 4
 ; 23   : 		_Right = _Tmp;
 
 	mov	eax, DWORD PTR __Right$[ebp]
-	mov	ecx, DWORD PTR __Tmp$186921[ebp]
+	mov	ecx, DWORD PTR __Tmp$189442[ebp]
 	mov	DWORD PTR [eax], ecx
 $LN2@swap@2:
 
@@ -46373,7 +46377,7 @@ $LN2@swap@2:
 _TEXT	ENDS
 ;	COMDAT ??$_Checked_base@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@std@@YA?AV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@AAV10@U_Unchanged_checked_iterator_base_type_tag@0@@Z
 _TEXT	SEGMENT
-$T216015 = -200						; size = 4
+$T218673 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 __It$ = 12						; size = 4
 ___formal$ = 16						; size = 1
@@ -46391,7 +46395,7 @@ ___formal$ = 16						; size = 1
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T216015[ebp], 0
+	mov	DWORD PTR $T218673[ebp], 0
 
 ; 1147 : 		return _It;
 
@@ -46399,9 +46403,9 @@ ___formal$ = 16						; size = 1
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T216015[ebp]
+	mov	ecx, DWORD PTR $T218673[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216015[ebp], ecx
+	mov	DWORD PTR $T218673[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1148 : 	}
@@ -46437,8 +46441,8 @@ __ehfuncinfo$??$_Equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocato
 xdata$x	ENDS
 ;	COMDAT ??$_Equal@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V12@Uforward_iterator_tag@2@@std@@YA_NV?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@00Uforward_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
 _TEXT	SEGMENT
-$T216019 = -221						; size = 1
-$T216020 = -209						; size = 1
+$T218677 = -221						; size = 1
+$T218678 = -209						; size = 1
 __$EHRec$ = -12						; size = 12
 __First1$ = 8						; size = 12
 __Last1$ = 20						; size = 12
@@ -46502,7 +46506,7 @@ $LN4@Equal@2:
 
 ; 2994 : 			return (false);
 
-	mov	BYTE PTR $T216019[ebp], 0
+	mov	BYTE PTR $T218677[ebp], 0
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First1$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -46512,7 +46516,7 @@ $LN4@Equal@2:
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __First2$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	al, BYTE PTR $T216019[ebp]
+	mov	al, BYTE PTR $T218677[ebp]
 	jmp	SHORT $LN5@Equal@2
 $LN1@Equal@2:
 
@@ -46520,7 +46524,7 @@ $LN1@Equal@2:
 
 	jmp	SHORT $LN3@Equal@2
 $LN2@Equal@2:
-	mov	BYTE PTR $T216020[ebp], 1
+	mov	BYTE PTR $T218678[ebp], 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First1$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
@@ -46530,7 +46534,7 @@ $LN2@Equal@2:
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __First2$[ebp]
 	call	??1?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ
-	mov	al, BYTE PTR $T216020[ebp]
+	mov	al, BYTE PTR $T218678[ebp]
 $LN5@Equal@2:
 
 ; 2996 : 	}
@@ -46575,21 +46579,21 @@ PUBLIC	??R?$add@KI$0A@@detail@random@boost@@QAEIKI@Z	; boost::random::detail::ad
 ; File c:\program files\boost\boost_1_40\boost\random\uniform_int.hpp
 ;	COMDAT ??$generate@V?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@@?$uniform_int@I@boost@@CAIAAV?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@1@III@Z
 _TEXT	SEGMENT
-$T216032 = -397						; size = 1
-$T216033 = -385						; size = 1
-$T216034 = -373						; size = 1
-$T216035 = -361						; size = 1
-$T216036 = -352						; size = 12
-$T216037 = -329						; size = 1
-$T216038 = -317						; size = 1
-$T216039 = -305						; size = 1
-_result$187027 = -104					; size = 4
-_bucket_size$187015 = -92				; size = 4
-_result_increment$186988 = -80				; size = 4
-_mult$186979 = -68					; size = 4
-_result$186978 = -56					; size = 4
-_limit$186973 = -44					; size = 4
-_v$186944 = -32						; size = 4
+$T218690 = -397						; size = 1
+$T218691 = -385						; size = 1
+$T218692 = -373						; size = 1
+$T218693 = -361						; size = 1
+$T218694 = -352						; size = 12
+$T218695 = -329						; size = 1
+$T218696 = -317						; size = 1
+$T218697 = -305						; size = 1
+_result$189548 = -104					; size = 4
+_bucket_size$189536 = -92				; size = 4
+_result_increment$189509 = -80				; size = 4
+_mult$189500 = -68					; size = 4
+_result$189499 = -56					; size = 4
+_limit$189494 = -44					; size = 4
+_v$189465 = -32						; size = 4
 _brange$ = -20						; size = 4
 _bmin$ = -8						; size = 4
 _eng$ = 8						; size = 4
@@ -46625,14 +46629,14 @@ _range$ = 20						; size = 4
 ; 104  :       random::detail::subtract<base_result>()((eng.max)(), (eng.min)());
 
 	xor	eax, eax
-	mov	BYTE PTR $T216032[ebp], al
+	mov	BYTE PTR $T218690[ebp], al
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	?min@?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QBEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::min
 	push	eax
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	?max@?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QBEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::max
 	push	eax
-	lea	ecx, DWORD PTR $T216032[ebp]
+	lea	ecx, DWORD PTR $T218690[ebp]
 	call	??R?$subtract@K$0A@@detail@random@boost@@QAEKKK@Z ; boost::random::detail::subtract<unsigned long,0>::operator()
 	mov	DWORD PTR _brange$[ebp], eax
 
@@ -46660,25 +46664,25 @@ $LN23@generate@2:
 ; 111  :       base_unsigned v = random::detail::subtract<base_result>()(eng(), bmin);
 
 	xor	eax, eax
-	mov	BYTE PTR $T216033[ebp], al
+	mov	BYTE PTR $T218691[ebp], al
 	mov	ecx, DWORD PTR _bmin$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	??R?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QAEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::operator()
 	push	eax
-	lea	ecx, DWORD PTR $T216033[ebp]
+	lea	ecx, DWORD PTR $T218691[ebp]
 	call	??R?$subtract@K$0A@@detail@random@boost@@QAEKKK@Z ; boost::random::detail::subtract<unsigned long,0>::operator()
-	mov	DWORD PTR _v$186944[ebp], eax
+	mov	DWORD PTR _v$189465[ebp], eax
 
 ; 112  :       return random::detail::add<base_unsigned, result_type>()(v, min_value);
 
 	xor	eax, eax
-	mov	BYTE PTR $T216034[ebp], al
+	mov	BYTE PTR $T218692[ebp], al
 	mov	ecx, DWORD PTR _min_value$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _v$186944[ebp]
+	mov	edx, DWORD PTR _v$189465[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T216034[ebp]
+	lea	ecx, DWORD PTR $T218692[ebp]
 	call	??R?$add@KI$0A@@detail@random@boost@@QAEIKI@Z ; boost::random::detail::add<unsigned long,unsigned int,0>::operator()
 	jmp	$LN24@generate@2
 	jmp	$LN24@generate@2
@@ -46715,7 +46719,7 @@ $LN18@generate@2:
 	mov	eax, DWORD PTR _range$[ebp]
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _limit$186973[ebp], eax
+	mov	DWORD PTR _limit$189494[ebp], eax
 
 ; 124  :           if(range % (range_type(brange)+1) == range_type(brange))
 
@@ -46729,9 +46733,9 @@ $LN18@generate@2:
 
 ; 125  :             ++limit;
 
-	mov	eax, DWORD PTR _limit$186973[ebp]
+	mov	eax, DWORD PTR _limit$189494[ebp]
 	add	eax, 1
-	mov	DWORD PTR _limit$186973[ebp], eax
+	mov	DWORD PTR _limit$189494[ebp], eax
 $LN15@generate@2:
 
 ; 126  :         } else {
@@ -46747,7 +46751,7 @@ $LN16@generate@2:
 	add	ecx, 1
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _limit$186973[ebp], eax
+	mov	DWORD PTR _limit$189494[ebp], eax
 $LN14@generate@2:
 
 ; 128  :         }
@@ -46756,11 +46760,11 @@ $LN14@generate@2:
 ; 131  :         // For every power of (brange+1), we determine a random factor
 ; 132  :         range_type result = range_type(0);
 
-	mov	DWORD PTR _result$186978[ebp], 0
+	mov	DWORD PTR _result$189499[ebp], 0
 
 ; 133  :         range_type mult = range_type(1);
 
-	mov	DWORD PTR _mult$186979[ebp], 1
+	mov	DWORD PTR _mult$189500[ebp], 1
 $LN13@generate@2:
 
 ; 134  : 
@@ -46769,8 +46773,8 @@ $LN13@generate@2:
 ; 137  :         //  mult <= range
 ; 138  :         while(mult <= limit) {
 
-	mov	eax, DWORD PTR _mult$186979[ebp]
-	cmp	eax, DWORD PTR _limit$186973[ebp]
+	mov	eax, DWORD PTR _mult$189500[ebp]
+	cmp	eax, DWORD PTR _limit$189494[ebp]
 	ja	SHORT $LN12@generate@2
 
 ; 139  :           // Postcondition: result <= range, thus no overflow
@@ -46796,26 +46800,26 @@ $LN13@generate@2:
 ; 159  :           result += random::detail::subtract<base_result>()(eng(), bmin) * mult;
 
 	xor	eax, eax
-	mov	BYTE PTR $T216035[ebp], al
+	mov	BYTE PTR $T218693[ebp], al
 	mov	ecx, DWORD PTR _bmin$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	??R?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QAEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::operator()
 	push	eax
-	lea	ecx, DWORD PTR $T216035[ebp]
+	lea	ecx, DWORD PTR $T218693[ebp]
 	call	??R?$subtract@K$0A@@detail@random@boost@@QAEKKK@Z ; boost::random::detail::subtract<unsigned long,0>::operator()
-	imul	eax, DWORD PTR _mult$186979[ebp]
-	add	eax, DWORD PTR _result$186978[ebp]
-	mov	DWORD PTR _result$186978[ebp], eax
+	imul	eax, DWORD PTR _mult$189500[ebp]
+	add	eax, DWORD PTR _result$189499[ebp]
+	mov	DWORD PTR _result$189499[ebp], eax
 
 ; 160  : 
 ; 161  :           // equivalent to (mult * (brange+1)) == range+1, but avoids overflow.
 ; 162  :           if(mult * range_type(brange) == range - mult + 1) {
 
-	mov	eax, DWORD PTR _mult$186979[ebp]
+	mov	eax, DWORD PTR _mult$189500[ebp]
 	imul	eax, DWORD PTR _brange$[ebp]
 	mov	ecx, DWORD PTR _range$[ebp]
-	sub	ecx, DWORD PTR _mult$186979[ebp]
+	sub	ecx, DWORD PTR _mult$189500[ebp]
 	add	ecx, 1
 	cmp	eax, ecx
 	jne	SHORT $LN11@generate@2
@@ -46824,7 +46828,7 @@ $LN13@generate@2:
 ; 164  :               // the generator's range.
 ; 165  :               return(result);
 
-	mov	eax, DWORD PTR _result$186978[ebp]
+	mov	eax, DWORD PTR _result$189499[ebp]
 	jmp	$LN24@generate@2
 $LN11@generate@2:
 
@@ -46845,8 +46849,8 @@ $LN11@generate@2:
 
 	mov	eax, DWORD PTR _brange$[ebp]
 	add	eax, 1
-	imul	eax, DWORD PTR _mult$186979[ebp]
-	mov	DWORD PTR _mult$186979[ebp], eax
+	imul	eax, DWORD PTR _mult$189500[ebp]
+	mov	DWORD PTR _mult$189500[ebp], eax
 
 ; 180  :         }
 
@@ -46885,14 +46889,14 @@ $LN12@generate@2:
 	push	eax
 	mov	eax, DWORD PTR _range$[ebp]
 	xor	edx, edx
-	div	DWORD PTR _mult$186979[ebp]
+	div	DWORD PTR _mult$189500[ebp]
 	push	eax
 	push	0
-	lea	ecx, DWORD PTR $T216036[ebp]
+	lea	ecx, DWORD PTR $T218694[ebp]
 	call	??0?$uniform_int@I@boost@@QAE@II@Z	; boost::uniform_int<unsigned int>::uniform_int<unsigned int>
 	mov	ecx, eax
 	call	??$?RV?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@@?$uniform_int@I@boost@@QAEIAAV?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@1@@Z ; boost::uniform_int<unsigned int>::operator()<boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> > >
-	mov	DWORD PTR _result_increment$186988[ebp], eax
+	mov	DWORD PTR _result_increment$189509[ebp], eax
 
 ; 208  :         if((std::numeric_limits<range_type>::max)() / mult < result_increment) {
 
@@ -46901,8 +46905,8 @@ $LN12@generate@2:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	xor	edx, edx
-	div	DWORD PTR _mult$186979[ebp]
-	cmp	eax, DWORD PTR _result_increment$186988[ebp]
+	div	DWORD PTR _mult$189500[ebp]
+	cmp	eax, DWORD PTR _result_increment$189509[ebp]
 	jae	SHORT $LN10@generate@2
 
 ; 209  :           // The multiplcation would overflow.  Reject immediately.
@@ -46914,21 +46918,21 @@ $LN10@generate@2:
 ; 211  :         }
 ; 212  :         result_increment *= mult;
 
-	mov	eax, DWORD PTR _result_increment$186988[ebp]
-	imul	eax, DWORD PTR _mult$186979[ebp]
-	mov	DWORD PTR _result_increment$186988[ebp], eax
+	mov	eax, DWORD PTR _result_increment$189509[ebp]
+	imul	eax, DWORD PTR _mult$189500[ebp]
+	mov	DWORD PTR _result_increment$189509[ebp], eax
 
 ; 213  :         // unsigned integers are guaranteed to wrap on overflow.
 ; 214  :         result += result_increment;
 
-	mov	eax, DWORD PTR _result$186978[ebp]
-	add	eax, DWORD PTR _result_increment$186988[ebp]
-	mov	DWORD PTR _result$186978[ebp], eax
+	mov	eax, DWORD PTR _result$189499[ebp]
+	add	eax, DWORD PTR _result_increment$189509[ebp]
+	mov	DWORD PTR _result$189499[ebp], eax
 
 ; 215  :         if(result < result_increment) {
 
-	mov	eax, DWORD PTR _result$186978[ebp]
-	cmp	eax, DWORD PTR _result_increment$186988[ebp]
+	mov	eax, DWORD PTR _result$189499[ebp]
+	cmp	eax, DWORD PTR _result_increment$189509[ebp]
 	jae	SHORT $LN9@generate@2
 
 ; 216  :           // The addition overflowed.  Reject.
@@ -46940,7 +46944,7 @@ $LN9@generate@2:
 ; 218  :         }
 ; 219  :         if(result > range) {
 
-	mov	eax, DWORD PTR _result$186978[ebp]
+	mov	eax, DWORD PTR _result$189499[ebp]
 	cmp	eax, DWORD PTR _range$[ebp]
 	jbe	SHORT $LN8@generate@2
 
@@ -46954,12 +46958,12 @@ $LN8@generate@2:
 ; 223  :         return random::detail::add<range_type, result_type>()(result, min_value);
 
 	xor	eax, eax
-	mov	BYTE PTR $T216037[ebp], al
+	mov	BYTE PTR $T218695[ebp], al
 	mov	ecx, DWORD PTR _min_value$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _result$186978[ebp]
+	mov	edx, DWORD PTR _result$189499[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T216037[ebp]
+	lea	ecx, DWORD PTR $T218695[ebp]
 	call	??R?$add@II$0A@@detail@random@boost@@QAEIII@Z ; boost::random::detail::add<unsigned int,unsigned int,0>::operator()
 	jmp	$LN24@generate@2
 
@@ -46993,7 +46997,7 @@ $LN19@generate@2:
 	mov	eax, DWORD PTR _brange$[ebp]
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _bucket_size$187015[ebp], eax
+	mov	DWORD PTR _bucket_size$189536[ebp], eax
 
 ; 233  :         if(brange % (static_cast<base_unsigned>(range)+1) == static_cast<base_unsigned>(range)) {
 
@@ -47007,9 +47011,9 @@ $LN19@generate@2:
 
 ; 234  :           ++bucket_size;
 
-	mov	eax, DWORD PTR _bucket_size$187015[ebp]
+	mov	eax, DWORD PTR _bucket_size$189536[ebp]
 	add	eax, 1
-	mov	DWORD PTR _bucket_size$187015[ebp], eax
+	mov	DWORD PTR _bucket_size$189536[ebp], eax
 $LN5@generate@2:
 
 ; 235  :         }
@@ -47026,7 +47030,7 @@ $LN6@generate@2:
 	add	ecx, 1
 	xor	edx, edx
 	div	ecx
-	mov	DWORD PTR _bucket_size$187015[ebp], eax
+	mov	DWORD PTR _bucket_size$189536[ebp], eax
 $LN3@generate@2:
 
 ; 238  :       }
@@ -47035,40 +47039,40 @@ $LN3@generate@2:
 ; 241  :           random::detail::subtract<base_result>()(eng(), bmin);
 
 	xor	eax, eax
-	mov	BYTE PTR $T216038[ebp], al
+	mov	BYTE PTR $T218696[ebp], al
 	mov	ecx, DWORD PTR _bmin$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _eng$[ebp]
 	call	??R?$pass_through_engine@V?$pass_through_engine@AAV?$mersenne_twister@K$0CA@$0CHA@$0BIN@$0BP@$0JJAILANP@$0L@$06$0JNCMFGIA@$0P@$0OPMGAAAA@$0BC@$0MHHGGGNO@@random@boost@@@detail@random@boost@@@detail@random@boost@@QAEKXZ ; boost::random::detail::pass_through_engine<boost::random::detail::pass_through_engine<boost::random::mersenne_twister<unsigned long,32,624,397,31,2567483615,11,7,2636928640,15,4022730752,18,3346425566> &> >::operator()
 	push	eax
-	lea	ecx, DWORD PTR $T216038[ebp]
+	lea	ecx, DWORD PTR $T218696[ebp]
 	call	??R?$subtract@K$0A@@detail@random@boost@@QAEKKK@Z ; boost::random::detail::subtract<unsigned long,0>::operator()
-	mov	DWORD PTR _result$187027[ebp], eax
+	mov	DWORD PTR _result$189548[ebp], eax
 
 ; 242  :         result /= bucket_size;
 
-	mov	eax, DWORD PTR _result$187027[ebp]
+	mov	eax, DWORD PTR _result$189548[ebp]
 	xor	edx, edx
-	div	DWORD PTR _bucket_size$187015[ebp]
-	mov	DWORD PTR _result$187027[ebp], eax
+	div	DWORD PTR _bucket_size$189536[ebp]
+	mov	DWORD PTR _result$189548[ebp], eax
 
 ; 243  :         // result and range are non-negative, and result is possibly larger
 ; 244  :         // than range, so the cast is safe
 ; 245  :         if(result <= static_cast<base_unsigned>(range))
 
-	mov	eax, DWORD PTR _result$187027[ebp]
+	mov	eax, DWORD PTR _result$189548[ebp]
 	cmp	eax, DWORD PTR _range$[ebp]
 	ja	SHORT $LN1@generate@2
 
 ; 246  :           return random::detail::add<base_unsigned, result_type>()(result, min_value);
 
 	xor	eax, eax
-	mov	BYTE PTR $T216039[ebp], al
+	mov	BYTE PTR $T218697[ebp], al
 	mov	ecx, DWORD PTR _min_value$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _result$187027[ebp]
+	mov	edx, DWORD PTR _result$189548[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T216039[ebp]
+	lea	ecx, DWORD PTR $T218697[ebp]
 	call	??R?$add@KI$0A@@detail@random@boost@@QAEIKI@Z ; boost::random::detail::add<unsigned long,unsigned int,0>::operator()
 	jmp	SHORT $LN24@generate@2
 $LN1@generate@2:
@@ -47096,7 +47100,7 @@ $LN24@generate@2:
 _TEXT	ENDS
 ;	COMDAT ??$swap@PAUimpl@?$basic_file@D@iostreams@boost@@@std@@YAXAAPAUimpl@?$basic_file@D@iostreams@boost@@0@Z
 _TEXT	SEGMENT
-__Tmp$187624 = -8					; size = 4
+__Tmp$190206 = -8					; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$swap@PAUimpl@?$basic_file@D@iostreams@boost@@@std@@YAXAAPAUimpl@?$basic_file@D@iostreams@boost@@0@Z PROC ; std::swap<boost::iostreams::basic_file<char>::impl *>, COMDAT
@@ -47125,7 +47129,7 @@ __Right$ = 12						; size = 4
 
 	mov	eax, DWORD PTR __Left$[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Tmp$187624[ebp], ecx
+	mov	DWORD PTR __Tmp$190206[ebp], ecx
 
 ; 21   : 
 ; 22   : 		_Left = _Right;
@@ -47138,7 +47142,7 @@ __Right$ = 12						; size = 4
 ; 23   : 		_Right = _Tmp;
 
 	mov	eax, DWORD PTR __Right$[ebp]
-	mov	ecx, DWORD PTR __Tmp$187624[ebp]
+	mov	ecx, DWORD PTR __Tmp$190206[ebp]
 	mov	DWORD PTR [eax], ecx
 $LN2@swap@3:
 
@@ -47159,7 +47163,7 @@ EXTRN	__imp_??0?$allocator@D@std@@QAE@XZ:PROC
 ; File c:\program files\boost\boost_1_40\boost\iostreams\detail\buffer.hpp
 ;	COMDAT ??1?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAE@XZ
 _TEXT	SEGMENT
-$T216046 = -209						; size = 1
+$T218704 = -209						; size = 1
 _this$ = -8						; size = 4
 ??1?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAE@XZ PROC ; boost::iostreams::detail::basic_buffer<char,std::allocator<char> >::~basic_buffer<char,std::allocator<char> >, COMDAT
 ; _this$ = ecx
@@ -47190,7 +47194,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR [edx]
 	push	eax
 	mov	edi, esp
-	lea	ecx, DWORD PTR $T216046[ebp]
+	lea	ecx, DWORD PTR $T218704[ebp]
 	call	DWORD PTR __imp_??0?$allocator@D@std@@QAE@XZ
 	cmp	edi, esp
 	call	__RTC_CheckEsp
@@ -47367,9 +47371,9 @@ _TEXT	SEGMENT
 tv80 = -244						; size = 4
 tv69 = -244						; size = 4
 tv67 = -244						; size = 4
-$T216064 = -236						; size = 4
-$T216067 = -221						; size = 1
-_size$187670 = -20					; size = 4
+$T218722 = -236						; size = 4
+$T218725 = -221						; size = 1
+_size$190252 = -20					; size = 4
 _this$ = -8						; size = 4
 _t$ = 8							; size = 4
 _buffer_size$ = 12					; size = 4
@@ -47444,10 +47448,10 @@ $LN11@open@2:
 
 ; 170  :         pback_size_ = (std::max)(2, pback_size); // STLPort needs 2.
 
-	mov	DWORD PTR $T216064[ebp], 2
+	mov	DWORD PTR $T218722[ebp], 2
 	lea	eax, DWORD PTR _pback_size$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216064[ebp]
+	lea	ecx, DWORD PTR $T218722[ebp]
 	push	ecx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
@@ -47470,11 +47474,11 @@ $LN13@open@2:
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+80]
 	add	edx, DWORD PTR tv80[ebp]
-	mov	DWORD PTR _size$187670[ebp], edx
+	mov	DWORD PTR _size$190252[ebp], edx
 
 ; 174  :         in().resize(size);
 
-	mov	eax, DWORD PTR _size$187670[ebp]
+	mov	eax, DWORD PTR _size$190252[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?in@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$basic_buffer@DV?$allocator@D@std@@@234@XZ ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::in
@@ -47550,7 +47554,7 @@ $LN3@open@2:
 
 	mov	eax, DWORD PTR _t$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216067[ebp]
+	lea	ecx, DWORD PTR $T218725[ebp]
 	call	??0?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@detail@iostreams@boost@@QAE@ABV?$basic_null_device@DUinput@iostreams@boost@@@23@@Z ; boost::iostreams::detail::concept_adapter<boost::iostreams::basic_null_device<char,boost::iostreams::input> >::concept_adapter<boost::iostreams::basic_null_device<char,boost::iostreams::input> >
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -47650,10 +47654,10 @@ PUBLIC	??$clear_flags@H@detail@iostreams@boost@@YA?AV?$clear_flags_operation@H@0
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?close@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ
 _TEXT	SEGMENT
-$T216072 = -268						; size = 4
-$T216073 = -256						; size = 4
-$T216074 = -244						; size = 8
-$T216075 = -228						; size = 8
+$T218730 = -268						; size = 4
+$T218731 = -256						; size = 4
+$T218732 = -244						; size = 8
+$T218733 = -228						; size = 8
 _self$ = -20						; size = 4
 _this$ = -8						; size = 4
 ?close@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::close, COMDAT
@@ -47691,7 +47695,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 84					; 00000054H
 	push	eax
-	lea	ecx, DWORD PTR $T216072[ebp]
+	lea	ecx, DWORD PTR $T218730[ebp]
 	push	ecx
 	call	??$clear_flags@H@detail@iostreams@boost@@YA?AV?$clear_flags_operation@H@012@AAH@Z ; boost::iostreams::detail::clear_flags<int>
 	add	esp, 8
@@ -47700,7 +47704,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 64					; 00000040H
 	push	eax
-	lea	ecx, DWORD PTR $T216073[ebp]
+	lea	ecx, DWORD PTR $T218731[ebp]
 	push	ecx
 	call	??$call_reset@V?$optional@V?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AV?$reset_operation@V?$optional@V?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@@012@AAV?$optional@V?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@detail@iostreams@boost@@@012@@Z ; boost::iostreams::detail::call_reset<boost::iostreams::detail::optional<boost::iostreams::detail::concept_adapter<boost::iostreams::basic_null_device<char,boost::iostreams::input> > > >
 	add	esp, 8
@@ -47709,7 +47713,7 @@ _this$ = -8						; size = 4
 	push	2
 	mov	eax, DWORD PTR _self$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216074[ebp]
+	lea	ecx, DWORD PTR $T218732[ebp]
 	push	ecx
 	call	??$call_member_close@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AV?$member_close_operation@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@012@AAV?$linked_streambuf@DU?$char_traits@D@std@@@012@H@Z ; boost::iostreams::detail::call_member_close<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > >
 	add	esp, 12					; 0000000cH
@@ -47720,7 +47724,7 @@ _this$ = -8						; size = 4
 	push	1
 	mov	ecx, DWORD PTR _self$[ebp]
 	push	ecx
-	lea	edx, DWORD PTR $T216075[ebp]
+	lea	edx, DWORD PTR $T218733[ebp]
 	push	edx
 	call	??$call_member_close@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AV?$member_close_operation@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@012@AAV?$linked_streambuf@DU?$char_traits@D@std@@@012@H@Z ; boost::iostreams::detail::call_member_close<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > >
 	add	esp, 12					; 0000000cH
@@ -47856,7 +47860,7 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv77 = -237						; size = 1
 tv76 = -236						; size = 4
-$T216082 = -225						; size = 1
+$T218740 = -225						; size = 1
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 ?strict_sync@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@UAE_NXZ PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::strict_sync, COMDAT
@@ -47915,7 +47919,7 @@ __catch$?strict_sync@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams
 
 ; 324  :     } catch (...) { return false; }
 
-	mov	BYTE PTR $T216082[ebp], 0
+	mov	BYTE PTR $T218740[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	mov	eax, $LN7@strict_syn
 	ret	0
@@ -47925,7 +47929,7 @@ __tryend$?strict_sync@?$indirect_streambuf@V?$basic_null_device@DUinput@iostream
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	jmp	SHORT $LN2@strict_syn
 $LN7@strict_syn:
-	mov	al, BYTE PTR $T216082[ebp]
+	mov	al, BYTE PTR $T218740[ebp]
 $LN2@strict_syn:
 
 ; 325  : }
@@ -47969,7 +47973,7 @@ EXTRN	__imp_?gptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ:PROC
 ;	COMDAT ?underflow@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHXZ
 _TEXT	SEGMENT
 tv241 = -256						; size = 4
-$T216098 = -248						; size = 4
+$T218756 = -248						; size = 4
 _chars$ = -44						; size = 4
 _keep$ = -32						; size = 4
 _buf$ = -20						; size = 4
@@ -48066,11 +48070,11 @@ $LN3@underflow:
 	cmp	edi, esp
 	call	__RTC_CheckEsp
 	sub	esi, eax
-	mov	DWORD PTR $T216098[ebp], esi
+	mov	DWORD PTR $T218756[ebp], esi
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 80					; 00000050H
 	push	eax
-	lea	ecx, DWORD PTR $T216098[ebp]
+	lea	ecx, DWORD PTR $T218756[ebp]
 	push	ecx
 	call	??$min@H@std@@YAABHABH0@Z		; std::min<int>
 	add	esp, 8
@@ -48280,8 +48284,8 @@ __TI3?AVfailure@ios_base@std@@ DD 00H
 xdata$x	ENDS
 ;	COMDAT ?pbackfail@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHH@Z
 _TEXT	SEGMENT
-$T216103 = -264						; size = 4
-$T216104 = -252						; size = 44
+$T218761 = -264						; size = 4
+$T218762 = -252						; size = 44
 _this$ = -8						; size = 4
 _c$ = 8							; size = 4
 ?pbackfail@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHH@Z PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::pbackfail, COMDAT
@@ -48334,9 +48338,9 @@ _c$ = 8							; size = 4
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR $T216103[ebp], eax
+	mov	DWORD PTR $T218761[ebp], eax
 	mov	esi, esp
-	lea	eax, DWORD PTR $T216103[ebp]
+	lea	eax, DWORD PTR $T218761[ebp]
 	push	eax
 	lea	ecx, DWORD PTR _c$[ebp]
 	push	ecx
@@ -48384,12 +48388,12 @@ $LN3@pbackfail:
 
 ; 277  :         throw bad_putback();
 
-	lea	eax, DWORD PTR $T216104[ebp]
+	lea	eax, DWORD PTR $T218762[ebp]
 	push	eax
 	call	?bad_putback@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ ; boost::iostreams::detail::bad_putback
 	add	esp, 4
 	push	OFFSET __TI3?AVfailure@ios_base@std@@
-	lea	ecx, DWORD PTR $T216104[ebp]
+	lea	ecx, DWORD PTR $T218762[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 $LN5@pbackfail:
@@ -48469,8 +48473,8 @@ __ehfuncinfo$?bad_putback@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ 
 xdata$x	ENDS
 ;	COMDAT ?bad_putback@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ
 _TEXT	SEGMENT
-$T216110 = -252						; size = 32
-$T216113 = -212						; size = 4
+$T218768 = -252						; size = 32
+$T218771 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 ?bad_putback@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ PROC ; boost::iostreams::detail::bad_putback, COMDAT
@@ -48496,24 +48500,24 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T216113[ebp], 0
+	mov	DWORD PTR $T218771[ebp], 0
 	mov	esi, esp
 	push	OFFSET ??_C@_0BE@DGJOHFIE@putback?5buffer?5full?$AA@
-	lea	ecx, DWORD PTR $T216110[ebp]
+	lea	ecx, DWORD PTR $T218768[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	lea	eax, DWORD PTR $T216110[ebp]
+	lea	eax, DWORD PTR $T218768[ebp]
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0failure@ios_base@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z ; std::ios_base::failure::failure
-	mov	ecx, DWORD PTR $T216113[ebp]
+	mov	ecx, DWORD PTR $T218771[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216113[ebp], ecx
+	mov	DWORD PTR $T218771[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216110[ebp]
+	lea	ecx, DWORD PTR $T218768[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -48535,15 +48539,15 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?bad_putback@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216110[ebp]
+	lea	ecx, DWORD PTR $T218768[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?bad_putback@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ$1:
-	mov	eax, DWORD PTR $T216113[ebp]
+	mov	eax, DWORD PTR $T218771[ebp]
 	and	eax, 1
 	je	$LN5@bad_putbac
-	and	DWORD PTR $T216113[ebp], -2		; fffffffeH
+	and	DWORD PTR $T218771[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1failure@ios_base@std@@UAE@XZ		; std::ios_base::failure::~failure
 $LN5@bad_putbac:
@@ -48567,8 +48571,8 @@ EXTRN	__imp_?pptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ:PROC
 ; File c:\program files\boost\boost_1_40\boost\iostreams\detail\streambuf\indirect_streambuf.hpp
 ;	COMDAT ?overflow@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHH@Z
 _TEXT	SEGMENT
-$T216123 = -224						; size = 4
-_d$187950 = -17						; size = 1
+$T218781 = -224						; size = 4
+_d$190532 = -17						; size = 1
 _this$ = -8						; size = 4
 _c$ = 8							; size = 4
 ?overflow@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHH@Z PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::overflow, COMDAT
@@ -48640,9 +48644,9 @@ $LN9@overflow:
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR $T216123[ebp], eax
+	mov	DWORD PTR $T218781[ebp], eax
 	mov	esi, esp
-	lea	eax, DWORD PTR $T216123[ebp]
+	lea	eax, DWORD PTR $T218781[ebp]
 	push	eax
 	lea	ecx, DWORD PTR _c$[ebp]
 	push	ecx
@@ -48749,7 +48753,7 @@ $LN5@overflow:
 	add	esp, 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	BYTE PTR _d$187950[ebp], al
+	mov	BYTE PTR _d$190532[ebp], al
 
 ; 301  :             if (obj().write(&d, 1, next_) != 1)
 
@@ -48757,7 +48761,7 @@ $LN5@overflow:
 	mov	ecx, DWORD PTR [eax+68]
 	push	ecx
 	push	1
-	lea	edx, DWORD PTR _d$187950[ebp]
+	lea	edx, DWORD PTR _d$190532[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?obj@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@234@XZ ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::obj
@@ -48847,7 +48851,7 @@ xdata$x	ENDS
 ;	COMDAT ?sync@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHXZ
 _TEXT	SEGMENT
 tv75 = -236						; size = 4
-$T216129 = -228						; size = 4
+$T218787 = -228						; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 ?sync@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHXZ PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::sync, COMDAT
@@ -48908,7 +48912,7 @@ __catch$?sync@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@
 
 ; 315  :     } catch (...) { return -1; }
 
-	mov	DWORD PTR $T216129[ebp], -1
+	mov	DWORD PTR $T218787[ebp], -1
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	mov	eax, $LN7@sync
 	ret	0
@@ -48918,7 +48922,7 @@ __tryend$?sync@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	jmp	SHORT $LN2@sync
 $LN7@sync:
-	mov	eax, DWORD PTR $T216129[ebp]
+	mov	eax, DWORD PTR $T218787[ebp]
 $LN2@sync:
 
 ; 316  : }
@@ -49333,7 +49337,7 @@ EXTRN	__imp_?pubimbue@?$basic_streambuf@DU?$char_traits@D@std@@@std@@QAE?AVlocal
 ; File c:\program files\boost\boost_1_40\boost\iostreams\detail\streambuf\indirect_streambuf.hpp
 ;	COMDAT ?imbue@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEXABVlocale@std@@@Z
 _TEXT	SEGMENT
-$T216159 = -212						; size = 4
+$T218817 = -212						; size = 4
 _this$ = -8						; size = 4
 _loc$ = 8						; size = 4
 ?imbue@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEXABVlocale@std@@@Z PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::imbue, COMDAT
@@ -49383,7 +49387,7 @@ _loc$ = 8						; size = 4
 	mov	esi, esp
 	mov	eax, DWORD PTR _loc$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216159[ebp]
+	lea	ecx, DWORD PTR $T218817[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+68]
@@ -49391,7 +49395,7 @@ _loc$ = 8						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216159[ebp]
+	lea	ecx, DWORD PTR $T218817[ebp]
 	call	DWORD PTR __imp_??1locale@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -49816,11 +49820,11 @@ tv179 = -276						; size = 4
 tv196 = -272						; size = 4
 tv194 = -272						; size = 4
 tv193 = -272						; size = 4
-$T216171 = -264						; size = 4
-$T216172 = -252						; size = 4
-$T216173 = -240						; size = 4
-$T216174 = -228						; size = 4
-$T216175 = -216						; size = 4
+$T218829 = -264						; size = 4
+$T218830 = -252						; size = 4
+$T218831 = -240						; size = 4
+$T218832 = -228						; size = 4
+$T218833 = -216						; size = 4
 __$EHRec$ = -16						; size = 16
 ___$ReturnUdt$ = 8					; size = 4
 _first$ = 12						; size = 12
@@ -49916,7 +49920,7 @@ __catch$??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$link
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216171[ebp], esp
+	mov	DWORD PTR $T218829[ebp], esp
 	lea	edx, DWORD PTR _last$[ebp]
 	push	edx
 	call	??0?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@ABV01@@Z
@@ -49926,12 +49930,12 @@ __catch$??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$link
 	mov	BYTE PTR __$EHRec$[ebp+12], 5
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216172[ebp], esp
+	mov	DWORD PTR $T218830[ebp], esp
 	lea	edx, DWORD PTR _first$[ebp]
 	push	edx
 	call	??0?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@ABV01@@Z
 	mov	DWORD PTR tv182[ebp], eax
-	lea	eax, DWORD PTR $T216173[ebp]
+	lea	eax, DWORD PTR $T218831[ebp]
 	push	eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 4
 	call	??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@0U34012@@Z ; boost::iostreams::detail::execute_foreach<std::reverse_iterator<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1> >,boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::closer>
@@ -49974,7 +49978,7 @@ __tryend$??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$lin
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216174[ebp], esp
+	mov	DWORD PTR $T218832[ebp], esp
 	lea	edx, DWORD PTR _last$[ebp]
 	push	edx
 	call	??0?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@ABV01@@Z
@@ -49984,7 +49988,7 @@ __tryend$??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$lin
 	mov	BYTE PTR __$EHRec$[ebp+12], 7
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216175[ebp], esp
+	mov	DWORD PTR $T218833[ebp], esp
 	lea	edx, DWORD PTR _first$[ebp]
 	push	edx
 	call	??0?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@ABV01@@Z
@@ -50027,10 +50031,10 @@ __unwindfunclet$??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@P
 	lea	ecx, DWORD PTR _first$[ebp]
 	jmp	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@0U34012@@Z$6:
-	mov	ecx, DWORD PTR $T216171[ebp]
+	mov	ecx, DWORD PTR $T218829[ebp]
 	jmp	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@0U34012@@Z$8:
-	mov	ecx, DWORD PTR $T216174[ebp]
+	mov	ecx, DWORD PTR $T218832[ebp]
 	jmp	??1?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@QAE@XZ
 __ehhandler$??$execute_foreach@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$reverse_iterator@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@@std@@0U34012@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -50097,11 +50101,11 @@ tv183 = -276						; size = 4
 tv200 = -272						; size = 4
 tv198 = -272						; size = 4
 tv197 = -272						; size = 4
-$T216202 = -264						; size = 4
-$T216203 = -252						; size = 4
-$T216204 = -240						; size = 4
-$T216205 = -228						; size = 4
-$T216206 = -216						; size = 4
+$T218860 = -264						; size = 4
+$T218861 = -252						; size = 4
+$T218862 = -240						; size = 4
+$T218863 = -228						; size = 4
+$T218864 = -216						; size = 4
 __$EHRec$ = -16						; size = 16
 ___$ReturnUdt$ = 8					; size = 4
 _first$ = 12						; size = 12
@@ -50195,7 +50199,7 @@ __catch$??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$cha
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216202[ebp], esp
+	mov	DWORD PTR $T218860[ebp], esp
 	lea	edx, DWORD PTR _last$[ebp]
 	push	edx
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
@@ -50205,12 +50209,12 @@ __catch$??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$cha
 	mov	BYTE PTR __$EHRec$[ebp+12], 5
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216203[ebp], esp
+	mov	DWORD PTR $T218861[ebp], esp
 	lea	edx, DWORD PTR _first$[ebp]
 	push	edx
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
 	mov	DWORD PTR tv186[ebp], eax
-	lea	eax, DWORD PTR $T216204[ebp]
+	lea	eax, DWORD PTR $T218862[ebp]
 	push	eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 4
 	call	??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@0U34012@@Z ; boost::iostreams::detail::execute_foreach<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>,boost::iostreams::detail::chain_base<boost::iostreams::chain<boost::iostreams::input,char,std::char_traits<char>,std::allocator<char> >,char,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::closer>
@@ -50253,7 +50257,7 @@ __tryend$??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$ch
 	push	eax
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216205[ebp], esp
+	mov	DWORD PTR $T218863[ebp], esp
 	lea	edx, DWORD PTR _last$[ebp]
 	push	edx
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
@@ -50263,7 +50267,7 @@ __tryend$??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$ch
 	mov	BYTE PTR __$EHRec$[ebp+12], 7
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216206[ebp], esp
+	mov	DWORD PTR $T218864[ebp], esp
 	lea	edx, DWORD PTR _first$[ebp]
 	push	edx
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
@@ -50306,10 +50310,10 @@ __unwindfunclet$??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf
 	lea	ecx, DWORD PTR _first$[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@0U34012@@Z$6:
-	mov	ecx, DWORD PTR $T216202[ebp]
+	mov	ecx, DWORD PTR $T218860[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __unwindfunclet$??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@0U34012@@Z$8:
-	mov	ecx, DWORD PTR $T216205[ebp]
+	mov	ecx, DWORD PTR $T218863[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$??$execute_foreach@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@Ucloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AUcloser@?$chain_base@V?$chain@Uinput@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@@iostreams@boost@@DU?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@012@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@0U34012@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -50465,8 +50469,8 @@ _TEXT	SEGMENT
 tv93 = -260						; size = 4
 tv90 = -256						; size = 4
 tv94 = -252						; size = 4
-$T216239 = -244						; size = 4
-$T216240 = -232						; size = 12
+$T218897 = -244						; size = 4
+$T218898 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __Val$ = 8						; size = 4
@@ -50502,7 +50506,7 @@ __Val$ = 8						; size = 4
 
 	mov	eax, DWORD PTR __Val$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216240[ebp]
+	lea	ecx, DWORD PTR $T218898[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE?AV?$_Iterator@$00@12@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::end
@@ -50512,7 +50516,7 @@ __Val$ = 8						; size = 4
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216239[ebp], esp
+	mov	DWORD PTR $T218897[ebp], esp
 	mov	eax, DWORD PTR tv90[ebp]
 	push	eax
 	call	??0?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
@@ -50520,7 +50524,7 @@ __Val$ = 8						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Insert@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEXV?$_Const_iterator@$00@12@ABQAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Insert
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T216240[ebp]
+	lea	ecx, DWORD PTR $T218898[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 
 ; 671  : 		}
@@ -50541,7 +50545,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?push_back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEXABQAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@Z$0:
-	lea	ecx, DWORD PTR $T216240[ebp]
+	lea	ecx, DWORD PTR $T218898[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$?push_back@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEXABQAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -50572,8 +50576,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv77 = -256						; size = 4
 tv78 = -252						; size = 4
-$T216251 = -244						; size = 4
-$T216252 = -232						; size = 12
+$T218909 = -244						; size = 4
+$T218910 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __Right$ = 8						; size = 4
@@ -50611,7 +50615,7 @@ __Right$ = 8						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	push	ecx
-	lea	ecx, DWORD PTR $T216252[ebp]
+	lea	ecx, DWORD PTR $T218910[ebp]
 	call	??0?$_String_const_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
 	mov	DWORD PTR tv78[ebp], eax
 	mov	edx, DWORD PTR tv78[ebp]
@@ -50619,11 +50623,11 @@ __Right$ = 8						; size = 4
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	mov	ecx, DWORD PTR tv77[ebp]
 	call	??G?$_String_const_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEHABV01@@Z ; std::_String_const_iterator<char,std::char_traits<char>,std::allocator<char> >::operator-
-	mov	DWORD PTR $T216251[ebp], eax
+	mov	DWORD PTR $T218909[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T216252[ebp]
+	lea	ecx, DWORD PTR $T218910[ebp]
 	call	??1?$_String_const_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T216251[ebp]
+	mov	eax, DWORD PTR $T218909[ebp]
 
 ; 429  : 		}
 
@@ -50643,7 +50647,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??G?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEHABV?$_String_const_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z$0:
-	lea	ecx, DWORD PTR $T216252[ebp]
+	lea	ecx, DWORD PTR $T218910[ebp]
 	jmp	??1?$_String_const_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __ehhandler$??G?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEHABV?$_String_const_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -50891,7 +50895,7 @@ CONST	SEGMENT
 CONST	ENDS
 ;	COMDAT ?begin@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QBE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ
 _TEXT	SEGMENT
-$T216273 = -212						; size = 4
+$T218931 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QBE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ PROC ; boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >::begin, COMDAT
@@ -50912,7 +50916,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T216273[ebp], 0
+	mov	DWORD PTR $T218931[ebp], 0
 
 ; 275  :                 BOOST_ASSERT( !is_singular() );
 
@@ -50937,9 +50941,9 @@ $LN3@begin:
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T216273[ebp]
+	mov	ecx, DWORD PTR $T218931[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216273[ebp], ecx
+	mov	DWORD PTR $T218931[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 277  :             }
@@ -50958,7 +50962,7 @@ $LN3@begin:
 _TEXT	ENDS
 ;	COMDAT ?end@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QBE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ
 _TEXT	SEGMENT
-$T216279 = -212						; size = 4
+$T218937 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$iterator_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@QBE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@XZ PROC ; boost::iterator_range<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >::end, COMDAT
@@ -50979,7 +50983,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T216279[ebp], 0
+	mov	DWORD PTR $T218937[ebp], 0
 
 ; 281  :                 BOOST_ASSERT( !is_singular() );
 
@@ -51005,9 +51009,9 @@ $LN3@end:
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T216279[ebp]
+	mov	ecx, DWORD PTR $T218937[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216279[ebp], ecx
+	mov	DWORD PTR $T218937[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 283  :             } 
@@ -51269,7 +51273,7 @@ _TEXT	ENDS
 ;	COMDAT ?reset@?$optional@V?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@QAEXABV?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@234@@Z
 _TEXT	SEGMENT
 tv72 = -220						; size = 4
-$T216297 = -212						; size = 4
+$T218955 = -212						; size = 4
 _this$ = -8						; size = 4
 _t$ = 8							; size = 4
 ?reset@?$optional@V?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@QAEXABV?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@234@@Z PROC ; boost::iostreams::detail::optional<boost::iostreams::detail::concept_adapter<boost::iostreams::basic_null_device<char,boost::iostreams::input> > >::reset, COMDAT
@@ -51304,14 +51308,14 @@ _t$ = 8							; size = 4
 	push	1
 	call	??2@YAPAXIPAX@Z				; operator new
 	add	esp, 8
-	mov	DWORD PTR $T216297[ebp], eax
-	cmp	DWORD PTR $T216297[ebp], 0
+	mov	DWORD PTR $T218955[ebp], eax
+	cmp	DWORD PTR $T218955[ebp], 0
 	je	SHORT $LN3@reset@5
 	mov	eax, DWORD PTR _t$[ebp]
 	mov	cl, BYTE PTR [eax]
-	mov	edx, DWORD PTR $T216297[ebp]
+	mov	edx, DWORD PTR $T218955[ebp]
 	mov	BYTE PTR [edx], cl
-	mov	eax, DWORD PTR $T216297[ebp]
+	mov	eax, DWORD PTR $T218955[ebp]
 	mov	DWORD PTR tv72[ebp], eax
 	jmp	SHORT $LN4@reset@5
 $LN3@reset@5:
@@ -51670,7 +51674,7 @@ __ehfuncinfo$??D?$_Revranit@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$ch
 xdata$x	ENDS
 ;	COMDAT ??D?$_Revranit@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@U?$iterator@Ubidirectional_iterator_tag@std@@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@HPAPAV3456@AAPAV3456@@3@@std@@QBEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ
 _TEXT	SEGMENT
-$T216319 = -244						; size = 4
+$T218977 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -51716,11 +51720,11 @@ __$EHRec$ = -12						; size = 12
 	call	??F?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAEAAV012@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator--
 	mov	ecx, eax
 	call	??D?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBEAAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@XZ ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>::operator*
-	mov	DWORD PTR $T216319[ebp], eax
+	mov	DWORD PTR $T218977[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
-	mov	eax, DWORD PTR $T216319[ebp]
+	mov	eax, DWORD PTR $T218977[ebp]
 
 ; 1937 : 		}
 
@@ -51971,7 +51975,7 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv92 = -240						; size = 4
 tv69 = -236						; size = 4
-$T216334 = -228						; size = 8
+$T218992 = -228						; size = 8
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _t$ = 8							; size = 4
@@ -52016,7 +52020,7 @@ _pback_size$ = 16					; size = 4
 	push	0
 	mov	edx, DWORD PTR _t$[ebp]
 	push	edx
-	lea	eax, DWORD PTR $T216334[ebp]
+	lea	eax, DWORD PTR $T218992[ebp]
 	push	eax
 	call	??$wrap@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@YA?AU?$basic_file_source@D@12@ABU312@PAX@Z ; boost::iostreams::detail::wrap<boost::iostreams::basic_file_source<char> >
 	add	esp, 12					; 0000000cH
@@ -52029,7 +52033,7 @@ _pback_size$ = 16					; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?open_impl@?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@AAEXABU?$basic_file_source@D@23@HH@Z ; boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::open_impl
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T216334[ebp]
+	lea	ecx, DWORD PTR $T218992[ebp]
 	call	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 
 ; 95   :                              BOOST_IOSTREAMS_PUSH_PARAMS,
@@ -52056,7 +52060,7 @@ __unwindfunclet$??0?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$ch
 	mov	ecx, DWORD PTR _this$[ebp]
 	jmp	??1?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@UAE@XZ
 __unwindfunclet$??0?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@QAE@ABU?$basic_file_source@D@12@HH@Z$1:
-	lea	ecx, DWORD PTR $T216334[ebp]
+	lea	ecx, DWORD PTR $T218992[ebp]
 	jmp	??1?$basic_file_source@D@iostreams@boost@@QAE@XZ
 __ehhandler$??0?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@QAE@ABU?$basic_file_source@D@12@HH@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -52186,8 +52190,8 @@ _TEXT	ENDS
 ;	COMDAT ??1?$auto_ptr@V?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@@std@@QAE@XZ
 _TEXT	SEGMENT
 tv74 = -232						; size = 4
-$T216351 = -224						; size = 4
-$T216352 = -212						; size = 4
+$T219009 = -224						; size = 4
+$T219010 = -212						; size = 4
 _this$ = -8						; size = 4
 ??1?$auto_ptr@V?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@@std@@QAE@XZ PROC ; std::auto_ptr<boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input> >::~auto_ptr<boost::iostreams::stream_buffer<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input> >, COMDAT
 ; _this$ = ecx
@@ -52212,16 +52216,16 @@ _this$ = -8						; size = 4
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR $T216352[ebp], ecx
-	mov	edx, DWORD PTR $T216352[ebp]
-	mov	DWORD PTR $T216351[ebp], edx
-	cmp	DWORD PTR $T216351[ebp], 0
+	mov	DWORD PTR $T219010[ebp], ecx
+	mov	edx, DWORD PTR $T219010[ebp]
+	mov	DWORD PTR $T219009[ebp], edx
+	cmp	DWORD PTR $T219009[ebp], 0
 	je	SHORT $LN3@auto_ptr
 	mov	esi, esp
 	push	1
-	mov	eax, DWORD PTR $T216351[ebp]
+	mov	eax, DWORD PTR $T219009[ebp]
 	mov	edx, DWORD PTR [eax]
-	mov	ecx, DWORD PTR $T216351[ebp]
+	mov	ecx, DWORD PTR $T219009[ebp]
 	mov	eax, DWORD PTR [edx]
 	call	eax
 	cmp	esi, esp
@@ -53329,8 +53333,8 @@ __ehfuncinfo$?open_impl@?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@
 xdata$x	ENDS
 ;	COMDAT ?open_impl@?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@AAEXABU?$basic_file_source@D@23@HH@Z
 _TEXT	SEGMENT
-$T216423 = -304						; size = 44
-$T216424 = -252						; size = 32
+$T219081 = -304						; size = 44
+$T219082 = -252						; size = 32
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _t$ = 8							; size = 4
@@ -53376,20 +53380,20 @@ _pback_size$ = 16					; size = 4
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0N@DLOMBLKD@already?5open?$AA@
-	lea	ecx, DWORD PTR $T216424[ebp]
+	lea	ecx, DWORD PTR $T219082[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	lea	eax, DWORD PTR $T216424[ebp]
+	lea	eax, DWORD PTR $T219082[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216423[ebp]
+	lea	ecx, DWORD PTR $T219081[ebp]
 	call	??0failure@ios_base@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z ; std::ios_base::failure::failure
-	lea	ecx, DWORD PTR $T216423[ebp]
+	lea	ecx, DWORD PTR $T219081[ebp]
 	call	??1failure@ios_base@std@@UAE@XZ		; std::ios_base::failure::~failure
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216424[ebp]
+	lea	ecx, DWORD PTR $T219082[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -53425,7 +53429,7 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?open_impl@?$stream_buffer@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@iostreams@boost@@AAEXABU?$basic_file_source@D@23@HH@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216424[ebp]
+	lea	ecx, DWORD PTR $T219082[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -53810,8 +53814,8 @@ __ehfuncinfo$?_Incsize@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@deta
 xdata$x	ENDS
 ;	COMDAT ?_Incsize@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@IAEXI@Z
 _TEXT	SEGMENT
-$T216454 = -304						; size = 44
-$T216455 = -252						; size = 32
+$T219112 = -304						; size = 44
+$T219113 = -252						; size = 32
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __Count$ = 8						; size = 4
@@ -53856,22 +53860,22 @@ __Count$ = 8						; size = 4
 
 	mov	esi, esp
 	push	OFFSET ??_C@_0BB@MOGOBHAF@list?$DMT?$DO?5too?5long?$AA@
-	lea	ecx, DWORD PTR $T216455[ebp]
+	lea	ecx, DWORD PTR $T219113[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	lea	eax, DWORD PTR $T216455[ebp]
+	lea	eax, DWORD PTR $T219113[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216454[ebp]
+	lea	ecx, DWORD PTR $T219112[ebp]
 	call	??0length_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z ; std::length_error::length_error
 	push	OFFSET __TI3?AVlength_error@std@@
-	lea	ecx, DWORD PTR $T216454[ebp]
+	lea	ecx, DWORD PTR $T219112[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216455[ebp]
+	lea	ecx, DWORD PTR $T219113[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -53905,7 +53909,7 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?_Incsize@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@IAEXI@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216455[ebp]
+	lea	ecx, DWORD PTR $T219113[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -54671,8 +54675,8 @@ _TEXT	SEGMENT
 tv75 = -256						; size = 4
 tv83 = -252						; size = 4
 tv81 = -248						; size = 4
-$T216499 = -240						; size = 4
-$T216500 = -228						; size = 4
+$T219157 = -240						; size = 4
+$T219158 = -228						; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 _p$ = 8							; size = 4
@@ -54722,13 +54726,13 @@ _p$ = 8							; size = 4
 	add	esp, 4
 	mov	DWORD PTR tv81[ebp], eax
 	mov	eax, DWORD PTR tv81[ebp]
-	mov	DWORD PTR $T216500[ebp], eax
+	mov	DWORD PTR $T219158[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 1
-	cmp	DWORD PTR $T216500[ebp], 0
+	cmp	DWORD PTR $T219158[ebp], 0
 	je	SHORT $LN4@shared_cou@4
 	mov	ecx, DWORD PTR _p$[ebp]
 	push	ecx
-	mov	ecx, DWORD PTR $T216500[ebp]
+	mov	ecx, DWORD PTR $T219158[ebp]
 	call	??0?$sp_counted_impl_p@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@detail@boost@@QAE@PAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@2@@Z ; boost::detail::sp_counted_impl_p<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>::sp_counted_impl_p<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>
 	mov	DWORD PTR tv83[ebp], eax
 	mov	edx, DWORD PTR tv83[ebp]
@@ -54738,10 +54742,10 @@ $LN4@shared_cou@4:
 	mov	DWORD PTR tv75[ebp], 0
 $LN5@shared_cou@4:
 	mov	eax, DWORD PTR tv75[ebp]
-	mov	DWORD PTR $T216499[ebp], eax
+	mov	DWORD PTR $T219157[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR $T216499[ebp]
+	mov	edx, DWORD PTR $T219157[ebp]
 	mov	DWORD PTR [ecx], edx
 
 ; 88   :         }
@@ -54805,7 +54809,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$?0Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@shared_count@detail@boost@@QAE@PAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@2@@Z$2:
-	mov	eax, DWORD PTR $T216500[ebp]
+	mov	eax, DWORD PTR $T219158[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -54919,7 +54923,7 @@ text$x	ENDS
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 ;	COMDAT ??$_Checked_base@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@AAV10@U_Unchanged_checked_iterator_base_type_tag@0@@Z
 _TEXT	SEGMENT
-$T216530 = -200						; size = 4
+$T219188 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 __It$ = 12						; size = 4
 ___formal$ = 16						; size = 1
@@ -54937,7 +54941,7 @@ ___formal$ = 16						; size = 1
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T216530[ebp], 0
+	mov	DWORD PTR $T219188[ebp], 0
 
 ; 1147 : 		return _It;
 
@@ -54945,9 +54949,9 @@ ___formal$ = 16						; size = 1
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T216530[ebp]
+	mov	ecx, DWORD PTR $T219188[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216530[ebp], ecx
+	mov	DWORD PTR $T219188[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1148 : 	}
@@ -55012,9 +55016,9 @@ _TEXT	SEGMENT
 tv169 = -252						; size = 4
 tv166 = -248						; size = 4
 tv177 = -244						; size = 4
-$T216534 = -236						; size = 4
-$T216535 = -224						; size = 4
-$T216542 = -212						; size = 4
+$T219192 = -236						; size = 4
+$T219193 = -224						; size = 4
+$T219200 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 __First$ = 12						; size = 12
@@ -55046,7 +55050,7 @@ ___formal$ = 56						; size = 1
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T216542[ebp], 0
+	mov	DWORD PTR $T219200[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
 
 ; 667  : 	_DEBUG_RANGE(_First, _Last);
@@ -55055,7 +55059,7 @@ ___formal$ = 56						; size = 1
 	push	OFFSET ??_C@_1IE@HBIEONKB@?$AAc?$AA?3?$AA?2?$AAp?$AAr?$AAo?$AAg?$AAr?$AAa?$AAm?$AA?5?$AAf?$AAi?$AAl?$AAe?$AAs?$AA?2?$AAm?$AAi?$AAc?$AAr?$AAo?$AAs?$AAo?$AAf?$AAt?$AA?5?$AAv?$AAi?$AAs?$AAu?$AAa@
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216534[ebp], esp
+	mov	DWORD PTR $T219192[ebp], esp
 	lea	eax, DWORD PTR __Last$[ebp]
 	push	eax
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
@@ -55065,7 +55069,7 @@ ___formal$ = 56						; size = 1
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216535[ebp], esp
+	mov	DWORD PTR $T219193[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
@@ -55130,9 +55134,9 @@ $LN1@Transform@2:
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T216542[ebp]
+	mov	ecx, DWORD PTR $T219200[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216542[ebp], ecx
+	mov	DWORD PTR $T219200[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
@@ -55171,13 +55175,13 @@ __unwindfunclet$??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allo
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@Uforward_iterator_tag@2@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@Uforward_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$3:
-	mov	ecx, DWORD PTR $T216534[ebp]
+	mov	ecx, DWORD PTR $T219192[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$_Transform@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V12@U?$to_lowerF@D@detail@algorithm@boost@@Uforward_iterator_tag@2@@std@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@V10@00U?$to_lowerF@D@detail@algorithm@boost@@Uforward_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$5:
-	mov	eax, DWORD PTR $T216542[ebp]
+	mov	eax, DWORD PTR $T219200[ebp]
 	and	eax, 1
 	je	$LN12@Transform@2
-	and	DWORD PTR $T216542[ebp], -2		; fffffffeH
+	and	DWORD PTR $T219200[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN12@Transform@2:
@@ -55342,8 +55346,8 @@ _TEXT	SEGMENT
 tv75 = -256						; size = 4
 tv83 = -252						; size = 4
 tv81 = -248						; size = 4
-$T216556 = -240						; size = 4
-$T216557 = -228						; size = 4
+$T219214 = -240						; size = 4
+$T219215 = -228						; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 _p$ = 8							; size = 4
@@ -55393,13 +55397,13 @@ _p$ = 8							; size = 4
 	add	esp, 4
 	mov	DWORD PTR tv81[ebp], eax
 	mov	eax, DWORD PTR tv81[ebp]
-	mov	DWORD PTR $T216557[ebp], eax
+	mov	DWORD PTR $T219215[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 1
-	cmp	DWORD PTR $T216557[ebp], 0
+	cmp	DWORD PTR $T219215[ebp], 0
 	je	SHORT $LN4@shared_cou@5
 	mov	ecx, DWORD PTR _p$[ebp]
 	push	ecx
-	mov	ecx, DWORD PTR $T216557[ebp]
+	mov	ecx, DWORD PTR $T219215[ebp]
 	call	??0?$sp_counted_impl_p@Uimpl@?$basic_file@D@iostreams@boost@@@detail@boost@@QAE@PAUimpl@?$basic_file@D@iostreams@2@@Z ; boost::detail::sp_counted_impl_p<boost::iostreams::basic_file<char>::impl>::sp_counted_impl_p<boost::iostreams::basic_file<char>::impl>
 	mov	DWORD PTR tv83[ebp], eax
 	mov	edx, DWORD PTR tv83[ebp]
@@ -55409,10 +55413,10 @@ $LN4@shared_cou@5:
 	mov	DWORD PTR tv75[ebp], 0
 $LN5@shared_cou@5:
 	mov	eax, DWORD PTR tv75[ebp]
-	mov	DWORD PTR $T216556[ebp], eax
+	mov	DWORD PTR $T219214[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	mov	edx, DWORD PTR $T216556[ebp]
+	mov	edx, DWORD PTR $T219214[ebp]
 	mov	DWORD PTR [ecx], edx
 
 ; 88   :         }
@@ -55476,7 +55480,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$?0Uimpl@?$basic_file@D@iostreams@boost@@@shared_count@detail@boost@@QAE@PAUimpl@?$basic_file@D@iostreams@2@@Z$2:
-	mov	eax, DWORD PTR $T216557[ebp]
+	mov	eax, DWORD PTR $T219215[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -55702,9 +55706,9 @@ tv168 = -260						; size = 4
 tv80 = -260						; size = 4
 tv69 = -260						; size = 4
 tv67 = -260						; size = 4
-$T216593 = -252						; size = 4
-$T216596 = -240						; size = 8
-_size$190174 = -32					; size = 4
+$T219251 = -252						; size = 4
+$T219254 = -240						; size = 8
+_size$192756 = -32					; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _t$ = 8							; size = 4
@@ -55789,10 +55793,10 @@ $LN11@open@3:
 
 ; 170  :         pback_size_ = (std::max)(2, pback_size); // STLPort needs 2.
 
-	mov	DWORD PTR $T216593[ebp], 2
+	mov	DWORD PTR $T219251[ebp], 2
 	lea	eax, DWORD PTR _pback_size$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216593[ebp]
+	lea	ecx, DWORD PTR $T219251[ebp]
 	push	ecx
 	call	??$max@H@std@@YAABHABH0@Z		; std::max<int>
 	add	esp, 8
@@ -55815,11 +55819,11 @@ $LN13@open@3:
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+88]
 	add	edx, DWORD PTR tv80[ebp]
-	mov	DWORD PTR _size$190174[ebp], edx
+	mov	DWORD PTR _size$192756[ebp], edx
 
 ; 174  :         in().resize(size);
 
-	mov	eax, DWORD PTR _size$190174[ebp]
+	mov	eax, DWORD PTR _size$192756[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?in@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$basic_buffer@DV?$allocator@D@std@@@234@XZ ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::in
@@ -55895,7 +55899,7 @@ $LN3@open@3:
 
 	mov	eax, DWORD PTR _t$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216596[ebp]
+	lea	ecx, DWORD PTR $T219254[ebp]
 	call	??0?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@QAE@ABU?$basic_file_source@D@23@@Z ; boost::iostreams::detail::concept_adapter<boost::iostreams::basic_file_source<char> >::concept_adapter<boost::iostreams::basic_file_source<char> >
 	mov	DWORD PTR tv168[ebp], eax
 	mov	ecx, DWORD PTR tv168[ebp]
@@ -55907,7 +55911,7 @@ $LN3@open@3:
 	add	ecx, 64					; 00000040H
 	call	?reset@?$optional@V?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@QAEXABV?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@234@@Z ; boost::iostreams::detail::optional<boost::iostreams::detail::concept_adapter<boost::iostreams::basic_file_source<char> > >::reset
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T216596[ebp]
+	lea	ecx, DWORD PTR $T219254[ebp]
 	call	??1?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@QAE@XZ
 
 ; 187  :     flags_ |= f_open;
@@ -55961,7 +55965,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?open@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXABU?$basic_file_source@D@34@HH@Z$0:
-	lea	ecx, DWORD PTR $T216596[ebp]
+	lea	ecx, DWORD PTR $T219254[ebp]
 	jmp	??1?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@QAE@XZ
 __ehhandler$?open@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXABU?$basic_file_source@D@34@HH@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -56018,10 +56022,10 @@ PUBLIC	??$call_reset@V?$optional@V?$concept_adapter@U?$basic_file_source@D@iostr
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?close@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ
 _TEXT	SEGMENT
-$T216608 = -268						; size = 4
-$T216609 = -256						; size = 4
-$T216610 = -244						; size = 8
-$T216611 = -228						; size = 8
+$T219266 = -268						; size = 4
+$T219267 = -256						; size = 4
+$T219268 = -244						; size = 8
+$T219269 = -228						; size = 8
 _self$ = -20						; size = 4
 _this$ = -8						; size = 4
 ?close@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@QAEXXZ PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::close, COMDAT
@@ -56059,7 +56063,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 92					; 0000005cH
 	push	eax
-	lea	ecx, DWORD PTR $T216608[ebp]
+	lea	ecx, DWORD PTR $T219266[ebp]
 	push	ecx
 	call	??$clear_flags@H@detail@iostreams@boost@@YA?AV?$clear_flags_operation@H@012@AAH@Z ; boost::iostreams::detail::clear_flags<int>
 	add	esp, 8
@@ -56068,7 +56072,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 64					; 00000040H
 	push	eax
-	lea	ecx, DWORD PTR $T216609[ebp]
+	lea	ecx, DWORD PTR $T219267[ebp]
 	push	ecx
 	call	??$call_reset@V?$optional@V?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AV?$reset_operation@V?$optional@V?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@@012@AAV?$optional@V?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@@012@@Z ; boost::iostreams::detail::call_reset<boost::iostreams::detail::optional<boost::iostreams::detail::concept_adapter<boost::iostreams::basic_file_source<char> > > >
 	add	esp, 8
@@ -56077,7 +56081,7 @@ _this$ = -8						; size = 4
 	push	2
 	mov	eax, DWORD PTR _self$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216610[ebp]
+	lea	ecx, DWORD PTR $T219268[ebp]
 	push	ecx
 	call	??$call_member_close@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AV?$member_close_operation@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@012@AAV?$linked_streambuf@DU?$char_traits@D@std@@@012@H@Z ; boost::iostreams::detail::call_member_close<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > >
 	add	esp, 12					; 0000000cH
@@ -56088,7 +56092,7 @@ _this$ = -8						; size = 4
 	push	1
 	mov	ecx, DWORD PTR _self$[ebp]
 	push	ecx
-	lea	edx, DWORD PTR $T216611[ebp]
+	lea	edx, DWORD PTR $T219269[ebp]
 	push	edx
 	call	??$call_member_close@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@detail@iostreams@boost@@YA?AV?$member_close_operation@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@012@AAV?$linked_streambuf@DU?$char_traits@D@std@@@012@H@Z ; boost::iostreams::detail::call_member_close<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > >
 	add	esp, 12					; 0000000cH
@@ -56224,7 +56228,7 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv77 = -237						; size = 1
 tv76 = -236						; size = 4
-$T216618 = -225						; size = 1
+$T219276 = -225						; size = 1
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 ?strict_sync@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@UAE_NXZ PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::strict_sync, COMDAT
@@ -56283,7 +56287,7 @@ __catch$?strict_sync@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost
 
 ; 324  :     } catch (...) { return false; }
 
-	mov	BYTE PTR $T216618[ebp], 0
+	mov	BYTE PTR $T219276[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	mov	eax, $LN7@strict_syn@2
 	ret	0
@@ -56293,7 +56297,7 @@ __tryend$?strict_sync@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boos
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	jmp	SHORT $LN2@strict_syn@2
 $LN7@strict_syn@2:
-	mov	al, BYTE PTR $T216618[ebp]
+	mov	al, BYTE PTR $T219276[ebp]
 $LN2@strict_syn@2:
 
 ; 325  : }
@@ -56328,7 +56332,7 @@ PUBLIC	??$read@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boos
 ;	COMDAT ?underflow@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHXZ
 _TEXT	SEGMENT
 tv241 = -256						; size = 4
-$T216634 = -248						; size = 4
+$T219292 = -248						; size = 4
 _chars$ = -44						; size = 4
 _keep$ = -32						; size = 4
 _buf$ = -20						; size = 4
@@ -56425,11 +56429,11 @@ $LN3@underflow@2:
 	cmp	edi, esp
 	call	__RTC_CheckEsp
 	sub	esi, eax
-	mov	DWORD PTR $T216634[ebp], esi
+	mov	DWORD PTR $T219292[ebp], esi
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 88					; 00000058H
 	push	eax
-	lea	ecx, DWORD PTR $T216634[ebp]
+	lea	ecx, DWORD PTR $T219292[ebp]
 	push	ecx
 	call	??$min@H@std@@YAABHABH0@Z		; std::min<int>
 	add	esp, 8
@@ -56607,8 +56611,8 @@ $LN5@underflow@2:
 _TEXT	ENDS
 ;	COMDAT ?pbackfail@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHH@Z
 _TEXT	SEGMENT
-$T216639 = -264						; size = 4
-$T216640 = -252						; size = 44
+$T219297 = -264						; size = 4
+$T219298 = -252						; size = 44
 _this$ = -8						; size = 4
 _c$ = 8							; size = 4
 ?pbackfail@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHH@Z PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::pbackfail, COMDAT
@@ -56661,9 +56665,9 @@ _c$ = 8							; size = 4
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR $T216639[ebp], eax
+	mov	DWORD PTR $T219297[ebp], eax
 	mov	esi, esp
-	lea	eax, DWORD PTR $T216639[ebp]
+	lea	eax, DWORD PTR $T219297[ebp]
 	push	eax
 	lea	ecx, DWORD PTR _c$[ebp]
 	push	ecx
@@ -56711,12 +56715,12 @@ $LN3@pbackfail@2:
 
 ; 277  :         throw bad_putback();
 
-	lea	eax, DWORD PTR $T216640[ebp]
+	lea	eax, DWORD PTR $T219298[ebp]
 	push	eax
 	call	?bad_putback@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ ; boost::iostreams::detail::bad_putback
 	add	esp, 4
 	push	OFFSET __TI3?AVfailure@ios_base@std@@
-	lea	ecx, DWORD PTR $T216640[ebp]
+	lea	ecx, DWORD PTR $T219298[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 $LN5@pbackfail@2:
@@ -56740,8 +56744,8 @@ PUBLIC	?output_buffered@?$indirect_streambuf@U?$basic_file_source@D@iostreams@bo
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?overflow@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHH@Z
 _TEXT	SEGMENT
-$T216643 = -224						; size = 4
-_d$190349 = -17						; size = 1
+$T219301 = -224						; size = 4
+_d$192931 = -17						; size = 1
 _this$ = -8						; size = 4
 _c$ = 8							; size = 4
 ?overflow@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHH@Z PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::overflow, COMDAT
@@ -56813,9 +56817,9 @@ $LN9@overflow@2:
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR $T216643[ebp], eax
+	mov	DWORD PTR $T219301[ebp], eax
 	mov	esi, esp
-	lea	eax, DWORD PTR $T216643[ebp]
+	lea	eax, DWORD PTR $T219301[ebp]
 	push	eax
 	lea	ecx, DWORD PTR _c$[ebp]
 	push	ecx
@@ -56922,7 +56926,7 @@ $LN5@overflow@2:
 	add	esp, 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	BYTE PTR _d$190349[ebp], al
+	mov	BYTE PTR _d$192931[ebp], al
 
 ; 301  :             if (obj().write(&d, 1, next_) != 1)
 
@@ -56930,7 +56934,7 @@ $LN5@overflow@2:
 	mov	ecx, DWORD PTR [eax+76]
 	push	ecx
 	push	1
-	lea	edx, DWORD PTR _d$190349[ebp]
+	lea	edx, DWORD PTR _d$192931[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?obj@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@234@XZ ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::obj
@@ -57020,7 +57024,7 @@ xdata$x	ENDS
 ;	COMDAT ?sync@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHXZ
 _TEXT	SEGMENT
 tv75 = -236						; size = 4
-$T216649 = -228						; size = 4
+$T219307 = -228						; size = 4
 _this$ = -24						; size = 4
 __$EHRec$ = -16						; size = 16
 ?sync@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEHXZ PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::sync, COMDAT
@@ -57081,7 +57085,7 @@ __catch$?sync@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$ch
 
 ; 315  :     } catch (...) { return -1; }
 
-	mov	DWORD PTR $T216649[ebp], -1
+	mov	DWORD PTR $T219307[ebp], -1
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	mov	eax, $LN7@sync@2
 	ret	0
@@ -57091,7 +57095,7 @@ __tryend$?sync@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$c
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	jmp	SHORT $LN2@sync@2
 $LN7@sync@2:
-	mov	eax, DWORD PTR $T216649[ebp]
+	mov	eax, DWORD PTR $T219307[ebp]
 $LN2@sync@2:
 
 ; 316  : }
@@ -57244,7 +57248,7 @@ PUBLIC	??$imbue@Vlocale@std@@@?$concept_adapter@U?$basic_file_source@D@iostreams
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?imbue@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEXABVlocale@std@@@Z
 _TEXT	SEGMENT
-$T216669 = -212						; size = 4
+$T219327 = -212						; size = 4
 _this$ = -8						; size = 4
 _loc$ = 8						; size = 4
 ?imbue@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@MAEXABVlocale@std@@@Z PROC ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::imbue, COMDAT
@@ -57294,7 +57298,7 @@ _loc$ = 8						; size = 4
 	mov	esi, esp
 	mov	eax, DWORD PTR _loc$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216669[ebp]
+	lea	ecx, DWORD PTR $T219327[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+76]
@@ -57302,7 +57306,7 @@ _loc$ = 8						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216669[ebp]
+	lea	ecx, DWORD PTR $T219327[ebp]
 	call	DWORD PTR __imp_??1locale@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -57718,7 +57722,7 @@ __ehfuncinfo$?resize@?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost
 xdata$x	ENDS
 ;	COMDAT ?resize@?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAEXH@Z
 _TEXT	SEGMENT
-_temp$194714 = -36					; size = 8
+_temp$197329 = -36					; size = 8
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _buffer_size$ = 8					; size = 4
@@ -57761,13 +57765,13 @@ _buffer_size$ = 8					; size = 4
 
 	mov	eax, DWORD PTR _buffer_size$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _temp$194714[ebp]
+	lea	ecx, DWORD PTR _temp$197329[ebp]
 	call	??0?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAE@H@Z ; boost::iostreams::detail::basic_buffer<char,std::allocator<char> >::basic_buffer<char,std::allocator<char> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 
 ; 163  :         std::swap(size_, temp.size_);
 
-	lea	eax, DWORD PTR _temp$194714[ebp+4]
+	lea	eax, DWORD PTR _temp$197329[ebp+4]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
@@ -57777,7 +57781,7 @@ _buffer_size$ = 8					; size = 4
 
 ; 164  :         std::swap(buf_, temp.buf_);
 
-	lea	eax, DWORD PTR _temp$194714[ebp]
+	lea	eax, DWORD PTR _temp$197329[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	push	ecx
@@ -57787,7 +57791,7 @@ _buffer_size$ = 8					; size = 4
 ; 165  :     }
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR _temp$194714[ebp]
+	lea	ecx, DWORD PTR _temp$197329[ebp]
 	call	??1?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAE@XZ ; boost::iostreams::detail::basic_buffer<char,std::allocator<char> >::~basic_buffer<char,std::allocator<char> >
 $LN2@resize:
 
@@ -57829,7 +57833,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?resize@?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAEXH@Z$0:
-	lea	ecx, DWORD PTR _temp$194714[ebp]
+	lea	ecx, DWORD PTR _temp$197329[ebp]
 	jmp	??1?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAE@XZ ; boost::iostreams::detail::basic_buffer<char,std::allocator<char> >::~basic_buffer<char,std::allocator<char> >
 __ehhandler$?resize@?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAEXH@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -57849,7 +57853,7 @@ PUBLIC	??$seek@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boos
 _TEXT	SEGMENT
 tv261 = -244						; size = 8
 tv242 = -244						; size = 8
-$T216695 = -232						; size = 24
+$T219353 = -232						; size = 24
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _off$ = 12						; size = 8
@@ -57977,7 +57981,7 @@ $LN7@seek_impl:
 	push	1
 	push	0
 	push	0
-	lea	eax, DWORD PTR $T216695[ebp]
+	lea	eax, DWORD PTR $T219353[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?obj@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$concept_adapter@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@234@XZ ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_null_device<char,boost::iostreams::input>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::obj
@@ -58106,7 +58110,7 @@ EXTRN	__imp_?pbase@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ:PROC
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?sync_impl@?$indirect_streambuf@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEXXZ
 _TEXT	SEGMENT
-_ptr$194791 = -44					; size = 4
+_ptr$197406 = -44					; size = 4
 _amt$ = -32						; size = 4
 _avail$ = -20						; size = 4
 _this$ = -8						; size = 4
@@ -58200,7 +58204,7 @@ $LN2@sync_impl:
 	call	DWORD PTR __imp_?pptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR _ptr$194791[ebp], eax
+	mov	DWORD PTR _ptr$197406[ebp], eax
 
 ; 396  :             setp(out().begin() + amt, out().end());
 
@@ -58228,7 +58232,7 @@ $LN2@sync_impl:
 	call	DWORD PTR __imp_?pptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	ecx, DWORD PTR _ptr$194791[ebp]
+	mov	ecx, DWORD PTR _ptr$197406[ebp]
 	sub	ecx, eax
 	mov	esi, esp
 	push	ecx
@@ -58305,7 +58309,7 @@ PUBLIC	??$_Debug_lt@HH@std@@YA_NABH0PB_WI@Z		; std::_Debug_lt<int,int>
 ;	COMDAT ??$max@H@std@@YAABHABH0@Z
 _TEXT	SEGMENT
 tv71 = -208						; size = 4
-$T216704 = -200						; size = 4
+$T219362 = -200						; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$max@H@std@@YAABHABH0@Z PROC				; std::max<int>, COMDAT
@@ -58344,8 +58348,8 @@ $LN3@max@3:
 	mov	DWORD PTR tv71[ebp], ecx
 $LN4@max@3:
 	mov	edx, DWORD PTR tv71[ebp]
-	mov	DWORD PTR $T216704[ebp], edx
-	mov	eax, DWORD PTR $T216704[ebp]
+	mov	DWORD PTR $T219362[ebp], edx
+	mov	eax, DWORD PTR $T219362[ebp]
 
 ; 3385 : 	}
 
@@ -58620,7 +58624,7 @@ text$x	ENDS
 ;	COMDAT ??$min@H@std@@YAABHABH0@Z
 _TEXT	SEGMENT
 tv71 = -208						; size = 4
-$T216735 = -200						; size = 4
+$T219393 = -200						; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$min@H@std@@YAABHABH0@Z PROC				; std::min<int>, COMDAT
@@ -58659,8 +58663,8 @@ $LN3@min:
 	mov	DWORD PTR tv71[ebp], ecx
 $LN4@min:
 	mov	edx, DWORD PTR tv71[ebp]
-	mov	DWORD PTR $T216735[ebp], edx
-	mov	eax, DWORD PTR $T216735[ebp]
+	mov	DWORD PTR $T219393[ebp], edx
+	mov	eax, DWORD PTR $T219393[ebp]
 
 ; 3400 : 	}
 
@@ -58950,7 +58954,7 @@ PUBLIC	??0?$basic_file_source@D@iostreams@boost@@QAE@ABU012@@Z ; boost::iostream
 ; File c:\program files\boost\boost_1_40\boost\iostreams\detail\wrap_unwrap.hpp
 ;	COMDAT ??$wrap@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@YA?AU?$basic_file_source@D@12@ABU312@PAX@Z
 _TEXT	SEGMENT
-$T216753 = -200						; size = 4
+$T219411 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _t$ = 12						; size = 4
 ___formal$ = 16						; size = 4
@@ -58968,14 +58972,14 @@ ___formal$ = 16						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T216753[ebp], 0
+	mov	DWORD PTR $T219411[ebp], 0
 	mov	eax, DWORD PTR _t$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$basic_file_source@D@iostreams@boost@@QAE@ABU012@@Z
-	mov	ecx, DWORD PTR $T216753[ebp]
+	mov	ecx, DWORD PTR $T219411[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216753[ebp], ecx
+	mov	DWORD PTR $T219411[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 	pop	edi
 	pop	esi
@@ -58993,7 +58997,7 @@ _TEXT	ENDS
 ;	COMDAT ??$_Construct@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@PAV1234@@std@@YAXPAPAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@ABQAV1234@@Z
 _TEXT	SEGMENT
 tv68 = -220						; size = 4
-$T216757 = -212						; size = 4
+$T219415 = -212						; size = 4
 __Vptr$ = -8						; size = 4
 __Ptr$ = 8						; size = 4
 __Val$ = 12						; size = 4
@@ -59024,14 +59028,14 @@ __Val$ = 12						; size = 4
 	push	4
 	call	??2@YAPAXIPAX@Z				; operator new
 	add	esp, 8
-	mov	DWORD PTR $T216757[ebp], eax
-	cmp	DWORD PTR $T216757[ebp], 0
+	mov	DWORD PTR $T219415[ebp], eax
+	cmp	DWORD PTR $T219415[ebp], 0
 	je	SHORT $LN3@Construct@2
-	mov	ecx, DWORD PTR $T216757[ebp]
+	mov	ecx, DWORD PTR $T219415[ebp]
 	mov	edx, DWORD PTR __Val$[ebp]
 	mov	eax, DWORD PTR [edx]
 	mov	DWORD PTR [ecx], eax
-	mov	ecx, DWORD PTR $T216757[ebp]
+	mov	ecx, DWORD PTR $T219415[ebp]
 	mov	DWORD PTR tv68[ebp], ecx
 	jmp	SHORT $LN1@Construct@2
 $LN3@Construct@2:
@@ -59872,9 +59876,9 @@ xdata$x	ENDS
 ;	COMDAT ?reset@?$optional@V?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@QAEXABV?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@234@@Z
 _TEXT	SEGMENT
 tv77 = -256						; size = 4
-$T216802 = -248						; size = 4
-$T216803 = -236						; size = 4
-$T216804 = -224						; size = 4
+$T219460 = -248						; size = 4
+$T219461 = -236						; size = 4
+$T219462 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 _t$ = 8							; size = 4
@@ -59915,19 +59919,19 @@ _t$ = 8							; size = 4
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?address@?$optional@V?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@AAEPAXXZ ; boost::iostreams::detail::optional<boost::iostreams::detail::concept_adapter<boost::iostreams::basic_file_source<char> > >::address
-	mov	DWORD PTR $T216804[ebp], eax
-	mov	eax, DWORD PTR $T216804[ebp]
+	mov	DWORD PTR $T219462[ebp], eax
+	mov	eax, DWORD PTR $T219462[ebp]
 	push	eax
 	push	8
 	call	??2@YAPAXIPAX@Z				; operator new
 	add	esp, 8
-	mov	DWORD PTR $T216803[ebp], eax
+	mov	DWORD PTR $T219461[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	cmp	DWORD PTR $T216803[ebp], 0
+	cmp	DWORD PTR $T219461[ebp], 0
 	je	SHORT $LN3@reset@7
 	mov	ecx, DWORD PTR _t$[ebp]
 	push	ecx
-	mov	ecx, DWORD PTR $T216803[ebp]
+	mov	ecx, DWORD PTR $T219461[ebp]
 	call	??0?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@QAE@ABV0123@@Z
 	mov	DWORD PTR tv77[ebp], eax
 	jmp	SHORT $LN4@reset@7
@@ -59935,7 +59939,7 @@ $LN3@reset@7:
 	mov	DWORD PTR tv77[ebp], 0
 $LN4@reset@7:
 	mov	edx, DWORD PTR tv77[ebp]
-	mov	DWORD PTR $T216802[ebp], edx
+	mov	DWORD PTR $T219460[ebp], edx
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 
 ; 101  :         initialized_ = true;
@@ -59961,9 +59965,9 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?reset@?$optional@V?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@detail@iostreams@boost@@@detail@iostreams@boost@@QAEXABV?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@234@@Z$0:
-	mov	eax, DWORD PTR $T216804[ebp]
+	mov	eax, DWORD PTR $T219462[ebp]
 	push	eax
-	mov	ecx, DWORD PTR $T216803[ebp]
+	mov	ecx, DWORD PTR $T219461[ebp]
 	push	ecx
 	call	??3@YAXPAX0@Z				; operator delete
 	add	esp, 8
@@ -60878,8 +60882,8 @@ PUBLIC	??_Gm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char
 ;	COMDAT ??$checked_delete@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YAXPAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z
 _TEXT	SEGMENT
 tv68 = -220						; size = 4
-$T216860 = -212						; size = 4
-$T216861 = -200						; size = 4
+$T219518 = -212						; size = 4
+$T219519 = -200						; size = 4
 _x$ = 8							; size = 4
 ??$checked_delete@Um_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@@boost@@YAXPAUm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@0@@Z PROC ; boost::checked_delete<boost::filesystem::basic_filesystem_error<boost::filesystem::basic_path<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,boost::filesystem::path_traits> >::m_imp>, COMDAT
 
@@ -60902,13 +60906,13 @@ _x$ = 8							; size = 4
 ; 34   :     delete x;
 
 	mov	eax, DWORD PTR _x$[ebp]
-	mov	DWORD PTR $T216861[ebp], eax
-	mov	ecx, DWORD PTR $T216861[ebp]
-	mov	DWORD PTR $T216860[ebp], ecx
-	cmp	DWORD PTR $T216860[ebp], 0
+	mov	DWORD PTR $T219519[ebp], eax
+	mov	ecx, DWORD PTR $T219519[ebp]
+	mov	DWORD PTR $T219518[ebp], ecx
+	cmp	DWORD PTR $T219518[ebp], 0
 	je	SHORT $LN3@checked_de@2
 	push	1
-	mov	ecx, DWORD PTR $T216860[ebp]
+	mov	ecx, DWORD PTR $T219518[ebp]
 	call	??_Gm_imp@?$basic_filesystem_error@V?$basic_path@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@Upath_traits@filesystem@boost@@@filesystem@boost@@@filesystem@boost@@QAEPAXI@Z
 	mov	DWORD PTR tv68[ebp], eax
 	jmp	SHORT $LN1@checked_de@2
@@ -60950,8 +60954,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv74 = -244						; size = 4
 tv79 = -240						; size = 4
-$T216866 = -232						; size = 12
-$T216869 = -212						; size = 4
+$T219524 = -232						; size = 12
+$T219527 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
@@ -60978,14 +60982,14 @@ _r$ = 12						; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T216869[ebp], 0
+	mov	DWORD PTR $T219527[ebp], 0
 
 ; 68   :             {
 ; 69   :                 return IteratorT( boost::begin( r ) );
 
 	mov	eax, DWORD PTR _r$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216866[ebp]
+	lea	ecx, DWORD PTR $T219524[ebp]
 	push	ecx
 	call	??$begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z ; boost::begin<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 8
@@ -60997,11 +61001,11 @@ _r$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T216869[ebp]
+	mov	ecx, DWORD PTR $T219527[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216869[ebp], ecx
+	mov	DWORD PTR $T219527[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T216866[ebp]
+	lea	ecx, DWORD PTR $T219524[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
@@ -61023,13 +61027,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$adl_begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@?$iterator_range_impl@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@iterator_range_detail@boost@@SA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$0:
-	lea	ecx, DWORD PTR $T216866[ebp]
+	lea	ecx, DWORD PTR $T219524[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$adl_begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@?$iterator_range_impl@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@iterator_range_detail@boost@@SA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$1:
-	mov	eax, DWORD PTR $T216869[ebp]
+	mov	eax, DWORD PTR $T219527[ebp]
 	and	eax, 1
 	je	$LN5@adl_begin
-	and	DWORD PTR $T216869[ebp], -2		; fffffffeH
+	and	DWORD PTR $T219527[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN5@adl_begin:
@@ -61064,8 +61068,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv74 = -244						; size = 4
 tv79 = -240						; size = 4
-$T216879 = -232						; size = 12
-$T216882 = -212						; size = 4
+$T219537 = -232						; size = 12
+$T219540 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
@@ -61092,14 +61096,14 @@ _r$ = 12						; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T216882[ebp], 0
+	mov	DWORD PTR $T219540[ebp], 0
 
 ; 74   :             {
 ; 75   :                 return IteratorT( boost::end( r ) );
 
 	mov	eax, DWORD PTR _r$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216879[ebp]
+	lea	ecx, DWORD PTR $T219537[ebp]
 	push	ecx
 	call	??$end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z ; boost::end<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 8
@@ -61111,11 +61115,11 @@ _r$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
-	mov	ecx, DWORD PTR $T216882[ebp]
+	mov	ecx, DWORD PTR $T219540[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T216882[ebp], ecx
+	mov	DWORD PTR $T219540[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T216879[ebp]
+	lea	ecx, DWORD PTR $T219537[ebp]
 	call	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
@@ -61137,13 +61141,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$adl_end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@?$iterator_range_impl@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@iterator_range_detail@boost@@SA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$0:
-	lea	ecx, DWORD PTR $T216879[ebp]
+	lea	ecx, DWORD PTR $T219537[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$adl_end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@?$iterator_range_impl@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@iterator_range_detail@boost@@SA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@4@@Z$1:
-	mov	eax, DWORD PTR $T216882[ebp]
+	mov	eax, DWORD PTR $T219540[ebp]
 	and	eax, 1
 	je	$LN5@adl_end
-	and	DWORD PTR $T216882[ebp], -2		; fffffffeH
+	and	DWORD PTR $T219540[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 $LN5@adl_end:
@@ -61183,9 +61187,9 @@ _TEXT	SEGMENT
 tv140 = -252						; size = 4
 tv137 = -248						; size = 4
 tv143 = -244						; size = 4
-$T216892 = -233						; size = 1
-$T216893 = -224						; size = 4
-$T216894 = -212						; size = 4
+$T219550 = -233						; size = 1
+$T219551 = -224						; size = 4
+$T219552 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 __First$ = 8						; size = 12
 __Last$ = 20						; size = 12
@@ -61220,7 +61224,7 @@ __Line$ = 36						; size = 4
 
 	lea	eax, DWORD PTR __First$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T216892[ebp]
+	lea	ecx, DWORD PTR $T219550[ebp]
 	push	ecx
 	call	??$_Iter_cat@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@YA?AUrandom_access_iterator_tag@0@ABV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@@Z ; std::_Iter_cat<std::_String_iterator<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 8
@@ -61232,7 +61236,7 @@ __Line$ = 36						; size = 4
 	push	ecx
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216893[ebp], esp
+	mov	DWORD PTR $T219551[ebp], esp
 	lea	edx, DWORD PTR __Last$[ebp]
 	push	edx
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
@@ -61242,7 +61246,7 @@ __Line$ = 36						; size = 4
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T216894[ebp], esp
+	mov	DWORD PTR $T219552[ebp], esp
 	lea	edx, DWORD PTR __First$[ebp]
 	push	edx
 	call	??0?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01@@Z
@@ -61281,7 +61285,7 @@ __unwindfunclet$??$_Debug_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$al
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __unwindfunclet$??$_Debug_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@YAXV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@0PB_WI@Z$2:
-	mov	ecx, DWORD PTR $T216893[ebp]
+	mov	ecx, DWORD PTR $T219551[ebp]
 	jmp	??1?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 __ehhandler$??$_Debug_range@V?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@YAXV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@0@0PB_WI@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -61361,8 +61365,8 @@ PUBLIC	??_Gimpl@?$basic_file@D@iostreams@boost@@QAEPAXI@Z ; boost::iostreams::ba
 ;	COMDAT ??$checked_delete@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@YAXPAUimpl@?$basic_file@D@iostreams@0@@Z
 _TEXT	SEGMENT
 tv68 = -220						; size = 4
-$T216911 = -212						; size = 4
-$T216912 = -200						; size = 4
+$T219569 = -212						; size = 4
+$T219570 = -200						; size = 4
 _x$ = 8							; size = 4
 ??$checked_delete@Uimpl@?$basic_file@D@iostreams@boost@@@boost@@YAXPAUimpl@?$basic_file@D@iostreams@0@@Z PROC ; boost::checked_delete<boost::iostreams::basic_file<char>::impl>, COMDAT
 
@@ -61385,13 +61389,13 @@ _x$ = 8							; size = 4
 ; 34   :     delete x;
 
 	mov	eax, DWORD PTR _x$[ebp]
-	mov	DWORD PTR $T216912[ebp], eax
-	mov	ecx, DWORD PTR $T216912[ebp]
-	mov	DWORD PTR $T216911[ebp], ecx
-	cmp	DWORD PTR $T216911[ebp], 0
+	mov	DWORD PTR $T219570[ebp], eax
+	mov	ecx, DWORD PTR $T219570[ebp]
+	mov	DWORD PTR $T219569[ebp], ecx
+	cmp	DWORD PTR $T219569[ebp], 0
 	je	SHORT $LN3@checked_de@3
 	push	1
-	mov	ecx, DWORD PTR $T216911[ebp]
+	mov	ecx, DWORD PTR $T219569[ebp]
 	call	??_Gimpl@?$basic_file@D@iostreams@boost@@QAEPAXI@Z
 	mov	DWORD PTR tv68[ebp], eax
 	jmp	SHORT $LN1@checked_de@3
@@ -61478,7 +61482,7 @@ PUBLIC	??$seek@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boos
 _TEXT	SEGMENT
 tv261 = -244						; size = 8
 tv242 = -244						; size = 8
-$T216921 = -232						; size = 24
+$T219579 = -232						; size = 24
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _off$ = 12						; size = 8
@@ -61606,7 +61610,7 @@ $LN7@seek_impl@2:
 	push	1
 	push	0
 	push	0
-	lea	eax, DWORD PTR $T216921[ebp]
+	lea	eax, DWORD PTR $T219579[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?obj@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEAAV?$concept_adapter@U?$basic_file_source@D@iostreams@boost@@@234@XZ ; boost::iostreams::detail::indirect_streambuf<boost::iostreams::basic_file_source<char>,std::char_traits<char>,std::allocator<char>,boost::iostreams::input>::obj
@@ -61734,7 +61738,7 @@ PUBLIC	?next@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$cha
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?sync_impl@?$indirect_streambuf@U?$basic_file_source@D@iostreams@boost@@U?$char_traits@D@std@@V?$allocator@D@5@Uinput@23@@detail@iostreams@boost@@AAEXXZ
 _TEXT	SEGMENT
-_ptr$196409 = -44					; size = 4
+_ptr$199024 = -44					; size = 4
 _amt$ = -32						; size = 4
 _avail$ = -20						; size = 4
 _this$ = -8						; size = 4
@@ -61828,7 +61832,7 @@ $LN2@sync_impl@2:
 	call	DWORD PTR __imp_?pptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR _ptr$196409[ebp], eax
+	mov	DWORD PTR _ptr$199024[ebp], eax
 
 ; 396  :             setp(out().begin() + amt, out().end());
 
@@ -61856,7 +61860,7 @@ $LN2@sync_impl@2:
 	call	DWORD PTR __imp_?pptr@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IBEPADXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	ecx, DWORD PTR _ptr$196409[ebp]
+	mov	ecx, DWORD PTR _ptr$199024[ebp]
 	sub	ecx, eax
 	mov	esi, esp
 	push	ecx
@@ -61886,7 +61890,7 @@ EXTRN	__imp_?allocate@?$allocator@D@std@@QAEPADIPBX@Z:PROC
 ; File c:\program files\boost\boost_1_40\boost\iostreams\detail\buffer.hpp
 ;	COMDAT ??0?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAE@H@Z
 _TEXT	SEGMENT
-$T216928 = -209						; size = 1
+$T219586 = -209						; size = 1
 _this$ = -8						; size = 4
 _buffer_size$ = 8					; size = 4
 ??0?$basic_buffer@DV?$allocator@D@std@@@detail@iostreams@boost@@QAE@H@Z PROC ; boost::iostreams::detail::basic_buffer<char,std::allocator<char> >::basic_buffer<char,std::allocator<char> >, COMDAT
@@ -61912,7 +61916,7 @@ _buffer_size$ = 8					; size = 4
 	mov	eax, DWORD PTR _buffer_size$[ebp]
 	push	eax
 	mov	edi, esp
-	lea	ecx, DWORD PTR $T216928[ebp]
+	lea	ecx, DWORD PTR $T219586[ebp]
 	call	DWORD PTR __imp_??0?$allocator@D@std@@QAE@XZ
 	cmp	edi, esp
 	call	__RTC_CheckEsp
@@ -62309,7 +62313,7 @@ _dev$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$swap@H@std@@YAXAAH0@Z
 _TEXT	SEGMENT
-__Tmp$196482 = -8					; size = 4
+__Tmp$199098 = -8					; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$swap@H@std@@YAXAAH0@Z PROC				; std::swap<int>, COMDAT
@@ -62338,7 +62342,7 @@ __Right$ = 12						; size = 4
 
 	mov	eax, DWORD PTR __Left$[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Tmp$196482[ebp], ecx
+	mov	DWORD PTR __Tmp$199098[ebp], ecx
 
 ; 21   : 
 ; 22   : 		_Left = _Right;
@@ -62351,7 +62355,7 @@ __Right$ = 12						; size = 4
 ; 23   : 		_Right = _Tmp;
 
 	mov	eax, DWORD PTR __Right$[ebp]
-	mov	ecx, DWORD PTR __Tmp$196482[ebp]
+	mov	ecx, DWORD PTR __Tmp$199098[ebp]
 	mov	DWORD PTR [eax], ecx
 $LN2@swap@4:
 
@@ -62369,7 +62373,7 @@ $LN2@swap@4:
 _TEXT	ENDS
 ;	COMDAT ??$swap@PAD@std@@YAXAAPAD0@Z
 _TEXT	SEGMENT
-__Tmp$196485 = -8					; size = 4
+__Tmp$199101 = -8					; size = 4
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$swap@PAD@std@@YAXAAPAD0@Z PROC			; std::swap<char *>, COMDAT
@@ -62398,7 +62402,7 @@ __Right$ = 12						; size = 4
 
 	mov	eax, DWORD PTR __Left$[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Tmp$196485[ebp], ecx
+	mov	DWORD PTR __Tmp$199101[ebp], ecx
 
 ; 21   : 
 ; 22   : 		_Left = _Right;
@@ -62411,7 +62415,7 @@ __Right$ = 12						; size = 4
 ; 23   : 		_Right = _Tmp;
 
 	mov	eax, DWORD PTR __Right$[ebp]
-	mov	ecx, DWORD PTR __Tmp$196485[ebp]
+	mov	ecx, DWORD PTR __Tmp$199101[ebp]
 	mov	DWORD PTR [eax], ecx
 $LN2@swap@5:
 
@@ -62815,7 +62819,7 @@ PUBLIC	?cant_write@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ ; boost
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$write@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@23@@?$device_wrapper_impl@Uinput@iostreams@boost@@@detail@iostreams@boost@@SAHAAV?$basic_null_device@DUinput@iostreams@boost@@@23@PAV?$linked_streambuf@DU?$char_traits@D@std@@@123@PBDH@Z
 _TEXT	SEGMENT
-$T216995 = -240						; size = 44
+$T219653 = -240						; size = 44
 ___formal$ = 8						; size = 4
 ___formal$ = 12						; size = 4
 ___formal$ = 16						; size = 4
@@ -62834,12 +62838,12 @@ ___formal$ = 20						; size = 4
 	mov	ecx, 61					; 0000003dH
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	lea	eax, DWORD PTR $T216995[ebp]
+	lea	eax, DWORD PTR $T219653[ebp]
 	push	eax
 	call	?cant_write@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ ; boost::iostreams::detail::cant_write
 	add	esp, 4
 	push	OFFSET __TI3?AVfailure@ios_base@std@@
-	lea	ecx, DWORD PTR $T216995[ebp]
+	lea	ecx, DWORD PTR $T219653[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 $LN2@write:
@@ -62882,8 +62886,8 @@ __ehfuncinfo$?cant_write@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ D
 xdata$x	ENDS
 ;	COMDAT ?cant_write@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ
 _TEXT	SEGMENT
-$T216998 = -252						; size = 32
-$T217001 = -212						; size = 4
+$T219656 = -252						; size = 32
+$T219659 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 ?cant_write@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ PROC ; boost::iostreams::detail::cant_write, COMDAT
@@ -62909,24 +62913,24 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T217001[ebp], 0
+	mov	DWORD PTR $T219659[ebp], 0
 	mov	esi, esp
 	push	OFFSET ??_C@_0BA@MGHELDEA@no?5write?5access?$AA@
-	lea	ecx, DWORD PTR $T216998[ebp]
+	lea	ecx, DWORD PTR $T219656[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	lea	eax, DWORD PTR $T216998[ebp]
+	lea	eax, DWORD PTR $T219656[ebp]
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0failure@ios_base@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z ; std::ios_base::failure::failure
-	mov	ecx, DWORD PTR $T217001[ebp]
+	mov	ecx, DWORD PTR $T219659[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T217001[ebp], ecx
+	mov	DWORD PTR $T219659[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216998[ebp]
+	lea	ecx, DWORD PTR $T219656[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -62948,15 +62952,15 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?cant_write@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T216998[ebp]
+	lea	ecx, DWORD PTR $T219656[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?cant_write@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ$1:
-	mov	eax, DWORD PTR $T217001[ebp]
+	mov	eax, DWORD PTR $T219659[ebp]
 	and	eax, 1
 	je	$LN5@cant_write
-	and	DWORD PTR $T217001[ebp], -2		; fffffffeH
+	and	DWORD PTR $T219659[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1failure@ios_base@std@@UAE@XZ		; std::ios_base::failure::~failure
 $LN5@cant_write:
@@ -63074,8 +63078,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv81 = -256						; size = 4
 tv82 = -252						; size = 4
-$T217015 = -241						; size = 1
-$T217016 = -232						; size = 12
+$T219673 = -241						; size = 1
+$T219674 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 __Right$ = 8						; size = 4
@@ -63110,7 +63114,7 @@ __Right$ = 8						; size = 4
 ; 1973 : 		{	// test for iterator equality
 ; 1974 : 		return (current == _Right.base());
 
-	lea	eax, DWORD PTR $T217016[ebp]
+	lea	eax, DWORD PTR $T219674[ebp]
 	push	eax
 	mov	ecx, DWORD PTR __Right$[ebp]
 	call	?base@?$_Revranit@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@U?$iterator@Ubidirectional_iterator_tag@std@@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@HPAPAV3456@AAPAV3456@@3@@std@@QBE?AV?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@2@XZ ; std::_Revranit<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>,std::iterator<std::bidirectional_iterator_tag,boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,int,boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > * *,boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > * &> >::base
@@ -63122,11 +63126,11 @@ __Right$ = 8						; size = 4
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	??8?$_Const_iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QBE_NABV012@@Z ; std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Const_iterator<1>::operator==
-	mov	BYTE PTR $T217015[ebp], al
+	mov	BYTE PTR $T219673[ebp], al
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T217016[ebp]
+	lea	ecx, DWORD PTR $T219674[ebp]
 	call	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
-	mov	al, BYTE PTR $T217015[ebp]
+	mov	al, BYTE PTR $T219673[ebp]
 
 ; 1975 : 		}
 
@@ -63146,7 +63150,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$_Equal@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@U?$iterator@Ubidirectional_iterator_tag@std@@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@HPAPAV3456@AAPAV3456@@3@@?$_Revranit@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@U?$iterator@Ubidirectional_iterator_tag@std@@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@HPAPAV3456@AAPAV3456@@3@@std@@QBE_NABV01@@Z$0:
-	lea	ecx, DWORD PTR $T217016[ebp]
+	lea	ecx, DWORD PTR $T219674[ebp]
 	jmp	??1?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@XZ
 __ehhandler$??$_Equal@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@U?$iterator@Ubidirectional_iterator_tag@std@@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@HPAPAV3456@AAPAV3456@@3@@?$_Revranit@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@U?$iterator@Ubidirectional_iterator_tag@std@@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@HPAPAV3456@AAPAV3456@@3@@std@@QBE_NABV01@@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -63314,13 +63318,13 @@ __ehfuncinfo$??$use_facet@V?$ctype@D@std@@@std@@YAABV?$ctype@D@0@ABVlocale@0@@Z 
 xdata$x	ENDS
 ;	COMDAT ??$use_facet@V?$ctype@D@std@@@std@@YAABV?$ctype@D@0@ABVlocale@0@@Z
 _TEXT	SEGMENT
-$T217030 = -292						; size = 12
-$T217031 = -272						; size = 4
-__Pfmod$162441 = -68					; size = 4
-__Pf$162425 = -56					; size = 4
-__Id$162424 = -44					; size = 4
-__Psave$162412 = -32					; size = 4
-__Lock$162411 = -20					; size = 4
+$T219688 = -292						; size = 12
+$T219689 = -272						; size = 4
+__Pfmod$164835 = -68					; size = 4
+__Pf$164819 = -56					; size = 4
+__Id$164818 = -44					; size = 4
+__Psave$164806 = -32					; size = 4
+__Lock$164805 = -20					; size = 4
 __$EHRec$ = -12						; size = 12
 __Loc$ = 8						; size = 4
 ??$use_facet@V?$ctype@D@std@@@std@@YAABV?$ctype@D@0@ABVlocale@0@@Z PROC ; std::use_facet<std::ctype<char> >, COMDAT
@@ -63351,7 +63355,7 @@ __Loc$ = 8						; size = 4
 
 	mov	esi, esp
 	push	0
-	lea	ecx, DWORD PTR __Lock$162411[ebp]
+	lea	ecx, DWORD PTR __Lock$164805[ebp]
 	call	DWORD PTR __imp_??0_Lockit@std@@QAE@H@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -63361,7 +63365,7 @@ __Loc$ = 8						; size = 4
 ; 489  : 			_Facetptr<_Facet>::_Psave;	// static pointer to lazy facet
 
 	mov	eax, DWORD PTR ?_Psave@?$_Facetptr@V?$ctype@D@std@@@std@@2PBVfacet@locale@2@B ; std::_Facetptr<std::ctype<char> >::_Psave
-	mov	DWORD PTR __Psave$162412[ebp], eax
+	mov	DWORD PTR __Psave$164806[ebp], eax
 
 ; 490  : 
 ; 491  : 		size_t _Id = _Facet::id;
@@ -63371,23 +63375,23 @@ __Loc$ = 8						; size = 4
 	call	DWORD PTR __imp_??Bid@locale@std@@QAEIXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR __Id$162424[ebp], eax
+	mov	DWORD PTR __Id$164818[ebp], eax
 
 ; 492  : 		const locale::facet *_Pf = _Loc._Getfacet(_Id);
 
 	mov	esi, esp
-	mov	eax, DWORD PTR __Id$162424[ebp]
+	mov	eax, DWORD PTR __Id$164818[ebp]
 	push	eax
 	mov	ecx, DWORD PTR __Loc$[ebp]
 	call	DWORD PTR __imp_?_Getfacet@locale@std@@QBEPBVfacet@12@I@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR __Pf$162425[ebp], eax
+	mov	DWORD PTR __Pf$164819[ebp], eax
 
 ; 493  : 
 ; 494  : 		if (_Pf != 0)
 
-	cmp	DWORD PTR __Pf$162425[ebp], 0
+	cmp	DWORD PTR __Pf$164819[ebp], 0
 	je	SHORT $LN6@use_facet
 	jmp	$LN5@use_facet
 $LN6@use_facet:
@@ -63395,13 +63399,13 @@ $LN6@use_facet:
 ; 495  : 			;	// got facet from locale
 ; 496  : 		else if (_Psave != 0)
 
-	cmp	DWORD PTR __Psave$162412[ebp], 0
+	cmp	DWORD PTR __Psave$164806[ebp], 0
 	je	SHORT $LN4@use_facet
 
 ; 497  : 			_Pf = _Psave;	// lazy facet already allocated
 
-	mov	eax, DWORD PTR __Psave$162412[ebp]
-	mov	DWORD PTR __Pf$162425[ebp], eax
+	mov	eax, DWORD PTR __Psave$164806[ebp]
+	mov	DWORD PTR __Pf$164819[ebp], eax
 	jmp	SHORT $LN5@use_facet
 $LN4@use_facet:
 
@@ -63410,7 +63414,7 @@ $LN4@use_facet:
 	mov	esi, esp
 	mov	eax, DWORD PTR __Loc$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR __Psave$162412[ebp]
+	lea	ecx, DWORD PTR __Psave$164806[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?_Getcat@?$ctype@D@std@@SAIPAPBVfacet@locale@2@PBV42@@Z
 	add	esp, 8
@@ -63425,12 +63429,12 @@ $LN4@use_facet:
 
 	mov	esi, esp
 	push	OFFSET ??_C@_08EPJLHIJG@bad?5cast?$AA@
-	lea	ecx, DWORD PTR $T217030[ebp]
+	lea	ecx, DWORD PTR $T219688[ebp]
 	call	DWORD PTR __imp_??0bad_cast@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	push	OFFSET __TI2?AVbad_cast@std@@
-	lea	eax, DWORD PTR $T217030[ebp]
+	lea	eax, DWORD PTR $T219688[ebp]
 	push	eax
 	call	__CxxThrowException@8
 
@@ -63447,31 +63451,31 @@ $LN2@use_facet:
 ; 508  : 			{	// queue up lazy facet for destruction
 ; 509  : 			_Pf = _Psave;
 
-	mov	eax, DWORD PTR __Psave$162412[ebp]
-	mov	DWORD PTR __Pf$162425[ebp], eax
+	mov	eax, DWORD PTR __Psave$164806[ebp]
+	mov	DWORD PTR __Pf$164819[ebp], eax
 
 ; 510  : 			_Facetptr<_Facet>::_Psave = _Psave;
 
-	mov	eax, DWORD PTR __Psave$162412[ebp]
+	mov	eax, DWORD PTR __Psave$164806[ebp]
 	mov	DWORD PTR ?_Psave@?$_Facetptr@V?$ctype@D@std@@@std@@2PBVfacet@locale@2@B, eax ; std::_Facetptr<std::ctype<char> >::_Psave
 
 ; 511  : 
 ; 512  : 			locale::facet *_Pfmod = (_Facet *)_Psave;
 
-	mov	eax, DWORD PTR __Psave$162412[ebp]
-	mov	DWORD PTR __Pfmod$162441[ebp], eax
+	mov	eax, DWORD PTR __Psave$164806[ebp]
+	mov	DWORD PTR __Pfmod$164835[ebp], eax
 
 ; 513  : 			_Pfmod->_Incref();
 
 	mov	esi, esp
-	mov	ecx, DWORD PTR __Pfmod$162441[ebp]
+	mov	ecx, DWORD PTR __Pfmod$164835[ebp]
 	call	DWORD PTR __imp_?_Incref@facet@locale@std@@QAEXXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
 ; 514  : 			_Pfmod->_Register();
 
-	mov	ecx, DWORD PTR __Pfmod$162441[ebp]
+	mov	ecx, DWORD PTR __Pfmod$164835[ebp]
 	call	?_Register@facet@locale@std@@QAEXXZ	; std::locale::facet::_Register
 $LN5@use_facet:
 
@@ -63479,15 +63483,15 @@ $LN5@use_facet:
 ; 516  : 
 ; 517  : 		return ((const _Facet&)(*_Pf));	// should be dynamic_cast
 
-	mov	eax, DWORD PTR __Pf$162425[ebp]
-	mov	DWORD PTR $T217031[ebp], eax
+	mov	eax, DWORD PTR __Pf$164819[ebp]
+	mov	DWORD PTR $T219689[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	esi, esp
-	lea	ecx, DWORD PTR __Lock$162411[ebp]
+	lea	ecx, DWORD PTR __Lock$164805[ebp]
 	call	DWORD PTR __imp_??1_Lockit@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	eax, DWORD PTR $T217031[ebp]
+	mov	eax, DWORD PTR $T219689[ebp]
 $LN8@use_facet:
 
 ; 518  : 	_END_LOCK()
@@ -63542,7 +63546,7 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$??$use_facet@V?$ctype@D@std@@@std@@YAABV?$ctype@D@0@ABVlocale@0@@Z$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR __Lock$162411[ebp]
+	lea	ecx, DWORD PTR __Lock$164805[ebp]
 	call	DWORD PTR __imp_??1_Lockit@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
@@ -63921,7 +63925,7 @@ text$x	ENDS
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 ;	COMDAT ?base@?$_Revranit@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@U?$iterator@Ubidirectional_iterator_tag@std@@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@HPAPAV3456@AAPAV3456@@3@@std@@QBE?AV?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@2@XZ
 _TEXT	SEGMENT
-$T217075 = -212						; size = 4
+$T219733 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?base@?$_Revranit@V?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@U?$iterator@Ubidirectional_iterator_tag@std@@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@HPAPAV3456@AAPAV3456@@3@@std@@QBE?AV?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@2@XZ PROC ; std::_Revranit<std::list<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,std::allocator<boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *> >::_Iterator<1>,std::iterator<std::bidirectional_iterator_tag,boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > *,int,boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > * *,boost::iostreams::detail::linked_streambuf<char,std::char_traits<char> > * &> >::base, COMDAT
@@ -63942,7 +63946,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T217075[ebp], 0
+	mov	DWORD PTR $T219733[ebp], 0
 
 ; 1930 : 		return (current);
 
@@ -63950,9 +63954,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0?$_Iterator@$00@?$list@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@V?$allocator@PAV?$linked_streambuf@DU?$char_traits@D@std@@@detail@iostreams@boost@@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T217075[ebp]
+	mov	ecx, DWORD PTR $T219733[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T217075[ebp], ecx
+	mov	DWORD PTR $T219733[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 1931 : 		}
@@ -64078,7 +64082,7 @@ PUBLIC	??$range_begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@s
 ; File c:\program files\boost\boost_1_40\boost\range\begin.hpp
 ;	COMDAT ??$begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z
 _TEXT	SEGMENT
-$T217086 = -200						; size = 4
+$T219744 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
 ??$begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z PROC ; boost::begin<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >, COMDAT
@@ -64095,7 +64099,7 @@ _r$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T217086[ebp], 0
+	mov	DWORD PTR $T219744[ebp], 0
 
 ; 98   : #if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564)) && \
 ; 99   :     !BOOST_WORKAROUND(__GNUC__, < 3) \
@@ -64110,9 +64114,9 @@ _r$ = 12						; size = 4
 	push	ecx
 	call	??$range_begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z ; boost::range_detail::range_begin<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 8
-	mov	edx, DWORD PTR $T217086[ebp]
+	mov	edx, DWORD PTR $T219744[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T217086[ebp], edx
+	mov	DWORD PTR $T219744[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 104  : }
@@ -64133,7 +64137,7 @@ PUBLIC	??$range_end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std
 ; File c:\program files\boost\boost_1_40\boost\range\end.hpp
 ;	COMDAT ??$end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z
 _TEXT	SEGMENT
-$T217091 = -200						; size = 4
+$T219749 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _r$ = 12						; size = 4
 ??$end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z PROC ; boost::end<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >, COMDAT
@@ -64150,7 +64154,7 @@ _r$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T217091[ebp], 0
+	mov	DWORD PTR $T219749[ebp], 0
 
 ; 94   : #if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564)) && \
 ; 95   :     !BOOST_WORKAROUND(__GNUC__, < 3) \
@@ -64165,9 +64169,9 @@ _r$ = 12						; size = 4
 	push	ecx
 	call	??$range_end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z ; boost::range_detail::range_end<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >
 	add	esp, 8
-	mov	edx, DWORD PTR $T217091[ebp]
+	mov	edx, DWORD PTR $T219749[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T217091[ebp], edx
+	mov	DWORD PTR $T219749[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 100  : }
@@ -64645,7 +64649,7 @@ _n$ = 20						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$write@U?$basic_file_source@D@iostreams@boost@@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@23@@?$device_wrapper_impl@Uinput@iostreams@boost@@@detail@iostreams@boost@@SAHAAU?$basic_file_source@D@23@PAV?$linked_streambuf@DU?$char_traits@D@std@@@123@PBDH@Z
 _TEXT	SEGMENT
-$T217134 = -240						; size = 44
+$T219792 = -240						; size = 44
 ___formal$ = 8						; size = 4
 ___formal$ = 12						; size = 4
 ___formal$ = 16						; size = 4
@@ -64664,12 +64668,12 @@ ___formal$ = 20						; size = 4
 	mov	ecx, 61					; 0000003dH
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	lea	eax, DWORD PTR $T217134[ebp]
+	lea	eax, DWORD PTR $T219792[ebp]
 	push	eax
 	call	?cant_write@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ ; boost::iostreams::detail::cant_write
 	add	esp, 4
 	push	OFFSET __TI3?AVfailure@ios_base@std@@
-	lea	ecx, DWORD PTR $T217134[ebp]
+	lea	ecx, DWORD PTR $T219792[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 $LN2@write@2:
@@ -64779,9 +64783,9 @@ PUBLIC	??0category@?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost
 ;	COMDAT ??$seek@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@23@@?$device_wrapper_impl@Uany_tag@iostreams@boost@@@detail@iostreams@boost@@SA?AV?$fpos@H@std@@AAV?$basic_null_device@DUinput@iostreams@boost@@@23@PAV?$linked_streambuf@DU?$char_traits@D@std@@@123@_JHH@Z
 _TEXT	SEGMENT
 tv78 = -240						; size = 4
-$T217141 = -232						; size = 4
-$T217142 = -220						; size = 12
-$T217145 = -197						; size = 1
+$T219799 = -232						; size = 4
+$T219800 = -220						; size = 12
+$T219803 = -197						; size = 1
 ___$ReturnUdt$ = 8					; size = 4
 _dev$ = 12						; size = 4
 ___formal$ = 16						; size = 4
@@ -64810,21 +64814,21 @@ _which$ = 32						; size = 4
 ; 132  :         return seek(dev, off, way, which, category()); 
 
 	push	1
-	lea	ecx, DWORD PTR $T217142[ebp]
+	lea	ecx, DWORD PTR $T219800[ebp]
 	call	??0category@?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@QAE@XZ
-	mov	DWORD PTR $T217141[ebp], eax
-	cmp	DWORD PTR $T217141[ebp], 0
+	mov	DWORD PTR $T219799[ebp], eax
+	cmp	DWORD PTR $T219799[ebp], 0
 	jne	SHORT $LN3@seek
 	mov	DWORD PTR tv78[ebp], 0
 	jmp	SHORT $LN4@seek
 $LN3@seek:
-	mov	eax, DWORD PTR $T217141[ebp]
+	mov	eax, DWORD PTR $T219799[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	edx, DWORD PTR $T217141[ebp]
+	mov	edx, DWORD PTR $T219799[ebp]
 	add	edx, DWORD PTR [ecx+4]
 	mov	DWORD PTR tv78[ebp], edx
 $LN4@seek:
-	movzx	eax, BYTE PTR $T217145[ebp]
+	movzx	eax, BYTE PTR $T219803[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _which$[ebp]
 	push	ecx
@@ -65564,7 +65568,7 @@ EXTRN	__imp_?begin@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@
 ; File c:\program files\boost\boost_1_40\boost\range\begin.hpp
 ;	COMDAT ??$range_begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z
 _TEXT	SEGMENT
-$T217195 = -200						; size = 4
+$T219853 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _c$ = 12						; size = 4
 ??$range_begin@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z PROC ; boost::range_detail::range_begin<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >, COMDAT
@@ -65581,7 +65585,7 @@ _c$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T217195[ebp], 0
+	mov	DWORD PTR $T219853[ebp], 0
 
 ; 44   :         //
 ; 45   :         // If you get a compile-error here, it is most likely because
@@ -65597,9 +65601,9 @@ _c$ = 12						; size = 4
 	call	DWORD PTR __imp_?begin@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@2@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	ecx, DWORD PTR $T217195[ebp]
+	mov	ecx, DWORD PTR $T219853[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T217195[ebp], ecx
+	mov	DWORD PTR $T219853[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 50   :     }
@@ -65619,7 +65623,7 @@ _c$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$range_end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z
 _TEXT	SEGMENT
-$T217200 = -200						; size = 4
+$T219858 = -200						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 _c$ = 12						; size = 4
 ??$range_end@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@range_detail@boost@@YA?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AAV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@3@@Z PROC ; boost::range_detail::range_end<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >, COMDAT
@@ -65636,7 +65640,7 @@ _c$ = 12						; size = 4
 	mov	ecx, 51					; 00000033H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
-	mov	DWORD PTR $T217200[ebp], 0
+	mov	DWORD PTR $T219858[ebp], 0
 
 ; 45   :             //
 ; 46   :             // If you get a compile-error here, it is most likely because
@@ -65652,9 +65656,9 @@ _c$ = 12						; size = 4
 	call	DWORD PTR __imp_?end@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE?AV?$_String_iterator@DU?$char_traits@D@std@@V?$allocator@D@2@@2@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	ecx, DWORD PTR $T217200[ebp]
+	mov	ecx, DWORD PTR $T219858[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T217200[ebp], ecx
+	mov	DWORD PTR $T219858[ebp], ecx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 51   :         }
@@ -65678,8 +65682,8 @@ PUBLIC	??0category@?$basic_file_source@D@iostreams@boost@@QAE@XZ ; boost::iostre
 ;	COMDAT ??$seek@U?$basic_file_source@D@iostreams@boost@@V?$linked_streambuf@DU?$char_traits@D@std@@@detail@23@@?$device_wrapper_impl@Uany_tag@iostreams@boost@@@detail@iostreams@boost@@SA?AV?$fpos@H@std@@AAU?$basic_file_source@D@23@PAV?$linked_streambuf@DU?$char_traits@D@std@@@123@_JHH@Z
 _TEXT	SEGMENT
 tv87 = -248						; size = 4
-$T217205 = -228						; size = 4
-$T217206 = -216						; size = 20
+$T219863 = -228						; size = 4
+$T219864 = -216						; size = 20
 ___$ReturnUdt$ = 8					; size = 4
 _dev$ = 12						; size = 4
 ___formal$ = 16						; size = 4
@@ -65708,17 +65712,17 @@ _which$ = 32						; size = 4
 ; 132  :         return seek(dev, off, way, which, category()); 
 
 	push	1
-	lea	ecx, DWORD PTR $T217206[ebp]
+	lea	ecx, DWORD PTR $T219864[ebp]
 	call	??0category@?$basic_file_source@D@iostreams@boost@@QAE@XZ
-	mov	DWORD PTR $T217205[ebp], eax
-	cmp	DWORD PTR $T217205[ebp], 0
+	mov	DWORD PTR $T219863[ebp], eax
+	cmp	DWORD PTR $T219863[ebp], 0
 	jne	SHORT $LN3@seek@2
 	mov	DWORD PTR tv87[ebp], 0
 	jmp	SHORT $LN4@seek@2
 $LN3@seek@2:
-	mov	eax, DWORD PTR $T217205[ebp]
+	mov	eax, DWORD PTR $T219863[ebp]
 	mov	ecx, DWORD PTR [eax]
-	mov	edx, DWORD PTR $T217205[ebp]
+	mov	edx, DWORD PTR $T219863[ebp]
 	add	edx, DWORD PTR [ecx+12]
 	mov	DWORD PTR tv87[ebp], edx
 $LN4@seek@2:
@@ -65933,7 +65937,7 @@ PUBLIC	?cant_seek@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ ; boost:
 ; File c:\program files\boost\boost_1_40\boost\iostreams\detail\adapter\concept_adapter.hpp
 ;	COMDAT ??$seek@V?$basic_null_device@DUinput@iostreams@boost@@@iostreams@boost@@@?$device_wrapper_impl@Uany_tag@iostreams@boost@@@detail@iostreams@boost@@SA?AV?$fpos@H@std@@AAV?$basic_null_device@DUinput@iostreams@boost@@@23@_JHHUany_tag@23@@Z
 _TEXT	SEGMENT
-$T217219 = -240						; size = 44
+$T219877 = -240						; size = 44
 ___$ReturnUdt$ = 8					; size = 4
 ___formal$ = 12						; size = 4
 ___formal$ = 16						; size = 8
@@ -65960,12 +65964,12 @@ ___formal$ = 32						; size = 1
 ; 139  :     { 
 ; 140  :         throw cant_seek(); 
 
-	lea	eax, DWORD PTR $T217219[ebp]
+	lea	eax, DWORD PTR $T219877[ebp]
 	push	eax
 	call	?cant_seek@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ ; boost::iostreams::detail::cant_seek
 	add	esp, 4
 	push	OFFSET __TI3?AVfailure@ios_base@std@@
-	lea	ecx, DWORD PTR $T217219[ebp]
+	lea	ecx, DWORD PTR $T219877[ebp]
 	push	ecx
 	call	__CxxThrowException@8
 $LN2@seek@3:
@@ -66006,8 +66010,8 @@ __ehfuncinfo$?cant_seek@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ DD
 xdata$x	ENDS
 ;	COMDAT ?cant_seek@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ
 _TEXT	SEGMENT
-$T217222 = -252						; size = 32
-$T217225 = -212						; size = 4
+$T219880 = -252						; size = 32
+$T219883 = -212						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
 ?cant_seek@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ PROC ; boost::iostreams::detail::cant_seek, COMDAT
@@ -66033,24 +66037,24 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	eax
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
-	mov	DWORD PTR $T217225[ebp], 0
+	mov	DWORD PTR $T219883[ebp], 0
 	mov	esi, esp
 	push	OFFSET ??_C@_0BB@JFGNMMAL@no?5random?5access?$AA@
-	lea	ecx, DWORD PTR $T217222[ebp]
+	lea	ecx, DWORD PTR $T219880[ebp]
 	call	DWORD PTR __imp_??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@PBD@Z
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	lea	eax, DWORD PTR $T217222[ebp]
+	lea	eax, DWORD PTR $T219880[ebp]
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0failure@ios_base@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@2@@Z ; std::ios_base::failure::failure
-	mov	ecx, DWORD PTR $T217225[ebp]
+	mov	ecx, DWORD PTR $T219883[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T217225[ebp], ecx
+	mov	DWORD PTR $T219883[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T217222[ebp]
+	lea	ecx, DWORD PTR $T219880[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
@@ -66072,15 +66076,15 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?cant_seek@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ$0:
 	mov	esi, esp
-	lea	ecx, DWORD PTR $T217222[ebp]
+	lea	ecx, DWORD PTR $T219880[ebp]
 	call	DWORD PTR __imp_??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ
 	cmp	esi, esp
 	jmp	__RTC_CheckEsp
 __unwindfunclet$?cant_seek@detail@iostreams@boost@@YA?AVfailure@ios_base@std@@XZ$1:
-	mov	eax, DWORD PTR $T217225[ebp]
+	mov	eax, DWORD PTR $T219883[ebp]
 	and	eax, 1
 	je	$LN5@cant_seek
-	and	DWORD PTR $T217225[ebp], -2		; fffffffeH
+	and	DWORD PTR $T219883[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1failure@ios_base@std@@UAE@XZ		; std::ios_base::failure::~failure
 $LN5@cant_seek:
@@ -67526,7 +67530,7 @@ EXTRN	__imp_?pubseekpos@?$basic_streambuf@DU?$char_traits@D@std@@@std@@QAE?AV?$f
 ; File c:\program files\boost\boost_1_40\boost\iostreams\seek.hpp
 ;	COMDAT ??$seek@V?$basic_filebuf@DU?$char_traits@D@std@@@std@@@?$seek_device_impl@Ustreambuf_tag@iostreams@boost@@@detail@iostreams@boost@@SA?AV?$fpos@H@std@@AAV?$basic_filebuf@DU?$char_traits@D@std@@@5@_JHH@Z
 _TEXT	SEGMENT
-$T217324 = -220						; size = 24
+$T219982 = -220						; size = 24
 ___$ReturnUdt$ = 8					; size = 4
 _t$ = 12						; size = 4
 _off$ = 16						; size = 8
@@ -67578,7 +67582,7 @@ $LN2@seek@4:
 	push	eax
 	mov	ecx, DWORD PTR _off$[ebp]
 	push	ecx
-	lea	edx, DWORD PTR $T217324[ebp]
+	lea	edx, DWORD PTR $T219982[ebp]
 	push	edx
 	call	?offset_to_position@iostreams@boost@@YA?AV?$fpos@H@std@@_J@Z ; boost::iostreams::offset_to_position
 	add	esp, -12				; fffffff4H

@@ -65,13 +65,16 @@ if not conf.CheckLib('xml2'):
 try:
 	if 'fast' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		print COMMAND_LINE_TARGETS[0]
+		#defines = ['M5']
+		#if (env.Dictionary() contains 'TRACE_GENERATE'):
+		#	print "works"
 		env.Append(
-			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops','-ffast-math', '-fomit-frame-pointer', '-Wconversion', '-Wuninitialized',
+			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops','-ffast-math', '-fomit-frame-pointer', '-Wuninitialized', '-Wno-conversion',
 			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-generate', '-mtune=native']
-			 '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-use', '-mtune=native']
-			# '-finline-functions', '-march=native','-Wno-unused-variable', '-mtune=native']
-			,CPPDEFINES = ['M5']
-			,LINKFLAGS = ['-fprofile-use']
+			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-use', '-mtune=native']
+			 '-finline-functions', '-march=native','-Wno-unused-variable', '-mtune=native']
+			,CPPDEFINES = ['M5', 'TRACE_GENERATE']
+			#,LINKFLAGS = ['-fprofile-use']
 			#,LINKFLAGS = ['-fprofile-generate']
 			)
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
@@ -128,6 +131,7 @@ Source('transaction.cpp')
 Source('reporting/soapC.cpp')
 Source('reporting/soapClient.cpp')
 Source('reporting/stdsoap2.cpp')
+Source('cache/lru.cc')
 
 env = conf.Finish()
 

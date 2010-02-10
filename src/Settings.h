@@ -127,6 +127,7 @@ namespace DRAMsimII
 		float maxVCC;
 		float VDD;
 		unsigned IDD0;
+		unsigned IDD1;
 		unsigned IDD2P;
 		unsigned IDD2N;
 		unsigned IDD3P;
@@ -134,6 +135,13 @@ namespace DRAMsimII
 		unsigned IDD4W;
 		unsigned IDD4R;
 		unsigned IDD5;
+
+		//////////////////////////////////////////////////////////////////////////
+		// cache data
+		unsigned associativity;
+		unsigned cacheSize;		///< given in kiB
+		unsigned blockSize;
+		unsigned hitLatency;
 	
 		bool setKeyValue(const std::string &nodeName, const std::string &nodeValue);
 		bool setKeyValue(const char* nodeName, const std::string &nodeValue) { std::string name(nodeName); return setKeyValue(name, nodeValue); }
@@ -157,6 +165,11 @@ namespace DRAMsimII
 		static std::map<FileIOToken, std::string> lookupSetup()
 		{
 			std::map<FileIOToken, std::string> theMap;
+
+			theMap[cache_associativity_token] = "associativity";
+			theMap[cache_blocksize_token] = "blockSize";
+			theMap[cache_size_token] = "cacheSize";
+			theMap[cache_hitlatency_token] = "hitLatency";
 
 			theMap[clock_granularity_token] = "clockGranularity";
 			theMap[channel_count_token] = "channels";
@@ -216,6 +229,7 @@ namespace DRAMsimII
 			theMap[max_vcc_token] = "maxVCC";
 			theMap[vdd_token] = "systemVDD";
 			theMap[idd0_token] = "IDD0";
+			theMap[idd1_token] = "IDD1";
 			theMap[idd2p_token] = "IDD2P";
 			theMap[idd2n_token] = "IDD2N";
 			theMap[idd3p_token] = "IDD3P";
@@ -247,6 +261,11 @@ namespace DRAMsimII
 		{
 			std::map<std::string, FileIOToken> theMap;
 
+			// should all be lower case
+			theMap["hitlatency"] = cache_hitlatency_token;
+			theMap["associativity"] = cache_associativity_token;
+			theMap["blocksize"] = cache_blocksize_token;
+			theMap["cachesize"] = cache_size_token;
 			theMap["type"]=dram_type_token;
 			theMap["dbreporting"]=dbreporting_token;
 			theMap["datarate"]=datarate_token;
@@ -387,6 +406,7 @@ namespace DRAMsimII
 			theMap["eventqueuedepth"] = event_queue_depth_token;
 			theMap["systemconfigurationtype"] = system_configuration_type_token;
 			theMap["idd0"] = idd0_token;
+			theMap["idd1"] = idd1_token;
 			theMap["idd2p"] = idd2p_token;
 			theMap["idd2n"] = idd2n_token;
 			theMap["idd3p"] = idd3p_token;
@@ -509,8 +529,8 @@ namespace DRAMsimII
 				addressMappingScheme & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount &
 				rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS & tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI &
 				tRFC & tRP & tRRD & tRTP & tWR & tCMD & tInternalBurst & tBufferDelay & cpuToMemoryClockRatio & PdqRD & PdqWR & PdqRDoth &
-				PdqWRoth & DQperDRAM & DQSperDRAM & DMperDRAM & frequencySpec & maxVCC & VDD & IDD0 & IDD2P & IDD2N & IDD3P & IDD3N & IDD4W &
-				IDD4R & IDD5;
+				PdqWRoth & DQperDRAM & DQSperDRAM & DMperDRAM & frequencySpec & maxVCC & VDD & IDD0 & IDD1 & IDD2P & IDD2N & IDD3P & IDD3N & IDD4W &
+				IDD4R & IDD5 & associativity & hitLatency & cacheSize & blockSize;
 		}
 	};
 }

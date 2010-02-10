@@ -42,7 +42,8 @@ Command::Command(const Command &rhs):
 Event(rhs),
 commandType(rhs.commandType),
 hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
-length(rhs.length)
+length(rhs.length),
+hit(rhs.hit)
 {
 	assert(!hostTransaction ||
 		(commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
@@ -60,7 +61,8 @@ length(rhs.length)
 Command::Command(Transaction *hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(addr,enqueueTime),
 hostTransaction((type == READ) ? hostTransaction : 0),
-length(commandLength)
+length(commandLength),
+hit(false)
 {
 	if (type == READ)
 	{
@@ -101,7 +103,8 @@ length(commandLength)
 Command::Command(Transaction *hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(hostTransaction->getAddress(),enqueueTime),
 hostTransaction((type == READ) ? hostTransaction : NULL),
-length(commandLength)
+length(commandLength),
+hit(false)
 {
 	if (type == READ)
 	{

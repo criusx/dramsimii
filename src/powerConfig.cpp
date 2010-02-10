@@ -27,6 +27,7 @@ PowerConfig::PowerConfig(const Settings& settings):
 VDD(settings.VDD),
 VDDmax(settings.maxVCC),
 IDD0(settings.IDD0),
+IDD1(settings.IDD1),
 IDD2P(settings.IDD2P),
 IDD2N(settings.IDD2N),
 IDD3P(settings.IDD3P),
@@ -36,10 +37,13 @@ IDD4W(settings.IDD4W),
 IDD5(settings.IDD5),
 PdsACT((settings.IDD0 - ((settings.IDD3N * settings.tRAS + settings.IDD2N * (settings.tRC - settings.tRAS))/settings.tRC)) * settings.VDD),
 PdsACT_STBY(settings.IDD3N * settings.VDD),
+PdsPRE_STBY(settings.IDD2N * settings.VDD),
+PdsACT_PDN(settings.IDD3P * settings.VDD),
+PdsPRE_PDN(settings.IDD2P * settings.VDD),
 PdsRD((settings.IDD4R - settings.IDD3N) * settings.VDD),
 PdsWR((settings.IDD4W - settings.IDD3N) * settings.VDD),
-voltageScaleFactor((settings.VDD * settings.VDD) / (settings.maxVCC * settings.maxVCC)),
-frequencyScaleFactor((float)settings.dataRate / (float)settings.frequencySpec),
+voltageScaleFactor((settings.VDD / settings.maxVCC) * (settings.VDD / settings.maxVCC)),
+frequencyScaleFactor((double)settings.dataRate / (double)settings.frequencySpec),
 PdstermW(settings.PdqWR * (settings.DQperDRAM + settings.DQSperDRAM + settings.DMperDRAM)),
 PdqRD(settings.PdqRD),
 PdqWR(settings.PdqWR),
@@ -65,6 +69,7 @@ PowerConfig::PowerConfig():
 VDD(-1.0F),
 VDDmax(-1.0F),
 IDD0(INT_MAX),
+IDD1(INT_MAX),
 IDD2P(INT_MAX),
 IDD2N(INT_MAX),
 IDD3P(INT_MAX),
@@ -74,6 +79,9 @@ IDD4W(INT_MAX),
 IDD5(INT_MAX),
 PdsACT(-1.0F),
 PdsACT_STBY(-1.0F),
+PdsPRE_STBY(-1.0F),
+PdsACT_PDN(-1.0F),
+PdsPRE_PDN(-1.0F),
 PdsRD(-1.0F),
 PdsWR(-1.0F),
 voltageScaleFactor(-1.0),
@@ -97,11 +105,14 @@ lastCalculation(TICK_MAX)
 
 bool PowerConfig::operator==(const PowerConfig& rhs) const
 {
-	return (AlmostEqual<float>(VDD, rhs.VDD) && AlmostEqual<float>(VDDmax, rhs.VDDmax) && IDD0 == IDD0 &&
-		IDD2P == rhs.IDD2P && IDD2N == rhs.IDD2N && IDD3P == rhs.IDD3P &&
+	return (AlmostEqual<float>(VDD, rhs.VDD) && AlmostEqual<float>(VDDmax, rhs.VDDmax) && IDD0 == rhs.IDD0 &&
+		IDD2P == rhs.IDD2P && IDD2N == rhs.IDD2N && IDD3P == rhs.IDD3P && IDD1 == rhs.IDD1 &&
 		IDD3N == rhs.IDD3N && IDD4R == rhs.IDD4R && IDD4W == rhs.IDD4W &&
 		IDD5 == rhs.IDD5 && AlmostEqual<float>(PdsACT, rhs.PdsACT) && AlmostEqual<float>(PdsACT_STBY, rhs.PdsACT_STBY) &&
 		AlmostEqual<double>(PdsRD, rhs.PdsRD) &&
+		AlmostEqual<double>(PdsACT_PDN, rhs.PdsACT_PDN) &&
+		AlmostEqual<double>(PdsPRE_STBY, rhs.PdsPRE_STBY) &&
+		AlmostEqual<double>(PdsPRE_PDN, rhs.PdsPRE_PDN) &&
 		AlmostEqual<double>(PdsWR, rhs.PdsWR) &&
 		AlmostEqual<double>(PdstermW, rhs.PdstermW) &&
 		AlmostEqual<double>(PdqRD, rhs.PdqRD) &&

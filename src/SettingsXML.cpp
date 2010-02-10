@@ -170,6 +170,14 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "readWriteGrouping", (const xmlChar *)(readWriteGrouping ? "true" : "false"));
 	xmlNewChild(node, NULL, BAD_CAST "autoPrecharge", (const xmlChar *)(autoPrecharge ? "true" : "false"));
 
+	// generate the cache settings section
+	node = xmlNewChild(node, NULL, BAD_CAST "cache", NULL);
+	xmlNewChild(node, NULL, BAD_CAST "associativity", (const xmlChar *)lexical_cast<string>(associativity).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "cacheSize", (const xmlChar *)lexical_cast<string>(cacheSize).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "blockSize", (const xmlChar *)lexical_cast<string>(blockSize).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "hitLatency", (const xmlChar *)lexical_cast<string>(hitLatency).c_str());
+
+
 
 	// create the timing parameter section
 	node = xmlNewChild(rootNode, NULL, BAD_CAST "timing", NULL);
@@ -208,6 +216,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "maxVCC", (const xmlChar *)lexical_cast<string>(maxVCC).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "systemVDD", (const xmlChar *)lexical_cast<string>(VDD).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "IDD0", (const xmlChar *)lexical_cast<string>(IDD0).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "IDD1", (const xmlChar *)lexical_cast<string>(IDD1).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "IDD2P", (const xmlChar *)lexical_cast<string>(IDD2P).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "IDD2N", (const xmlChar *)lexical_cast<string>(IDD2N).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "IDD3P", (const xmlChar *)lexical_cast<string>(IDD3P).c_str());

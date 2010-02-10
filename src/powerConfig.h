@@ -35,20 +35,24 @@ namespace DRAMsimII
 	{
 	protected:
 		const float VDD;			///< the current voltage
-		const float VDDmax;		///< the maximum voltage as specified by the manufacturer's datasheets
-		const int IDD0;			///< Operating Current: One Bank Active-Precharge in mA
+		const float VDDmax;			///< the maximum voltage as specified by the manufacturer's datasheets		
+		const int IDD0;				///< Operating Current: One Bank Active-Precharge in mA
+		const int IDD1;				///< one bank ACT to read to Pre current, in mA
 		const int IDD2P;			///< Precharge Power-Down Current (CKE=0), in mA
 		const int IDD2N;			///< Precharge Standby Current (CKE=1), in mA
 		const int IDD3P;			///< Active Power-Down Current (CKE=0), in mA
 		const int IDD3N;			///< Active Standby Current (CKE=1), in mA
 		const int IDD4R;			///< Operating Burst Read Current in mA
 		const int IDD4W;			///< Operating Burst Write Current in mA
-		const int IDD5;			///< Burst Refresh Current in mA
+		const int IDD5;				///< Burst Refresh Current in mA
 
 		const double PdsACT;		///< power for ACT/PRE commands
 		const double PdsACT_STBY;	///< background power for active standby
-		const double PdsRD;		///< read power
-		const double PdsWR;		///< write power
+		const double PdsPRE_STBY;	///< background power for precharge standby
+		const double PdsACT_PDN;	///< background power for active powerdown
+		const double PdsPRE_PDN;	///< background power for precharge powerdown
+		const double PdsRD;			///< read power
+		const double PdsWR;			///< write power
 
 		const double voltageScaleFactor;	///< derating based on voltage
 		const double frequencyScaleFactor;	///< derating based on frequency
@@ -87,6 +91,10 @@ namespace DRAMsimII
 		unsigned getFrequency() const { return frequency; }
 		unsigned getSpecFrequency() const { return specFrequency; }
 		tick getLastCalculation() const { return lastCalculation; }
+		double getPdsACT_STBY() const { return PdsACT_STBY; }
+		double getPdsACT_PDN() const { return PdsACT_PDN; }
+		double getPdsPRE_STBY() const { return PdsPRE_STBY; }
+		double getPdsPRE_PDN() const { return PdsPRE_PDN; }
 		double getPdsACT() const { return PdsACT; }
 		double getPdqRD() const { return PdqRD; }
 		double getPdqWR() const { return PdqWR; }
@@ -100,6 +108,7 @@ namespace DRAMsimII
 		unsigned getDMperDRAM() const { return DMperDRAM; }
 		unsigned getDevicesPerRank() const { return DQperRank; }
 		int getIDD0() const { return IDD0; }
+		int getIDD1() const { return IDD1; }
 		int getIDD2N() const { return IDD2N; }
 		int getIDD2P() const { return IDD2P; }		
 		int getIDD3N() const { return IDD3N; }
@@ -138,7 +147,8 @@ namespace DRAMsimII
 					const_cast<double&>(PdstermW) & const_cast<double&>(PdqRD) & const_cast<double&>(PdqWR) & const_cast<double&>(PdqRDoth) & const_cast<double&>(PdqWRoth) & 
 					const_cast<unsigned&>(DQperDRAM) & const_cast<unsigned&>(DQSperDRAM) & const_cast<unsigned&>(DMperDRAM) & const_cast<unsigned&>(frequency) & const_cast<unsigned&>(specFrequency) &
 					const_cast<unsigned&>(tBurst) & const_cast<unsigned&>(tRC) & const_cast<unsigned&>(tRAS) & const_cast<unsigned&>(DQperRank) & lastCalculation &
-					const_cast<double&>(frequencyScaleFactor) & const_cast<double&>(voltageScaleFactor);
+					const_cast<double&>(frequencyScaleFactor) & const_cast<double&>(voltageScaleFactor) & const_cast<int&>(IDD1) &
+					const_cast<double&>(PdsACT_PDN) & const_cast<double&>(PdsPRE_PDN) & const_cast<double&>(PdsPRE_STBY);
 			}
 			
 		}

@@ -39786,7 +39786,7 @@ _TEXT	ENDS
 PUBLIC	_soap_outwstring
 ; Function compile flags: /Ogtpy
 _TEXT	SEGMENT
-_pp$543617 = -4						; size = 4
+_pp$574746 = -4						; size = 4
 _tag$ = 8						; size = 4
 _p$ = 12						; size = 4
 _type$ = 16						; size = 4
@@ -39817,12 +39817,12 @@ $LN13@soap_outws:
 	test	eax, eax
 	jge	SHORT $LN9@soap_outws
 	mov	esi, DWORD PTR _n$[esp+16]
-	lea	edx, DWORD PTR _pp$543617[esp+20]
+	lea	edx, DWORD PTR _pp$574746[esp+20]
 	call	_soap_pointer_lookup
 	mov	esi, eax
 	test	esi, esi
 	je	SHORT $LN9@soap_outws
-	mov	ebx, DWORD PTR _pp$543617[esp+20]
+	mov	ebx, DWORD PTR _pp$574746[esp+20]
 	mov	ecx, ebx
 	mov	eax, edi
 	call	_soap_is_embedded
@@ -39979,7 +39979,7 @@ _TEXT	ENDS
 PUBLIC	_soap_outstring
 ; Function compile flags: /Ogtpy
 _TEXT	SEGMENT
-_pp$543674 = -4						; size = 4
+_pp$574803 = -4						; size = 4
 _tag$ = 8						; size = 4
 _p$ = 12						; size = 4
 _type$ = 16						; size = 4
@@ -40010,12 +40010,12 @@ $LN13@soap_outst:
 	test	eax, eax
 	jge	SHORT $LN9@soap_outst
 	mov	esi, DWORD PTR _n$[esp+16]
-	lea	edx, DWORD PTR _pp$543674[esp+20]
+	lea	edx, DWORD PTR _pp$574803[esp+20]
 	call	_soap_pointer_lookup
 	mov	esi, eax
 	test	esi, esi
 	je	SHORT $LN9@soap_outst
-	mov	ebx, DWORD PTR _pp$543674[esp+20]
+	mov	ebx, DWORD PTR _pp$574803[esp+20]
 	mov	ecx, ebx
 	mov	eax, edi
 	call	_soap_is_embedded
@@ -56714,11 +56714,11 @@ ___flags$ = 8						; size = 4
 	mov	esi, ecx
 	call	??1soap@@UAE@XZ				; soap::~soap
 	test	BYTE PTR ___flags$[esp], 1
-	je	SHORT $LN4@scalar@97
+	je	SHORT $LN4@scalar@102
 	push	esi
 	call	??3@YAXPAX@Z				; operator delete
 	add	esp, 4
-$LN4@scalar@97:
+$LN4@scalar@102:
 	mov	eax, esi
 	pop	esi
 	ret	4

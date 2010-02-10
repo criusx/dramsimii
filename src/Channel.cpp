@@ -61,7 +61,7 @@ systemConfig(sysConfig),
 statistics(stats),
 powerModel(settings),
 dbReporting(settings.dbReporting),
-rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig)),
+rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig, stats)),
 finishedTransactions()
 {
 	// assign an id to each channel (normally done with commands)
@@ -101,7 +101,7 @@ powerModel(rhs.powerModel),
 channelID(rhs.channelID),
 dbReporting(rhs.dbReporting),
 // to initialize the references
-rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig)),
+rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig, stats)),
 finishedTransactions()
 {
 	// to fill incomingTransaction the values
@@ -145,7 +145,7 @@ statistics(rhs.statistics),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
 dbReporting(rhs.dbReporting),
-rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig)),
+rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig, statistics)),
 finishedTransactions()
 {
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
@@ -514,7 +514,7 @@ Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 /// also does breakdowns of power consumed per channel and per epoch as well as averaged over time
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void Channel::doPowerCalculation(const tick systemTime)
+void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 {	
 	// the counts for the total number of operations
 	//unsigned entireRAS = 1;
@@ -522,25 +522,32 @@ void Channel::doPowerCalculation(const tick systemTime)
 	//unsigned entireCASW = 1;
 
 	// the counts for the operations this epoch
-	unsigned totalRAS = 1;
+	//unsigned totalRAS = 1;
 
-	double PsysACTTotal = 0.0F;
-	double PsysRD = 0.0F;
-	double PsysWR = 0.0F;
-	double PsysACT_STBY = 0.0F;
-	double PsysPRE_STBY = 0.0F;
-	double PsysPRE_PDN = 0.0F;
-	double PsysACT_PDN = 0.0F;
-	double PsysACT = 0.0F;
+	//double PsysACTTotal = 0.0;
+	double PsysRD = 0.0;
+	double PsysRdAdjusted = 0.0;
+	double PsysWR = 0.0;
 
-	float tRRDsch = 0.0F;
+	double PsysACT_STBY = 0.0;
+	double PsysPRE_STBY = 0.0;
+	double PsysPRE_PDN = 0.0;
+	double PsysACT_PDN = 0.0;
+	double PsysACT = 0.0;
+	double PsysACTAdjusted = 0.0;
+
+	//float tRRDsch = 0.0F;
+	float tRRDschAdjusted = 0.0F;
 
 	vector<int> rankArray;
 	vector<double> PsysACTSTBYArray, PsysACTArray;
-
+	unsigned totalReadHits = 0;
+	
 	for (vector<Rank>::iterator k = rank.begin(); k != rank.end(); k++)
 	{
-		unsigned perRankRASCount = 1;
+		unsigned allBankRASCount = 1;
+		//unsigned perRankAdjustedRASCount = 1;
+		//unsigned thisRankRasCount;
 		//unsigned totalCAS = 1;
 		//unsigned totalCASW = 1; // ensure no div/0
 
@@ -548,15 +555,29 @@ void Channel::doPowerCalculation(const tick systemTime)
 
 		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
-			totalRAS += l->getRASCount();			
-			perRankRASCount += l->getRASCount();
+			//totalRAS += l->getRASCount();			
+			allBankRASCount += l->getRASCount();
 			//totalCAS += l->getCASCount();
 			//totalCASW += l->getCASWCount();
 			l->accumulateAndResetCounts();
 		}
 
+		// what if the RAS could be reduced by specific caching
+		unsigned perRankAdjustedRASCount = allBankRASCount - statistics.getRowReduction()[getChannelID()][k->getRankID()]; 
+		if (allBankRASCount < statistics.getRowReduction()[getChannelID()][k->getRankID()])
+			cerr << allBankRASCount << " " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << endl;
+#if 0
+		cerr << "!!! rasCount " << allBankRASCount << " reduxBy " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << 
+			" reducedTo " << allBankRASCount - statistics.getRowReduction()[getChannelID()][k->getRankID()] << " totalReadHits " <<
+			statistics.getHitRate()[getChannelID()][k->getRankID()].first.first << endl;
+#endif
+		totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankID()].first.first;
+		BOOST_ASSERT(perRankAdjustedRASCount >= 0);
+		BOOST_ASSERT(perRankAdjustedRASCount <= allBankRASCount);
+
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
-		double percentActive = 1.0F - (k->getPrechargeTime(time) / (double)(time - powerModel.getLastCalculation()));
+		double percentActive = 1.0F - (k->getPrechargeTime(time) / max((double)(time - powerModel.getLastCalculation()), 0.00000001));
+
 		assert(percentActive >= 0.0F && percentActive <= 1.0F);
 		assert(k->getPrechargeTime(time) <= time - powerModel.getLastCalculation());
 
@@ -564,42 +585,64 @@ void Channel::doPowerCalculation(const tick systemTime)
 		double CKE_LO_PRE = 0.95F;
 		double CKE_LO_ACT = 0.01F;
 
-		// calculate PsysACT-STBY
-		PsysACT_STBY += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() *
-			powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive * (1.0F - CKE_LO_ACT);
+		// calculate background power
+		// calculate PsysACT-STBY	
+		double PschACT_STBY = powerModel.getPdsACT_STBY() * percentActive * (1 - CKE_LO_ACT);
+		PsysACT_STBY += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() *
+			powerModel.getFrequencyScaleFactor() * PschACT_STBY;
 
 		PsysACTSTBYArray.push_back(PsysACT_STBY);
 
 		// calculate PsysPRE-STBY
-		PsysPRE_STBY += powerModel.getDevicesPerRank() * powerModel.getFrequencyScaleFactor() * powerModel.getVoltageScaleFactor() *
-			powerModel.getIDD2N() * powerModel.getVDDmax() * (1 - percentActive) * (1 - CKE_LO_PRE);
+		double PschPRE_STBY = powerModel.getPdsPRE_STBY() * (1.0 - percentActive) * (1 - CKE_LO_PRE);
+		PsysPRE_STBY += powerModel.getDevicesPerRank() * powerModel.getFrequencyScaleFactor() *
+			powerModel.getVoltageScaleFactor() * PschPRE_STBY;
 
 		// calculate PsysPRE-PDN
-		PsysPRE_PDN += powerModel.getVoltageScaleFactor() * powerModel.getIDD2P() * powerModel.getVDDmax() * (1 - percentActive) * CKE_LO_PRE;
+		double PschPRE_PDN = powerModel.getPdsPRE_PDN() * (1.0 - percentActive) * (CKE_LO_PRE);
+		PsysPRE_PDN += powerModel.getDevicesPerRank() * powerModel.getFrequencyScaleFactor() *
+			powerModel.getVoltageScaleFactor() * PschPRE_PDN;
 
 		// calculate PsysACT-PDN
-		/// @todo: account for CKE
-		PsysACT_PDN += powerModel.getVoltageScaleFactor() * powerModel.getIDD3P() * powerModel.getVDDmax() * percentActive * (1 - CKE_LO_ACT);
+		double PschACT_PDN = powerModel.getPdsACT_PDN() * percentActive * CKE_LO_ACT;
+		PsysACT_PDN += powerModel.getDevicesPerRank() * powerModel.getFrequencyScaleFactor() * 
+			powerModel.getVoltageScaleFactor() * PschACT_PDN;
 
 		// calculate PsysACT
-		tRRDsch = ((double)(time - powerModel.getLastCalculation())) / perRankRASCount;
+		double tRRDsch = ((double)(time - powerModel.getLastCalculation())) / (allBankRASCount > 0 ? allBankRASCount : 0.00000001);
+	
+		cerr << "rrd " << tRRDsch << " " << powerModel.gettRC() << endl;
+		double PschACT = powerModel.getPdsACT() * powerModel.gettRC() / tRRDsch;
 
-		//if (tRRDsch > 200.0F)
-		//	cerr << "t=" << time << ", last t=" << powerModel.getLastCalculation() << ", #RAS=" << perRankRASCount << endl;
 
-		PsysACT += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
+		tRRDschAdjusted = ((float)(time - powerModel.getLastCalculation()) / perRankAdjustedRASCount);
+#if 0
+		if (tRRDsch > 200.0F)
+			cerr << "t=" << time << ", last t=" << powerModel.getLastCalculation() << ", #RAS=" << perRankRASCount << endl;
+#endif
+		PsysACT += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * PschACT;
+
+		PsysACTAdjusted += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDschAdjusted) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
 
 		PsysACTArray.push_back(PsysACT);
 
-		PsysACTTotal += ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
+		//PsysACTTotal += ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
 
 		// calculate PdsRD
 		double RDschPct = k->getReadCycles() / (double)(time - powerModel.getLastCalculation());
 
+		double RDschPctAdjusted = (k->getReadCycles() - timingSpecification.tBurst() * statistics.getHitRate()[getChannelID()][k->getRankID()].first.first) / (double)(time - powerModel.getLastCalculation());
+
+		BOOST_ASSERT(RDschPctAdjusted >= 0.0);
+
 		PsysRD += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsRD() * RDschPct;
+
+		PsysRdAdjusted += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsRD() * RDschPctAdjusted;
 
 		// calculate PdsWR
 		double WRschPct = k->getWriteCycles() / (double)(time - powerModel.getLastCalculation());
+
+		// using a write-through cache, no help for writes
 
 		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
 
@@ -607,26 +650,36 @@ void Channel::doPowerCalculation(const tick systemTime)
 		k->resetCycleCounts();
 	}
 
-	systemConfig.powerOutStream << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) <<
-		PsysACT_STBY << "} mW" << endl;
+	os << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysACT_STBY << "} mW EsysAdjusted {" << setprecision(5) <<
+		(PsysRD + PsysWR + PsysACT + PsysACT_STBY + PsysACT_PDN + PsysPRE_STBY + PsysPRE_PDN) * systemConfig.getEpoch() / systemConfig.getDatarate() << "/" <<
+		powerModel.getDevicesPerRank() * powerModel.getIDD1() * ((float)timingSpecification.tRC() / systemConfig.getDatarate()) * powerModel.getVDD() * totalReadHits << "} mJ" <<
+		endl;
 	//Pre(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
 
-	systemConfig.powerOutStream << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) <<
-		PsysACT << "} mW tRRD[" << tRRDsch << "]" << endl;
+	os << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) << PsysACT << "} mW" << endl;
+	//tRRD[" << tRRDsch << "]" <<
+		//<<Psys(ACT)adjusted {" << setprecision(5) << PsysACTAdjusted << "} mW" << 
+	//	endl;
 
-	systemConfig.powerOutStream << "-Psys(PRE_STBY) ch[" << channelID << "] {" << setprecision(5) <<
-		PsysPRE_STBY << "} mW" << endl;
+	os << "-Psys(PRE_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysPRE_STBY << "} mW" << endl;
 	//Pre(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
 
-	systemConfig.powerOutStream << "-Psys(RD) ch[" << channelID << "] {" << setprecision(5) << PsysRD << "} mW" << endl;
+	os << "-Psys(RD) ch[" << channelID << "] {" << setprecision(5) << PsysRD << "} mW Psys(RD)adjusted {" << 
+		setprecision(5) << PsysRdAdjusted << "} mW " << endl;
+// 	cerr << PsysRD * systemConfig.getEpoch() / systemConfig.getDatarate() << " " <<
+// 		powerModel.getIDD1() << " " <<  ((float)timingSpecification.tRC() / systemConfig.getDatarate()) << " " << powerModel.getVDD() << " " << totalReadHits << endl;
 
-	systemConfig.powerOutStream << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << PsysWR << "} mW" << endl;
+	os << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << PsysWR << "} mW" << endl;
 
 	// report these results
 	if (dbReporting)
 	{
 		boost::thread(boost::bind(&DRAMsimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray, systemTime));
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// do speculative power calcs that leave out cache hits
+
 
 	// no total power calcs for now
 #if 0
@@ -1121,7 +1174,8 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		else if (systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE_AGGRESSIVE &&
 			destinationBank->aggressiveInsert(incomingTransaction,time))
 		{
-			statistics.reportHit();
+			statistics.reportRowBufferAccess(incomingTransaction,true);
+			//statistics.reportHit();
 		}
 		// every transaction translates into at least two commands
 		// or three commands if the CAS+Precharge command is not available
@@ -1138,7 +1192,8 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		else
 		{
 			// didn't find place to issue command
-			statistics.reportMiss();
+			//statistics.reportMiss();
+			statistics.reportRowBufferAccess(incomingTransaction,false);
 
 			// command one, the RAS command to activate the row
 #ifndef NDEBUG
@@ -1272,7 +1327,8 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			if (destinationBank->aggressiveInsert(incomingTransaction, time))
 			{
 				// found place to insert, hit
-				statistics.reportHit();
+				//statistics.reportHit();
+				statistics.reportRowBufferAccess(incomingTransaction,true);
 			}
 			else
 			{
@@ -1316,7 +1372,8 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 				}
 
 				// did not find place to insert
-				statistics.reportMiss();
+				//statistics.reportMiss();
+				statistics.reportRowBufferAccess(incomingTransaction,false);
 
 				// RAS command
 				assert(!destinationBank->isFull());
@@ -2285,7 +2342,8 @@ void Channel::executeCommand(Command *thisCommand)
 			}
 			else
 			{
-				i->issueCAS(time, thisCommand);
+				const bool hit = i->issueCAS(time, thisCommand);
+				thisCommand->setHit(hit);
 			}
 		}
 		break;
@@ -2318,7 +2376,8 @@ void Channel::executeCommand(Command *thisCommand)
 			}
 			else
 			{
-				i->issueCASW(time,thisCommand);
+				const bool hit = i->issueCASW(time,thisCommand);
+				thisCommand->setHit(hit);
 			}
 		}
 		break;

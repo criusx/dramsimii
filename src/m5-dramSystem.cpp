@@ -35,11 +35,18 @@ using std::ostream;
 using std::vector;
 using std::pair;
 using std::queue;
-using namespace DRAMsimII;
+//using namespace DRAMsimII;
+using DRAMsimII::Settings;
+using DRAMsimII::PhysicalAddress;
+using DRAMsimII::Transaction;
+using DRAMsimII::System;
+//using DRAMsimII::OutputFileType::GZ;
+using DRAMsimII::Address;
 using boost::lexical_cast;
 using boost::is_any_of;
 using boost::token_compress_on;
 using boost::split;
+using ::Packet;
 
 //#define TESTNEW
 
@@ -263,6 +270,12 @@ outstandingPackets(0)
 	settings.setKeyValue("IDD4W",lexical_cast<string>(p->IDD4W));
 	settings.setKeyValue("IDD5A",lexical_cast<string>(p->IDD5A));
 
+	// DIMM cache
+	settings.setKeyValue("associativity", lexical_cast<string>(p->associativity));
+	settings.setKeyValue("cacheSize", lexical_cast<string>(p->cacheSize));
+	settings.setKeyValue("blockSize", lexical_cast<string>(p->blockSize));
+	settings.setKeyValue("hitLatency", lexical_cast<string>(p->hitLatency));
+	
 	settings.setKeyValue("requestCount", lexical_cast<string>(p->requestCount));
 	settings.setKeyValue("epoch",lexical_cast<string>(p->epoch));
 	settings.setKeyValue("outFileType", p->outFileType);
@@ -291,9 +304,9 @@ outstandingPackets(0)
 		settings.commandLine = p->commandLine;	
 
 	// if this is a normal system or a fbd system
-	if (settings.systemType == FBD_CONFIG)
-		ds = new fbdSystem(settings);	
-	else
+// 	if (settings.systemType == FBD_CONFIG)
+// 		ds = new fbdSystem(settings);	
+// 	else
 		ds = new System(settings);
 
 #ifdef TRACE_GENERATE
@@ -320,7 +333,7 @@ outstandingPackets(0)
 	}
 
 
-	if (settings.outFileType == GZ)
+	if (settings.outFileType == DRAMsimII::GZ)
 	{
 		path tracepath;
 		unsigned counter = 0;

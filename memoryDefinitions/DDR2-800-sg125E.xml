@@ -42,6 +42,13 @@
 		<readWriteGrouping>true</readWriteGrouping>
 		<!--able to issue CAS+Pre commands, effective with close page, unavailable in open page RBMP -->
 		<autoPrecharge>true</autoPrecharge>
+		<cache>
+			<associativity>8</associativity>
+			<!-- size is given in kiB and determines the number of sets -->
+			<cacheSize>8192</cacheSize>
+			<blockSize>64</blockSize>
+			<hitLatency>5</hitLatency>
+		</cache>
 	</setup>
 	<timing>
 		<tBufferDelay>1</tBufferDelay>
@@ -91,6 +98,8 @@
 		<!--all are in mA-->
 		<!--maximum active precharge current-->
 		<IDD0>90</IDD0>
+		<!--one bank Activate-to-Read-to-Precharge current-->
+		<IDD1>110</IDD1>
 		<!--maximum precharge power-down standby current-->
 		<IDD2P>7</IDD2P>
 		<!--maximum precharge standby current-->
@@ -100,9 +109,9 @@
 		<!--maximum active standby current-->
 		<IDD3N>60</IDD3N>
 		<!--maximum read burst current-->
-		<IDD4R>145</IDD4R>
+		<IDD4R>190</IDD4R>
 		<!--maximum write burst current-->
-		<IDD4W>145</IDD4W>
+		<IDD4W>210</IDD4W>
 		<!--maximum burst refresh current-->
 		<IDD5A>235</IDD5A>
 	</power>

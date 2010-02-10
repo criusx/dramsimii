@@ -121,6 +121,7 @@ frequencySpec(UINT_MAX),
 maxVCC(-1.0F),
 VDD(-1.0F),
 IDD0(UINT_MAX),
+IDD1(UINT_MAX),
 IDD2P(UINT_MAX),
 IDD2N(UINT_MAX),
 IDD3P(UINT_MAX),
@@ -152,6 +153,18 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		case unknown_token:
 			cerr << nodeName << " failed" << endl;
 			return false;
+			break;
+		case cache_associativity_token:
+			associativity = lexical_cast<unsigned>(nodeValue);
+			break;
+		case cache_hitlatency_token:
+			hitLatency = lexical_cast<unsigned>(nodeValue);
+			break;
+		case cache_size_token:
+			cacheSize = lexical_cast<unsigned>(nodeValue);
+			break;
+		case cache_blocksize_token:
+			blockSize = lexical_cast<unsigned>(nodeValue);
 			break;
 		case cpu_to_memory_clock_ratio:
 			cpuToMemoryClockRatio = lexical_cast<float>(nodeValue);
@@ -224,6 +237,9 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			break;
 		case idd0_token:
 			IDD0 = lexical_cast<unsigned>(nodeValue);
+			break;
+		case idd1_token:
+			IDD1 = lexical_cast<unsigned>(nodeValue);
 			break;
 		case vdd_token:
 			VDD = lexical_cast<float>(nodeValue);

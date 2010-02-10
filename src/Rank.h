@@ -41,6 +41,7 @@ namespace DRAMsimII
 	private:
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
+		Statistics& statistics;				///< reference for collecting statistics
 
 	protected:
 
@@ -84,17 +85,17 @@ namespace DRAMsimII
 		Command *getCommand(const unsigned bank);
 		void issueRAS(const tick currentTime, const Command *currentCommand);
 		void issuePRE(const tick currentTime, const Command *currentCommand);
-		void issueCAS(const tick currentTime, const Command *currentCommand);
+		bool issueCAS(const tick currentTime, const Command *currentCommand);
 		void issueCASother(const tick currentTime, const Command *currentCommand);
-		void issueCASW(const tick currentTime, const Command *currentCommand);
+		bool issueCASW(const tick currentTime, const Command *currentCommand);
 		void issueCASWother(const tick currentTime, const Command *currentCommand);
 		void issueREF(const tick currentTime);
 		void resetToTime(const tick time);
 		tick next(Command::CommandType nextCommandType) const;
 
 		// constructors
-		explicit Rank(const Rank &, const TimingSpecification &, const SystemConfiguration &);
-		explicit Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
+		explicit Rank(const Rank &, const TimingSpecification &, const SystemConfiguration &, Statistics& stats);
+		explicit Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics& stats);
 		Rank(const Rank &);
 
 		// accessors
@@ -130,7 +131,7 @@ namespace DRAMsimII
 
 	private:
 		//serialization
-		explicit Rank(const TimingSpecification &timing, const std::vector<Bank> & newBank);
+		explicit Rank(const TimingSpecification &timing, const std::vector<Bank> & newBank, Statistics &stats);
 		explicit Rank();
 
 		friend class boost::serialization::access;
@@ -157,6 +158,8 @@ namespace DRAMsimII
 				ar << timing;
 				const std::vector<DRAMsimII::Bank>* const bank = &(t->bank);
 				ar << bank;	
+				const Statistics* const stats = &(t->statistics);
+				ar << stats;
 			}
 
 		}
@@ -170,8 +173,10 @@ namespace DRAMsimII
 				ar >> timing;
 				std::vector<DRAMsimII::Bank>* newBank;
 				ar >> newBank;
+				DRAMsimII::Statistics* stats;
+				ar >> stats;
 
-				::new(t)DRAMsimII::Rank(*timing, *newBank);
+				::new(t)DRAMsimII::Rank(*timing, *newBank, *stats);
 			}
 
 		}		

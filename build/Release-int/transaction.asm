@@ -286,30 +286,30 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [edi+80]
 	cmp	eax, DWORD PTR [esi+80]
-	jne	SHORT $LN3@operator@125
+	jne	SHORT $LN3@operator@152
 	mov	ecx, DWORD PTR [edi+84]
 	cmp	ecx, DWORD PTR [esi+84]
-	jne	SHORT $LN3@operator@125
+	jne	SHORT $LN3@operator@152
 	mov	edx, DWORD PTR [edi+88]
 	cmp	edx, DWORD PTR [esi+88]
-	jne	SHORT $LN3@operator@125
+	jne	SHORT $LN3@operator@152
 	mov	eax, DWORD PTR [edi+92]
 	cmp	eax, DWORD PTR [esi+92]
-	jne	SHORT $LN3@operator@125
+	jne	SHORT $LN3@operator@152
 	mov	eax, esi
 	mov	ecx, edi
 	call	??8Event@DRAMsimII@@QBE_NABV01@@Z	; DRAMsimII::Event::operator==
 	test	al, al
-	je	SHORT $LN3@operator@125
+	je	SHORT $LN3@operator@152
 	mov	ecx, DWORD PTR [edi+108]
 	cmp	ecx, DWORD PTR [esi+108]
-	jne	SHORT $LN3@operator@125
+	jne	SHORT $LN3@operator@152
 	mov	eax, 1
 
 ; 123  : }
 
 	ret	0
-$LN3@operator@125:
+$LN3@operator@152:
 
 ; 121  : 	return (type == rhs.type && length == rhs.length &&
 ; 122  : 		decodeTime == rhs.decodeTime && this->Event::operator==(rhs) && originalTransaction == rhs.originalTransaction);
@@ -331,24 +331,24 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [edi+80]
 	cmp	eax, DWORD PTR [esi+80]
-	jne	SHORT $LN5@operator@241
+	jne	SHORT $LN5@operator@298
 	mov	ecx, DWORD PTR [edi+84]
 	cmp	ecx, DWORD PTR [esi+84]
-	jne	SHORT $LN5@operator@241
+	jne	SHORT $LN5@operator@298
 	mov	edx, DWORD PTR [edi+88]
 	cmp	edx, DWORD PTR [esi+88]
-	jne	SHORT $LN5@operator@241
+	jne	SHORT $LN5@operator@298
 	mov	eax, DWORD PTR [edi+92]
 	cmp	eax, DWORD PTR [esi+92]
-	jne	SHORT $LN5@operator@241
+	jne	SHORT $LN5@operator@298
 	mov	eax, esi
 	mov	ecx, edi
 	call	??8Event@DRAMsimII@@QBE_NABV01@@Z	; DRAMsimII::Event::operator==
 	test	al, al
-	je	SHORT $LN5@operator@241
+	je	SHORT $LN5@operator@298
 	mov	ecx, DWORD PTR [edi+108]
 	cmp	ecx, DWORD PTR [esi+108]
-	jne	SHORT $LN5@operator@241
+	jne	SHORT $LN5@operator@298
 	mov	eax, 1
 	xor	edx, edx
 	test	al, al
@@ -361,7 +361,7 @@ _TEXT	SEGMENT
 
 ; 130  : 	return !(*this == rhs);
 
-$LN5@operator@241:
+$LN5@operator@298:
 	xor	eax, eax
 	xor	edx, edx
 	test	al, al
@@ -382,9 +382,9 @@ _TEXT	SEGMENT
 ; 146  : 	switch (type)
 
 	cmp	eax, 7
-	ja	$LN1@operator@333
-	jmp	DWORD PTR $LN15@operator@333[eax*4]
-$LN9@operator@333:
+	ja	$LN1@operator@407
+	jmp	DWORD PTR $LN15@operator@407[eax*4]
+$LN9@operator@407:
 
 ; 147  : 	{
 ; 148  : 	case Transaction::IFETCH_TRANSACTION:
@@ -409,7 +409,7 @@ $LN9@operator@333:
 ; 177  : }
 
 	ret	0
-$LN8@operator@333:
+$LN8@operator@407:
 
 ; 150  : 		break;
 ; 151  : 	case Transaction::WRITE_TRANSACTION:
@@ -434,7 +434,7 @@ $LN8@operator@333:
 ; 177  : }
 
 	ret	0
-$LN7@operator@333:
+$LN7@operator@407:
 
 ; 153  : 		break;
 ; 154  : 	case Transaction::READ_TRANSACTION:
@@ -459,7 +459,7 @@ $LN7@operator@333:
 ; 177  : }
 
 	ret	0
-$LN6@operator@333:
+$LN6@operator@407:
 
 ; 156  : 		break;
 ; 157  : 	case Transaction::PREFETCH_TRANSACTION:
@@ -484,7 +484,7 @@ $LN6@operator@333:
 ; 177  : }
 
 	ret	0
-$LN5@operator@333:
+$LN5@operator@407:
 
 ; 159  : 		break;
 ; 160  : 	case Transaction::AUTO_REFRESH_TRANSACTION:
@@ -509,7 +509,7 @@ $LN5@operator@333:
 ; 177  : }
 
 	ret	0
-$LN4@operator@333:
+$LN4@operator@407:
 
 ; 162  : 		break;
 ; 163  : 	case Transaction::PER_BANK_REFRESH_TRANSACTION:
@@ -534,7 +534,7 @@ $LN4@operator@333:
 ; 177  : }
 
 	ret	0
-$LN3@operator@333:
+$LN3@operator@407:
 
 ; 165  : 		break;
 ; 166  : 	case Transaction::AUTO_PRECHARGE_TRANSACTION:
@@ -559,7 +559,7 @@ $LN3@operator@333:
 ; 177  : }
 
 	ret	0
-$LN2@operator@333:
+$LN2@operator@407:
 
 ; 168  : 		break;
 ; 169  : 	case Transaction::CONTROL_TRANSACTION:
@@ -584,7 +584,7 @@ $LN2@operator@333:
 ; 177  : }
 
 	ret	0
-$LN1@operator@333:
+$LN1@operator@407:
 
 ; 171  : 		break;
 ; 172  : 	default:
@@ -605,15 +605,15 @@ $LN1@operator@333:
 
 	ret	0
 	npad	3
-$LN15@operator@333:
-	DD	$LN9@operator@333
-	DD	$LN8@operator@333
-	DD	$LN7@operator@333
-	DD	$LN6@operator@333
-	DD	$LN5@operator@333
-	DD	$LN4@operator@333
-	DD	$LN3@operator@333
-	DD	$LN2@operator@333
+$LN15@operator@407:
+	DD	$LN9@operator@407
+	DD	$LN8@operator@407
+	DD	$LN7@operator@407
+	DD	$LN6@operator@407
+	DD	$LN5@operator@407
+	DD	$LN4@operator@407
+	DD	$LN3@operator@407
+	DD	$LN2@operator@407
 ??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4TransactionType@Transaction@0@@Z ENDP ; DRAMsimII::operator<<
 ; Function compile flags: /Ogtpy
 ; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\event.h
@@ -891,12 +891,12 @@ ___flags$ = 8						; size = 4
 	push	esi
 	mov	esi, ecx
 	mov	DWORD PTR [esi], OFFSET ??_7Event@DRAMsimII@@6B@
-	je	SHORT $LN10@scalar@98
+	je	SHORT $LN10@scalar@103
 	push	0
 	call	DWORD PTR ??_7Event@DRAMsimII@@6B@
 	push	esi
 	call	?releaseItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEXPAVTransaction@2@@Z ; DRAMsimII::Queue<DRAMsimII::Transaction>::releaseItem
-$LN10@scalar@98:
+$LN10@scalar@103:
 	mov	eax, esi
 	pop	esi
 	ret	4
@@ -944,7 +944,7 @@ __ehfuncinfo$?acquireItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTran
 xdata$x	ENDS
 ;	COMDAT ?acquireItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ
 _TEXT	SEGMENT
-$T627277 = -16						; size = 4
+$T667912 = -16						; size = 4
 __$EHRec$ = -12						; size = 12
 ?acquireItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ PROC ; DRAMsimII::Queue<DRAMsimII::Transaction>::acquireItem, COMDAT
 
@@ -980,7 +980,7 @@ __$EHRec$ = -12						; size = 12
 	call	??2@YAPAXI@Z				; operator new
 	mov	esi, eax
 	add	esp, 4
-	mov	DWORD PTR $T627277[esp+28], esi
+	mov	DWORD PTR $T667912[esp+28], esi
 	mov	DWORD PTR __$EHRec$[esp+36], edi
 	cmp	esi, edi
 	je	SHORT $LN5@acquireIte@2
@@ -1050,7 +1050,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?acquireItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ$0:
-	mov	eax, DWORD PTR $T627277[ebp]
+	mov	eax, DWORD PTR $T667912[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx

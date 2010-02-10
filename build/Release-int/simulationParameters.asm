@@ -30,19 +30,19 @@ _TEXT	SEGMENT
 
 	mov	edx, DWORD PTR [ecx]
 	cmp	edx, DWORD PTR [eax]
-	jne	SHORT $LN3@operator@9
+	jne	SHORT $LN3@operator@11
 	mov	edx, DWORD PTR [ecx+4]
 	cmp	edx, DWORD PTR [eax+4]
-	jne	SHORT $LN3@operator@9
+	jne	SHORT $LN3@operator@11
 	mov	ecx, DWORD PTR [ecx+8]
 	cmp	ecx, DWORD PTR [eax+8]
-	jne	SHORT $LN3@operator@9
+	jne	SHORT $LN3@operator@11
 	mov	eax, 1
 
 ; 35   : }
 
 	ret	0
-$LN3@operator@9:
+$LN3@operator@11:
 
 ; 34   : 	return requestCount == right.requestCount && inputType == right.inputType;
 

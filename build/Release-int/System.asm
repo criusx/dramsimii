@@ -18,6 +18,24 @@ PUBLIC	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@ABV01
 PUBLIC	?get_allocator@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV?$allocator@D@2@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::get_allocator
 PUBLIC	?substr@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV12@II@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::substr
 PUBLIC	?setChannelID@Channel@DRAMsimII@@QAEXI@Z	; DRAMsimII::Channel::setChannelID
+PUBLIC	?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QBEPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@XZ ; std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Checked_iterator_base
+PUBLIC	??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::_Different_checked_iterator_base_type_tag>
+PUBLIC	??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@@std@@YAPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@@Z ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > > >
+PUBLIC	??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *>
+PUBLIC	??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > const *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+PUBLIC	??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@stdext@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@Z ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+PUBLIC	??$_Ucopy@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@1@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@1@0PAV21@@Z ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Ucopy<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > > >
+PUBLIC	??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+PUBLIC	?begin@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBE?AV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@XZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::begin
+PUBLIC	?end@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBE?AV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@XZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::end
+PUBLIC	?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBEPBV?$vector@IV?$allocator@I@std@@@2@XZ ; std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Checked_iterator_base
+PUBLIC	??$_Checked_base@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@IV?$allocator@I@std@@@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z ; std::_Checked_base<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::_Different_checked_iterator_base_type_tag>
+PUBLIC	??$_Checked_base@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@@std@@YAPBV?$vector@IV?$allocator@I@std@@@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@@Z ; std::_Checked_base<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > > >
+PUBLIC	??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@PAV?$vector@IV?$allocator@I@std@@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@AAPAV?$vector@IV?$allocator@I@std@@@0@@Z ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::vector<unsigned int,std::allocator<unsigned int> > *>
+PUBLIC	??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<unsigned int,std::allocator<unsigned int> > const *,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+PUBLIC	??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@PAV?$vector@IV?$allocator@I@std@@@2@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@stdext@@YAPAV?$vector@IV?$allocator@I@std@@@std@@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@Z ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+PUBLIC	??$_Ucopy@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEPAV?$vector@IV?$allocator@I@std@@@1@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@1@0PAV21@@Z ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Ucopy<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > > >
+PUBLIC	??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
 PUBLIC	?get_allocator@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QBE?AV?$allocator@U?$pair@$$CBII@std@@@2@XZ ; std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::get_allocator
 PUBLIC	?get_allocator@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QBE?AV?$allocator@U?$pair@$$CBII@std@@@std@@XZ ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::get_allocator
 PUBLIC	?begin@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE?AV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@XZ ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::begin
@@ -45,11 +63,14 @@ PUBLIC	?_Copy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$
 PUBLIC	?_Copy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXABV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Copy
 PUBLIC	??0?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV01@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >
 PUBLIC	??0?$map@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@@std@@QAE@ABV01@@Z ; std::map<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> > >::map<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> > >
-PUBLIC	??$_Ptr_cat@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@PAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@IV?$allocator@I@std@@@0@AAPAI@Z ; std::_Ptr_cat<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> >,unsigned int *>
-PUBLIC	??$_Uninit_copy@PBIPAIV?$allocator@I@std@@@std@@YAPAIPBI0PAIAAV?$allocator@I@0@U_Scalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<unsigned int const *,unsigned int *,std::allocator<unsigned int> >
-PUBLIC	??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@PAIV?$allocator@I@2@@stdext@@YAPAIV?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@0PAIAAV?$allocator@I@2@@Z ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> >,unsigned int *,std::allocator<unsigned int> >
-PUBLIC	??$_Ucopy@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@@?$vector@IV?$allocator@I@std@@@std@@IAEPAIV?$_Vector_const_iterator@IV?$allocator@I@std@@@1@0PAI@Z ; std::vector<unsigned int,std::allocator<unsigned int> >::_Ucopy<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> > >
-PUBLIC	??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z ; std::vector<unsigned int,std::allocator<unsigned int> >::vector<unsigned int,std::allocator<unsigned int> >
+PUBLIC	?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QBEPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@XZ ; std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Checked_iterator_base
+PUBLIC	??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::_Different_checked_iterator_base_type_tag>
+PUBLIC	??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@@std@@YAPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@@Z ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > > >
+PUBLIC	??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *>
+PUBLIC	??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > const *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+PUBLIC	??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@stdext@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@Z ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+PUBLIC	??$_Ucopy@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@1@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@1@0PAV21@@Z ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Ucopy<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > > >
+PUBLIC	??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
 PUBLIC	??0Statistics@DRAMsimII@@QAE@ABV01@@Z		; DRAMsimII::Statistics::Statistics
 PUBLIC	??0?$allocator@VChannel@DRAMsimII@@@std@@QAE@XZ	; std::allocator<DRAMsimII::Channel>::allocator<DRAMsimII::Channel>
 PUBLIC	??$?0VChannel@DRAMsimII@@@?$allocator@V_Aux_cont@std@@@std@@QAE@ABV?$allocator@VChannel@DRAMsimII@@@1@@Z ; std::allocator<std::_Aux_cont>::allocator<std::_Aux_cont><DRAMsimII::Channel>
@@ -84,7 +105,6 @@ PUBLIC	??$unchecked_uninitialized_copy@PAVChannel@DRAMsimII@@PAV12@V?$allocator@
 PUBLIC	??$_Ucopy@PAVChannel@DRAMsimII@@@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAEPAVChannel@DRAMsimII@@PAV23@00@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Ucopy<DRAMsimII::Channel *>
 PUBLIC	??4?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator=
 PUBLIC	??A?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEAAVChannel@DRAMsimII@@I@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator[]
-PUBLIC	?getEpoch@SystemConfiguration@DRAMsimII@@QBEIXZ	; DRAMsimII::SystemConfiguration::getEpoch
 PUBLIC	??0?$pair@II@std@@QAE@ABI0@Z			; std::pair<unsigned int,unsigned int>::pair<unsigned int,unsigned int>
 PUBLIC	?getReadWriteBytes@Statistics@DRAMsimII@@QBE?AU?$pair@II@std@@XZ ; DRAMsimII::Statistics::getReadWriteBytes
 PUBLIC	??_9Channel@DRAMsimII@@$BBI@AE			; DRAMsimII::Channel::`vcall'{24}'
@@ -94,19 +114,11 @@ PUBLIC	??0?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@Q
 PUBLIC	??$bind2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@0@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@AB_J@Z ; boost::bind2nd<boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >
 PUBLIC	??R?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@QBEXAAVChannel@DRAMsimII@@AB_J@Z ; boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>::operator()
 PUBLIC	??R?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@QBEXAAVChannel@DRAMsimII@@@Z ; boost::binder2nd<boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >::operator()
-PUBLIC	??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V12@@Z ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,boost::binder2nd<boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >
-PUBLIC	?getChannelID@Channel@DRAMsimII@@QBEIXZ		; DRAMsimII::Channel::getChannelID
-PUBLIC	?getTime@Channel@DRAMsimII@@QBE_JXZ		; DRAMsimII::Channel::getTime
-PUBLIC	??0?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@QAE@P8Channel@DRAMsimII@@AEX_J@Z@Z ; std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>
-PUBLIC	??$mem_fun_ref@XVChannel@DRAMsimII@@_J@std@@YA?AV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@P8Channel@DRAMsimII@@AEX_J@Z@Z ; std::mem_fun_ref<void,DRAMsimII::Channel,__int64>
-PUBLIC	??0?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@std@@QAE@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@1@AB_J@Z ; std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >
-PUBLIC	??$bind2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@_J@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@AB_J@Z ; std::bind2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>,__int64>
-PUBLIC	??R?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@QBEXAAVChannel@DRAMsimII@@_J@Z ; std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>::operator()
-PUBLIC	??R?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@std@@QBEXAAVChannel@DRAMsimII@@@Z ; std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >::operator()
 PUBLIC	?_Checked_iterator_base@?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QBEPAVChannel@DRAMsimII@@XZ ; std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Checked_iterator_base
 PUBLIC	??$_Checked_base@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPAVChannel@DRAMsimII@@AAV?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@U_Different_checked_iterator_base_type_tag@0@@Z ; std::_Checked_base<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,std::_Different_checked_iterator_base_type_tag>
 PUBLIC	??$_Checked_base@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@std@@YAPAVChannel@DRAMsimII@@AAV?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@@Z ; std::_Checked_base<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> > >
-PUBLIC	??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@2@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V10@@Z ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >
+PUBLIC	??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V12@@Z ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,boost::binder2nd<boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >
+PUBLIC	?getTime@Channel@DRAMsimII@@QBE_JXZ		; DRAMsimII::Channel::getTime
 PUBLIC	?pendingTransactionCount@Channel@DRAMsimII@@QBEIXZ ; DRAMsimII::Channel::pendingTransactionCount
 PUBLIC	?begin@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::begin
 PUBLIC	??0?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@PAVChannel@DRAMsimII@@PBV_Container_base_aux@1@@Z ; std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
@@ -297,6 +309,12 @@ PUBLIC	??C?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRA
 PUBLIC	?getConfigType@SystemConfiguration@DRAMsimII@@QBE?AW4SystemConfigurationType@2@XZ ; DRAMsimII::SystemConfiguration::getConfigType
 PUBLIC	?getShortBurstRatio@SystemConfiguration@DRAMsimII@@QBENXZ ; DRAMsimII::SystemConfiguration::getShortBurstRatio
 PUBLIC	?getReadPercentage@SystemConfiguration@DRAMsimII@@QBENXZ ; DRAMsimII::SystemConfiguration::getReadPercentage
+PUBLIC	??_C@_07KMICBNBC@?$FN?5sets?$FL?$AA@		; `string'
+PUBLIC	??_C@_08NADJLLE@?$FN?5assoc?$FL?$AA@		; `string'
+PUBLIC	??_C@_06DGPPDNGF@blkSz?$FL?$AA@			; `string'
+PUBLIC	??_C@_04BHMCEHEJ@kB?$FN?5?$AA@			; `string'
+PUBLIC	??_C@_06CMDGPFCD@cache?$FL?$AA@			; `string'
+PUBLIC	??_C@_02PBFOLPKM@?$FN?5?$AA@			; `string'
 PUBLIC	??_C@_0L@EIAHPKIN@?$FN?5t_?$HLFAW?$HN?$FL?$AA@	; `string'
 PUBLIC	??_C@_07FANEOFIO@M?$FN?5PBQ?$FL?$AA@		; `string'
 PUBLIC	??_C@_05BNONNLFK@?$FN?5DR?$FL?$AA@		; `string'
@@ -322,7 +340,6 @@ PUBLIC	??_C@_0BO@OCAALIAC@?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9
 PUBLIC	??_C@_04MHNOOJKH@SYS?$FL?$AA@			; `string'
 PUBLIC	??_C@_06FHJKBJEN@BASE?$FN?5?$AA@		; `string'
 PUBLIC	??_C@_06IDCEFCJK@UNKN?$FN?5?$AA@		; `string'
-PUBLIC	??_C@_02PBFOLPKM@?$FN?5?$AA@			; `string'
 PUBLIC	??_C@_03JECMFAMM@RC?$FL?$AA@			; `string'
 PUBLIC	??_C@_03MEDFAHFD@BC?$FL?$AA@			; `string'
 PUBLIC	??_C@_04KBBGIBEE@ALG?$FL?$AA@			; `string'
@@ -414,10 +431,6 @@ CONST	ENDS
 ;	COMDAT ??_C@_03JECMFAMM@RC?$FL?$AA@
 CONST	SEGMENT
 ??_C@_03JECMFAMM@RC?$FL?$AA@ DB 'RC[', 00H		; `string'
-CONST	ENDS
-;	COMDAT ??_C@_02PBFOLPKM@?$FN?5?$AA@
-CONST	SEGMENT
-??_C@_02PBFOLPKM@?$FN?5?$AA@ DB '] ', 00H		; `string'
 CONST	ENDS
 ;	COMDAT ??_C@_06IDCEFCJK@UNKN?$FN?5?$AA@
 CONST	SEGMENT
@@ -519,6 +532,30 @@ CONST	ENDS
 ;	COMDAT ??_C@_0L@EIAHPKIN@?$FN?5t_?$HLFAW?$HN?$FL?$AA@
 CONST	SEGMENT
 ??_C@_0L@EIAHPKIN@?$FN?5t_?$HLFAW?$HN?$FL?$AA@ DB '] t_{FAW}[', 00H ; `string'
+CONST	ENDS
+;	COMDAT ??_C@_02PBFOLPKM@?$FN?5?$AA@
+CONST	SEGMENT
+??_C@_02PBFOLPKM@?$FN?5?$AA@ DB '] ', 00H		; `string'
+CONST	ENDS
+;	COMDAT ??_C@_06CMDGPFCD@cache?$FL?$AA@
+CONST	SEGMENT
+??_C@_06CMDGPFCD@cache?$FL?$AA@ DB 'cache[', 00H	; `string'
+CONST	ENDS
+;	COMDAT ??_C@_04BHMCEHEJ@kB?$FN?5?$AA@
+CONST	SEGMENT
+??_C@_04BHMCEHEJ@kB?$FN?5?$AA@ DB 'kB] ', 00H		; `string'
+CONST	ENDS
+;	COMDAT ??_C@_06DGPPDNGF@blkSz?$FL?$AA@
+CONST	SEGMENT
+??_C@_06DGPPDNGF@blkSz?$FL?$AA@ DB 'blkSz[', 00H	; `string'
+CONST	ENDS
+;	COMDAT ??_C@_08NADJLLE@?$FN?5assoc?$FL?$AA@
+CONST	SEGMENT
+??_C@_08NADJLLE@?$FN?5assoc?$FL?$AA@ DB '] assoc[', 00H	; `string'
+CONST	ENDS
+;	COMDAT ??_C@_07KMICBNBC@?$FN?5sets?$FL?$AA@
+CONST	SEGMENT
+??_C@_07KMICBNBC@?$FN?5sets?$FL?$AA@ DB '] sets[', 00H	; `string'
 __bad_alloc_Message DD FLAT:??_C@_0P@GHFPNOJB@bad?5allocation?$AA@
 ; Function compile flags: /Odtpy
 ;	COMDAT ??_9Channel@DRAMsimII@@$BBI@AE
@@ -527,6 +564,52 @@ _TEXT	SEGMENT
 	mov	eax, DWORD PTR [ecx]
 	jmp	DWORD PTR [eax+24]
 ??_9Channel@DRAMsimII@@$BBI@AE ENDP			; DRAMsimII::Channel::`vcall'{24}'
+; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+_TEXT	ENDS
+;	COMDAT ?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QBEPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@XZ
+_TEXT	SEGMENT
+?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QBEPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@XZ PROC ; std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Checked_iterator_base, COMDAT
+; _this$ = eax
+
+; 47   : 		return _Myptr;
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 48   : 	}
+
+	ret	0
+?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QBEPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@XZ ENDP ; std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Checked_iterator_base
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBEPBV?$vector@IV?$allocator@I@std@@@2@XZ
+_TEXT	SEGMENT
+?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBEPBV?$vector@IV?$allocator@I@std@@@2@XZ PROC ; std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Checked_iterator_base, COMDAT
+; _this$ = eax
+
+; 47   : 		return _Myptr;
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 48   : 	}
+
+	ret	0
+?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBEPBV?$vector@IV?$allocator@I@std@@@2@XZ ENDP ; std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Checked_iterator_base
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QBEPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@XZ
+_TEXT	SEGMENT
+?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QBEPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@XZ PROC ; std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Checked_iterator_base, COMDAT
+; _this$ = eax
+
+; 47   : 		return _Myptr;
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 48   : 	}
+
+	ret	0
+?_Checked_iterator_base@?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QBEPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@XZ ENDP ; std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Checked_iterator_base
 ; Function compile flags: /Ogtpy
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 _TEXT	ENDS
@@ -571,6 +654,54 @@ $LN1@Copy_backw:
 
 	ret	0
 ??$_Copy_backward_opt@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@Uforward_iterator_tag@std@@@std@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@00Uforward_iterator_tag@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ENDP ; std::_Copy_backward_opt<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,std::forward_iterator_tag>
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z
+_TEXT	SEGMENT
+___formal$ = 8						; size = 1
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z PROC ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::_Different_checked_iterator_base_type_tag>, COMDAT
+; __It$ = eax
+
+; 1139 : 		return _It._Checked_iterator_base();
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 1140 : 	}
+
+	ret	0
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z ENDP ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::_Different_checked_iterator_base_type_tag>
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Checked_base@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@IV?$allocator@I@std@@@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z
+_TEXT	SEGMENT
+___formal$ = 8						; size = 1
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@IV?$allocator@I@std@@@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z PROC ; std::_Checked_base<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::_Different_checked_iterator_base_type_tag>, COMDAT
+; __It$ = eax
+
+; 1139 : 		return _It._Checked_iterator_base();
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 1140 : 	}
+
+	ret	0
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@IV?$allocator@I@std@@@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z ENDP ; std::_Checked_base<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::_Different_checked_iterator_base_type_tag>
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z
+_TEXT	SEGMENT
+___formal$ = 8						; size = 1
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z PROC ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::_Different_checked_iterator_base_type_tag>, COMDAT
+; __It$ = eax
+
+; 1139 : 		return _It._Checked_iterator_base();
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 1140 : 	}
+
+	ret	0
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@U_Different_checked_iterator_base_type_tag@0@@Z ENDP ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::_Different_checked_iterator_base_type_tag>
 ; Function compile flags: /Ogtpy
 ; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 _TEXT	ENDS
@@ -707,48 +838,11 @@ ___formal$ = 8						; size = 1
 	ret	0
 ??$_Checked_base@PAVChannel@DRAMsimII@@@std@@YAPAVChannel@DRAMsimII@@AAPAV12@U_Unchanged_checked_iterator_base_type_tag@0@@Z ENDP ; std::_Checked_base<DRAMsimII::Channel *>
 ; Function compile flags: /Ogtpy
-; File c:\program files\microsoft visual studio 9.0\vc\include\memory
 _TEXT	ENDS
-;	COMDAT ??$_Uninit_copy@PBIPAIV?$allocator@I@std@@@std@@YAPAIPBI0PAIAAV?$allocator@I@0@U_Scalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
-_TEXT	SEGMENT
-__Dest$ = 8						; size = 4
-__Result$ = 12						; size = 4
-??$_Uninit_copy@PBIPAIV?$allocator@I@std@@@std@@YAPAIPBI0PAIAAV?$allocator@I@0@U_Scalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z PROC ; std::_Uninit_copy<unsigned int const *,unsigned int *,std::allocator<unsigned int> >, COMDAT
-; __First$ = ecx
-; __Count$ = eax
-
-; 146  : 	_DEBUG_RANGE(_First, _Last);
-; 147  : 	_DEBUG_POINTER(_Dest);
-; 148  : 	size_t _Count = (size_t)(_Last - _First);
-; 149  : 	_FwdIt _Result = _Dest + _Count;
-; 150  : 	if (_Count > 0)
-; 151  : 		_CRT_SECURE_MEMMOVE(&*_Dest, _Count * sizeof (*_First), &*_First, _Count * sizeof (*_First));	// NB: non-overlapping move
-
-	mov	edx, DWORD PTR __Dest$[esp-4]
-	add	eax, eax
-	add	eax, eax
-	push	eax
-	push	ecx
-	push	eax
-	push	edx
-	call	_memmove_s
-
-; 152  : 	return (_Result);
-
-	mov	eax, DWORD PTR __Result$[esp+12]
-	add	esp, 16					; 00000010H
-
-; 153  : 	}
-
-	ret	0
-??$_Uninit_copy@PBIPAIV?$allocator@I@std@@@std@@YAPAIPBI0PAIAAV?$allocator@I@0@U_Scalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ENDP ; std::_Uninit_copy<unsigned int const *,unsigned int *,std::allocator<unsigned int> >
-; Function compile flags: /Ogtpy
-; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
-_TEXT	ENDS
-;	COMDAT ??$_Ptr_cat@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@PAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@IV?$allocator@I@std@@@0@AAPAI@Z
+;	COMDAT ??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z
 _TEXT	SEGMENT
 __Cat$ = -1						; size = 1
-??$_Ptr_cat@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@PAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@IV?$allocator@I@std@@@0@AAPAI@Z PROC ; std::_Ptr_cat<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> >,unsigned int *>, COMDAT
+??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z PROC ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *>, COMDAT
 
 ; 1509 : 	{
 
@@ -763,7 +857,97 @@ __Cat$ = -1						; size = 1
 
 	pop	ecx
 	ret	0
-??$_Ptr_cat@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@PAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@IV?$allocator@I@std@@@0@AAPAI@Z ENDP ; std::_Ptr_cat<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> >,unsigned int *>
+??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z ENDP ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *>
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@@std@@YAPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@@Z
+_TEXT	SEGMENT
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@@std@@YAPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@@Z PROC ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > > >, COMDAT
+; __It$ = eax
+
+; 1164 : 		typename _Checked_iterator_base_helper<_Iter>::_Checked_iterator_base_type_tag _Base_tag;
+; 1165 : 		return _Checked_base(_It, _Base_tag);
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 1166 : 	}
+
+	ret	0
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@@std@@YAPBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@0@@Z ENDP ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > > >
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@PAV?$vector@IV?$allocator@I@std@@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@AAPAV?$vector@IV?$allocator@I@std@@@0@@Z
+_TEXT	SEGMENT
+__Cat$ = -1						; size = 1
+??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@PAV?$vector@IV?$allocator@I@std@@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@AAPAV?$vector@IV?$allocator@I@std@@@0@@Z PROC ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::vector<unsigned int,std::allocator<unsigned int> > *>, COMDAT
+
+; 1509 : 	{
+
+	push	ecx
+
+; 1510 : 	typename _Ptr_cat_helper<_T1, _T2>::_Ptr_cat _Cat;
+; 1511 : 	return (_Cat);
+
+	mov	al, BYTE PTR __Cat$[esp+4]
+
+; 1512 : 	}
+
+	pop	ecx
+	ret	0
+??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@PAV?$vector@IV?$allocator@I@std@@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@AAPAV?$vector@IV?$allocator@I@std@@@0@@Z ENDP ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::vector<unsigned int,std::allocator<unsigned int> > *>
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Checked_base@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@@std@@YAPBV?$vector@IV?$allocator@I@std@@@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@@Z
+_TEXT	SEGMENT
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@@std@@YAPBV?$vector@IV?$allocator@I@std@@@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@@Z PROC ; std::_Checked_base<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > > >, COMDAT
+; __It$ = eax
+
+; 1164 : 		typename _Checked_iterator_base_helper<_Iter>::_Checked_iterator_base_type_tag _Base_tag;
+; 1165 : 		return _Checked_base(_It, _Base_tag);
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 1166 : 	}
+
+	ret	0
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@@std@@YAPBV?$vector@IV?$allocator@I@std@@@0@AAV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@0@@Z ENDP ; std::_Checked_base<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > > >
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z
+_TEXT	SEGMENT
+__Cat$ = -1						; size = 1
+??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z PROC ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *>, COMDAT
+
+; 1509 : 	{
+
+	push	ecx
+
+; 1510 : 	typename _Ptr_cat_helper<_T1, _T2>::_Ptr_cat _Cat;
+; 1511 : 	return (_Cat);
+
+	mov	al, BYTE PTR __Cat$[esp+4]
+
+; 1512 : 	}
+
+	pop	ecx
+	ret	0
+??$_Ptr_cat@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z ENDP ; std::_Ptr_cat<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *>
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@@std@@YAPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@@Z
+_TEXT	SEGMENT
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@@std@@YAPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@@Z PROC ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > > >, COMDAT
+; __It$ = eax
+
+; 1164 : 		typename _Checked_iterator_base_helper<_Iter>::_Checked_iterator_base_type_tag _Base_tag;
+; 1165 : 		return _Checked_base(_It, _Base_tag);
+
+	mov	eax, DWORD PTR [eax+4]
+
+; 1166 : 	}
+
+	ret	0
+??$_Checked_base@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@@std@@YAPBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@AAV?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@0@@Z ENDP ; std::_Checked_base<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > > >
 ; Function compile flags: /Ogtpy
 _TEXT	ENDS
 ;	COMDAT ??$_Checked_base@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@U_Different_checked_iterator_base_type_tag@2@@std@@YAPAVChannel@DRAMsimII@@AAV?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@U_Different_checked_iterator_base_type_tag@0@@Z
@@ -1009,30 +1193,6 @@ _TEXT	SEGMENT
 	ret	0
 ??$_Checked_base@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@std@@YAPAVChannel@DRAMsimII@@AAV?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@@Z ENDP ; std::_Checked_base<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> > >
 ; Function compile flags: /Ogtpy
-; File c:\program files\microsoft visual studio 9.0\vc\include\functional
-_TEXT	ENDS
-;	COMDAT ??R?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@QBEXAAVChannel@DRAMsimII@@_J@Z
-_TEXT	SEGMENT
-__Left$ = 8						; size = 4
-__Right$ = 12						; size = 8
-??R?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@QBEXAAVChannel@DRAMsimII@@_J@Z PROC ; std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>::operator(), COMDAT
-; _this$ = edx
-
-; 648  : 		return ((_Left.*_Pmemfun)(_Right));
-
-	mov	eax, DWORD PTR __Right$[esp]
-	mov	ecx, DWORD PTR __Right$[esp-4]
-	push	eax
-	mov	eax, DWORD PTR [edx]
-	push	ecx
-	mov	ecx, DWORD PTR __Left$[esp+4]
-	call	eax
-
-; 649  : 		}
-
-	ret	12					; 0000000cH
-??R?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@QBEXAAVChannel@DRAMsimII@@_J@Z ENDP ; std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>::operator()
-; Function compile flags: /Ogtpy
 ; File c:\program files\boost\boost_1_40\boost\functional.hpp
 _TEXT	ENDS
 ;	COMDAT ??R?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@QBEXAAVChannel@DRAMsimII@@AB_J@Z
@@ -1058,68 +1218,6 @@ _p$ = 12						; size = 4
 	ret	8
 ??R?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@QBEXAAVChannel@DRAMsimII@@AB_J@Z ENDP ; boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>::operator()
 ; Function compile flags: /Ogtpy
-; File c:\program files\microsoft visual studio 9.0\vc\include\functional
-_TEXT	ENDS
-;	COMDAT ??R?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@std@@QBEXAAVChannel@DRAMsimII@@@Z
-_TEXT	SEGMENT
-__Left$ = 8						; size = 4
-??R?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@std@@QBEXAAVChannel@DRAMsimII@@@Z PROC ; std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >::operator(), COMDAT
-; _this$ = eax
-
-; 325  : 		return (op(_Left, value));
-
-	mov	ecx, DWORD PTR [eax+12]
-	mov	edx, DWORD PTR [eax+8]
-	mov	eax, DWORD PTR [eax]
-	push	ecx
-	mov	ecx, DWORD PTR __Left$[esp]
-	push	edx
-	call	eax
-
-; 326  : 		}
-
-	ret	4
-??R?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@std@@QBEXAAVChannel@DRAMsimII@@@Z ENDP ; std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >::operator()
-; Function compile flags: /Ogtpy
-_TEXT	ENDS
-;	COMDAT ??0?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@std@@QAE@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@1@AB_J@Z
-_TEXT	SEGMENT
-__Func$ = 8						; size = 4
-??0?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@std@@QAE@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@1@AB_J@Z PROC ; std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >, COMDAT
-; _this$ = eax
-; __Right$ = ecx
-
-; 315  : 		{	// construct from functor and right operand
-
-	mov	edx, DWORD PTR __Func$[esp-4]
-	mov	edx, DWORD PTR [edx]
-	mov	DWORD PTR [eax], edx
-	mov	edx, DWORD PTR [ecx]
-	mov	ecx, DWORD PTR [ecx+4]
-	mov	DWORD PTR [eax+8], edx
-	mov	DWORD PTR [eax+12], ecx
-
-; 316  : 		}
-
-	ret	4
-??0?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@std@@QAE@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@1@AB_J@Z ENDP ; std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> >
-; Function compile flags: /Ogtpy
-_TEXT	ENDS
-;	COMDAT ??0?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@QAE@P8Channel@DRAMsimII@@AEX_J@Z@Z
-_TEXT	SEGMENT
-??0?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@QAE@P8Channel@DRAMsimII@@AEX_J@Z@Z PROC ; std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>, COMDAT
-; _this$ = eax
-
-; 643  : 		{	// construct from pointer
-
-	mov	DWORD PTR [eax], OFFSET ?doPowerCalculation@Channel@DRAMsimII@@QAEX_J@Z ; DRAMsimII::Channel::doPowerCalculation
-
-; 644  : 		}
-
-	ret	0
-??0?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@QAE@P8Channel@DRAMsimII@@AEX_J@Z@Z ENDP ; std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>
-; Function compile flags: /Ogtpy
-; File c:\program files\boost\boost_1_40\boost\functional.hpp
 _TEXT	ENDS
 ;	COMDAT ??R?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@QBEXAAVChannel@DRAMsimII@@@Z
 _TEXT	SEGMENT
@@ -1331,13 +1429,13 @@ _TEXT	SEGMENT
 ; Function compile flags: /Ogtpy
 ; File c:\program files\microsoft visual studio 9.0\vc\include\algorithm
 _TEXT	ENDS
-;	COMDAT ??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@2@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V10@@Z
+;	COMDAT ??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V12@@Z
 _TEXT	SEGMENT
 ___$ReturnUdt$ = 8					; size = 4
 __First$ = 12						; size = 8
 __Last$ = 20						; size = 8
 __Func$ = 28						; size = 16
-??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@2@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V10@@Z PROC ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >, COMDAT
+??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V12@@Z PROC ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,boost::binder2nd<boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >, COMDAT
 
 ; 23   : 	{	// perform function for each element
 
@@ -1371,114 +1469,10 @@ $LL3@for_each:
 	push	ecx
 	mov	ecx, esi
 	call	DWORD PTR __Func$[esp+20]
-	add	esi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
 	cmp	esi, edi
 	jne	SHORT $LL3@for_each
 $LN1@for_each:
-
-; 30   : 	return (_Func);
-
-	movq	xmm0, QWORD PTR __Func$[esp+12]
-	movq	QWORD PTR [ebx], xmm0
-	movq	xmm0, QWORD PTR __Func$[esp+20]
-
-; 31   : 	}
-
-	pop	edi
-	pop	esi
-	movq	QWORD PTR [ebx+8], xmm0
-	mov	eax, ebx
-	pop	ebx
-	pop	ecx
-	ret	0
-??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@2@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V10@@Z ENDP ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >
-; Function compile flags: /Ogtpy
-; File c:\program files\microsoft visual studio 9.0\vc\include\functional
-_TEXT	ENDS
-;	COMDAT ??$bind2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@_J@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@AB_J@Z
-_TEXT	SEGMENT
-__Func$ = 8						; size = 4
-??$bind2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@_J@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@AB_J@Z PROC ; std::bind2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>,__int64>, COMDAT
-; ___$ReturnUdt$ = eax
-; __Right$ = ecx
-
-; 338  : 	typename _Fn2::second_argument_type _Val(_Right);
-; 339  : 	return (std::binder2nd<_Fn2>(_Func, _Val));
-
-	mov	edx, DWORD PTR __Func$[esp-4]
-	mov	edx, DWORD PTR [edx]
-	mov	DWORD PTR [eax], edx
-	mov	edx, DWORD PTR [ecx]
-	mov	ecx, DWORD PTR [ecx+4]
-	mov	DWORD PTR [eax+8], edx
-	mov	DWORD PTR [eax+12], ecx
-
-; 340  : 	}
-
-	ret	0
-??$bind2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@_J@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@ABV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@AB_J@Z ENDP ; std::bind2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64>,__int64>
-; Function compile flags: /Ogtpy
-_TEXT	ENDS
-;	COMDAT ??$mem_fun_ref@XVChannel@DRAMsimII@@_J@std@@YA?AV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@P8Channel@DRAMsimII@@AEX_J@Z@Z
-_TEXT	SEGMENT
-??$mem_fun_ref@XVChannel@DRAMsimII@@_J@std@@YA?AV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@P8Channel@DRAMsimII@@AEX_J@Z@Z PROC ; std::mem_fun_ref<void,DRAMsimII::Channel,__int64>, COMDAT
-; ___$ReturnUdt$ = eax
-
-; 712  : 	return (std::mem_fun1_ref_t<_Result, _Ty, _Arg>(_Pm));
-
-	mov	DWORD PTR [eax], OFFSET ?doPowerCalculation@Channel@DRAMsimII@@QAEX_J@Z ; DRAMsimII::Channel::doPowerCalculation
-
-; 713  : 	}
-
-	ret	0
-??$mem_fun_ref@XVChannel@DRAMsimII@@_J@std@@YA?AV?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@0@P8Channel@DRAMsimII@@AEX_J@Z@Z ENDP ; std::mem_fun_ref<void,DRAMsimII::Channel,__int64>
-; Function compile flags: /Ogtpy
-; File c:\program files\microsoft visual studio 9.0\vc\include\algorithm
-_TEXT	ENDS
-;	COMDAT ??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V12@@Z
-_TEXT	SEGMENT
-___$ReturnUdt$ = 8					; size = 4
-__First$ = 12						; size = 8
-__Last$ = 20						; size = 8
-__Func$ = 28						; size = 16
-??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V12@@Z PROC ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,boost::binder2nd<boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >, COMDAT
-
-; 23   : 	{	// perform function for each element
-
-	push	ecx
-	push	ebx
-	mov	ebx, DWORD PTR ___$ReturnUdt$[esp+4]
-	push	esi
-
-; 24   : 	_DEBUG_RANGE(_First, _Last);
-; 25   : 	_DEBUG_POINTER(_Func);
-; 26   : 	_CHECKED_BASE_TYPE(_InIt) _ChkFirst(_CHECKED_BASE(_First));
-
-	mov	esi, DWORD PTR __First$[esp+12]
-	push	edi
-
-; 27   : 	_CHECKED_BASE_TYPE(_InIt) _ChkLast(_CHECKED_BASE(_Last));
-
-	mov	edi, DWORD PTR __Last$[esp+16]
-
-; 28   : 	for (; _ChkFirst != _ChkLast; ++_ChkFirst)
-
-	cmp	esi, edi
-	je	SHORT $LN1@for_each@2
-$LL3@for_each@2:
-
-; 29   : 		_Func(*_ChkFirst);
-
-	mov	eax, DWORD PTR __Func$[esp+24]
-	mov	ecx, DWORD PTR __Func$[esp+20]
-	push	eax
-	push	ecx
-	mov	ecx, esi
-	call	DWORD PTR __Func$[esp+20]
-	add	esi, 424				; 000001a8H
-	cmp	esi, edi
-	jne	SHORT $LL3@for_each@2
-$LN1@for_each@2:
 
 ; 30   : 	return (_Func);
 
@@ -1901,7 +1895,7 @@ _TEXT	SEGMENT
 ; 165  : 		_SIZT _Count = (_SIZT)(-1) / sizeof (_Ty);
 ; 166  : 		return (0 < _Count ? _Count : 1);
 
-	mov	eax, 10129639				; 009a90e7H
+	mov	eax, 9418787				; 008fb823H
 
 ; 167  : 		}
 
@@ -2093,7 +2087,7 @@ _TEXT	SEGMENT
 
 ; 731  : 		return (this->_Alval.max_size());
 
-	mov	eax, 10129639				; 009a90e7H
+	mov	eax, 9418787				; 008fb823H
 
 ; 732  : 		}
 
@@ -2187,9 +2181,10 @@ $LN3@capacity@2:
 
 	mov	ecx, DWORD PTR [ecx+20]
 	sub	ecx, eax
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
@@ -2277,7 +2272,7 @@ _TEXT	SEGMENT
 
 ; 127  : 		void setChannelID(const unsigned value) { channelID = value; }	///< set the channel ordinal
 
-	mov	DWORD PTR [eax+360], ecx
+	mov	DWORD PTR [eax+392], ecx
 	ret	0
 ?setChannelID@Channel@DRAMsimII@@QAEXI@Z ENDP		; DRAMsimII::Channel::setChannelID
 ; Function compile flags: /Ogtpy
@@ -2294,18 +2289,6 @@ _TEXT	SEGMENT
 	ret	0
 ?getTime@Channel@DRAMsimII@@QBE_JXZ ENDP		; DRAMsimII::Channel::getTime
 ; Function compile flags: /Ogtpy
-_TEXT	ENDS
-;	COMDAT ?getChannelID@Channel@DRAMsimII@@QBEIXZ
-_TEXT	SEGMENT
-?getChannelID@Channel@DRAMsimII@@QBEIXZ PROC		; DRAMsimII::Channel::getChannelID, COMDAT
-; _this$ = eax
-
-; 101  : 		unsigned getChannelID() const { return channelID; }			///< return the ordinal of this channel
-
-	mov	eax, DWORD PTR [eax+360]
-	ret	0
-?getChannelID@Channel@DRAMsimII@@QBEIXZ ENDP		; DRAMsimII::Channel::getChannelID
-; Function compile flags: /Ogtpy
 ; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\statistics.h
 _TEXT	ENDS
 ;	COMDAT ?getReadWriteBytes@Statistics@DRAMsimII@@QBE?AU?$pair@II@std@@XZ
@@ -2314,7 +2297,7 @@ _TEXT	SEGMENT
 ; _this$ = ecx
 ; ___$ReturnUdt$ = eax
 
-; 145  : 		std::pair<unsigned,unsigned> getReadWriteBytes() const { return std::pair<unsigned,unsigned>(readBytesTransferred,writeBytesTransferred); }
+; 150  : 		std::pair<unsigned,unsigned> getReadWriteBytes() const { return std::pair<unsigned,unsigned>(readBytesTransferred,writeBytesTransferred); }
 
 	mov	edx, DWORD PTR [ecx+44]
 	mov	ecx, DWORD PTR [ecx+48]
@@ -2361,18 +2344,6 @@ _TEXT	SEGMENT
 	movsd	xmm0, QWORD PTR [eax+384]
 	ret	0
 ?getShortBurstRatio@SystemConfiguration@DRAMsimII@@QBENXZ ENDP ; DRAMsimII::SystemConfiguration::getShortBurstRatio
-; Function compile flags: /Ogtpy
-_TEXT	ENDS
-;	COMDAT ?getEpoch@SystemConfiguration@DRAMsimII@@QBEIXZ
-_TEXT	SEGMENT
-?getEpoch@SystemConfiguration@DRAMsimII@@QBEIXZ PROC	; DRAMsimII::SystemConfiguration::getEpoch, COMDAT
-; _this$ = eax
-
-; 102  : 		unsigned getEpoch() const { return epoch; }
-
-	mov	eax, DWORD PTR [eax+380]
-	ret	0
-?getEpoch@SystemConfiguration@DRAMsimII@@QBEIXZ ENDP	; DRAMsimII::SystemConfiguration::getEpoch
 ; Function compile flags: /Ogtpy
 _TEXT	ENDS
 ;	COMDAT ?getConfigType@SystemConfiguration@DRAMsimII@@QBE?AW4SystemConfigurationType@2@XZ
@@ -2509,26 +2480,26 @@ ___formal$ = 16						; size = 1
 ; 403  : 	for (; 0 < _Count; --_Count, ++_First)
 
 	test	ecx, ecx
-	jbe	SHORT $LN4@Uninit_fil@3
+	jbe	SHORT $LN4@Uninit_fil@5
 	push	esi
 	npad	7
-$LL6@Uninit_fil@3:
+$LL6@Uninit_fil@5:
 
 ; 404  : 		_Al.construct(_First, _Val);
 
 	test	eax, eax
-	je	SHORT $LN5@Uninit_fil@3
+	je	SHORT $LN5@Uninit_fil@5
 	mov	esi, DWORD PTR [edx]
 	mov	DWORD PTR [eax], esi
 	mov	esi, DWORD PTR [edx+4]
 	mov	DWORD PTR [eax+4], esi
-$LN5@Uninit_fil@3:
+$LN5@Uninit_fil@5:
 	dec	ecx
 	add	eax, 8
 	test	ecx, ecx
-	ja	SHORT $LL6@Uninit_fil@3
+	ja	SHORT $LL6@Uninit_fil@5
 	pop	esi
-$LN4@Uninit_fil@3:
+$LN4@Uninit_fil@5:
 
 ; 405  : 	_CATCH_ALL
 ; 406  : 	for (; _Next != _First; ++_Next)
@@ -2630,48 +2601,10 @@ $LN7@Copy_opt@4:
 ; Function compile flags: /Ogtpy
 ; File c:\program files\microsoft visual studio 9.0\vc\include\memory
 _TEXT	ENDS
-;	COMDAT ??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@PAIV?$allocator@I@2@@stdext@@YAPAIV?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@0PAIAAV?$allocator@I@2@@Z
-_TEXT	SEGMENT
-__First$ = 8						; size = 8
-__Last$ = 16						; size = 8
-??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@PAIV?$allocator@I@2@@stdext@@YAPAIV?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@0PAIAAV?$allocator@I@2@@Z PROC ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> >,unsigned int *,std::allocator<unsigned int> >, COMDAT
-; __Dest$ = edx
-
-; 820  : 	return (_STD _Uninit_copy(_CHECKED_BASE(_First),
-; 821  : 		_CHECKED_BASE(_Last), _Dest, _Al,
-; 822  : 		_STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
-
-	mov	eax, DWORD PTR __Last$[esp]
-	push	esi
-	push	edi
-	mov	edi, DWORD PTR __First$[esp+8]
-	sub	eax, edi
-	sar	eax, 2
-	lea	ecx, DWORD PTR [eax*4]
-	lea	esi, DWORD PTR [ecx+edx]
-	test	eax, eax
-	jbe	SHORT $LN20@unchecked_@13
-	push	ecx
-	push	edi
-	push	ecx
-	push	edx
-	call	_memmove_s
-	add	esp, 16					; 00000010H
-$LN20@unchecked_@13:
-	pop	edi
-	mov	eax, esi
-	pop	esi
-
-; 823  : 	}
-
-	ret	0
-??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@PAIV?$allocator@I@2@@stdext@@YAPAIV?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@0PAIAAV?$allocator@I@2@@Z ENDP ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> >,unsigned int *,std::allocator<unsigned int> >
-; Function compile flags: /Ogtpy
-_TEXT	ENDS
 ;	COMDAT ??$unchecked_uninitialized_fill_n@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@stdext@@YAXPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@0@IABU120@AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@Z
 _TEXT	SEGMENT
-$T320481 = -4						; size = 1
-__Cat$320485 = -4					; size = 1
+$T331825 = -4						; size = 1
+__Cat$331830 = -4					; size = 1
 __Count$ = 8						; size = 4
 __Val$ = 12						; size = 4
 ??$unchecked_uninitialized_fill_n@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@stdext@@YAXPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@0@IABU120@AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@Z PROC ; stdext::unchecked_uninitialized_fill_n<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,unsigned int,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >, COMDAT
@@ -2684,9 +2617,9 @@ __Val$ = 12						; size = 4
 ; 941  : 	_STD _Uninit_fill_n(_First, _Count, _Val, _Al,
 ; 942  : 		_STD _Ptr_cat(_First, _First), _STD _Range_checked_iterator_tag());
 
-	mov	BYTE PTR $T320481[esp+4], 0
-	mov	eax, DWORD PTR $T320481[esp+4]
-	mov	ecx, DWORD PTR __Cat$320485[esp+4]
+	mov	BYTE PTR $T331825[esp+4], 0
+	mov	eax, DWORD PTR $T331825[esp+4]
+	mov	ecx, DWORD PTR __Cat$331830[esp+4]
 	push	eax
 	push	ecx
 	mov	ecx, DWORD PTR __Count$[esp+8]
@@ -2783,19 +2716,19 @@ _TEXT	SEGMENT
 	sar	eax, 3
 	lea	eax, DWORD PTR [edx+eax*8]
 	cmp	ecx, esi
-	je	SHORT $LN21@unchecked_@14
+	je	SHORT $LN21@unchecked_@19
 	sub	edx, ecx
 	push	edi
-$LL23@unchecked_@14:
+$LL23@unchecked_@19:
 	mov	edi, DWORD PTR [ecx]
 	mov	DWORD PTR [edx+ecx], edi
 	mov	edi, DWORD PTR [ecx+4]
 	mov	DWORD PTR [edx+ecx+4], edi
 	add	ecx, 8
 	cmp	ecx, esi
-	jne	SHORT $LL23@unchecked_@14
+	jne	SHORT $LL23@unchecked_@19
 	pop	edi
-$LN21@unchecked_@14:
+$LN21@unchecked_@19:
 
 ; 3607 : 	}
 
@@ -2806,8 +2739,8 @@ $LN21@unchecked_@14:
 _TEXT	ENDS
 ;	COMDAT ??$_Allocate@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IPAU123@@Z
 _TEXT	SEGMENT
-$T320696 = -16						; size = 4
-$T320688 = -12						; size = 12
+$T332040 = -16						; size = 4
+$T332032 = -12						; size = 12
 ??$_Allocate@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IPAU123@@Z PROC ; std::_Allocate<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position>, COMDAT
 ; __Count$ = ecx
 
@@ -2824,15 +2757,15 @@ $T320688 = -12						; size = 12
 
 ; 40   : 		_THROW_NCEE(std::bad_alloc, NULL);
 
-	lea	eax, DWORD PTR $T320696[esp+16]
+	lea	eax, DWORD PTR $T332040[esp+16]
 	push	eax
-	lea	ecx, DWORD PTR $T320688[esp+20]
-	mov	DWORD PTR $T320696[esp+20], 0
+	lea	ecx, DWORD PTR $T332032[esp+20]
+	mov	DWORD PTR $T332040[esp+20], 0
 	call	??0exception@std@@QAE@ABQBD@Z		; std::exception::exception
 	push	OFFSET __TI2?AVbad_alloc@std@@
-	lea	ecx, DWORD PTR $T320688[esp+20]
+	lea	ecx, DWORD PTR $T332032[esp+20]
 	push	ecx
-	mov	DWORD PTR $T320688[esp+24], OFFSET ??_7bad_alloc@std@@6B@
+	mov	DWORD PTR $T332032[esp+24], OFFSET ??_7bad_alloc@std@@6B@
 	call	__CxxThrowException@8
 $LN13@Allocate:
 $LN1@Allocate:
@@ -2877,8 +2810,8 @@ $LN3@Construct@3:
 _TEXT	ENDS
 ;	COMDAT ??$_Allocate@U_Node@?$_List_nod@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@@std@@YAPAU_Node@?$_List_nod@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@0@IPAU120@@Z
 _TEXT	SEGMENT
-$T320719 = -16						; size = 4
-$T320711 = -12						; size = 12
+$T332063 = -16						; size = 4
+$T332055 = -12						; size = 12
 ??$_Allocate@U_Node@?$_List_nod@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@@std@@YAPAU_Node@?$_List_nod@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@0@IPAU120@@Z PROC ; std::_Allocate<std::_List_nod<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::_Node>, COMDAT
 ; __Count$ = ecx
 
@@ -2895,15 +2828,15 @@ $T320711 = -12						; size = 12
 
 ; 40   : 		_THROW_NCEE(std::bad_alloc, NULL);
 
-	lea	eax, DWORD PTR $T320719[esp+16]
+	lea	eax, DWORD PTR $T332063[esp+16]
 	push	eax
-	lea	ecx, DWORD PTR $T320711[esp+20]
-	mov	DWORD PTR $T320719[esp+20], 0
+	lea	ecx, DWORD PTR $T332055[esp+20]
+	mov	DWORD PTR $T332063[esp+20], 0
 	call	??0exception@std@@QAE@ABQBD@Z		; std::exception::exception
 	push	OFFSET __TI2?AVbad_alloc@std@@
-	lea	ecx, DWORD PTR $T320711[esp+20]
+	lea	ecx, DWORD PTR $T332055[esp+20]
 	push	ecx
-	mov	DWORD PTR $T320711[esp+24], OFFSET ??_7bad_alloc@std@@6B@
+	mov	DWORD PTR $T332055[esp+24], OFFSET ??_7bad_alloc@std@@6B@
 	call	__CxxThrowException@8
 $LN13@Allocate@2:
 $LN1@Allocate@2:
@@ -2929,8 +2862,8 @@ $LN12@Allocate@2:
 _TEXT	ENDS
 ;	COMDAT ??$_Allocate@VChannel@DRAMsimII@@@std@@YAPAVChannel@DRAMsimII@@IPAV12@@Z
 _TEXT	SEGMENT
-$T320733 = -16						; size = 4
-$T320725 = -12						; size = 12
+$T332077 = -16						; size = 4
+$T332069 = -12						; size = 12
 ??$_Allocate@VChannel@DRAMsimII@@@std@@YAPAVChannel@DRAMsimII@@IPAV12@@Z PROC ; std::_Allocate<DRAMsimII::Channel>, COMDAT
 ; __Count$ = ecx
 
@@ -2942,20 +2875,20 @@ $T320725 = -12						; size = 12
 	xor	edx, edx
 	div	ecx
 	sub	esp, 16					; 00000010H
-	cmp	eax, 424				; 000001a8H
+	cmp	eax, 456				; 000001c8H
 	jae	SHORT $LN1@Allocate@3
 
 ; 40   : 		_THROW_NCEE(std::bad_alloc, NULL);
 
-	lea	eax, DWORD PTR $T320733[esp+16]
+	lea	eax, DWORD PTR $T332077[esp+16]
 	push	eax
-	lea	ecx, DWORD PTR $T320725[esp+20]
-	mov	DWORD PTR $T320733[esp+20], 0
+	lea	ecx, DWORD PTR $T332069[esp+20]
+	mov	DWORD PTR $T332077[esp+20], 0
 	call	??0exception@std@@QAE@ABQBD@Z		; std::exception::exception
 	push	OFFSET __TI2?AVbad_alloc@std@@
-	lea	ecx, DWORD PTR $T320725[esp+20]
+	lea	ecx, DWORD PTR $T332069[esp+20]
 	push	ecx
-	mov	DWORD PTR $T320725[esp+24], OFFSET ??_7bad_alloc@std@@6B@
+	mov	DWORD PTR $T332069[esp+24], OFFSET ??_7bad_alloc@std@@6B@
 	call	__CxxThrowException@8
 $LN13@Allocate@3:
 $LN1@Allocate@3:
@@ -2964,7 +2897,7 @@ $LN1@Allocate@3:
 ; 42   : 		// allocate storage for _Count elements of type _Ty
 ; 43   : 	return ((_Ty _FARQ *)::operator new(_Count * sizeof (_Ty)));
 
-	imul	ecx, 424				; 000001a8H
+	imul	ecx, 456				; 000001c8H
 	push	ecx
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
@@ -2975,45 +2908,6 @@ $LN1@Allocate@3:
 	ret	0
 $LN12@Allocate@3:
 ??$_Allocate@VChannel@DRAMsimII@@@std@@YAPAVChannel@DRAMsimII@@IPAV12@@Z ENDP ; std::_Allocate<DRAMsimII::Channel>
-; Function compile flags: /Ogtpy
-; File c:\program files\microsoft visual studio 9.0\vc\include\vector
-_TEXT	ENDS
-;	COMDAT ??$_Ucopy@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@@?$vector@IV?$allocator@I@std@@@std@@IAEPAIV?$_Vector_const_iterator@IV?$allocator@I@std@@@1@0PAI@Z
-_TEXT	SEGMENT
-__First$ = 8						; size = 8
-__Last$ = 16						; size = 8
-??$_Ucopy@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@@?$vector@IV?$allocator@I@std@@@std@@IAEPAIV?$_Vector_const_iterator@IV?$allocator@I@std@@@1@0PAI@Z PROC ; std::vector<unsigned int,std::allocator<unsigned int> >::_Ucopy<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> > >, COMDAT
-; __Ptr$ = edx
-
-; 1139 : 		{	// copy initializing [_First, _Last), using allocator
-; 1140 : 		return (_STDEXT unchecked_uninitialized_copy(_First, _Last,
-; 1141 : 			_Ptr, this->_Alval));
-
-	mov	eax, DWORD PTR __Last$[esp]
-	push	esi
-	push	edi
-	mov	edi, DWORD PTR __First$[esp+8]
-	sub	eax, edi
-	sar	eax, 2
-	lea	ecx, DWORD PTR [eax*4]
-	lea	esi, DWORD PTR [ecx+edx]
-	test	eax, eax
-	jbe	SHORT $LN22@Ucopy@3
-	push	ecx
-	push	edi
-	push	ecx
-	push	edx
-	call	_memmove_s
-	add	esp, 16					; 00000010H
-$LN22@Ucopy@3:
-	pop	edi
-	mov	eax, esi
-	pop	esi
-
-; 1142 : 		}
-
-	ret	16					; 00000010H
-??$_Ucopy@V?$_Vector_const_iterator@IV?$allocator@I@std@@@std@@@?$vector@IV?$allocator@I@std@@@std@@IAEPAIV?$_Vector_const_iterator@IV?$allocator@I@std@@@1@0PAI@Z ENDP ; std::vector<unsigned int,std::allocator<unsigned int> >::_Ucopy<std::_Vector_const_iterator<unsigned int,std::allocator<unsigned int> > >
 ; Function compile flags: /Ogtpy
 _TEXT	ENDS
 ;	COMDAT ??0?$_Iterator_with_base@Urandom_access_iterator_tag@std@@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@HPBU345@ABU345@V_Iterator_base_aux@2@@std@@QAE@XZ
@@ -3033,6 +2927,7 @@ _TEXT	SEGMENT
 	ret	0
 ??0?$_Ranit@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@HPBU123@ABU123@@std@@QAE@XZ ENDP ; std::_Ranit<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,int,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position const *,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position const &>::_Ranit<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,int,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position const *,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position const &>
 ; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 _TEXT	ENDS
 ;	COMDAT ??8?$_Vector_const_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@QBE_NABV01@@Z
 _TEXT	SEGMENT
@@ -3048,12 +2943,12 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [edi]
 	test	eax, eax
-	je	SHORT $LN1@operator@30
+	je	SHORT $LN1@operator@42
 	cmp	eax, DWORD PTR [esi]
-	je	SHORT $LN2@operator@30
-$LN1@operator@30:
+	je	SHORT $LN2@operator@42
+$LN1@operator@42:
 	call	__invalid_parameter_noinfo
-$LN2@operator@30:
+$LN2@operator@42:
 
 ; 209  :  #endif /* _HAS_ITERATOR_DEBUGGING */
 ; 210  : 
@@ -3116,8 +3011,8 @@ $LN2@Vector_con:
 _TEXT	ENDS
 ;	COMDAT ?_Ufill@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU345@IABU345@@Z
 _TEXT	SEGMENT
-$T320876 = -4						; size = 1
-__Cat$320880 = -4					; size = 1
+$T332138 = -4						; size = 1
+__Cat$332142 = -4					; size = 1
 ?_Ufill@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU345@IABU345@@Z PROC ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Ufill, COMDAT
 ; __Ptr$ = edi
 ; __Count$ = esi
@@ -3129,9 +3024,9 @@ __Cat$320880 = -4					; size = 1
 
 ; 1254 : 		_STDEXT unchecked_uninitialized_fill_n(_Ptr, _Count, _Val, this->_Alval);
 
-	mov	BYTE PTR $T320876[esp+4], 0
-	mov	eax, DWORD PTR $T320876[esp+4]
-	mov	ecx, DWORD PTR __Cat$320880[esp+4]
+	mov	BYTE PTR $T332138[esp+4], 0
+	mov	eax, DWORD PTR $T332138[esp+4]
+	mov	ecx, DWORD PTR __Cat$332142[esp+4]
 	push	eax
 	push	ecx
 	push	edi
@@ -3159,12 +3054,12 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [edi]
 	test	eax, eax
-	je	SHORT $LN3@operator@31
+	je	SHORT $LN3@operator@43
 	cmp	eax, DWORD PTR [esi]
-	je	SHORT $LN4@operator@31
-$LN3@operator@31:
+	je	SHORT $LN4@operator@43
+$LN3@operator@43:
 	call	__invalid_parameter_noinfo
-$LN4@operator@31:
+$LN4@operator@43:
 	mov	eax, DWORD PTR [edi+4]
 	xor	ecx, ecx
 	cmp	eax, DWORD PTR [esi+4]
@@ -3447,8 +3342,8 @@ $LN6@begin:
 _TEXT	ENDS
 ;	COMDAT ?allocate@?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@QAEPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@I@Z
 _TEXT	SEGMENT
-$T321382 = -16						; size = 4
-$T321388 = -12						; size = 12
+$T332644 = -16						; size = 4
+$T332650 = -12						; size = 12
 ?allocate@?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@QAEPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@I@Z PROC ; std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position>::allocate, COMDAT
 ; __Count$ = ecx
 
@@ -3480,15 +3375,15 @@ $LN5@allocate:
 	div	ecx
 	cmp	eax, 8
 	jae	SHORT $LN3@allocate
-	lea	eax, DWORD PTR $T321382[esp+16]
+	lea	eax, DWORD PTR $T332644[esp+16]
 	push	eax
-	lea	ecx, DWORD PTR $T321388[esp+20]
-	mov	DWORD PTR $T321382[esp+20], 0
+	lea	ecx, DWORD PTR $T332650[esp+20]
+	mov	DWORD PTR $T332644[esp+20], 0
 	call	??0exception@std@@QAE@ABQBD@Z		; std::exception::exception
 	push	OFFSET __TI2?AVbad_alloc@std@@
-	lea	ecx, DWORD PTR $T321388[esp+20]
+	lea	ecx, DWORD PTR $T332650[esp+20]
 	push	ecx
-	mov	DWORD PTR $T321388[esp+24], OFFSET ??_7bad_alloc@std@@6B@
+	mov	DWORD PTR $T332650[esp+24], OFFSET ??_7bad_alloc@std@@6B@
 	call	__CxxThrowException@8
 $LN12@allocate:
 $LN11@allocate:
@@ -3839,19 +3734,19 @@ _TEXT	SEGMENT
 	mov	DWORD PTR [ecx+4], ecx
 	mov	DWORD PTR [esi+24], 0
 	cmp	eax, DWORD PTR [esi+20]
-	je	SHORT $LN3@Tidy@8
+	je	SHORT $LN3@Tidy@13
 	push	edi
 	npad	6
-$LL5@Tidy@8:
+$LL5@Tidy@13:
 	mov	edi, DWORD PTR [eax]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	add	esp, 4
 	mov	eax, edi
 	cmp	edi, DWORD PTR [esi+20]
-	jne	SHORT $LL5@Tidy@8
+	jne	SHORT $LL5@Tidy@13
 	pop	edi
-$LN3@Tidy@8:
+$LN3@Tidy@13:
 
 ; 1214 : 		this->_Alptr.destroy(&_Nextnode(_Myhead));
 ; 1215 : 		this->_Alptr.destroy(&_Prevnode(_Myhead));
@@ -3968,8 +3863,8 @@ $LN1@Hashval@2:
 _TEXT	ENDS
 ;	COMDAT ?allocate@?$allocator@VChannel@DRAMsimII@@@std@@QAEPAVChannel@DRAMsimII@@I@Z
 _TEXT	SEGMENT
-$T321849 = -16						; size = 4
-$T321851 = -12						; size = 12
+$T333111 = -16						; size = 4
+$T333113 = -12						; size = 12
 ?allocate@?$allocator@VChannel@DRAMsimII@@@std@@QAEPAVChannel@DRAMsimII@@I@Z PROC ; std::allocator<DRAMsimII::Channel>::allocate, COMDAT
 ; __Count$ = ecx
 
@@ -3983,7 +3878,7 @@ $T321851 = -12						; size = 12
 	ja	SHORT $LN5@allocate@2
 	xor	ecx, ecx
 $LN3@allocate@2:
-	imul	ecx, 424				; 000001a8H
+	imul	ecx, 456				; 000001c8H
 	push	ecx
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
@@ -3999,17 +3894,17 @@ $LN5@allocate@2:
 	or	eax, -1
 	xor	edx, edx
 	div	ecx
-	cmp	eax, 424				; 000001a8H
+	cmp	eax, 456				; 000001c8H
 	jae	SHORT $LN3@allocate@2
-	lea	eax, DWORD PTR $T321849[esp+16]
+	lea	eax, DWORD PTR $T333111[esp+16]
 	push	eax
-	lea	ecx, DWORD PTR $T321851[esp+20]
-	mov	DWORD PTR $T321849[esp+20], 0
+	lea	ecx, DWORD PTR $T333113[esp+20]
+	mov	DWORD PTR $T333111[esp+20], 0
 	call	??0exception@std@@QAE@ABQBD@Z		; std::exception::exception
 	push	OFFSET __TI2?AVbad_alloc@std@@
-	lea	ecx, DWORD PTR $T321851[esp+20]
+	lea	ecx, DWORD PTR $T333113[esp+20]
 	push	ecx
-	mov	DWORD PTR $T321851[esp+24], OFFSET ??_7bad_alloc@std@@6B@
+	mov	DWORD PTR $T333113[esp+24], OFFSET ??_7bad_alloc@std@@6B@
 	call	__CxxThrowException@8
 $LN12@allocate@2:
 $LN11@allocate@2:
@@ -4396,12 +4291,12 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [edi]
 	test	eax, eax
-	je	SHORT $LN1@operator@32
+	je	SHORT $LN1@operator@44
 	cmp	eax, DWORD PTR [esi]
-	je	SHORT $LN2@operator@32
-$LN1@operator@32:
+	je	SHORT $LN2@operator@44
+$LN1@operator@44:
 	call	__invalid_parameter_noinfo
-$LN2@operator@32:
+$LN2@operator@44:
 
 ; 296  :  #endif /* _HAS_ITERATOR_DEBUGGING */
 ; 297  : 
@@ -4515,22 +4410,23 @@ _TEXT	SEGMENT
 
 	mov	ecx, DWORD PTR [esi+16]
 	sub	ecx, DWORD PTR [esi+12]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
 	cmp	edi, eax
-	jb	SHORT $LN1@operator@33
+	jb	SHORT $LN1@operator@45
 	call	__invalid_parameter_noinfo
-$LN1@operator@33:
+$LN1@operator@45:
 
 ; 784  : 
 ; 785  : 		return (*(_Myfirst + _Pos));
 
 	mov	eax, edi
-	imul	eax, 424				; 000001a8H
+	imul	eax, 456				; 000001c8H
 	add	eax, DWORD PTR [esi+12]
 
 ; 786  : 		}
@@ -4617,28 +4513,28 @@ _TEXT	SEGMENT
 ?checkStats@System@DRAMsimII@@IAEXXZ PROC		; DRAMsimII::System::checkStats
 ; _this$ = esi
 
-; 200  : 	if (time >= nextStats)
+; 203  : 	if (time >= nextStats)
 
-	mov	eax, DWORD PTR [esi+11484]
-	cmp	eax, DWORD PTR [esi+11492]
+	mov	eax, DWORD PTR [esi+11548]
+	cmp	eax, DWORD PTR [esi+11556]
 	jl	SHORT $LN8@checkStats
 	jg	SHORT $LN10@checkStats
-	mov	ecx, DWORD PTR [esi+11480]
-	cmp	ecx, DWORD PTR [esi+11488]
+	mov	ecx, DWORD PTR [esi+11544]
+	cmp	ecx, DWORD PTR [esi+11552]
 	jb	SHORT $LN8@checkStats
 $LN10@checkStats:
 
-; 201  : 	{		
-; 202  : 		DEBUG_TIMING_LOG("aggregate stats");
-; 203  : 		doPowerCalculation();
+; 204  : 	{		
+; 205  : 		DEBUG_TIMING_LOG("aggregate stats");
+; 206  : 		doPowerCalculation();
 
 	mov	edx, DWORD PTR [esi]
 	mov	eax, DWORD PTR [edx]
 	mov	ecx, esi
 	call	eax
 
-; 204  : 
-; 205  : 		printStatistics();
+; 207  : 
+; 208  : 		printStatistics();
 
 	mov	edx, DWORD PTR [esi]
 	mov	eax, DWORD PTR [edx+4]
@@ -4646,16 +4542,16 @@ $LN10@checkStats:
 	call	eax
 $LN8@checkStats:
 
-; 206  : 	}
-; 207  : 
-; 208  : 	while (time >= nextStats)
+; 209  : 	}
+; 210  : 
+; 211  : 	while (time >= nextStats)
 
-	mov	ecx, DWORD PTR [esi+11484]
-	cmp	ecx, DWORD PTR [esi+11492]
+	mov	ecx, DWORD PTR [esi+11548]
+	cmp	ecx, DWORD PTR [esi+11556]
 	jl	SHORT $LN12@checkStats
 	jg	SHORT $LN11@checkStats
-	mov	edx, DWORD PTR [esi+11480]
-	cmp	edx, DWORD PTR [esi+11488]
+	mov	edx, DWORD PTR [esi+11544]
+	cmp	edx, DWORD PTR [esi+11552]
 	jb	SHORT $LN12@checkStats
 $LN11@checkStats:
 	mov	eax, DWORD PTR [esi+388]
@@ -4663,25 +4559,25 @@ $LN11@checkStats:
 	npad	11
 $LL2@checkStats:
 
-; 209  : 		nextStats += systemConfig.getEpoch();
+; 212  : 		nextStats += systemConfig.getEpoch();
 
-	add	DWORD PTR [esi+11488], eax
-	adc	DWORD PTR [esi+11492], ecx
-	mov	edx, DWORD PTR [esi+11484]
-	cmp	edx, DWORD PTR [esi+11492]
+	add	DWORD PTR [esi+11552], eax
+	adc	DWORD PTR [esi+11556], ecx
+	mov	edx, DWORD PTR [esi+11548]
+	cmp	edx, DWORD PTR [esi+11556]
 	jg	SHORT $LL2@checkStats
 
-; 206  : 	}
-; 207  : 
-; 208  : 	while (time >= nextStats)
+; 209  : 	}
+; 210  : 
+; 211  : 	while (time >= nextStats)
 
 	jl	SHORT $LN12@checkStats
-	mov	edx, DWORD PTR [esi+11480]
-	cmp	edx, DWORD PTR [esi+11488]
+	mov	edx, DWORD PTR [esi+11544]
+	cmp	edx, DWORD PTR [esi+11552]
 	jae	SHORT $LL2@checkStats
 $LN12@checkStats:
 
-; 210  : }
+; 213  : }
 
 	ret	0
 ?checkStats@System@DRAMsimII@@IAEXXZ ENDP		; DRAMsimII::System::checkStats
@@ -4695,7 +4591,7 @@ _TEXT	SEGMENT
 
 ; 105  : 		unsigned pendingTransactionCount() const { return finishedTransactions.size(); }
 
-	mov	eax, DWORD PTR [eax+420]
+	mov	eax, DWORD PTR [eax+452]
 	ret	0
 ?pendingTransactionCount@Channel@DRAMsimII@@QBEIXZ ENDP	; DRAMsimII::Channel::pendingTransactionCount
 ; Function compile flags: /Ogtpy
@@ -4739,26 +4635,26 @@ ___formal$ = 16						; size = 1
 ; 130  : 	for (; _First != _Last; ++_Dest, ++_First)
 
 	cmp	ecx, edx
-	je	SHORT $LN4@Uninit_cop
+	je	SHORT $LN4@Uninit_cop@2
 	push	esi
 	npad	7
-$LL6@Uninit_cop:
+$LL6@Uninit_cop@2:
 
 ; 131  : 		_Al.construct(_Dest, *_First);
 
 	test	eax, eax
-	je	SHORT $LN5@Uninit_cop
+	je	SHORT $LN5@Uninit_cop@2
 	mov	esi, DWORD PTR [ecx]
 	mov	DWORD PTR [eax], esi
 	mov	esi, DWORD PTR [ecx+4]
 	mov	DWORD PTR [eax+4], esi
-$LN5@Uninit_cop:
+$LN5@Uninit_cop@2:
 	add	ecx, 8
 	add	eax, 8
 	cmp	ecx, edx
-	jne	SHORT $LL6@Uninit_cop
+	jne	SHORT $LL6@Uninit_cop@2
 	pop	esi
-$LN4@Uninit_cop:
+$LN4@Uninit_cop@2:
 
 ; 132  : 	_CATCH_ALL
 ; 133  : 	for (; _Next != _Dest; ++_Next)
@@ -4774,8 +4670,8 @@ $LN4@Uninit_cop:
 _TEXT	ENDS
 ;	COMDAT ??$unchecked_uninitialized_copy@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@stdext@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@0@PAU120@00AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@Z
 _TEXT	SEGMENT
-$T358718 = -4						; size = 1
-__Cat$358723 = 8					; size = 1
+$T374687 = -4						; size = 1
+__Cat$374691 = 8					; size = 1
 __Last$ = 8						; size = 4
 __Dest$ = 12						; size = 4
 ??$unchecked_uninitialized_copy@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@stdext@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@0@PAU120@00AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@Z PROC ; stdext::unchecked_uninitialized_copy<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >, COMDAT
@@ -4789,9 +4685,9 @@ __Dest$ = 12						; size = 4
 ; 821  : 		_CHECKED_BASE(_Last), _Dest, _Al,
 ; 822  : 		_STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
 
-	mov	ecx, DWORD PTR __Cat$358723[esp]
-	mov	BYTE PTR $T358718[esp+4], 0
-	mov	eax, DWORD PTR $T358718[esp+4]
+	mov	ecx, DWORD PTR __Cat$374691[esp]
+	mov	BYTE PTR $T374687[esp+4], 0
+	mov	eax, DWORD PTR $T374687[esp+4]
 	push	eax
 	mov	eax, DWORD PTR __Dest$[esp+4]
 	push	ecx
@@ -4808,9 +4704,9 @@ __Dest$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$_Uninit_move@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@U_Undefined_move_tag@5@@std@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@00AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@0@U_Undefined_move_tag@0@U_Range_checked_iterator_tag@0@@Z
 _TEXT	SEGMENT
-$T358776 = -4						; size = 1
+$T374745 = -4						; size = 1
 __Last$ = 8						; size = 4
-__Cat$358780 = 12					; size = 1
+__Cat$374748 = 12					; size = 1
 __Dest$ = 12						; size = 4
 ___formal$ = 16						; size = 1
 ___formal$ = 20						; size = 1
@@ -4823,9 +4719,9 @@ ___formal$ = 20						; size = 1
 
 ; 207  : 	return (_STDEXT unchecked_uninitialized_copy(_First, _Last, _Dest, _Al));
 
-	mov	ecx, DWORD PTR __Cat$358780[esp]
-	mov	BYTE PTR $T358776[esp+4], 0
-	mov	eax, DWORD PTR $T358776[esp+4]
+	mov	ecx, DWORD PTR __Cat$374748[esp]
+	mov	BYTE PTR $T374745[esp+4], 0
+	mov	eax, DWORD PTR $T374745[esp+4]
 	push	eax
 	mov	eax, DWORD PTR __Dest$[esp+4]
 	push	ecx
@@ -4842,9 +4738,9 @@ ___formal$ = 20						; size = 1
 _TEXT	ENDS
 ;	COMDAT ??$_Unchecked_uninitialized_move@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@stdext@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@0@PAU120@00AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@Z
 _TEXT	SEGMENT
-$T358874 = -4						; size = 1
+$T374842 = -4						; size = 1
 __Last$ = 8						; size = 4
-__Cat$358878 = 12					; size = 1
+__Cat$374846 = 12					; size = 1
 __Dest$ = 12						; size = 4
 ??$_Unchecked_uninitialized_move@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@stdext@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@0@PAU120@00AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@Z PROC ; stdext::_Unchecked_uninitialized_move<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >, COMDAT
 ; __First$ = edx
@@ -4857,9 +4753,9 @@ __Dest$ = 12						; size = 4
 ; 863  : 		_CHECKED_BASE(_Last), _Dest, _Al,
 ; 864  : 		_STD _Move_cat(_Dest), _STD _Range_checked_iterator_tag()));
 
-	mov	ecx, DWORD PTR __Cat$358878[esp]
-	mov	BYTE PTR $T358874[esp+4], 0
-	mov	eax, DWORD PTR $T358874[esp+4]
+	mov	ecx, DWORD PTR __Cat$374846[esp]
+	mov	BYTE PTR $T374842[esp+4], 0
+	mov	eax, DWORD PTR $T374842[esp+4]
 	push	eax
 	mov	eax, DWORD PTR __Dest$[esp+4]
 	push	ecx
@@ -4877,9 +4773,9 @@ __Dest$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$_Umove@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU234@00@Z
 _TEXT	SEGMENT
-$T359010 = -4						; size = 1
+$T374978 = -4						; size = 1
 __Last$ = 8						; size = 4
-__Cat$359014 = 12					; size = 1
+__Cat$374982 = 12					; size = 1
 __Ptr$ = 12						; size = 4
 ??$_Umove@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU234@00@Z PROC ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Umove<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *>, COMDAT
 ; __First$ = edx
@@ -4892,9 +4788,9 @@ __Ptr$ = 12						; size = 4
 ; 1147 : 		return (_STDEXT _Unchecked_uninitialized_move(_First, _Last,
 ; 1148 : 			_Ptr, this->_Alval));
 
-	mov	ecx, DWORD PTR __Cat$359014[esp]
-	mov	BYTE PTR $T359010[esp+4], 0
-	mov	eax, DWORD PTR $T359010[esp+4]
+	mov	ecx, DWORD PTR __Cat$374982[esp]
+	mov	BYTE PTR $T374978[esp+4], 0
+	mov	eax, DWORD PTR $T374978[esp+4]
 	push	eax
 	mov	eax, DWORD PTR __Ptr$[esp+4]
 	push	ecx
@@ -4978,20 +4874,20 @@ __Off$ = 8						; size = 4
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN20@operator@128
+	jne	SHORT $LN20@operator@155
 	call	__invalid_parameter_noinfo
 
 ; 161  : 		_SCL_SECURE_VALIDATE_RANGE(
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN10@operator@128
-$LN20@operator@128:
+	je	SHORT $LN10@operator@155
+$LN20@operator@155:
 	mov	edx, DWORD PTR [eax]
-	jmp	SHORT $LN11@operator@128
-$LN10@operator@128:
+	jmp	SHORT $LN11@operator@155
+$LN10@operator@155:
 	xor	edx, edx
-$LN11@operator@128:
+$LN11@operator@155:
 	mov	ecx, DWORD PTR [esi+4]
 	push	edi
 	mov	edi, DWORD PTR __Off$[esp]
@@ -5000,23 +4896,23 @@ $LN11@operator@128:
 	add	edi, edi
 	add	ecx, edi
 	cmp	ecx, DWORD PTR [edx+16]
-	ja	SHORT $LN1@operator@128
+	ja	SHORT $LN1@operator@155
 	test	eax, eax
-	je	SHORT $LN16@operator@128
+	je	SHORT $LN16@operator@155
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN17@operator@128
-$LN16@operator@128:
+	jmp	SHORT $LN17@operator@155
+$LN16@operator@155:
 	xor	eax, eax
-$LN17@operator@128:
+$LN17@operator@155:
 	cmp	ecx, DWORD PTR [eax+12]
-	jae	SHORT $LN21@operator@128
-$LN1@operator@128:
+	jae	SHORT $LN21@operator@155
+$LN1@operator@155:
 
 ; 162  : 			_Myptr + _Off <= ((_Myvec *)(this->_Getmycont()))->_Mylast &&
 ; 163  : 			_Myptr + _Off >= ((_Myvec *)(this->_Getmycont()))->_Myfirst);
 
 	call	__invalid_parameter_noinfo
-$LN21@operator@128:
+$LN21@operator@155:
 
 ; 164  : 		_Myptr += _Off;
 
@@ -5087,32 +4983,32 @@ __Prev$ = 12						; size = 4
 ; 1195 : 		this->_Alptr.construct(&_Nextnode(_Pnode), _Next);
 
 	test	eax, eax
-	je	SHORT $LN27@Buynode@10
+	je	SHORT $LN27@Buynode@13
 	mov	ecx, DWORD PTR __Next$[esp-4]
 	mov	DWORD PTR [eax], ecx
-$LN27@Buynode@10:
+$LN27@Buynode@13:
 
 ; 1196 : 		++_Linkcnt;
 ; 1197 : 		this->_Alptr.construct(&_Prevnode(_Pnode), _Prev);
 
 	lea	ecx, DWORD PTR [eax+4]
 	test	ecx, ecx
-	je	SHORT $LN37@Buynode@10
+	je	SHORT $LN37@Buynode@13
 	mov	edx, DWORD PTR __Prev$[esp-4]
 	mov	DWORD PTR [ecx], edx
-$LN37@Buynode@10:
+$LN37@Buynode@13:
 
 ; 1198 : 		++_Linkcnt;
 ; 1199 : 		this->_Alval.construct(&_Myval(_Pnode), _Val);
 
 	lea	ecx, DWORD PTR [eax+8]
 	test	ecx, ecx
-	je	SHORT $LN47@Buynode@10
+	je	SHORT $LN47@Buynode@13
 	movq	xmm0, QWORD PTR [esi]
 	movq	QWORD PTR [ecx], xmm0
 	mov	edx, DWORD PTR [esi+8]
 	mov	DWORD PTR [ecx+8], edx
-$LN47@Buynode@10:
+$LN47@Buynode@13:
 
 ; 1200 : 		_CATCH_ALL
 ; 1201 : 		if (1 < _Linkcnt)
@@ -5161,17 +5057,17 @@ __Off$ = 8						; size = 4
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN22@operator@129
+	jne	SHORT $LN22@operator@156
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN12@operator@129
-$LN22@operator@129:
+	je	SHORT $LN12@operator@156
+$LN22@operator@156:
 	mov	edx, DWORD PTR [eax]
-	jmp	SHORT $LN13@operator@129
-$LN12@operator@129:
+	jmp	SHORT $LN13@operator@156
+$LN12@operator@156:
 	xor	edx, edx
-$LN13@operator@129:
+$LN13@operator@156:
 	mov	ecx, DWORD PTR [esi+4]
 	push	edi
 	mov	edi, DWORD PTR __Off$[esp]
@@ -5180,19 +5076,19 @@ $LN13@operator@129:
 	add	edi, edi
 	add	ecx, edi
 	cmp	ecx, DWORD PTR [edx+16]
-	ja	SHORT $LN3@operator@129
+	ja	SHORT $LN3@operator@156
 	test	eax, eax
-	je	SHORT $LN18@operator@129
+	je	SHORT $LN18@operator@156
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN19@operator@129
-$LN18@operator@129:
+	jmp	SHORT $LN19@operator@156
+$LN18@operator@156:
 	xor	eax, eax
-$LN19@operator@129:
+$LN19@operator@156:
 	cmp	ecx, DWORD PTR [eax+12]
-	jae	SHORT $LN23@operator@129
-$LN3@operator@129:
+	jae	SHORT $LN23@operator@156
+$LN3@operator@156:
 	call	__invalid_parameter_noinfo
-$LN23@operator@129:
+$LN23@operator@156:
 	add	DWORD PTR [esi+4], edi
 
 ; 376  : 		return (*this);
@@ -5226,9 +5122,9 @@ _TEXT	SEGMENT
 ; 274  : 			_SCL_SECURE_TRAITS_VALIDATE(this->_Has_container());
 
 	cmp	DWORD PTR [esi], 0
-	jne	SHORT $LN3@operator@130
+	jne	SHORT $LN3@operator@157
 	call	__invalid_parameter_noinfo
-$LN3@operator@130:
+$LN3@operator@157:
 
 ; 275  : 			_Ptr = _Prevnode(_Ptr);
 
@@ -5240,16 +5136,16 @@ $LN3@operator@130:
 	mov	eax, DWORD PTR [esi]
 	mov	DWORD PTR [esi+4], ecx
 	test	eax, eax
-	je	SHORT $LN13@operator@130
+	je	SHORT $LN13@operator@157
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN14@operator@130
-$LN13@operator@130:
+	jmp	SHORT $LN14@operator@157
+$LN13@operator@157:
 	xor	eax, eax
-$LN14@operator@130:
+$LN14@operator@157:
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN17@operator@130
+	jne	SHORT $LN17@operator@157
 	call	__invalid_parameter_noinfo
-$LN17@operator@130:
+$LN17@operator@157:
 
 ; 277  :  #endif /* _HAS_ITERATOR_DEBUGGING */
 ; 278  : 
@@ -5422,29 +5318,29 @@ __Off$ = 12						; size = 4
 ; 382  : 		return (_Tmp += _Off);
 
 	test	esi, esi
-	jne	SHORT $LN24@operator@131
+	jne	SHORT $LN24@operator@158
 	call	__invalid_parameter_noinfo
 	xor	eax, eax
-$LN15@operator@131:
+$LN15@operator@158:
 	mov	ecx, DWORD PTR __Off$[esp+8]
 	lea	edi, DWORD PTR [edi+ecx*8]
 	cmp	edi, DWORD PTR [eax+16]
-	ja	SHORT $LN5@operator@131
+	ja	SHORT $LN5@operator@158
 	test	esi, esi
-	je	SHORT $LN20@operator@131
+	je	SHORT $LN20@operator@158
 	mov	eax, DWORD PTR [esi]
-	jmp	SHORT $LN21@operator@131
-$LN24@operator@131:
+	jmp	SHORT $LN21@operator@158
+$LN24@operator@158:
 	mov	eax, DWORD PTR [esi]
-	jmp	SHORT $LN15@operator@131
-$LN20@operator@131:
+	jmp	SHORT $LN15@operator@158
+$LN20@operator@158:
 	xor	eax, eax
-$LN21@operator@131:
+$LN21@operator@158:
 	cmp	edi, DWORD PTR [eax+12]
-	jae	SHORT $LN6@operator@131
-$LN5@operator@131:
+	jae	SHORT $LN6@operator@158
+$LN5@operator@158:
 	call	__invalid_parameter_noinfo
-$LN6@operator@131:
+$LN6@operator@158:
 	mov	DWORD PTR [ebx+4], edi
 	pop	edi
 	mov	DWORD PTR [ebx], esi
@@ -5467,24 +5363,24 @@ _TEXT	SEGMENT
 ; 417  : 			--(*(_Mybase_iter *)this);
 
 	cmp	DWORD PTR [esi], 0
-	jne	SHORT $LN5@operator@132
+	jne	SHORT $LN5@operator@159
 	call	__invalid_parameter_noinfo
-$LN5@operator@132:
+$LN5@operator@159:
 	mov	eax, DWORD PTR [esi+4]
 	mov	ecx, DWORD PTR [eax+4]
 	mov	eax, DWORD PTR [esi]
 	mov	DWORD PTR [esi+4], ecx
 	test	eax, eax
-	je	SHORT $LN15@operator@132
+	je	SHORT $LN15@operator@159
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN16@operator@132
-$LN15@operator@132:
+	jmp	SHORT $LN16@operator@159
+$LN15@operator@159:
 	xor	eax, eax
-$LN16@operator@132:
+$LN16@operator@159:
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN19@operator@132
+	jne	SHORT $LN19@operator@159
 	call	__invalid_parameter_noinfo
-$LN19@operator@132:
+$LN19@operator@159:
 
 ; 418  : 			return (*this);
 
@@ -6058,25 +5954,25 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN17@operator@133
+	jne	SHORT $LN17@operator@160
 	call	__invalid_parameter_noinfo
 
 ; 247  : 			_SCL_SECURE_TRAITS_VALIDATE_RANGE(_Ptr != ((_Myt *)(this->_Getmycont()))->_Myhead);
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN11@operator@133
-$LN17@operator@133:
+	je	SHORT $LN11@operator@160
+$LN17@operator@160:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN12@operator@133
-$LN11@operator@133:
+	jmp	SHORT $LN12@operator@160
+$LN11@operator@160:
 	xor	eax, eax
-$LN12@operator@133:
+$LN12@operator@160:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN1@operator@133
+	jne	SHORT $LN1@operator@160
 	call	__invalid_parameter_noinfo
-$LN1@operator@133:
+$LN1@operator@160:
 
 ; 248  :  #endif /* _HAS_ITERATOR_DEBUGGING */
 ; 249  : 
@@ -6115,25 +6011,25 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN17@operator@134
+	jne	SHORT $LN17@operator@161
 	call	__invalid_parameter_noinfo
 
 ; 223  : 			_SCL_SECURE_TRAITS_VALIDATE_RANGE(_Ptr != ((_Myt *)(this->_Getmycont()))->_Myhead);
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN11@operator@134
-$LN17@operator@134:
+	je	SHORT $LN11@operator@161
+$LN17@operator@161:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN12@operator@134
-$LN11@operator@134:
+	jmp	SHORT $LN12@operator@161
+$LN11@operator@161:
 	xor	eax, eax
-$LN12@operator@134:
+$LN12@operator@161:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN1@operator@134
+	jne	SHORT $LN1@operator@161
 	call	__invalid_parameter_noinfo
-$LN1@operator@134:
+$LN1@operator@161:
 
 ; 224  :  #endif /* _HAS_ITERATOR_DEBUGGING */
 ; 225  : 
@@ -6157,22 +6053,22 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN19@operator@135
+	jne	SHORT $LN19@operator@162
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN13@operator@135
-$LN19@operator@135:
+	je	SHORT $LN13@operator@162
+$LN19@operator@162:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN14@operator@135
-$LN13@operator@135:
+	jmp	SHORT $LN14@operator@162
+$LN13@operator@162:
 	xor	eax, eax
-$LN14@operator@135:
+$LN14@operator@162:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN3@operator@135
+	jne	SHORT $LN3@operator@162
 	call	__invalid_parameter_noinfo
-$LN3@operator@135:
+$LN3@operator@162:
 	mov	edx, DWORD PTR [esi+4]
 	mov	eax, DWORD PTR [edx]
 	mov	DWORD PTR [esi+4], eax
@@ -6196,22 +6092,22 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN19@operator@136
+	jne	SHORT $LN19@operator@163
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN13@operator@136
-$LN19@operator@136:
+	je	SHORT $LN13@operator@163
+$LN19@operator@163:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN14@operator@136
-$LN13@operator@136:
+	jmp	SHORT $LN14@operator@163
+$LN13@operator@163:
 	xor	eax, eax
-$LN14@operator@136:
+$LN14@operator@163:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN3@operator@136
+	jne	SHORT $LN3@operator@163
 	call	__invalid_parameter_noinfo
-$LN3@operator@136:
+$LN3@operator@163:
 	mov	eax, DWORD PTR [esi+4]
 	add	eax, 8
 
@@ -6474,8 +6370,8 @@ $LN7@equal_rang@6:
 _TEXT	ENDS
 ;	COMDAT ?lower_bound@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE?AV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@ABI@Z
 _TEXT	SEGMENT
-$T361656 = -16						; size = 4
-$T361423 = -16						; size = 8
+$T377625 = -16						; size = 4
+$T377392 = -16						; size = 8
 __Where$ = -8						; size = 8
 tv540 = 8						; size = 4
 _this$ = 8						; size = 4
@@ -6540,7 +6436,7 @@ $LN40@lower_boun@2:
 ; 642  : 				return (this->comp(_Keyval,
 ; 643  : 					this->_Kfn(*_Where)) ? end() : _Where);
 
-	mov	DWORD PTR $T361656[esp+32], esi
+	mov	DWORD PTR $T377625[esp+32], esi
 $LL58@lower_boun@2:
 	mov	edx, DWORD PTR [ebx+52]
 	sub	edx, DWORD PTR [ebx+48]
@@ -6586,7 +6482,7 @@ $LN65@lower_boun@2:
 	call	__invalid_parameter_noinfo
 $LN54@lower_boun@2:
 	mov	edi, DWORD PTR [edi]
-	mov	esi, DWORD PTR $T361656[esp+32]
+	mov	esi, DWORD PTR $T377625[esp+32]
 	jmp	SHORT $LL58@lower_boun@2
 $LN171@lower_boun@2:
 
@@ -6622,9 +6518,9 @@ $LN109@lower_boun@2:
 	mov	ecx, DWORD PTR [eax+20]
 	mov	edx, DWORD PTR [eax]
 	mov	eax, DWORD PTR ___$ReturnUdt$[esp+28]
-	mov	DWORD PTR $T361423[esp+36], ecx
-	lea	ecx, DWORD PTR $T361423[esp+32]
-	mov	DWORD PTR $T361423[esp+32], edx
+	mov	DWORD PTR $T377392[esp+36], ecx
+	lea	ecx, DWORD PTR $T377392[esp+32]
+	mov	DWORD PTR $T377392[esp+32], edx
 	mov	edx, DWORD PTR [ecx]
 	mov	ecx, DWORD PTR [ecx+4]
 	mov	DWORD PTR [eax], edx
@@ -6698,14 +6594,14 @@ __Ptr$ = 8						; size = 4
 	mov	ebx, DWORD PTR __Ptr$[esp]
 	mov	DWORD PTR [edi], 0
 	test	esi, esi
-	je	SHORT $LN3@Vector_ite@9
+	je	SHORT $LN3@Vector_ite@10
 	cmp	DWORD PTR [esi+12], ebx
-	ja	SHORT $LN3@Vector_ite@9
+	ja	SHORT $LN3@Vector_ite@10
 	cmp	ebx, DWORD PTR [esi+16]
-	jbe	SHORT $LN4@Vector_ite@9
-$LN3@Vector_ite@9:
+	jbe	SHORT $LN4@Vector_ite@10
+$LN3@Vector_ite@10:
 	call	__invalid_parameter_noinfo
-$LN4@Vector_ite@9:
+$LN4@Vector_ite@10:
 	mov	eax, DWORD PTR [esi]
 	mov	DWORD PTR [edi], eax
 	mov	DWORD PTR [edi+4], ebx
@@ -6940,6 +6836,67 @@ $LN2@Copy@4:
 	ret	4
 ?_Copy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXABV12@@Z ENDP ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Copy
 ; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+_TEXT	ENDS
+;	COMDAT ?end@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBE?AV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@XZ
+_TEXT	SEGMENT
+?end@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBE?AV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@XZ PROC ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::end, COMDAT
+; _this$ = edi
+; ___$ReturnUdt$ = esi
+
+; 655  : 		{	// return iterator for end of nonmutable sequence
+
+	push	ebx
+
+; 656  : 		return (const_iterator(_Mylast, this));
+
+	mov	ebx, DWORD PTR [edi+16]
+	mov	DWORD PTR [esi], 0
+	cmp	DWORD PTR [edi+12], ebx
+	jbe	SHORT $LN4@end@28
+	call	__invalid_parameter_noinfo
+$LN4@end@28:
+	mov	eax, DWORD PTR [edi]
+	mov	DWORD PTR [esi], eax
+	mov	DWORD PTR [esi+4], ebx
+	mov	eax, esi
+	pop	ebx
+
+; 657  : 		}
+
+	ret	0
+?end@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBE?AV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@XZ ENDP ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::end
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ?begin@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBE?AV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@XZ
+_TEXT	SEGMENT
+?begin@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBE?AV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@XZ PROC ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::begin, COMDAT
+; _this$ = edi
+; ___$ReturnUdt$ = esi
+
+; 645  : 		{	// return iterator for beginning of nonmutable sequence
+
+	push	ebx
+
+; 646  : 		return (const_iterator(_Myfirst, this));
+
+	mov	ebx, DWORD PTR [edi+12]
+	mov	DWORD PTR [esi], 0
+	cmp	ebx, DWORD PTR [edi+16]
+	jbe	SHORT $LN4@begin@31
+	call	__invalid_parameter_noinfo
+$LN4@begin@31:
+	mov	eax, DWORD PTR [edi]
+	mov	DWORD PTR [esi], eax
+	mov	DWORD PTR [esi+4], ebx
+	mov	eax, esi
+	pop	ebx
+
+; 647  : 		}
+
+	ret	0
+?begin@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QBE?AV?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@XZ ENDP ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::begin
+; Function compile flags: /Ogtpy
 ; File c:\program files\microsoft visual studio 9.0\vc\include\list
 _TEXT	ENDS
 ;	COMDAT ??9?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QBE_NABV012@@Z
@@ -6952,12 +6909,12 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [edi]
 	test	eax, eax
-	je	SHORT $LN3@operator@137
+	je	SHORT $LN3@operator@164
 	cmp	eax, DWORD PTR [esi]
-	je	SHORT $LN4@operator@137
-$LN3@operator@137:
+	je	SHORT $LN4@operator@164
+$LN3@operator@164:
 	call	__invalid_parameter_noinfo
-$LN4@operator@137:
+$LN4@operator@164:
 	mov	eax, DWORD PTR [edi+4]
 	xor	ecx, ecx
 	cmp	eax, DWORD PTR [esi+4]
@@ -6986,22 +6943,22 @@ _TEXT	SEGMENT
 ; 257  : 			++*this;
 
 	test	eax, eax
-	jne	SHORT $LN19@operator@138
+	jne	SHORT $LN19@operator@165
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN13@operator@138
-$LN19@operator@138:
+	je	SHORT $LN13@operator@165
+$LN19@operator@165:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN14@operator@138
-$LN13@operator@138:
+	jmp	SHORT $LN14@operator@165
+$LN13@operator@165:
 	xor	eax, eax
-$LN14@operator@138:
+$LN14@operator@165:
 	mov	edx, DWORD PTR [esi+4]
 	cmp	edx, DWORD PTR [eax+20]
-	jne	SHORT $LN3@operator@138
+	jne	SHORT $LN3@operator@165
 	call	__invalid_parameter_noinfo
-$LN3@operator@138:
+$LN3@operator@165:
 	mov	eax, DWORD PTR [esi+4]
 	mov	ecx, DWORD PTR [eax]
 	mov	DWORD PTR [esi+4], ecx
@@ -7025,22 +6982,22 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN19@operator@139
+	jne	SHORT $LN19@operator@166
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN13@operator@139
-$LN19@operator@139:
+	je	SHORT $LN13@operator@166
+$LN19@operator@166:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN14@operator@139
-$LN13@operator@139:
+	jmp	SHORT $LN14@operator@166
+$LN13@operator@166:
 	xor	eax, eax
-$LN14@operator@139:
+$LN14@operator@166:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN3@operator@139
+	jne	SHORT $LN3@operator@166
 	call	__invalid_parameter_noinfo
-$LN3@operator@139:
+$LN3@operator@166:
 	mov	eax, DWORD PTR [esi+4]
 	add	eax, 8
 
@@ -7066,22 +7023,22 @@ _TEXT	SEGMENT
 ; 411  : 			++*this;
 
 	test	eax, eax
-	jne	SHORT $LN21@operator@140
+	jne	SHORT $LN21@operator@167
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN15@operator@140
-$LN21@operator@140:
+	je	SHORT $LN15@operator@167
+$LN21@operator@167:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN16@operator@140
-$LN15@operator@140:
+	jmp	SHORT $LN16@operator@167
+$LN15@operator@167:
 	xor	eax, eax
-$LN16@operator@140:
+$LN16@operator@167:
 	mov	edx, DWORD PTR [esi+4]
 	cmp	edx, DWORD PTR [eax+20]
-	jne	SHORT $LN5@operator@140
+	jne	SHORT $LN5@operator@167
 	call	__invalid_parameter_noinfo
-$LN5@operator@140:
+$LN5@operator@167:
 	mov	eax, DWORD PTR [esi+4]
 	mov	ecx, DWORD PTR [eax]
 	mov	DWORD PTR [esi+4], ecx
@@ -7105,22 +7062,22 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN21@operator@141
+	jne	SHORT $LN21@operator@168
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN15@operator@141
-$LN21@operator@141:
+	je	SHORT $LN15@operator@168
+$LN21@operator@168:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN16@operator@141
-$LN15@operator@141:
+	jmp	SHORT $LN16@operator@168
+$LN15@operator@168:
 	xor	eax, eax
-$LN16@operator@141:
+$LN16@operator@168:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN5@operator@141
+	jne	SHORT $LN5@operator@168
 	call	__invalid_parameter_noinfo
-$LN5@operator@141:
+$LN5@operator@168:
 	mov	eax, DWORD PTR [esi+4]
 	add	eax, 8
 
@@ -7173,9 +7130,9 @@ _TEXT	SEGMENT
 	mov	ebx, DWORD PTR [edi+16]
 	mov	DWORD PTR [esi], 0
 	cmp	DWORD PTR [edi+12], ebx
-	jbe	SHORT $LN6@end@19
+	jbe	SHORT $LN6@end@29
 	call	__invalid_parameter_noinfo
-$LN6@end@19:
+$LN6@end@29:
 	mov	eax, DWORD PTR [edi]
 	mov	DWORD PTR [esi], eax
 	mov	DWORD PTR [esi+4], ebx
@@ -7203,9 +7160,9 @@ _TEXT	SEGMENT
 	mov	ebx, DWORD PTR [edi+12]
 	mov	DWORD PTR [esi], 0
 	cmp	ebx, DWORD PTR [edi+16]
-	jbe	SHORT $LN6@begin@22
+	jbe	SHORT $LN6@begin@32
 	call	__invalid_parameter_noinfo
-$LN6@begin@22:
+$LN6@begin@32:
 	mov	eax, DWORD PTR [edi]
 	mov	DWORD PTR [esi], eax
 	mov	DWORD PTR [esi+4], ebx
@@ -7227,13 +7184,14 @@ _TEXT	SEGMENT
 
 ; 82   : 		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); } ///< returns true if this channel has no more room
 
-	mov	ecx, DWORD PTR [edi+1124]
-	sub	ecx, DWORD PTR [edi+1120]
+	mov	ecx, DWORD PTR [edi+1188]
+	sub	ecx, DWORD PTR [edi+1184]
 	push	esi
 	mov	esi, eax
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
@@ -7241,8 +7199,8 @@ _TEXT	SEGMENT
 	jb	SHORT $LN3@isFull
 	call	__invalid_parameter_noinfo
 $LN3@isFull:
-	mov	ecx, DWORD PTR [edi+1120]
-	imul	esi, 424				; 000001a8H
+	mov	ecx, DWORD PTR [edi+1184]
+	imul	esi, 456				; 000001c8H
 	mov	edx, DWORD PTR [esi+ecx+140]
 	sub	edx, DWORD PTR [esi+ecx+136]
 	lea	eax, DWORD PTR [esi+ecx+112]
@@ -7401,7 +7359,7 @@ $LN15@fill@8:
 _TEXT	ENDS
 ;	COMDAT ??$_Distance@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@I@std@@YAXV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@0@0AAI@Z
 _TEXT	SEGMENT
-$T404938 = -4						; size = 1
+$T427011 = -4						; size = 1
 __First$ = 8						; size = 8
 __Last$ = 16						; size = 8
 ??$_Distance@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@I@std@@YAXV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@0@0AAI@Z PROC ; std::_Distance<std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::_Iterator<1>,unsigned int>, COMDAT
@@ -7413,7 +7371,7 @@ __Last$ = 16						; size = 8
 
 ; 1893 : 	_Distance2(_First, _Last, _Off, _Iter_cat(_First));
 
-	mov	eax, DWORD PTR $T404938[esp+4]
+	mov	eax, DWORD PTR $T427011[esp+4]
 	mov	ecx, DWORD PTR __Last$[esp+4]
 	mov	edx, DWORD PTR __Last$[esp]
 	push	eax
@@ -7435,7 +7393,7 @@ __Last$ = 16						; size = 8
 _TEXT	ENDS
 ;	COMDAT ?erase@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z
 _TEXT	SEGMENT
-$T404946 = -8						; size = 8
+$T427019 = -8						; size = 8
 ___$ReturnUdt$ = 8					; size = 4
 __Where$ = 12						; size = 8
 ?erase@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z PROC ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::erase, COMDAT
@@ -7460,7 +7418,7 @@ __Where$ = 12						; size = 8
 	mov	ebx, DWORD PTR ___$ReturnUdt$[esp+8]
 	push	esi
 	mov	esi, DWORD PTR __Where$[esp+16]
-	mov	DWORD PTR $T404946[esp+16], eax
+	mov	DWORD PTR $T427019[esp+16], eax
 	test	eax, eax
 	jne	SHORT $LN54@erase@9
 	call	__invalid_parameter_noinfo
@@ -7750,23 +7708,23 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN15@operator@242
+	jne	SHORT $LN15@operator@299
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN11@operator@242
-$LN15@operator@242:
+	je	SHORT $LN11@operator@299
+$LN15@operator@299:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN12@operator@242
-$LN11@operator@242:
+	jmp	SHORT $LN12@operator@299
+$LN11@operator@299:
 	xor	eax, eax
-$LN12@operator@242:
+$LN12@operator@299:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+16]
-	jb	SHORT $LN16@operator@242
+	jb	SHORT $LN16@operator@299
 	call	__invalid_parameter_noinfo
-$LN16@operator@242:
-	add	DWORD PTR [esi+4], 424			; 000001a8H
+$LN16@operator@299:
+	add	DWORD PTR [esi+4], 456			; 000001c8H
 
 ; 350  : 		return (*this);
 
@@ -7787,27 +7745,27 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN15@operator@243
+	jne	SHORT $LN15@operator@300
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN11@operator@243
-$LN15@operator@243:
+	je	SHORT $LN11@operator@300
+$LN15@operator@300:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN12@operator@243
-$LN11@operator@243:
+	jmp	SHORT $LN12@operator@300
+$LN11@operator@300:
 	xor	eax, eax
-$LN12@operator@243:
+$LN12@operator@300:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+16]
-	jb	SHORT $LN16@operator@243
+	jb	SHORT $LN16@operator@300
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi+4]
 
 ; 340  : 		}
 
 	ret	0
-$LN16@operator@243:
+$LN16@operator@300:
 
 ; 339  : 		return ((reference)**(_Mybase *)this);
 
@@ -7878,23 +7836,23 @@ _TEXT	SEGMENT
 ; 356  : 		++*this;
 
 	test	eax, eax
-	jne	SHORT $LN17@operator@244
+	jne	SHORT $LN17@operator@301
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN13@operator@244
-$LN17@operator@244:
+	je	SHORT $LN13@operator@301
+$LN17@operator@301:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN14@operator@244
-$LN13@operator@244:
+	jmp	SHORT $LN14@operator@301
+$LN13@operator@301:
 	xor	eax, eax
-$LN14@operator@244:
+$LN14@operator@301:
 	mov	edx, DWORD PTR [esi+4]
 	cmp	edx, DWORD PTR [eax+16]
-	jb	SHORT $LN18@operator@244
+	jb	SHORT $LN18@operator@301
 	call	__invalid_parameter_noinfo
-$LN18@operator@244:
-	add	DWORD PTR [esi+4], 424			; 000001a8H
+$LN18@operator@301:
+	add	DWORD PTR [esi+4], 456			; 000001c8H
 
 ; 357  : 		return (_Tmp);
 
@@ -7915,27 +7873,27 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN17@operator@245
+	jne	SHORT $LN17@operator@302
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN13@operator@245
-$LN17@operator@245:
+	je	SHORT $LN13@operator@302
+$LN17@operator@302:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN14@operator@245
-$LN13@operator@245:
+	jmp	SHORT $LN14@operator@302
+$LN13@operator@302:
 	xor	eax, eax
-$LN14@operator@245:
+$LN14@operator@302:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+16]
-	jb	SHORT $LN18@operator@245
+	jb	SHORT $LN18@operator@302
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi+4]
 
 ; 345  : 		}
 
 	ret	0
-$LN18@operator@245:
+$LN18@operator@302:
 
 ; 344  : 		return (&**this);
 
@@ -7956,27 +7914,27 @@ _TEXT	SEGMENT
 
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	jne	SHORT $LN15@operator@246
+	jne	SHORT $LN15@operator@303
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi]
 	test	eax, eax
-	je	SHORT $LN11@operator@246
-$LN15@operator@246:
+	je	SHORT $LN11@operator@303
+$LN15@operator@303:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN12@operator@246
-$LN11@operator@246:
+	jmp	SHORT $LN12@operator@303
+$LN11@operator@303:
 	xor	eax, eax
-$LN12@operator@246:
+$LN12@operator@303:
 	mov	ecx, DWORD PTR [esi+4]
 	cmp	ecx, DWORD PTR [eax+16]
-	jb	SHORT $LN16@operator@246
+	jb	SHORT $LN16@operator@303
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR [esi+4]
 
 ; 112  : 		}
 
 	ret	0
-$LN16@operator@246:
+$LN16@operator@303:
 
 ; 111  : 		return (&**this);
 
@@ -7991,7 +7949,7 @@ $LN16@operator@246:
 _TEXT	ENDS
 ;	COMDAT ?substr@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV12@II@Z
 _TEXT	SEGMENT
-$T405811 = -4						; size = 4
+$T427884 = -4						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 __Off$ = 12						; size = 4
 __Count$ = 16						; size = 4
@@ -8010,7 +7968,7 @@ __Count$ = 16						; size = 4
 	xor	eax, eax
 	mov	DWORD PTR [esi+20], eax
 	mov	DWORD PTR [esi+24], 15			; 0000000fH
-	mov	DWORD PTR $T405811[esp+8], eax
+	mov	DWORD PTR $T427884[esp+8], eax
 	mov	BYTE PTR [esi+4], al
 	mov	eax, DWORD PTR __Count$[esp+4]
 	push	eax
@@ -8035,7 +7993,7 @@ _count$ = 8						; size = 4
 _this$ = 8						; size = 4
 ?pendingTransactionCount@System@DRAMsimII@@QBEIXZ PROC	; DRAMsimII::System::pendingTransactionCount
 
-; 347  : {
+; 355  : {
 
 	push	ebx
 	push	ebp
@@ -8043,24 +8001,24 @@ _this$ = 8						; size = 4
 	push	esi
 	push	edi
 
-; 348  : 	unsigned count = 0;
-; 349  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+; 356  : 	unsigned count = 0;
+; 357  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
 
-	mov	edi, DWORD PTR [ebp+1120]
+	mov	edi, DWORD PTR [ebp+1184]
 	mov	DWORD PTR _count$[esp+12], 0
-	cmp	edi, DWORD PTR [ebp+1124]
+	cmp	edi, DWORD PTR [ebp+1188]
 	jbe	SHORT $LN9@pendingTra
 	call	__invalid_parameter_noinfo
 $LN9@pendingTra:
-	mov	esi, DWORD PTR [ebp+1108]
+	mov	esi, DWORD PTR [ebp+1172]
 	npad	7
 $LL24@pendingTra:
-	mov	ebx, DWORD PTR [ebp+1124]
-	cmp	DWORD PTR [ebp+1120], ebx
+	mov	ebx, DWORD PTR [ebp+1188]
+	cmp	DWORD PTR [ebp+1184], ebx
 	jbe	SHORT $LN37@pendingTra
 	call	__invalid_parameter_noinfo
 $LN37@pendingTra:
-	mov	eax, DWORD PTR [ebp+1108]
+	mov	eax, DWORD PTR [ebp+1172]
 	test	esi, esi
 	je	SHORT $LN50@pendingTra
 	cmp	esi, eax
@@ -8071,7 +8029,7 @@ $LN51@pendingTra:
 	cmp	edi, ebx
 	je	SHORT $LN81@pendingTra
 
-; 350  : 		count += i->pendingTransactionCount();
+; 358  : 		count += i->pendingTransactionCount();
 
 	test	esi, esi
 	jne	SHORT $LN80@pendingTra
@@ -8082,7 +8040,7 @@ $LN69@pendingTra:
 	jb	SHORT $LN60@pendingTra
 	call	__invalid_parameter_noinfo
 $LN60@pendingTra:
-	mov	eax, DWORD PTR [edi+420]
+	mov	eax, DWORD PTR [edi+452]
 	add	DWORD PTR _count$[esp+12], eax
 	test	esi, esi
 	jne	SHORT $LN79@pendingTra
@@ -8090,35 +8048,35 @@ $LN60@pendingTra:
 	xor	eax, eax
 $LN31@pendingTra:
 
-; 348  : 	unsigned count = 0;
-; 349  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+; 356  : 	unsigned count = 0;
+; 357  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
 
 	cmp	edi, DWORD PTR [eax+16]
 	jb	SHORT $LN22@pendingTra
 	call	__invalid_parameter_noinfo
 $LN22@pendingTra:
-	add	edi, 424				; 000001a8H
+	add	edi, 456				; 000001c8H
 	jmp	SHORT $LL24@pendingTra
 $LN80@pendingTra:
 
-; 350  : 		count += i->pendingTransactionCount();
+; 358  : 		count += i->pendingTransactionCount();
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN69@pendingTra
 $LN79@pendingTra:
 
-; 348  : 	unsigned count = 0;
-; 349  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+; 356  : 	unsigned count = 0;
+; 357  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN31@pendingTra
 $LN81@pendingTra:
 
-; 351  : 	return count;
+; 359  : 	return count;
 
 	mov	eax, DWORD PTR _count$[esp+12]
 
-; 352  : }
+; 360  : }
 
 	pop	edi
 	pop	esi
@@ -8135,26 +8093,26 @@ _oldestTime$ = -8					; size = 8
 _this$ = 8						; size = 4
 ?findOldestChannel@System@DRAMsimII@@IBEIXZ PROC	; DRAMsimII::System::findOldestChannel
 
-; 302  : {
+; 305  : {
 
 	sub	esp, 12					; 0000000cH
 	push	ebx
 	push	ebp
 	push	esi
 
-; 303  : 	vector<Channel>::const_iterator currentChan = channel.begin();
+; 306  : 	vector<Channel>::const_iterator currentChan = channel.begin();
 
 	mov	esi, DWORD PTR _this$[esp+20]
 	push	edi
-	mov	edi, DWORD PTR [esi+1120]
-	cmp	edi, DWORD PTR [esi+1124]
+	mov	edi, DWORD PTR [esi+1184]
+	cmp	edi, DWORD PTR [esi+1188]
 	jbe	SHORT $LN10@findOldest
 	call	__invalid_parameter_noinfo
 $LN10@findOldest:
-	mov	esi, DWORD PTR [esi+1108]
+	mov	esi, DWORD PTR [esi+1172]
 	mov	ebx, edi
 
-; 304  : 	tick oldestTime = currentChan->getTime();
+; 307  : 	tick oldestTime = currentChan->getTime();
 
 	test	esi, esi
 	jne	$LN145@findOldest
@@ -8169,7 +8127,7 @@ $LN23@findOldest:
 	mov	ebp, DWORD PTR [edi+8]
 	mov	DWORD PTR _oldestTime$[esp+32], eax
 
-; 305  : 	unsigned oldestChanID = currentChan->getChannelID();
+; 308  : 	unsigned oldestChanID = currentChan->getChannelID();
 
 	test	esi, esi
 	jne	$LN144@findOldest
@@ -8180,21 +8138,21 @@ $LN48@findOldest:
 	jb	SHORT $LN39@findOldest
 	call	__invalid_parameter_noinfo
 $LN39@findOldest:
-	mov	ecx, DWORD PTR [edi+360]
+	mov	ecx, DWORD PTR [edi+392]
 	mov	DWORD PTR _oldestChanID$[esp+28], ecx
 	npad	4
 
-; 306  : 	for (; currentChan != channel.end(); currentChan++)
+; 309  : 	for (; currentChan != channel.end(); currentChan++)
 
 $LL57@findOldest:
 	mov	eax, DWORD PTR _this$[esp+24]
-	mov	edi, DWORD PTR [eax+1124]
-	cmp	DWORD PTR [eax+1120], edi
+	mov	edi, DWORD PTR [eax+1188]
+	cmp	DWORD PTR [eax+1184], edi
 	jbe	SHORT $LN70@findOldest
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR _this$[esp+24]
 $LN70@findOldest:
-	mov	eax, DWORD PTR [eax+1108]
+	mov	eax, DWORD PTR [eax+1172]
 	test	esi, esi
 	je	SHORT $LN83@findOldest
 	cmp	esi, eax
@@ -8205,8 +8163,8 @@ $LN84@findOldest:
 	cmp	ebx, edi
 	je	$LN147@findOldest
 
-; 307  : 	{
-; 308  : 		if (currentChan->getTime() < oldestTime)
+; 310  : 	{
+; 311  : 		if (currentChan->getTime() < oldestTime)
 
 	test	esi, esi
 	jne	$LN143@findOldest
@@ -8226,8 +8184,8 @@ $LN93@findOldest:
 	jae	SHORT $LN3@findOldest
 $LN146@findOldest:
 
-; 309  : 		{
-; 310  : 			oldestChanID = currentChan->getChannelID();
+; 312  : 		{
+; 313  : 			oldestChanID = currentChan->getChannelID();
 
 	test	esi, esi
 	jne	SHORT $LN142@findOldest
@@ -8238,10 +8196,10 @@ $LN118@findOldest:
 	jb	SHORT $LN109@findOldest
 	call	__invalid_parameter_noinfo
 $LN109@findOldest:
-	mov	ecx, DWORD PTR [ebx+360]
+	mov	ecx, DWORD PTR [ebx+392]
 	mov	DWORD PTR _oldestChanID$[esp+28], ecx
 
-; 311  : 			oldestTime = currentChan->getTime();
+; 314  : 			oldestTime = currentChan->getTime();
 
 	test	esi, esi
 	jne	SHORT $LN141@findOldest
@@ -8257,7 +8215,7 @@ $LN125@findOldest:
 	mov	DWORD PTR _oldestTime$[esp+32], edx
 $LN3@findOldest:
 
-; 306  : 	for (; currentChan != channel.end(); currentChan++)
+; 309  : 	for (; currentChan != channel.end(); currentChan++)
 
 	test	esi, esi
 	jne	SHORT $LN140@findOldest
@@ -8268,52 +8226,52 @@ $LN64@findOldest:
 	jb	SHORT $LN55@findOldest
 	call	__invalid_parameter_noinfo
 $LN55@findOldest:
-	add	ebx, 424				; 000001a8H
+	add	ebx, 456				; 000001c8H
 	jmp	$LL57@findOldest
 $LN145@findOldest:
 
-; 304  : 	tick oldestTime = currentChan->getTime();
+; 307  : 	tick oldestTime = currentChan->getTime();
 
 	mov	eax, DWORD PTR [esi]
 	jmp	$LN32@findOldest
 $LN144@findOldest:
 
-; 305  : 	unsigned oldestChanID = currentChan->getChannelID();
+; 308  : 	unsigned oldestChanID = currentChan->getChannelID();
 
 	mov	eax, DWORD PTR [esi]
 	jmp	$LN48@findOldest
 $LN143@findOldest:
 
-; 307  : 	{
-; 308  : 		if (currentChan->getTime() < oldestTime)
+; 310  : 	{
+; 311  : 		if (currentChan->getTime() < oldestTime)
 
 	mov	eax, DWORD PTR [esi]
 	jmp	$LN102@findOldest
 $LN142@findOldest:
 
-; 309  : 		{
-; 310  : 			oldestChanID = currentChan->getChannelID();
+; 312  : 		{
+; 313  : 			oldestChanID = currentChan->getChannelID();
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN118@findOldest
 $LN141@findOldest:
 
-; 311  : 			oldestTime = currentChan->getTime();
+; 314  : 			oldestTime = currentChan->getTime();
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN134@findOldest
 $LN140@findOldest:
 
-; 306  : 	for (; currentChan != channel.end(); currentChan++)
+; 309  : 	for (; currentChan != channel.end(); currentChan++)
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN64@findOldest
 $LN147@findOldest:
 
-; 312  : 		}
-; 313  : 	}
-; 314  : 
-; 315  : 	return oldestChanID;
+; 315  : 		}
+; 316  : 	}
+; 317  : 
+; 318  : 	return oldestChanID;
 
 	mov	eax, DWORD PTR _oldestChanID$[esp+28]
 	pop	edi
@@ -8321,7 +8279,7 @@ $LN147@findOldest:
 	pop	ebp
 	pop	ebx
 
-; 316  : }
+; 319  : }
 
 	add	esp, 12					; 0000000cH
 	ret	4
@@ -8334,7 +8292,7 @@ _currentChan$ = -8					; size = 8
 _this$ = 8						; size = 4
 ?updateSystemTime@System@DRAMsimII@@IAEXXZ PROC		; DRAMsimII::System::updateSystemTime
 
-; 218  : {
+; 221  : {
 
 	sub	esp, 8
 	push	ebx
@@ -8343,18 +8301,18 @@ _this$ = 8						; size = 4
 	push	esi
 	push	edi
 
-; 219  : 	vector<Channel>::const_iterator currentChan = channel.begin();
+; 222  : 	vector<Channel>::const_iterator currentChan = channel.begin();
 
-	mov	edi, DWORD PTR [ebx+1120]
-	cmp	edi, DWORD PTR [ebx+1124]
+	mov	edi, DWORD PTR [ebx+1184]
+	cmp	edi, DWORD PTR [ebx+1188]
 	jbe	SHORT $LN12@updateSyst
 	call	__invalid_parameter_noinfo
 $LN12@updateSyst:
-	mov	esi, DWORD PTR [ebx+1108]
+	mov	esi, DWORD PTR [ebx+1172]
 	mov	ebp, esi
 	mov	DWORD PTR _currentChan$[esp+28], edi
 
-; 220  : 	time = currentChan->getTime();
+; 223  : 	time = currentChan->getTime();
 
 	test	esi, esi
 	jne	$LN130@updateSyst
@@ -8366,11 +8324,11 @@ $LN34@updateSyst:
 	call	__invalid_parameter_noinfo
 $LN25@updateSyst:
 	mov	eax, DWORD PTR [edi+8]
-	mov	DWORD PTR [ebx+11480], eax
+	mov	DWORD PTR [ebx+11544], eax
 	mov	ecx, DWORD PTR [edi+12]
-	mov	DWORD PTR [ebx+11484], ecx
+	mov	DWORD PTR [ebx+11548], ecx
 
-; 221  : 	currentChan++;
+; 224  : 	currentChan++;
 
 	test	esi, esi
 	jne	$LN129@updateSyst
@@ -8380,18 +8338,18 @@ $LN50@updateSyst:
 	jb	SHORT $LN41@updateSyst
 	call	__invalid_parameter_noinfo
 $LN41@updateSyst:
-	lea	esi, DWORD PTR [edi+424]
+	lea	esi, DWORD PTR [edi+456]
 
-; 222  : 
-; 223  : 	for (;currentChan != channel.end(); currentChan++)
+; 225  : 
+; 226  : 	for (;currentChan != channel.end(); currentChan++)
 
 $LL57@updateSyst:
-	mov	edi, DWORD PTR [ebx+1124]
-	cmp	DWORD PTR [ebx+1120], edi
+	mov	edi, DWORD PTR [ebx+1188]
+	cmp	DWORD PTR [ebx+1184], edi
 	jbe	SHORT $LN72@updateSyst
 	call	__invalid_parameter_noinfo
 $LN72@updateSyst:
-	mov	eax, DWORD PTR [ebx+1108]
+	mov	eax, DWORD PTR [ebx+1172]
 	test	ebp, ebp
 	je	SHORT $LN85@updateSyst
 	cmp	ebp, eax
@@ -8402,8 +8360,8 @@ $LN86@updateSyst:
 	cmp	esi, edi
 	je	$LN2@updateSyst
 
-; 224  : 	{
-; 225  : 		if (currentChan->getTime() < time)
+; 227  : 	{
+; 228  : 		if (currentChan->getTime() < time)
 
 	test	ebp, ebp
 	jne	SHORT $LN128@updateSyst
@@ -8415,15 +8373,15 @@ $LN104@updateSyst:
 	call	__invalid_parameter_noinfo
 $LN95@updateSyst:
 	mov	edx, DWORD PTR [esi+12]
-	cmp	edx, DWORD PTR [ebx+11484]
+	cmp	edx, DWORD PTR [ebx+11548]
 	jg	SHORT $LN3@updateSyst
 	jl	SHORT $LN131@updateSyst
 	mov	eax, DWORD PTR [esi+8]
-	cmp	eax, DWORD PTR [ebx+11480]
+	cmp	eax, DWORD PTR [ebx+11544]
 	jae	SHORT $LN3@updateSyst
 $LN131@updateSyst:
 
-; 226  : 			time = currentChan->getTime();
+; 229  : 			time = currentChan->getTime();
 
 	test	ebp, ebp
 	jne	SHORT $LN127@updateSyst
@@ -8435,13 +8393,13 @@ $LN120@updateSyst:
 	call	__invalid_parameter_noinfo
 $LN111@updateSyst:
 	mov	ecx, DWORD PTR [esi+8]
-	mov	DWORD PTR [ebx+11480], ecx
+	mov	DWORD PTR [ebx+11544], ecx
 	mov	edx, DWORD PTR [esi+12]
-	mov	DWORD PTR [ebx+11484], edx
+	mov	DWORD PTR [ebx+11548], edx
 $LN3@updateSyst:
 
-; 222  : 
-; 223  : 	for (;currentChan != channel.end(); currentChan++)
+; 225  : 
+; 226  : 	for (;currentChan != channel.end(); currentChan++)
 
 	test	ebp, ebp
 	jne	SHORT $LN126@updateSyst
@@ -8452,44 +8410,44 @@ $LN64@updateSyst:
 	jb	SHORT $LN55@updateSyst
 	call	__invalid_parameter_noinfo
 $LN55@updateSyst:
-	add	esi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
 	jmp	$LL57@updateSyst
 $LN130@updateSyst:
 
-; 220  : 	time = currentChan->getTime();
+; 223  : 	time = currentChan->getTime();
 
 	mov	eax, DWORD PTR [esi]
 	jmp	$LN34@updateSyst
 $LN129@updateSyst:
 
-; 221  : 	currentChan++;
+; 224  : 	currentChan++;
 
 	mov	esi, DWORD PTR [esi]
 	jmp	$LN50@updateSyst
 $LN128@updateSyst:
 
-; 224  : 	{
-; 225  : 		if (currentChan->getTime() < time)
+; 227  : 	{
+; 228  : 		if (currentChan->getTime() < time)
 
 	mov	eax, DWORD PTR [ebp]
 	jmp	SHORT $LN104@updateSyst
 $LN127@updateSyst:
 
-; 226  : 			time = currentChan->getTime();
+; 229  : 			time = currentChan->getTime();
 
 	mov	eax, DWORD PTR [ebp]
 	jmp	SHORT $LN120@updateSyst
 $LN126@updateSyst:
 
-; 222  : 
-; 223  : 	for (;currentChan != channel.end(); currentChan++)
+; 225  : 
+; 226  : 	for (;currentChan != channel.end(); currentChan++)
 
 	mov	eax, DWORD PTR [ebp]
 	jmp	SHORT $LN64@updateSyst
 $LN2@updateSyst:
 
-; 227  : 	}
-; 228  : }
+; 230  : 	}
+; 231  : }
 
 	pop	edi
 	pop	esi
@@ -8503,7 +8461,7 @@ _nextEvent$ = -8					; size = 8
 ?nextTick@System@DRAMsimII@@UBE_JXZ PROC		; DRAMsimII::System::nextTick
 ; _this$ = ecx
 
-; 175  : {
+; 178  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -8512,34 +8470,34 @@ _nextEvent$ = -8					; size = 8
 	push	ebx
 	mov	ebx, ecx
 
-; 176  : 	tick nextEvent = nextStats;
+; 179  : 	tick nextEvent = nextStats;
 
-	mov	eax, DWORD PTR [ebx+11488]
-	mov	ecx, DWORD PTR [ebx+11492]
+	mov	eax, DWORD PTR [ebx+11552]
+	mov	ecx, DWORD PTR [ebx+11556]
 	push	ebp
 	push	esi
 
-; 177  : 
-; 178  : 	// find the next time to wake from among all the channels
-; 179  : 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
+; 180  : 
+; 181  : 	// find the next time to wake from among all the channels
+; 182  : 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 
-	mov	esi, DWORD PTR [ebx+1120]
+	mov	esi, DWORD PTR [ebx+1184]
 	push	edi
 	mov	DWORD PTR _nextEvent$[esp+24], eax
 	mov	DWORD PTR _nextEvent$[esp+28], ecx
-	cmp	esi, DWORD PTR [ebx+1124]
+	cmp	esi, DWORD PTR [ebx+1188]
 	jbe	SHORT $LN10@nextTick
 	call	__invalid_parameter_noinfo
 $LN10@nextTick:
-	mov	edi, DWORD PTR [ebx+1108]
+	mov	edi, DWORD PTR [ebx+1172]
 	npad	4
 $LL25@nextTick:
-	mov	ebp, DWORD PTR [ebx+1124]
-	cmp	DWORD PTR [ebx+1120], ebp
+	mov	ebp, DWORD PTR [ebx+1188]
+	cmp	DWORD PTR [ebx+1184], ebp
 	jbe	SHORT $LN38@nextTick
 	call	__invalid_parameter_noinfo
 $LN38@nextTick:
-	mov	eax, DWORD PTR [ebx+1108]
+	mov	eax, DWORD PTR [ebx+1172]
 	test	edi, edi
 	je	SHORT $LN51@nextTick
 	cmp	edi, eax
@@ -8550,8 +8508,8 @@ $LN52@nextTick:
 	cmp	esi, ebp
 	je	SHORT $LN77@nextTick
 
-; 180  : 	{
-; 181  : 		tick channelNextWake = currentChan->nextTick();
+; 183  : 	{
+; 184  : 		tick channelNextWake = currentChan->nextTick();
 
 	test	edi, edi
 	jne	SHORT $LN75@nextTick
@@ -8567,9 +8525,9 @@ $LN61@nextTick:
 	mov	ecx, esi
 	call	eax
 
-; 182  : 		assert(channelNextWake > currentChan->getTime());
-; 183  : 
-; 184  : 		if (channelNextWake < nextEvent)
+; 185  : 		assert(channelNextWake > currentChan->getTime());
+; 186  : 
+; 187  : 		if (channelNextWake < nextEvent)
 
 	cmp	edx, DWORD PTR _nextEvent$[esp+28]
 	jg	SHORT $LN3@nextTick
@@ -8578,16 +8536,16 @@ $LN61@nextTick:
 	jae	SHORT $LN3@nextTick
 $LN76@nextTick:
 
-; 185  : 		{
-; 186  : 			nextEvent = channelNextWake;
+; 188  : 		{
+; 189  : 			nextEvent = channelNextWake;
 
 	mov	DWORD PTR _nextEvent$[esp+24], eax
 	mov	DWORD PTR _nextEvent$[esp+28], edx
 $LN3@nextTick:
 
-; 177  : 
-; 178  : 	// find the next time to wake from among all the channels
-; 179  : 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
+; 180  : 
+; 181  : 	// find the next time to wake from among all the channels
+; 182  : 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 
 	test	edi, edi
 	jne	SHORT $LN74@nextTick
@@ -8598,35 +8556,35 @@ $LN32@nextTick:
 	jb	SHORT $LN23@nextTick
 	call	__invalid_parameter_noinfo
 $LN23@nextTick:
-	add	esi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
 	jmp	SHORT $LL25@nextTick
 $LN75@nextTick:
 
-; 180  : 	{
-; 181  : 		tick channelNextWake = currentChan->nextTick();
+; 183  : 	{
+; 184  : 		tick channelNextWake = currentChan->nextTick();
 
 	mov	eax, DWORD PTR [edi]
 	jmp	SHORT $LN70@nextTick
 $LN74@nextTick:
 
-; 177  : 
-; 178  : 	// find the next time to wake from among all the channels
-; 179  : 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
+; 180  : 
+; 181  : 	// find the next time to wake from among all the channels
+; 182  : 	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
 
 	mov	eax, DWORD PTR [edi]
 	jmp	SHORT $LN32@nextTick
 $LN77@nextTick:
 
-; 187  : 		}
-; 188  : 	}
-; 189  : 	assert(nextEvent < TICK_MAX);
-; 190  : 	assert(nextEvent > time);
-; 191  : 	return nextEvent;
+; 190  : 		}
+; 191  : 	}
+; 192  : 	assert(nextEvent < TICK_MAX);
+; 193  : 	assert(nextEvent > time);
+; 194  : 	return nextEvent;
 
 	mov	eax, DWORD PTR _nextEvent$[esp+24]
 	mov	edx, DWORD PTR _nextEvent$[esp+28]
 
-; 192  : }
+; 195  : }
 
 	pop	edi
 	pop	esi
@@ -8640,7 +8598,7 @@ $LN77@nextTick:
 ; File c:\program files\microsoft visual studio 9.0\vc\include\list
 ;	COMDAT ?erase@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@0@Z
 _TEXT	SEGMENT
-$T444175 = -8						; size = 8
+$T466912 = -8						; size = 8
 ___$ReturnUdt$ = 8					; size = 4
 __First$ = 12						; size = 8
 __Last$ = 20						; size = 8
@@ -8735,7 +8693,7 @@ $LN78@erase@14:
 
 	push	eax
 	push	ecx
-	lea	eax, DWORD PTR $T444175[esp+32]
+	lea	eax, DWORD PTR $T466912[esp+32]
 	push	eax
 	mov	edi, esi
 	call	?erase@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::erase
@@ -8792,7 +8750,7 @@ _TEXT	SEGMENT
 _this$ = 8						; size = 4
 ?isEmpty@System@DRAMsimII@@QBE_NXZ PROC			; DRAMsimII::System::isEmpty
 
-; 475  : {
+; 483  : {
 
 	push	ebx
 	push	ebp
@@ -8800,21 +8758,21 @@ _this$ = 8						; size = 4
 	push	esi
 	push	edi
 
-; 476  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+; 484  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
 
-	mov	edi, DWORD PTR [ebp+1120]
-	cmp	edi, DWORD PTR [ebp+1124]
+	mov	edi, DWORD PTR [ebp+1184]
+	cmp	edi, DWORD PTR [ebp+1188]
 	jbe	SHORT $LN10@isEmpty@3
 	call	__invalid_parameter_noinfo
 $LN10@isEmpty@3:
-	mov	esi, DWORD PTR [ebp+1108]
+	mov	esi, DWORD PTR [ebp+1172]
 $LL25@isEmpty@3:
-	mov	ebx, DWORD PTR [ebp+1124]
-	cmp	DWORD PTR [ebp+1120], ebx
+	mov	ebx, DWORD PTR [ebp+1188]
+	cmp	DWORD PTR [ebp+1184], ebx
 	jbe	SHORT $LN38@isEmpty@3
 	call	__invalid_parameter_noinfo
 $LN38@isEmpty@3:
-	mov	eax, DWORD PTR [ebp+1108]
+	mov	eax, DWORD PTR [ebp+1172]
 	test	esi, esi
 	je	SHORT $LN51@isEmpty@3
 	cmp	esi, eax
@@ -8825,8 +8783,8 @@ $LN52@isEmpty@3:
 	cmp	edi, ebx
 	je	SHORT $LN2@isEmpty@3
 
-; 477  : 	{
-; 478  : 		if (!i->isEmpty())
+; 485  : 	{
+; 486  : 		if (!i->isEmpty())
 
 	test	esi, esi
 	jne	SHORT $LN76@isEmpty@3
@@ -8842,7 +8800,7 @@ $LN61@isEmpty@3:
 	test	al, al
 	je	SHORT $LN74@isEmpty@3
 
-; 476  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+; 484  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
 
 	test	esi, esi
 	jne	SHORT $LN75@isEmpty@3
@@ -8853,18 +8811,18 @@ $LN32@isEmpty@3:
 	jb	SHORT $LN23@isEmpty@3
 	call	__invalid_parameter_noinfo
 $LN23@isEmpty@3:
-	add	edi, 424				; 000001a8H
+	add	edi, 456				; 000001c8H
 	jmp	SHORT $LL25@isEmpty@3
 $LN76@isEmpty@3:
 
-; 477  : 	{
-; 478  : 		if (!i->isEmpty())
+; 485  : 	{
+; 486  : 		if (!i->isEmpty())
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN70@isEmpty@3
 $LN75@isEmpty@3:
 
-; 476  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+; 484  : 	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN32@isEmpty@3
@@ -8873,12 +8831,12 @@ $LN74@isEmpty@3:
 	pop	esi
 	pop	ebp
 
-; 479  : 			return false;
+; 487  : 			return false;
 
 	xor	al, al
 	pop	ebx
 
-; 482  : }
+; 490  : }
 
 	ret	4
 $LN2@isEmpty@3:
@@ -8886,13 +8844,13 @@ $LN2@isEmpty@3:
 	pop	esi
 	pop	ebp
 
-; 480  : 	}
-; 481  : 	return true;
+; 488  : 	}
+; 489  : 	return true;
 
 	mov	al, 1
 	pop	ebx
 
-; 482  : }
+; 490  : }
 
 	ret	4
 ?isEmpty@System@DRAMsimII@@QBE_NXZ ENDP			; DRAMsimII::System::isEmpty
@@ -8900,103 +8858,103 @@ _TEXT	ENDS
 PUBLIC	?moveToTime@System@DRAMsimII@@QAE_N_J@Z		; DRAMsimII::System::moveToTime
 ; Function compile flags: /Ogtpy
 _TEXT	SEGMENT
-$T444804 = -20						; size = 16
-$T444801 = -20						; size = 16
+$T467541 = -20						; size = 16
+$T467538 = -20						; size = 16
 _endTime$ = 8						; size = 8
 ?moveToTime@System@DRAMsimII@@QAE_N_J@Z PROC		; DRAMsimII::System::moveToTime
 ; _this$ = eax
 
-; 272  : {
+; 275  : {
 
 	sub	esp, 20					; 00000014H
 
-; 273  : 	std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
+; 276  : 	std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
 
 	mov	ecx, DWORD PTR _endTime$[esp+20]
 	push	ebx
 	push	ebp
 	push	esi
 	mov	esi, eax
-	mov	ebp, DWORD PTR [esi+1124]
+	mov	ebp, DWORD PTR [esi+1188]
 	mov	eax, DWORD PTR _endTime$[esp+28]
 	push	edi
-	mov	DWORD PTR $T444801[esp+36], OFFSET ??_9Channel@DRAMsimII@@$BBI@AE ; DRAMsimII::Channel::`vcall'{24}'
-	mov	DWORD PTR $T444801[esp+44], eax
-	mov	DWORD PTR $T444801[esp+48], ecx
-	cmp	DWORD PTR [esi+1120], ebp
+	mov	DWORD PTR $T467538[esp+36], OFFSET ??_9Channel@DRAMsimII@@$BBI@AE ; DRAMsimII::Channel::`vcall'{24}'
+	mov	DWORD PTR $T467538[esp+44], eax
+	mov	DWORD PTR $T467538[esp+48], ecx
+	cmp	DWORD PTR [esi+1184], ebp
 	jbe	SHORT $LN17@moveToTime
 	call	__invalid_parameter_noinfo
 $LN17@moveToTime:
-	mov	edi, DWORD PTR [esi+1120]
-	mov	ebx, DWORD PTR [esi+1108]
-	cmp	edi, DWORD PTR [esi+1124]
+	mov	edi, DWORD PTR [esi+1184]
+	mov	ebx, DWORD PTR [esi+1172]
+	cmp	edi, DWORD PTR [esi+1188]
 	jbe	SHORT $LN33@moveToTime
 	call	__invalid_parameter_noinfo
 $LN33@moveToTime:
-	mov	ecx, DWORD PTR [esi+1108]
-	movq	xmm0, QWORD PTR $T444801[esp+36]
+	mov	ecx, DWORD PTR [esi+1172]
+	movq	xmm0, QWORD PTR $T467538[esp+36]
 	sub	esp, 16					; 00000010H
 	mov	eax, esp
 	push	ebp
 	push	ebx
 	push	edi
 	movq	QWORD PTR [eax], xmm0
-	movq	xmm0, QWORD PTR $T444801[esp+72]
+	movq	xmm0, QWORD PTR $T467538[esp+72]
 	push	ecx
-	lea	edx, DWORD PTR $T444804[esp+68]
+	lea	edx, DWORD PTR $T467541[esp+68]
 	push	edx
 	movq	QWORD PTR [eax+8], xmm0
 	call	??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@boost@@@boost@@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V12@@Z ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,boost::binder2nd<boost::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >
 	add	esp, 36					; 00000024H
 
-; 274  : 	//#pragma omp parallel for private(i)
-; 275  : 	// 	for (i = channel.size() - 1; i >= 0; i--)
-; 276  : 	// 	{
-; 277  : 	// 		channel[i].moveToTime(endTime);
-; 278  : 	// 	}
-; 279  : 
-; 280  : 	updateSystemTime();
+; 277  : 	//#pragma omp parallel for private(i)
+; 278  : 	// 	for (i = channel.size() - 1; i >= 0; i--)
+; 279  : 	// 	{
+; 280  : 	// 		channel[i].moveToTime(endTime);
+; 281  : 	// 	}
+; 282  : 
+; 283  : 	updateSystemTime();
 
 	push	esi
 	call	?updateSystemTime@System@DRAMsimII@@IAEXXZ ; DRAMsimII::System::updateSystemTime
 
-; 281  : 
-; 282  : 	bool result = true;
-; 283  : 
-; 284  : 	if (time >= nextStats)
+; 284  : 
+; 285  : 	bool result = true;
+; 286  : 
+; 287  : 	if (time >= nextStats)
 
-	mov	eax, DWORD PTR [esi+11484]
-	cmp	eax, DWORD PTR [esi+11492]
+	mov	eax, DWORD PTR [esi+11548]
+	cmp	eax, DWORD PTR [esi+11556]
 	mov	bl, 1
 	jl	SHORT $LN1@moveToTime
 	jg	SHORT $LN48@moveToTime
-	mov	ecx, DWORD PTR [esi+11480]
-	cmp	ecx, DWORD PTR [esi+11488]
+	mov	ecx, DWORD PTR [esi+11544]
+	cmp	ecx, DWORD PTR [esi+11552]
 	jb	SHORT $LN1@moveToTime
 $LN48@moveToTime:
 
-; 285  : 	{
-; 286  : 		std::pair<unsigned,unsigned> rwBytes = statistics.getReadWriteBytes();
+; 288  : 	{
+; 289  : 		std::pair<unsigned,unsigned> rwBytes = statistics.getReadWriteBytes();
 
 	mov	eax, DWORD PTR [esi+612]
 	mov	ecx, DWORD PTR [esi+616]
 
-; 287  : 		result =  rwBytes.first + rwBytes.second > 0;
+; 290  : 		result =  rwBytes.first + rwBytes.second > 0;
 
 	add	ecx, eax
 	test	ecx, ecx
 	seta	bl
 $LN1@moveToTime:
 
-; 288  : 	}
-; 289  : 
-; 290  : 	checkStats();
+; 291  : 	}
+; 292  : 
+; 293  : 	checkStats();
 
 	call	?checkStats@System@DRAMsimII@@IAEXXZ	; DRAMsimII::System::checkStats
 
-; 291  : 
-; 292  : 	return result;
-; 293  : }
+; 294  : 
+; 295  : 	return result;
+; 296  : }
 
 	pop	edi
 	pop	esi
@@ -9023,8 +8981,8 @@ __ehfuncinfo$?_Incsize@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV
 xdata$x	ENDS
 ;	COMDAT ?_Incsize@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@IAEXI@Z
 _TEXT	SEGMENT
-$T481061 = -80						; size = 28
-$T481060 = -52						; size = 40
+$T503645 = -80						; size = 28
+$T503644 = -52						; size = 40
 __$EHRec$ = -12						; size = 12
 ?_Incsize@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@IAEXI@Z PROC ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::_Incsize, COMDAT
 ; _this$ = ecx
@@ -9054,20 +9012,20 @@ __$EHRec$ = -12						; size = 12
 
 	push	16					; 00000010H
 	push	OFFSET ??_C@_0BB@MOGOBHAF@list?$DMT?$DO?5too?5long?$AA@
-	lea	ecx, DWORD PTR $T481061[esp+92]
-	mov	DWORD PTR $T481061[esp+116], 15		; 0000000fH
-	mov	DWORD PTR $T481061[esp+112], 0
-	mov	BYTE PTR $T481061[esp+96], 0
+	lea	ecx, DWORD PTR $T503645[esp+92]
+	mov	DWORD PTR $T503645[esp+116], 15		; 0000000fH
+	mov	DWORD PTR $T503645[esp+112], 0
+	mov	BYTE PTR $T503645[esp+96], 0
 	call	?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@PBDI@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::assign
-	lea	eax, DWORD PTR $T481061[esp+84]
+	lea	eax, DWORD PTR $T503645[esp+84]
 	push	eax
-	lea	ecx, DWORD PTR $T481060[esp+88]
+	lea	ecx, DWORD PTR $T503644[esp+88]
 	mov	DWORD PTR __$EHRec$[esp+96], 0
 	call	??0logic_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z ; std::logic_error::logic_error
 	push	OFFSET __TI3?AVlength_error@std@@
-	lea	ecx, DWORD PTR $T481060[esp+88]
+	lea	ecx, DWORD PTR $T503644[esp+88]
 	push	ecx
-	mov	DWORD PTR $T481060[esp+92], OFFSET ??_7length_error@std@@6B@
+	mov	DWORD PTR $T503644[esp+92], OFFSET ??_7length_error@std@@6B@
 	call	__CxxThrowException@8
 $LN52@Incsize:
 $LN1@Incsize:
@@ -9089,7 +9047,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?_Incsize@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@IAEXI@Z$0:
-	lea	ecx, DWORD PTR $T481061[ebp]
+	lea	ecx, DWORD PTR $T503645[ebp]
 	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 __ehhandler$?_Incsize@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@IAEXI@Z:
 	mov	edx, DWORD PTR [esp+8]
@@ -9118,8 +9076,8 @@ __ehfuncinfo$?_Xlen@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PA
 xdata$x	ENDS
 ;	COMDAT ?_Xlen@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@KAXXZ
 _TEXT	SEGMENT
-$T481238 = -80						; size = 28
-$T481237 = -52						; size = 40
+$T503822 = -80						; size = 28
+$T503821 = -52						; size = 40
 __$EHRec$ = -12						; size = 12
 ?_Xlen@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@KAXXZ PROC ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Xlen, COMDAT
 
@@ -9140,20 +9098,20 @@ __$EHRec$ = -12						; size = 12
 
 	push	18					; 00000012H
 	push	OFFSET ??_C@_0BD@OLBABOEK@vector?$DMT?$DO?5too?5long?$AA@
-	lea	ecx, DWORD PTR $T481238[esp+92]
-	mov	DWORD PTR $T481238[esp+116], 15		; 0000000fH
-	mov	DWORD PTR $T481238[esp+112], 0
-	mov	BYTE PTR $T481238[esp+96], 0
+	lea	ecx, DWORD PTR $T503822[esp+92]
+	mov	DWORD PTR $T503822[esp+116], 15		; 0000000fH
+	mov	DWORD PTR $T503822[esp+112], 0
+	mov	BYTE PTR $T503822[esp+96], 0
 	call	?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@PBDI@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::assign
-	lea	eax, DWORD PTR $T481238[esp+84]
+	lea	eax, DWORD PTR $T503822[esp+84]
 	push	eax
-	lea	ecx, DWORD PTR $T481237[esp+88]
+	lea	ecx, DWORD PTR $T503821[esp+88]
 	mov	DWORD PTR __$EHRec$[esp+96], 0
 	call	??0logic_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z ; std::logic_error::logic_error
 	push	OFFSET __TI3?AVlength_error@std@@
-	lea	ecx, DWORD PTR $T481237[esp+88]
+	lea	ecx, DWORD PTR $T503821[esp+88]
 	push	ecx
-	mov	DWORD PTR $T481237[esp+92], OFFSET ??_7length_error@std@@6B@
+	mov	DWORD PTR $T503821[esp+92], OFFSET ??_7length_error@std@@6B@
 	call	__CxxThrowException@8
 $LN45@Xlen:
 $LN44@Xlen:
@@ -9162,7 +9120,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?_Xlen@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@KAXXZ$0:
-	lea	ecx, DWORD PTR $T481238[ebp]
+	lea	ecx, DWORD PTR $T503822[ebp]
 	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 __ehhandler$?_Xlen@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@KAXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -9398,12 +9356,12 @@ _this$ = 8						; size = 4
 	xor	ecx, ecx
 	add	esp, 4
 	cmp	eax, ecx
-	je	SHORT $LN13@vector@27
+	je	SHORT $LN13@vector@36
 	mov	DWORD PTR [eax], esi
-	jmp	SHORT $LN14@vector@27
-$LN13@vector@27:
+	jmp	SHORT $LN14@vector@36
+$LN13@vector@36:
 	xor	eax, eax
-$LN14@vector@27:
+$LN14@vector@36:
 	mov	DWORD PTR [esi], eax
 
 ; 477  : 		_Buy(0);
@@ -9454,8 +9412,8 @@ __ehfuncinfo$?_Xlen@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII
 xdata$x	ENDS
 ;	COMDAT ?_Xlen@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@KAXXZ
 _TEXT	SEGMENT
-$T481775 = -80						; size = 28
-$T481774 = -52						; size = 40
+$T504359 = -80						; size = 28
+$T504358 = -52						; size = 40
 __$EHRec$ = -12						; size = 12
 ?_Xlen@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@KAXXZ PROC ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Xlen, COMDAT
 
@@ -9476,20 +9434,20 @@ __$EHRec$ = -12						; size = 12
 
 	push	18					; 00000012H
 	push	OFFSET ??_C@_0BD@OLBABOEK@vector?$DMT?$DO?5too?5long?$AA@
-	lea	ecx, DWORD PTR $T481775[esp+92]
-	mov	DWORD PTR $T481775[esp+116], 15		; 0000000fH
-	mov	DWORD PTR $T481775[esp+112], 0
-	mov	BYTE PTR $T481775[esp+96], 0
+	lea	ecx, DWORD PTR $T504359[esp+92]
+	mov	DWORD PTR $T504359[esp+116], 15		; 0000000fH
+	mov	DWORD PTR $T504359[esp+112], 0
+	mov	BYTE PTR $T504359[esp+96], 0
 	call	?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@PBDI@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::assign
-	lea	eax, DWORD PTR $T481775[esp+84]
+	lea	eax, DWORD PTR $T504359[esp+84]
 	push	eax
-	lea	ecx, DWORD PTR $T481774[esp+88]
+	lea	ecx, DWORD PTR $T504358[esp+88]
 	mov	DWORD PTR __$EHRec$[esp+96], 0
 	call	??0logic_error@std@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@1@@Z ; std::logic_error::logic_error
 	push	OFFSET __TI3?AVlength_error@std@@
-	lea	ecx, DWORD PTR $T481774[esp+88]
+	lea	ecx, DWORD PTR $T504358[esp+88]
 	push	ecx
-	mov	DWORD PTR $T481774[esp+92], OFFSET ??_7length_error@std@@6B@
+	mov	DWORD PTR $T504358[esp+92], OFFSET ??_7length_error@std@@6B@
 	call	__CxxThrowException@8
 $LN45@Xlen@2:
 $LN44@Xlen@2:
@@ -9498,7 +9456,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?_Xlen@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@KAXXZ$0:
-	lea	ecx, DWORD PTR $T481775[ebp]
+	lea	ecx, DWORD PTR $T504359[ebp]
 	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 __ehhandler$?_Xlen@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@KAXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -9546,7 +9504,7 @@ $LN4@Buy@2:
 
 ; 1106 : 		else if (max_size() < _Capacity)
 
-	cmp	esi, 10129639				; 009a90e7H
+	cmp	esi, 9418787				; 008fb823H
 	jbe	SHORT $LN2@Buy@2
 
 ; 1107 : 			_Xlen();	// result too long
@@ -9565,7 +9523,7 @@ $LN2@Buy@2:
 ; 1111 : 			_Mylast = _Myfirst;
 ; 1112 : 			_Myend = _Myfirst + _Capacity;
 
-	imul	esi, 424				; 000001a8H
+	imul	esi, 456				; 000001c8H
 	add	esi, eax
 	mov	DWORD PTR [edi+12], eax
 	mov	DWORD PTR [edi+16], eax
@@ -9591,35 +9549,35 @@ _time$ = 8						; size = 8
 ?resetToTime@System@DRAMsimII@@QAEX_J@Z PROC		; DRAMsimII::System::resetToTime
 ; _this$ = edi
 
-; 256  : 	nextStats = time + systemConfig.getEpoch();
+; 259  : 	nextStats = time + systemConfig.getEpoch();
 
 	mov	eax, DWORD PTR [edi+388]
 	xor	ecx, ecx
 	add	eax, DWORD PTR _time$[esp-4]
 	push	ebx
 	adc	ecx, DWORD PTR _time$[esp+4]
-	mov	DWORD PTR [edi+11488], eax
-	mov	DWORD PTR [edi+11492], ecx
+	mov	DWORD PTR [edi+11552], eax
+	mov	DWORD PTR [edi+11556], ecx
 
-; 257  : 
-; 258  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+; 260  : 
+; 261  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 
-	mov	ebx, DWORD PTR [edi+1120]
+	mov	ebx, DWORD PTR [edi+1184]
 	push	ebp
 	push	esi
-	cmp	ebx, DWORD PTR [edi+1124]
+	cmp	ebx, DWORD PTR [edi+1188]
 	jbe	SHORT $LN13@resetToTim@4
 	call	__invalid_parameter_noinfo
 $LN13@resetToTim@4:
-	mov	esi, DWORD PTR [edi+1108]
+	mov	esi, DWORD PTR [edi+1172]
 	npad	8
 $LL30@resetToTim@4:
-	mov	ebp, DWORD PTR [edi+1124]
-	cmp	DWORD PTR [edi+1120], ebp
+	mov	ebp, DWORD PTR [edi+1188]
+	cmp	DWORD PTR [edi+1184], ebp
 	jbe	SHORT $LN45@resetToTim@4
 	call	__invalid_parameter_noinfo
 $LN45@resetToTim@4:
-	mov	eax, DWORD PTR [edi+1108]
+	mov	eax, DWORD PTR [edi+1172]
 	test	esi, esi
 	je	SHORT $LN58@resetToTim@4
 	cmp	esi, eax
@@ -9630,8 +9588,8 @@ $LN59@resetToTim@4:
 	cmp	ebx, ebp
 	je	SHORT $LN1@resetToTim@4
 
-; 259  : 	{
-; 260  : 		i->resetToTime(time);
+; 262  : 	{
+; 263  : 		i->resetToTime(time);
 
 	test	esi, esi
 	jne	SHORT $LN84@resetToTim@4
@@ -9654,33 +9612,33 @@ $LN70@resetToTim@4:
 	xor	eax, eax
 $LN37@resetToTim@4:
 
-; 257  : 
-; 258  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+; 260  : 
+; 261  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 
 	cmp	ebx, DWORD PTR [eax+16]
 	jb	SHORT $LN28@resetToTim@4
 	call	__invalid_parameter_noinfo
 $LN28@resetToTim@4:
-	add	ebx, 424				; 000001a8H
+	add	ebx, 456				; 000001c8H
 	jmp	SHORT $LL30@resetToTim@4
 $LN84@resetToTim@4:
 
-; 259  : 	{
-; 260  : 		i->resetToTime(time);
+; 262  : 	{
+; 263  : 		i->resetToTime(time);
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN79@resetToTim@4
 $LN83@resetToTim@4:
 
-; 257  : 
-; 258  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+; 260  : 
+; 261  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN37@resetToTim@4
 $LN1@resetToTim@4:
 
-; 261  : 	}
-; 262  : }
+; 264  : 	}
+; 265  : }
 
 	pop	esi
 	pop	ebp
@@ -9715,8 +9673,8 @@ __ehfuncinfo$??$_Insert@V?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTr
 xdata$x	ENDS
 ;	COMDAT ??$_Insert@V?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAEXV?$_Const_iterator@$00@01@00Uforward_iterator_tag@1@@Z
 _TEXT	SEGMENT
-$T549575 = -40						; size = 8
-__Before$154532 = -32					; size = 8
+$T580704 = -40						; size = 8
+__Before$160208 = -32					; size = 8
 __Next$ = -24						; size = 8
 __$EHRec$ = -16						; size = 16
 _this$ = 8						; size = 4
@@ -9767,38 +9725,38 @@ __Last$ = 32						; size = 8
 
 ; 773  : 		for (; _First != _Last; ++_First)
 
-$LL18@Insert@5:
+$LL18@Insert@6:
 	test	eax, eax
-	je	SHORT $LN32@Insert@5
+	je	SHORT $LN32@Insert@6
 	cmp	eax, DWORD PTR __Last$[ebp]
-	je	SHORT $LN33@Insert@5
-$LN32@Insert@5:
+	je	SHORT $LN33@Insert@6
+$LN32@Insert@6:
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First$[ebp]
-$LN33@Insert@5:
+$LN33@Insert@6:
 	mov	edx, DWORD PTR __First$[ebp+4]
 	cmp	edx, DWORD PTR __Last$[ebp+4]
-	je	$LN4@Insert@5
+	je	$LN4@Insert@6
 
 ; 774  : 			_Insert(_Where, *_First);
 
 	test	eax, eax
-	jne	SHORT $LN74@Insert@5
+	jne	SHORT $LN74@Insert@6
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First$[ebp]
 	test	eax, eax
-	je	SHORT $LN51@Insert@5
-$LN74@Insert@5:
+	je	SHORT $LN51@Insert@6
+$LN74@Insert@6:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN52@Insert@5
-$LN51@Insert@5:
+	jmp	SHORT $LN52@Insert@6
+$LN51@Insert@6:
 	xor	eax, eax
-$LN52@Insert@5:
+$LN52@Insert@6:
 	mov	ecx, DWORD PTR __First$[ebp+4]
 	cmp	ecx, DWORD PTR [eax+20]
-	jne	SHORT $LN41@Insert@5
+	jne	SHORT $LN41@Insert@6
 	call	__invalid_parameter_noinfo
-$LN41@Insert@5:
+$LN41@Insert@6:
 	mov	eax, DWORD PTR __Where$[ebp+4]
 	mov	edx, DWORD PTR [eax+4]
 	mov	esi, DWORD PTR __First$[ebp+4]
@@ -9815,30 +9773,30 @@ $LN41@Insert@5:
 	mov	DWORD PTR [eax], esi
 	mov	eax, DWORD PTR __First$[ebp]
 	test	eax, eax
-	jne	SHORT $LN73@Insert@5
+	jne	SHORT $LN73@Insert@6
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First$[ebp]
 	test	eax, eax
-	je	SHORT $LN24@Insert@5
-$LN73@Insert@5:
+	je	SHORT $LN24@Insert@6
+$LN73@Insert@6:
 
 ; 773  : 		for (; _First != _Last; ++_First)
 
 	mov	ecx, DWORD PTR [eax]
-	jmp	SHORT $LN25@Insert@5
-$LN24@Insert@5:
+	jmp	SHORT $LN25@Insert@6
+$LN24@Insert@6:
 	xor	ecx, ecx
-$LN25@Insert@5:
+$LN25@Insert@6:
 	mov	edx, DWORD PTR __First$[ebp+4]
 	cmp	edx, DWORD PTR [ecx+20]
-	jne	SHORT $LN14@Insert@5
+	jne	SHORT $LN14@Insert@6
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First$[ebp]
-$LN14@Insert@5:
+$LN14@Insert@6:
 	mov	ecx, DWORD PTR __First$[ebp+4]
 	mov	edx, DWORD PTR [ecx]
 	mov	DWORD PTR __First$[ebp+4], edx
-	jmp	$LL18@Insert@5
+	jmp	$LL18@Insert@6
 __catch$??$_Insert@V?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAEXV?$_Const_iterator@$00@01@00Uforward_iterator_tag@1@@Z$0:
 
 ; 775  : 		_CATCH_ALL
@@ -9848,10 +9806,10 @@ __catch$??$_Insert@V?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransac
 	lea	edi, DWORD PTR __Next$[ebp]
 	call	??9?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QBE_NABV012@@Z ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::_Const_iterator<1>::operator!=
 	test	al, al
-	je	SHORT $LN1@Insert@5
+	je	SHORT $LN1@Insert@6
 	mov	ebx, DWORD PTR _this$[ebp]
 	npad	1
-$LL3@Insert@5:
+$LL3@Insert@6:
 
 ; 777  : 			{	// undo inserts
 ; 778  : 			const_iterator _Before = _Where;
@@ -9861,15 +9819,15 @@ $LL3@Insert@5:
 
 ; 779  : 			erase(--_Before);
 
-	lea	esi, DWORD PTR __Before$154532[ebp]
-	mov	DWORD PTR __Before$154532[ebp], eax
-	mov	DWORD PTR __Before$154532[ebp+4], ecx
+	lea	esi, DWORD PTR __Before$160208[ebp]
+	mov	DWORD PTR __Before$160208[ebp], eax
+	mov	DWORD PTR __Before$160208[ebp+4], ecx
 	call	??F?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAEAAV012@XZ ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::_Const_iterator<1>::operator--
 	mov	edx, DWORD PTR [eax+4]
 	mov	eax, DWORD PTR [eax]
 	push	edx
 	push	eax
-	lea	ecx, DWORD PTR $T549575[ebp]
+	lea	ecx, DWORD PTR $T580704[ebp]
 	push	ecx
 	mov	edi, ebx
 	call	?erase@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::erase
@@ -9879,8 +9837,8 @@ $LL3@Insert@5:
 	lea	edi, DWORD PTR __Next$[ebp]
 	call	??9?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QBE_NABV012@@Z ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::_Const_iterator<1>::operator!=
 	test	al, al
-	jne	SHORT $LL3@Insert@5
-$LN1@Insert@5:
+	jne	SHORT $LL3@Insert@6
+$LN1@Insert@6:
 
 ; 780  : 			}
 ; 781  : 		_RERAISE;
@@ -9888,8 +9846,8 @@ $LN1@Insert@5:
 	push	0
 	push	0
 	call	__CxxThrowException@8
-$LN77@Insert@5:
-$LN4@Insert@5:
+$LN77@Insert@6:
+$LN4@Insert@6:
 
 ; 782  : 		_CATCH_END
 ; 783  : 		}
@@ -9903,7 +9861,7 @@ $LN4@Insert@5:
 	mov	esp, ebp
 	pop	ebp
 	ret	32					; 00000020H
-$LN76@Insert@5:
+$LN76@Insert@6:
 _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
@@ -9920,7 +9878,7 @@ text$x	ENDS
 ; Function compile flags: /Ogtpy
 ;	COMDAT ??$insert@V?$_Const_iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAEXV?$_Const_iterator@$00@01@00@Z
 _TEXT	SEGMENT
-$T549733 = 8						; size = 1
+$T580862 = 8						; size = 1
 _this$ = 8						; size = 4
 __Where$ = 12						; size = 8
 __First$ = 20						; size = 8
@@ -9940,7 +9898,7 @@ __Last$ = 28						; size = 8
 	push	edx
 	mov	edx, DWORD PTR __Where$[esp+8]
 	push	eax
-	mov	eax, DWORD PTR $T549733[esp+12]
+	mov	eax, DWORD PTR $T580862[esp+12]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[esp+16]
 	push	edx
@@ -9995,20 +9953,20 @@ __ehfuncinfo$?_Insert_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pai
 xdata$x	ENDS
 ;	COMDAT ?_Insert_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEXV?$_Vector_const_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@2@IABU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@Z
 _TEXT	SEGMENT
-__Tmp$150570 = -40					; size = 8
-$T550208 = -36						; size = 1
-$T549822 = -36						; size = 1
-__Tmp$150560 = -32					; size = 8
-__Newvec$150545 = -28					; size = 4
+__Tmp$155499 = -40					; size = 8
+$T581336 = -36						; size = 1
+$T580949 = -36						; size = 1
+__Tmp$155489 = -32					; size = 8
+__Newvec$155474 = -28					; size = 4
 __Capacity$ = -24					; size = 4
 __$EHRec$ = -16						; size = 16
 tv515 = 8						; size = 4
-__Cat$550212 = 8					; size = 1
-$T550158 = 8						; size = 1
-__Cat$550162 = 8					; size = 1
-$T549981 = 8						; size = 1
-__Cat$549965 = 8					; size = 1
-__Cat$549825 = 8					; size = 1
+__Cat$581339 = 8					; size = 1
+$T581290 = 8						; size = 1
+__Cat$581293 = 8					; size = 1
+$T581114 = 8						; size = 1
+__Cat$581118 = 8					; size = 1
+__Cat$580953 = 8					; size = 1
 __Val$ = 8						; size = 4
 __Where$ = 12						; size = 8
 ?_Insert_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEXV?$_Vector_const_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@2@IABU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@Z PROC ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Insert_n, COMDAT
@@ -10133,11 +10091,11 @@ $LN9@Insert_n@4:
 
 ; 1178 : 			_Ufill(_Newvec + _Whereoff, _Count, _Val);	// add new stuff
 
-	mov	edx, DWORD PTR __Cat$549825[ebp]
-	mov	BYTE PTR $T549822[ebp], 0
-	mov	ecx, DWORD PTR $T549822[ebp]
+	mov	edx, DWORD PTR __Cat$580953[ebp]
+	mov	BYTE PTR $T580949[ebp], 0
+	mov	ecx, DWORD PTR $T580949[ebp]
 	push	ecx
-	mov	DWORD PTR __Newvec$150545[ebp], eax
+	mov	DWORD PTR __Newvec$155474[ebp], eax
 	sar	ebx, 3
 	push	edx
 	mov	edx, DWORD PTR __Val$[ebp]
@@ -10152,14 +10110,14 @@ $LN9@Insert_n@4:
 
 	mov	eax, DWORD PTR [esi+12]
 	add	esp, 12					; 0000000cH
-	mov	BYTE PTR $T549981[ebp], 0
-	mov	ecx, DWORD PTR $T549981[ebp]
-	mov	edx, DWORD PTR __Cat$549965[ebp]
+	mov	BYTE PTR $T581114[ebp], 0
+	mov	ecx, DWORD PTR $T581114[ebp]
+	mov	edx, DWORD PTR __Cat$581118[ebp]
 	push	ecx
 	push	edx
 	mov	edx, DWORD PTR __Where$[ebp+4]
 	push	eax
-	mov	eax, DWORD PTR __Newvec$150545[ebp]
+	mov	eax, DWORD PTR __Newvec$155474[ebp]
 	call	??$_Uninit_copy@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@00AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >
 
 ; 1182 : 			++_Ncopied;
@@ -10168,14 +10126,14 @@ $LN9@Insert_n@4:
 
 	mov	edx, DWORD PTR [esi+16]
 	add	esp, 12					; 0000000cH
-	mov	BYTE PTR $T550158[ebp], 0
-	mov	ecx, DWORD PTR $T550158[ebp]
+	mov	BYTE PTR $T581290[ebp], 0
+	mov	ecx, DWORD PTR $T581290[ebp]
 	push	ecx
-	mov	ecx, DWORD PTR __Cat$550162[ebp]
+	mov	ecx, DWORD PTR __Cat$581293[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR __Where$[ebp+4]
 	lea	eax, DWORD PTR [ebx+edi]
-	mov	ebx, DWORD PTR __Newvec$150545[ebp]
+	mov	ebx, DWORD PTR __Newvec$155474[ebp]
 	lea	eax, DWORD PTR [ebx+eax*8]
 	push	ecx
 	call	??$_Uninit_copy@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@YAPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU123@00AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >
@@ -10247,7 +10205,7 @@ __catch$?_Insert_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAV
 ; 1189 : 				_Destroy(_Newvec + _Whereoff, _Newvec + _Whereoff + _Count);
 ; 1190 : 			this->_Alval.deallocate(_Newvec, _Capacity);
 
-	mov	eax, DWORD PTR __Newvec$150545[ebp]
+	mov	eax, DWORD PTR __Newvec$155474[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	add	esp, 4
@@ -10277,7 +10235,7 @@ $LN10@Insert_n@4:
 	mov	ecx, DWORD PTR [eax]
 	jae	SHORT $LN3@Insert_n@4
 	mov	eax, DWORD PTR [eax+4]
-	mov	DWORD PTR __Tmp$150560[ebp+4], eax
+	mov	DWORD PTR __Tmp$155489[ebp+4], eax
 
 ; 1212 : 
 ; 1213 : 			_Umove(_VEC_ITER_BASE(_Where), _Mylast,
@@ -10288,7 +10246,7 @@ $LN10@Insert_n@4:
 	add	eax, edx
 	push	eax
 	push	ebx
-	mov	DWORD PTR __Tmp$150560[ebp], ecx
+	mov	DWORD PTR __Tmp$155489[ebp], ecx
 	call	??$_Umove@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU234@00@Z ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Umove<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *>
 
 ; 1215 : 
@@ -10302,16 +10260,16 @@ $LN10@Insert_n@4:
 	mov	eax, DWORD PTR [esi+16]
 	mov	ecx, eax
 	sub	ecx, DWORD PTR __Where$[ebp+4]
-	mov	BYTE PTR $T550208[ebp], 0
-	mov	edx, DWORD PTR $T550208[ebp]
+	mov	BYTE PTR $T581336[ebp], 0
+	mov	edx, DWORD PTR $T581336[ebp]
 	push	edx
-	mov	edx, DWORD PTR __Cat$550212[ebp]
+	mov	edx, DWORD PTR __Cat$581339[ebp]
 	sar	ecx, 3
 	push	edx
 	sub	edi, ecx
 	mov	ecx, edi
 	push	eax
-	lea	edx, DWORD PTR __Tmp$150560[ebp]
+	lea	edx, DWORD PTR __Tmp$155489[ebp]
 	call	??$_Uninit_fill_n@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IU123@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@YAXPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IABU123@AAV?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_fill_n<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,unsigned int,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >
 
 ; 1219 : 			_CATCH_ALL
@@ -10336,7 +10294,7 @@ $LN10@Insert_n@4:
 	add	esp, 12					; 0000000cH
 	sub	edx, eax
 	mov	eax, DWORD PTR __Where$[ebp+4]
-	lea	ecx, DWORD PTR __Tmp$150560[ebp]
+	lea	ecx, DWORD PTR __Tmp$155489[ebp]
 
 ; 1232 : 			}
 ; 1233 : 		else
@@ -10358,10 +10316,10 @@ $LN3@Insert_n@4:
 	mov	edi, ebx
 	sub	edi, eax
 	push	ebx
-	mov	DWORD PTR __Tmp$150570[ebp+4], edx
+	mov	DWORD PTR __Tmp$155499[ebp+4], edx
 	push	ebx
 	mov	edx, edi
-	mov	DWORD PTR __Tmp$150570[ebp], ecx
+	mov	DWORD PTR __Tmp$155499[ebp], ecx
 	mov	DWORD PTR tv515[ebp], eax
 	call	??$_Umove@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@PAU234@00@Z ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Umove<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *>
 	mov	DWORD PTR [esi+16], eax
@@ -10385,7 +10343,7 @@ $LN3@Insert_n@4:
 	mov	ecx, DWORD PTR tv515[ebp]
 	mov	eax, DWORD PTR __Where$[ebp+4]
 	lea	edx, DWORD PTR [ecx+eax]
-	lea	ecx, DWORD PTR __Tmp$150570[ebp]
+	lea	ecx, DWORD PTR __Tmp$155499[ebp]
 $LN129@Insert_n@4:
 	push	eax
 	call	??$fill@PAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@U123@@std@@YAXPAU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@0ABU123@@Z ; std::fill<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position *,stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position>
@@ -10452,7 +10410,7 @@ _TEXT	ENDS
 ;	COMDAT ?_Assign_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEXIABU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@Z
 _TEXT	SEGMENT
 __Tmp$ = -16						; size = 8
-$T550240 = -8						; size = 8
+$T581369 = -8						; size = 8
 __Count$ = 8						; size = 4
 ?_Assign_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEXIABU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@Z PROC ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Assign_n, COMDAT
 ; _this$ = ecx
@@ -10492,7 +10450,7 @@ $LN24@Assign_n:
 	push	ebp
 	push	ebx
 	push	eax
-	lea	eax, DWORD PTR $T550240[esp+48]
+	lea	eax, DWORD PTR $T581369[esp+48]
 	push	eax
 	call	?erase@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@QAE?AV?$_Vector_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@2@V?$_Vector_const_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@2@0@Z ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::erase
 
@@ -10775,7 +10733,7 @@ $LN71@splice:
 _TEXT	ENDS
 ;	COMDAT ?_Init@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXI@Z
 _TEXT	SEGMENT
-$T550748 = -12						; size = 8
+$T581877 = -12						; size = 8
 ?_Init@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXI@Z PROC ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Init, COMDAT
 ; _this$ = esi
 ; __Buckets$ = edi
@@ -10793,12 +10751,12 @@ $LN25@Init@4:
 	xor	eax, eax
 $LN26@Init@4:
 	mov	eax, DWORD PTR [eax]
-	mov	DWORD PTR $T550748[esp+16], ecx
+	mov	DWORD PTR $T581877[esp+16], ecx
 	lea	ecx, DWORD PTR [edi+1]
-	mov	DWORD PTR $T550748[esp+12], eax
+	mov	DWORD PTR $T581877[esp+12], eax
 	push	ecx
 	lea	ecx, DWORD PTR [esi+36]
-	lea	eax, DWORD PTR $T550748[esp+16]
+	lea	eax, DWORD PTR $T581877[esp+16]
 	call	?_Assign_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEXIABU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@Z ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Assign_n
 
 ; 831  : 		_Mask = _Buckets - 1;
@@ -10819,7 +10777,7 @@ $LN26@Init@4:
 _TEXT	ENDS
 ;	COMDAT ?clear@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAEXXZ
 _TEXT	SEGMENT
-$T551147 = -12						; size = 8
+$T582277 = -12						; size = 8
 ?clear@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAEXXZ PROC ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::clear, COMDAT
 ; _this$ = esi
 
@@ -10834,35 +10792,35 @@ $T551147 = -12						; size = 8
 	push	edi
 	mov	DWORD PTR [esi+32], 0
 	cmp	eax, DWORD PTR [esi+28]
-	je	SHORT $LN3@clear@18
+	je	SHORT $LN3@clear@19
 	npad	3
-$LL5@clear@18:
+$LL5@clear@19:
 	mov	edi, DWORD PTR [eax]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	add	esp, 4
 	mov	eax, edi
 	cmp	edi, DWORD PTR [esi+28]
-	jne	SHORT $LL5@clear@18
-$LN3@clear@18:
+	jne	SHORT $LL5@clear@19
+$LN3@clear@19:
 
 ; 615  : 		_Init();
 
 	mov	eax, DWORD PTR [esi+8]
 	mov	ecx, DWORD PTR [esi+28]
 	test	eax, eax
-	je	SHORT $LN42@clear@18
+	je	SHORT $LN42@clear@19
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN43@clear@18
-$LN42@clear@18:
+	jmp	SHORT $LN43@clear@19
+$LN42@clear@19:
 	xor	eax, eax
-$LN43@clear@18:
+$LN43@clear@19:
 	mov	eax, DWORD PTR [eax]
-	mov	DWORD PTR $T551147[esp+24], ecx
-	mov	DWORD PTR $T551147[esp+20], eax
+	mov	DWORD PTR $T582277[esp+24], ecx
+	mov	DWORD PTR $T582277[esp+20], eax
 	push	9
 	lea	ecx, DWORD PTR [esi+36]
-	lea	eax, DWORD PTR $T551147[esp+24]
+	lea	eax, DWORD PTR $T582277[esp+24]
 	call	?_Assign_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEXIABU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@Z ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Assign_n
 	mov	DWORD PTR [esi+60], 7
 	mov	DWORD PTR [esi+64], 8
@@ -10877,7 +10835,7 @@ $LN43@clear@18:
 _TEXT	ENDS
 ;	COMDAT ?erase@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE?AV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@V?$_Const_iterator@$00@45@0@Z
 _TEXT	SEGMENT
-$T551202 = -8						; size = 8
+$T582331 = -8						; size = 8
 ___$ReturnUdt$ = 8					; size = 4
 __First$ = 12						; size = 8
 __Last$ = 20						; size = 8
@@ -10902,28 +10860,28 @@ __Last$ = 20						; size = 8
 	mov	edi, DWORD PTR [eax]
 	mov	eax, DWORD PTR __First$[esp+20]
 	test	eax, eax
-	je	SHORT $LN27@erase@29
+	je	SHORT $LN27@erase@31
 	cmp	eax, ecx
-	je	SHORT $LN28@erase@29
-$LN27@erase@29:
+	je	SHORT $LN28@erase@31
+$LN27@erase@31:
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First$[esp+20]
-$LN28@erase@29:
+$LN28@erase@31:
 	cmp	DWORD PTR __First$[esp+24], edi
-	jne	SHORT $LL2@erase@29
+	jne	SHORT $LL2@erase@31
 	mov	edx, DWORD PTR __Last$[esp+20]
 	mov	edi, DWORD PTR [ebp+20]
 	mov	ecx, DWORD PTR [ebp]
 	test	edx, edx
-	je	SHORT $LN54@erase@29
+	je	SHORT $LN54@erase@31
 	cmp	edx, ecx
-	je	SHORT $LN55@erase@29
-$LN54@erase@29:
+	je	SHORT $LN55@erase@31
+$LN54@erase@31:
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First$[esp+20]
-$LN55@erase@29:
+$LN55@erase@31:
 	cmp	DWORD PTR __Last$[esp+24], edi
-	jne	SHORT $LL2@erase@29
+	jne	SHORT $LL2@erase@31
 
 ; 583  : 			{	// erase all
 ; 584  : 			clear();
@@ -10948,7 +10906,7 @@ $LN55@erase@29:
 	pop	ebx
 	add	esp, 8
 	ret	20					; 00000014H
-$LL2@erase@29:
+$LL2@erase@31:
 
 ; 586  : 			}
 ; 587  : 		else
@@ -10956,49 +10914,49 @@ $LL2@erase@29:
 ; 589  : 			while (_First != _Last)
 
 	test	eax, eax
-	je	SHORT $LN85@erase@29
+	je	SHORT $LN85@erase@31
 	cmp	eax, DWORD PTR __Last$[esp+20]
-	je	SHORT $LN86@erase@29
-$LN85@erase@29:
+	je	SHORT $LN86@erase@31
+$LN85@erase@31:
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First$[esp+20]
-$LN86@erase@29:
+$LN86@erase@31:
 	mov	ebx, DWORD PTR __First$[esp+24]
 	cmp	ebx, DWORD PTR __Last$[esp+24]
-	je	SHORT $LN1@erase@29
+	je	SHORT $LN1@erase@31
 
 ; 590  : 				erase(_First++);
 
 	mov	edi, eax
 	test	eax, eax
-	jne	SHORT $LN129@erase@29
+	jne	SHORT $LN129@erase@31
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First$[esp+20]
 	test	eax, eax
-	je	SHORT $LN106@erase@29
-$LN129@erase@29:
+	je	SHORT $LN106@erase@31
+$LN129@erase@31:
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN107@erase@29
-$LN106@erase@29:
+	jmp	SHORT $LN107@erase@31
+$LN106@erase@31:
 	xor	eax, eax
-$LN107@erase@29:
+$LN107@erase@31:
 	mov	edx, DWORD PTR __First$[esp+24]
 	cmp	edx, DWORD PTR [eax+20]
-	jne	SHORT $LN96@erase@29
+	jne	SHORT $LN96@erase@31
 	call	__invalid_parameter_noinfo
-$LN96@erase@29:
+$LN96@erase@31:
 	mov	eax, DWORD PTR __First$[esp+24]
 	mov	ecx, DWORD PTR [eax]
 	push	ebx
 	push	edi
-	lea	edx, DWORD PTR $T551202[esp+32]
+	lea	edx, DWORD PTR $T582331[esp+32]
 	push	edx
 	mov	eax, esi
 	mov	DWORD PTR __First$[esp+36], ecx
 	call	?erase@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE?AV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@V?$_Const_iterator@$00@45@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::erase
 	mov	eax, DWORD PTR __First$[esp+20]
-	jmp	SHORT $LL2@erase@29
-$LN1@erase@29:
+	jmp	SHORT $LL2@erase@31
+$LN1@erase@31:
 
 ; 591  : 			return (_List._Make_iter(_First));
 
@@ -11006,9 +10964,9 @@ $LN1@erase@29:
 	mov	DWORD PTR [esi], 0
 	mov	DWORD PTR [esi+4], ebx
 	test	ebp, ebp
-	jne	SHORT $LN116@erase@29
+	jne	SHORT $LN116@erase@31
 	call	__invalid_parameter_noinfo
-$LN116@erase@29:
+$LN116@erase@31:
 	mov	eax, DWORD PTR [ebp]
 
 ; 592  : 			}
@@ -11048,7 +11006,7 @@ __ehfuncinfo$??0?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12
 xdata$x	ENDS
 ;	COMDAT ??0?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE@ABV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@1@ABV?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@std@@@Z
 _TEXT	SEGMENT
-$T551853 = -20						; size = 8
+$T582981 = -20						; size = 8
 __$EHRec$ = -12						; size = 12
 _this$ = 8						; size = 4
 __Parg$ = 12						; size = 4
@@ -11096,11 +11054,11 @@ $LN33@Hash@3:
 	xor	edi, edi
 $LN34@Hash@3:
 	mov	edx, DWORD PTR [edi]
-	mov	DWORD PTR $T551853[esp+40], eax
+	mov	DWORD PTR $T582981[esp+40], eax
 	push	9
-	lea	eax, DWORD PTR $T551853[esp+40]
+	lea	eax, DWORD PTR $T582981[esp+40]
 	mov	ecx, ebx
-	mov	DWORD PTR $T551853[esp+40], edx
+	mov	DWORD PTR $T582981[esp+40], edx
 	call	?_Assign_n@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@IAEXIABU_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@Z ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::_Assign_n
 	mov	DWORD PTR [esi+60], 7
 	mov	DWORD PTR [esi+64], 8
@@ -11140,9 +11098,9 @@ text$x	ENDS
 ; Function compile flags: /Ogtpy
 ;	COMDAT ?erase@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAEIABI@Z
 _TEXT	SEGMENT
-$T551921 = -24						; size = 1
+$T583050 = -24						; size = 1
 __Num$ = -24						; size = 4
-$T551912 = -20						; size = 8
+$T583041 = -20						; size = 8
 __Where$ = -20						; size = 16
 ?erase@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAEIABI@Z PROC ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::erase, COMDAT
 ; _this$ = edi
@@ -11171,7 +11129,7 @@ __Where$ = -20						; size = 16
 	mov	eax, DWORD PTR __Where$[esp+40]
 	mov	ecx, DWORD PTR __Where$[esp+36]
 	mov	DWORD PTR __Num$[esp+36], 0
-	mov	edx, DWORD PTR $T551921[esp+36]
+	mov	edx, DWORD PTR $T583050[esp+36]
 	push	edx
 	push	ebx
 	push	ebp
@@ -11189,7 +11147,7 @@ __Where$ = -20						; size = 16
 	push	ebp
 	push	edx
 	push	eax
-	lea	ecx, DWORD PTR $T551912[esp+52]
+	lea	ecx, DWORD PTR $T583041[esp+52]
 	push	ecx
 	mov	eax, edi
 	call	?erase@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE?AV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@V?$_Const_iterator@$00@45@0@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::erase
@@ -11211,14 +11169,14 @@ __Where$ = -20						; size = 16
 _TEXT	ENDS
 ;	COMDAT ??0?$unordered_map@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$hash@I@tr1@2@U?$equal_to@I@2@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@tr1@std@@QAE@XZ
 _TEXT	SEGMENT
-$T551931 = -2						; size = 2
+$T583060 = -2						; size = 2
 ??0?$unordered_map@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$hash@I@tr1@2@U?$equal_to@I@2@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@tr1@std@@QAE@XZ PROC ; std::tr1::unordered_map<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::unordered_map<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >, COMDAT
 ; _this$ = esi
 
 ; 118  : 		{	// construct empty map from defaults
 
 	push	ecx
-	lea	eax, DWORD PTR $T551931[esp+4]
+	lea	eax, DWORD PTR $T583060[esp+4]
 	push	eax
 	push	esi
 	call	??0?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE@ABV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@1@ABV?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@std@@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >
@@ -11288,12 +11246,12 @@ __Right$ = 12						; size = 4
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
 	test	eax, eax
-	je	SHORT $LN37@Tree@7
+	je	SHORT $LN37@Tree@8
 	mov	DWORD PTR [eax], esi
-	jmp	SHORT $LN38@Tree@7
-$LN37@Tree@7:
+	jmp	SHORT $LN38@Tree@8
+$LN37@Tree@8:
 	xor	eax, eax
-$LN38@Tree@7:
+$LN38@Tree@8:
 	mov	DWORD PTR [esi], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], 0
 
@@ -11346,8 +11304,8 @@ __catch$??0?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_
 	push	0
 	push	0
 	call	__CxxThrowException@8
-$LN87@Tree@7:
-$LN86@Tree@7:
+$LN87@Tree@8:
+$LN86@Tree@8:
 	int	3
 _TEXT	ENDS
 ;	COMDAT text$x
@@ -11422,12 +11380,12 @@ __Right$ = 12						; size = 4
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
 	test	eax, eax
-	je	SHORT $LN37@Tree@8
+	je	SHORT $LN37@Tree@9
 	mov	DWORD PTR [eax], esi
-	jmp	SHORT $LN38@Tree@8
-$LN37@Tree@8:
+	jmp	SHORT $LN38@Tree@9
+$LN37@Tree@9:
 	xor	eax, eax
-$LN38@Tree@8:
+$LN38@Tree@9:
 	mov	DWORD PTR [esi], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], 0
 
@@ -11480,8 +11438,8 @@ __catch$??0?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less
 	push	0
 	push	0
 	call	__CxxThrowException@8
-$LN87@Tree@8:
-$LN86@Tree@8:
+$LN87@Tree@9:
+$LN86@Tree@9:
 	int	3
 _TEXT	ENDS
 ;	COMDAT text$x
@@ -11507,7 +11465,7 @@ _this$ = 8						; size = 4
 _rhs$ = 12						; size = 4
 ??8System@DRAMsimII@@QBE_NABV01@@Z PROC			; DRAMsimII::System::operator==
 
-; 489  : {
+; 497  : {
 
 	push	ebx
 	mov	ebx, DWORD PTR _rhs$[esp]
@@ -11515,77 +11473,77 @@ _rhs$ = 12						; size = 4
 	mov	ebp, DWORD PTR _this$[esp+4]
 	push	edi
 
-; 490  : 	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
-; 491  : 		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
-; 492  : 		nextStats == rhs.nextStats;
+; 498  : 	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
+; 499  : 		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
+; 500  : 		nextStats == rhs.nextStats;
 
 	lea	eax, DWORD PTR [ebx+8]
 	lea	ecx, DWORD PTR [ebp+8]
 	call	??8SystemConfiguration@DRAMsimII@@QBE_NABV01@@Z ; DRAMsimII::SystemConfiguration::operator==
 	test	al, al
-	je	$LN3@operator@304
+	je	$LN3@operator@378
 	push	esi
-	lea	eax, DWORD PTR [ebx+1108]
+	lea	eax, DWORD PTR [ebx+1172]
 	push	eax
-	lea	esi, DWORD PTR [ebp+1108]
+	lea	esi, DWORD PTR [ebp+1172]
 	call	??$?8VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YA_NABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0@Z ; std::operator==<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
 	add	esp, 4
 	pop	esi
 	test	al, al
-	je	$LN3@operator@304
+	je	$LN3@operator@378
 	mov	ecx, DWORD PTR [ebp+552]
 	cmp	ecx, DWORD PTR [ebx+552]
-	jne	$LN3@operator@304
+	jne	$LN3@operator@378
 	mov	edx, DWORD PTR [ebp+556]
 	cmp	edx, DWORD PTR [ebx+556]
-	jne	SHORT $LN3@operator@304
+	jne	SHORT $LN3@operator@378
 	mov	eax, DWORD PTR [ebp+560]
 	cmp	eax, DWORD PTR [ebx+560]
-	jne	SHORT $LN3@operator@304
+	jne	SHORT $LN3@operator@378
 	lea	ecx, DWORD PTR [ebp+568]
 	lea	edi, DWORD PTR [ebx+568]
 	push	ecx
 	call	??8Statistics@DRAMsimII@@QBE_NABV01@@Z	; DRAMsimII::Statistics::operator==
 	test	al, al
-	je	SHORT $LN3@operator@304
-	lea	edx, DWORD PTR [ebp+1136]
-	lea	edi, DWORD PTR [ebx+1136]
+	je	SHORT $LN3@operator@378
+	lea	edx, DWORD PTR [ebp+1200]
+	lea	edi, DWORD PTR [ebx+1200]
 	push	edx
 	call	??8InputStream@DRAMsimII@@QBE_NABV01@@Z	; DRAMsimII::InputStream::operator==
 	test	al, al
-	je	SHORT $LN3@operator@304
-	mov	eax, DWORD PTR [ebp+11480]
-	cmp	eax, DWORD PTR [ebx+11480]
-	jne	SHORT $LN3@operator@304
-	mov	ecx, DWORD PTR [ebp+11484]
-	cmp	ecx, DWORD PTR [ebx+11484]
-	jne	SHORT $LN3@operator@304
-	mov	edx, DWORD PTR [ebp+11488]
-	cmp	edx, DWORD PTR [ebx+11488]
-	jne	SHORT $LN3@operator@304
-	mov	eax, DWORD PTR [ebp+11492]
-	cmp	eax, DWORD PTR [ebx+11492]
-	jne	SHORT $LN3@operator@304
+	je	SHORT $LN3@operator@378
+	mov	eax, DWORD PTR [ebp+11544]
+	cmp	eax, DWORD PTR [ebx+11544]
+	jne	SHORT $LN3@operator@378
+	mov	ecx, DWORD PTR [ebp+11548]
+	cmp	ecx, DWORD PTR [ebx+11548]
+	jne	SHORT $LN3@operator@378
+	mov	edx, DWORD PTR [ebp+11552]
+	cmp	edx, DWORD PTR [ebx+11552]
+	jne	SHORT $LN3@operator@378
+	mov	eax, DWORD PTR [ebp+11556]
+	cmp	eax, DWORD PTR [ebx+11556]
+	jne	SHORT $LN3@operator@378
 	pop	edi
 	pop	ebp
 	mov	eax, 1
 	pop	ebx
 
-; 493  : }
+; 501  : }
 
 	ret	8
-$LN3@operator@304:
+$LN3@operator@378:
 	pop	edi
 	pop	ebp
 
-; 490  : 	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
-; 491  : 		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
-; 492  : 		nextStats == rhs.nextStats;
+; 498  : 	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
+; 499  : 		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
+; 500  : 		nextStats == rhs.nextStats;
 
 	xor	eax, eax
 	pop	ebx
 
-; 493  : }
+; 501  : }
 
 	ret	8
 ??8System@DRAMsimII@@QBE_NABV01@@Z ENDP			; DRAMsimII::System::operator==
@@ -11597,7 +11555,7 @@ _this$ = 8						; size = 4
 _outputQueue$ = 12					; size = 4
 ?getPendingTransactions@System@DRAMsimII@@QAEXAAV?$queue@U?$pair@I_J@std@@V?$deque@U?$pair@I_J@std@@V?$allocator@U?$pair@I_J@std@@@2@@2@@std@@@Z PROC ; DRAMsimII::System::getPendingTransactions
 
-; 358  : {
+; 366  : {
 
 	push	ecx
 	push	ebx
@@ -11606,21 +11564,21 @@ _outputQueue$ = 12					; size = 4
 	push	esi
 	push	edi
 
-; 359  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+; 367  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 
-	mov	edi, DWORD PTR [ebp+1120]
-	cmp	edi, DWORD PTR [ebp+1124]
+	mov	edi, DWORD PTR [ebp+1184]
+	cmp	edi, DWORD PTR [ebp+1188]
 	jbe	SHORT $LN11@getPending@2
 	call	__invalid_parameter_noinfo
 $LN11@getPending@2:
-	mov	esi, DWORD PTR [ebp+1108]
+	mov	esi, DWORD PTR [ebp+1172]
 $LL28@getPending@2:
-	mov	ebx, DWORD PTR [ebp+1124]
-	cmp	DWORD PTR [ebp+1120], ebx
+	mov	ebx, DWORD PTR [ebp+1188]
+	cmp	DWORD PTR [ebp+1184], ebx
 	jbe	SHORT $LN43@getPending@2
 	call	__invalid_parameter_noinfo
 $LN43@getPending@2:
-	mov	eax, DWORD PTR [ebp+1108]
+	mov	eax, DWORD PTR [ebp+1172]
 	test	esi, esi
 	je	SHORT $LN56@getPending@2
 	cmp	esi, eax
@@ -11631,7 +11589,7 @@ $LN57@getPending@2:
 	cmp	edi, ebx
 	je	SHORT $LN1@getPending@2
 
-; 360  : 		i->getPendingTransactions(outputQueue);
+; 368  : 		i->getPendingTransactions(outputQueue);
 
 	test	esi, esi
 	jne	SHORT $LN82@getPending@2
@@ -11652,29 +11610,29 @@ $LN68@getPending@2:
 	xor	eax, eax
 $LN35@getPending@2:
 
-; 359  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+; 367  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 
 	cmp	edi, DWORD PTR [eax+16]
 	jb	SHORT $LN26@getPending@2
 	call	__invalid_parameter_noinfo
 $LN26@getPending@2:
-	add	edi, 424				; 000001a8H
+	add	edi, 456				; 000001c8H
 	jmp	SHORT $LL28@getPending@2
 $LN82@getPending@2:
 
-; 360  : 		i->getPendingTransactions(outputQueue);
+; 368  : 		i->getPendingTransactions(outputQueue);
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN77@getPending@2
 $LN81@getPending@2:
 
-; 359  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+; 367  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
 
 	mov	eax, DWORD PTR [esi]
 	jmp	SHORT $LN35@getPending@2
 $LN1@getPending@2:
 
-; 361  : }
+; 369  : }
 
 	pop	edi
 	pop	esi
@@ -11709,20 +11667,485 @@ _TEXT	SEGMENT
 	mov	eax, esi
 	ret	0
 ??0?$map@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@@std@@QAE@ABV01@@Z ENDP ; std::map<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> > >::map<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> > >
+;	COMDAT xdata$x
+; File c:\program files\microsoft visual studio 9.0\vc\include\new
+xdata$x	SEGMENT
+__unwindtable$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 0ffffffffH
+	DD	00H
+	DD	00H
+	DD	FLAT:__unwindfunclet$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2
+	DD	0ffffffffH
+	DD	00H
+__catchsym$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$3 DD 040H
+	DD	00H
+	DD	00H
+	DD	FLAT:__catch$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$0
+__tryblocktable$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 00H
+	DD	01H
+	DD	02H
+	DD	01H
+	DD	FLAT:__catchsym$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$3
+__ehfuncinfo$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 019930522H
+	DD	03H
+	DD	FLAT:__unwindtable$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	DD	01H
+	DD	FLAT:__tryblocktable$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\memory
+xdata$x	ENDS
+;	COMDAT ??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+_TEXT	SEGMENT
+$T605602 = -28						; size = 4
+__Vptr$605608 = -24					; size = 4
+__Next$ = -20						; size = 4
+__$EHRec$ = -16						; size = 16
+__Last$ = 8						; size = 4
+__Dest$ = 12						; size = 4
+___formal$ = 16						; size = 1
+___formal$ = 20						; size = 1
+??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z PROC ; std::_Uninit_copy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > const *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >, COMDAT
+; __First$ = ecx
+
+; 124  : 	{	// copy [_First, _Last) to raw _Dest, using _Al, arbitrary type
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 16					; 00000010H
+	push	ebx
+	push	esi
+	push	edi
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR __$EHRec$[ebp], esp
+	mov	esi, DWORD PTR __Dest$[ebp]
+	mov	edi, ecx
+
+; 125  : 	_DEBUG_RANGE(_First, _Last);
+; 126  : 	_DEBUG_POINTER(_Dest);
+; 127  : 	_FwdIt _Next = _Dest;
+; 128  : 
+; 129  : 	_TRY_BEGIN
+
+	xor	ebx, ebx
+	mov	DWORD PTR __Next$[ebp], esi
+	mov	DWORD PTR __$EHRec$[ebp+12], ebx
+$LL6@Uninit_cop@11:
+
+; 130  : 	for (; _First != _Last; ++_Dest, ++_First)
+
+	cmp	edi, DWORD PTR __Last$[ebp]
+	je	SHORT $LN4@Uninit_cop@11
+
+; 131  : 		_Al.construct(_Dest, *_First);
+
+	mov	DWORD PTR __Vptr$605608[ebp], esi
+	mov	DWORD PTR $T605602[ebp], esi
+	mov	BYTE PTR __$EHRec$[ebp+12], 1
+	cmp	esi, ebx
+	je	SHORT $LN18@Uninit_cop@11
+	push	edi
+	push	esi
+	call	??0?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@ABV01@@Z ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+$LN18@Uninit_cop@11:
+	add	esi, 24					; 00000018H
+	mov	BYTE PTR __$EHRec$[ebp+12], bl
+	mov	DWORD PTR __Dest$[ebp], esi
+	add	edi, 24					; 00000018H
+	jmp	SHORT $LL6@Uninit_cop@11
+__catch$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$0:
+
+; 132  : 	_CATCH_ALL
+; 133  : 	for (; _Next != _Dest; ++_Next)
+
+	mov	esi, DWORD PTR __Next$[ebp]
+	mov	edi, DWORD PTR __Dest$[ebp]
+	cmp	esi, edi
+	je	SHORT $LN1@Uninit_cop@11
+	npad	6
+$LL3@Uninit_cop@11:
+
+; 134  : 		_Al.destroy(_Next);
+
+	call	?destroy@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@Z ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::destroy
+	add	esi, 24					; 00000018H
+	cmp	esi, edi
+	jne	SHORT $LL3@Uninit_cop@11
+$LN1@Uninit_cop@11:
+
+; 135  : 	_RERAISE;
+
+	xor	ebx, ebx
+	push	ebx
+	push	ebx
+	call	__CxxThrowException@8
+$LN29@Uninit_cop@11:
+$LN4@Uninit_cop@11:
+
+; 136  : 	_CATCH_END
+; 137  : 	return (_Dest);
+
+	mov	eax, esi
+
+; 138  : 	}
+
+	mov	ecx, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+$LN28@Uninit_cop@11:
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
+	mov	eax, DWORD PTR __Vptr$605608[ebp]
+	push	eax
+	mov	ecx, DWORD PTR $T605602[ebp]
+	push	ecx
+	call	??3@YAXPAX0@Z				; operator delete
+	add	esp, 8
+	ret	0
+__ehhandler$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-32]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ENDP ; std::_Uninit_copy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > const *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+;	COMDAT xdata$x
+; File c:\program files\microsoft visual studio 9.0\vc\include\new
+xdata$x	SEGMENT
+__unwindtable$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 0ffffffffH
+	DD	00H
+	DD	00H
+	DD	FLAT:__unwindfunclet$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2
+	DD	0ffffffffH
+	DD	00H
+__catchsym$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$3 DD 040H
+	DD	00H
+	DD	00H
+	DD	FLAT:__catch$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$0
+__tryblocktable$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 00H
+	DD	01H
+	DD	02H
+	DD	01H
+	DD	FLAT:__catchsym$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$3
+__ehfuncinfo$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 019930522H
+	DD	03H
+	DD	FLAT:__unwindtable$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	DD	01H
+	DD	FLAT:__tryblocktable$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\memory
+xdata$x	ENDS
+;	COMDAT ??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+_TEXT	SEGMENT
+$T605652 = -28						; size = 4
+__Vptr$605658 = -24					; size = 4
+__Next$ = -20						; size = 4
+__$EHRec$ = -16						; size = 16
+__Last$ = 8						; size = 4
+__Dest$ = 12						; size = 4
+___formal$ = 16						; size = 1
+___formal$ = 20						; size = 1
+??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z PROC ; std::_Uninit_copy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > const *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >, COMDAT
+; __First$ = ecx
+
+; 124  : 	{	// copy [_First, _Last) to raw _Dest, using _Al, arbitrary type
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 16					; 00000010H
+	push	ebx
+	push	esi
+	push	edi
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR __$EHRec$[ebp], esp
+	mov	esi, DWORD PTR __Dest$[ebp]
+	mov	edi, ecx
+
+; 125  : 	_DEBUG_RANGE(_First, _Last);
+; 126  : 	_DEBUG_POINTER(_Dest);
+; 127  : 	_FwdIt _Next = _Dest;
+; 128  : 
+; 129  : 	_TRY_BEGIN
+
+	xor	ebx, ebx
+	mov	DWORD PTR __Next$[ebp], esi
+	mov	DWORD PTR __$EHRec$[ebp+12], ebx
+$LL6@Uninit_cop@12:
+
+; 130  : 	for (; _First != _Last; ++_Dest, ++_First)
+
+	cmp	edi, DWORD PTR __Last$[ebp]
+	je	SHORT $LN4@Uninit_cop@12
+
+; 131  : 		_Al.construct(_Dest, *_First);
+
+	mov	DWORD PTR __Vptr$605658[ebp], esi
+	mov	DWORD PTR $T605652[ebp], esi
+	mov	BYTE PTR __$EHRec$[ebp+12], 1
+	cmp	esi, ebx
+	je	SHORT $LN18@Uninit_cop@12
+	push	edi
+	push	esi
+	call	??0?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@ABV01@@Z ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >
+$LN18@Uninit_cop@12:
+	add	esi, 24					; 00000018H
+	mov	BYTE PTR __$EHRec$[ebp+12], bl
+	mov	DWORD PTR __Dest$[ebp], esi
+	add	edi, 24					; 00000018H
+	jmp	SHORT $LL6@Uninit_cop@12
+__catch$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$0:
+
+; 132  : 	_CATCH_ALL
+; 133  : 	for (; _Next != _Dest; ++_Next)
+
+	mov	esi, DWORD PTR __Next$[ebp]
+	mov	edi, DWORD PTR __Dest$[ebp]
+	cmp	esi, edi
+	je	SHORT $LN1@Uninit_cop@12
+	npad	6
+$LL3@Uninit_cop@12:
+
+; 134  : 		_Al.destroy(_Next);
+
+	call	?destroy@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@Z ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::destroy
+	add	esi, 24					; 00000018H
+	cmp	esi, edi
+	jne	SHORT $LL3@Uninit_cop@12
+$LN1@Uninit_cop@12:
+
+; 135  : 	_RERAISE;
+
+	xor	ebx, ebx
+	push	ebx
+	push	ebx
+	call	__CxxThrowException@8
+$LN29@Uninit_cop@12:
+$LN4@Uninit_cop@12:
+
+; 136  : 	_CATCH_END
+; 137  : 	return (_Dest);
+
+	mov	eax, esi
+
+; 138  : 	}
+
+	mov	ecx, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+$LN28@Uninit_cop@12:
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
+	mov	eax, DWORD PTR __Vptr$605658[ebp]
+	push	eax
+	mov	ecx, DWORD PTR $T605652[ebp]
+	push	ecx
+	call	??3@YAXPAX0@Z				; operator delete
+	add	esp, 8
+	ret	0
+__ehhandler$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-32]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ENDP ; std::_Uninit_copy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > const *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+; Function compile flags: /Ogtpy
+;	COMDAT ??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@stdext@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@Z
+_TEXT	SEGMENT
+$T605675 = -4						; size = 1
+__First$ = 8						; size = 8
+__Cat$605679 = 16					; size = 1
+__Last$ = 16						; size = 8
+??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@stdext@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@Z PROC ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >, COMDAT
+; __Dest$ = edx
+
+; 819  : 	{	// copy [_First, _Last) to raw _Dest, using _Al
+
+	push	ecx
+
+; 820  : 	return (_STD _Uninit_copy(_CHECKED_BASE(_First),
+; 821  : 		_CHECKED_BASE(_Last), _Dest, _Al,
+; 822  : 		_STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
+
+	mov	ecx, DWORD PTR __Cat$605679[esp]
+	mov	BYTE PTR $T605675[esp+4], 0
+	mov	eax, DWORD PTR $T605675[esp+4]
+	push	eax
+	mov	eax, DWORD PTR __Last$[esp+8]
+	push	ecx
+	mov	ecx, DWORD PTR __First$[esp+12]
+	push	edx
+	push	eax
+	call	??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > const *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+
+; 823  : 	}
+
+	add	esp, 20					; 00000014H
+	ret	0
+??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@stdext@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@Z ENDP ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@stdext@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@Z
+_TEXT	SEGMENT
+$T605718 = -4						; size = 1
+__First$ = 8						; size = 8
+__Cat$605722 = 16					; size = 1
+__Last$ = 16						; size = 8
+??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@stdext@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@Z PROC ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >, COMDAT
+; __Dest$ = edx
+
+; 819  : 	{	// copy [_First, _Last) to raw _Dest, using _Al
+
+	push	ecx
+
+; 820  : 	return (_STD _Uninit_copy(_CHECKED_BASE(_First),
+; 821  : 		_CHECKED_BASE(_Last), _Dest, _Al,
+; 822  : 		_STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
+
+	mov	ecx, DWORD PTR __Cat$605722[esp]
+	mov	BYTE PTR $T605718[esp+4], 0
+	mov	eax, DWORD PTR $T605718[esp+4]
+	push	eax
+	mov	eax, DWORD PTR __Last$[esp+8]
+	push	ecx
+	mov	ecx, DWORD PTR __First$[esp+12]
+	push	edx
+	push	eax
+	call	??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > const *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+
+; 823  : 	}
+
+	add	esp, 20					; 00000014H
+	ret	0
+??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@stdext@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@Z ENDP ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+_TEXT	ENDS
+;	COMDAT ??$_Ucopy@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@1@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@1@0PAV21@@Z
+_TEXT	SEGMENT
+$T605803 = -4						; size = 1
+__First$ = 8						; size = 8
+__Cat$605806 = 16					; size = 1
+__Last$ = 16						; size = 8
+??$_Ucopy@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@1@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@1@0PAV21@@Z PROC ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Ucopy<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > > >, COMDAT
+; __Ptr$ = edx
+
+; 1138 : 		pointer _Ucopy(_Iter _First, _Iter _Last, pointer _Ptr)
+
+	push	ecx
+
+; 1139 : 		{	// copy initializing [_First, _Last), using allocator
+; 1140 : 		return (_STDEXT unchecked_uninitialized_copy(_First, _Last,
+; 1141 : 			_Ptr, this->_Alval));
+
+	mov	ecx, DWORD PTR __Cat$605806[esp]
+	mov	BYTE PTR $T605803[esp+4], 0
+	mov	eax, DWORD PTR $T605803[esp+4]
+	push	eax
+	mov	eax, DWORD PTR __Last$[esp+8]
+	push	ecx
+	mov	ecx, DWORD PTR __First$[esp+12]
+	push	edx
+	push	eax
+	call	??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > const *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+
+; 1142 : 		}
+
+	add	esp, 20					; 00000014H
+	ret	16					; 00000010H
+??$_Ucopy@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@1@V?$_Vector_const_iterator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@1@0PAV21@@Z ENDP ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Ucopy<std::_Vector_const_iterator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > > >
+; Function compile flags: /Ogtpy
+_TEXT	ENDS
+;	COMDAT ??$_Ucopy@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@1@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@1@0PAV21@@Z
+_TEXT	SEGMENT
+$T605872 = -4						; size = 1
+__First$ = 8						; size = 8
+__Cat$605875 = 16					; size = 1
+__Last$ = 16						; size = 8
+??$_Ucopy@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@1@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@1@0PAV21@@Z PROC ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Ucopy<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > > >, COMDAT
+; __Ptr$ = edx
+
+; 1138 : 		pointer _Ucopy(_Iter _First, _Iter _Last, pointer _Ptr)
+
+	push	ecx
+
+; 1139 : 		{	// copy initializing [_First, _Last), using allocator
+; 1140 : 		return (_STDEXT unchecked_uninitialized_copy(_First, _Last,
+; 1141 : 			_Ptr, this->_Alval));
+
+	mov	ecx, DWORD PTR __Cat$605875[esp]
+	mov	BYTE PTR $T605872[esp+4], 0
+	mov	eax, DWORD PTR $T605872[esp+4]
+	push	eax
+	mov	eax, DWORD PTR __Last$[esp+8]
+	push	ecx
+	mov	ecx, DWORD PTR __First$[esp+12]
+	push	edx
+	push	eax
+	call	??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > const *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+
+; 1142 : 		}
+
+	add	esp, 20					; 00000014H
+	ret	16					; 00000010H
+??$_Ucopy@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@1@V?$_Vector_const_iterator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@1@0PAV21@@Z ENDP ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Ucopy<std::_Vector_const_iterator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > > >
 ; Function compile flags: /Ogtpy
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xhash
+_TEXT	ENDS
 ;	COMDAT ?_Insert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAE?AU?$pair@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@_N@std@@ABU?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@4@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@4@@Z
 _TEXT	SEGMENT
 __Bucket$ = -24						; size = 4
-__Num$569895 = -20					; size = 4
-__Tmp$571420 = -16					; size = 8
+__Num$605930 = -20					; size = 4
+__Tmp$607434 = -16					; size = 8
 __Plist$ = -16						; size = 8
-$T571426 = -8						; size = 8
-$T571423 = -8						; size = 8
-$T569863 = -8						; size = 8
-$T569859 = -8						; size = 8
-$T569857 = -8						; size = 8
-$T569854 = -8						; size = 8
+$T607440 = -8						; size = 8
+$T607437 = -8						; size = 8
+$T605906 = -8						; size = 8
+$T605902 = -8						; size = 8
+$T605900 = -8						; size = 8
+$T605897 = -8						; size = 8
 _this$ = 8						; size = 4
 ___$ReturnUdt$ = 12					; size = 4
 tv1572 = 16						; size = 4
@@ -11748,22 +12171,22 @@ __Where$ = 20						; size = 8
 	imul	edx, 16807				; 000041a7H
 	add	esp, 8
 	sub	edx, eax
-	jns	SHORT $LN28@Insert@7
+	jns	SHORT $LN28@Insert@8
 	add	edx, 2147483647				; 7fffffffH
-$LN28@Insert@7:
+$LN28@Insert@8:
 	mov	ebp, DWORD PTR _this$[esp+36]
 	mov	eax, DWORD PTR [ebp+60]
 	mov	edi, eax
 	and	edi, edx
-	mov	DWORD PTR __Num$569895[esp+40], edi
+	mov	DWORD PTR __Num$605930[esp+40], edi
 	cmp	DWORD PTR [ebp+64], edi
-	ja	SHORT $LN23@Insert@7
+	ja	SHORT $LN23@Insert@8
 	shr	eax, 1
 	or	edx, -1
 	sub	edx, eax
 	add	edi, edx
-	mov	DWORD PTR __Num$569895[esp+40], edi
-$LN23@Insert@7:
+	mov	DWORD PTR __Num$605930[esp+40], edi
+$LN23@Insert@8:
 
 ; 838  : 		iterator _Plist = _Get_iter_from_vec(_Vec[_Bucket + 1]);
 
@@ -11774,121 +12197,121 @@ $LN23@Insert@7:
 	inc	edi
 	sar	eax, 3
 	cmp	edi, eax
-	jb	SHORT $LN31@Insert@7
+	jb	SHORT $LN31@Insert@8
 	call	__invalid_parameter_noinfo
-$LN31@Insert@7:
+$LN31@Insert@8:
 	add	ebp, 8
 	mov	ecx, DWORD PTR [esi+12]
 	mov	edx, DWORD PTR [ecx+edi*8+4]
 	mov	DWORD PTR __Plist$[esp+44], edx
-	jne	SHORT $LN44@Insert@7
+	jne	SHORT $LN44@Insert@8
 	call	__invalid_parameter_noinfo
-$LN44@Insert@7:
+$LN44@Insert@8:
 	mov	ebx, DWORD PTR [ebp]
 	mov	DWORD PTR __Plist$[esp+40], ebx
-$LN18@Insert@7:
+$LN18@Insert@8:
 
 ; 839  : 
 ; 840  : 		for (; _Plist != _Get_iter_from_vec(_Vec[_Bucket]); )
 
 	mov	eax, DWORD PTR [esi+16]
 	sub	eax, DWORD PTR [esi+12]
-	mov	edi, DWORD PTR __Num$569895[esp+40]
+	mov	edi, DWORD PTR __Num$605930[esp+40]
 	sar	eax, 3
 	cmp	edi, eax
-	jb	SHORT $LN56@Insert@7
+	jb	SHORT $LN56@Insert@8
 	call	__invalid_parameter_noinfo
-$LN56@Insert@7:
+$LN56@Insert@8:
 	mov	ecx, DWORD PTR [esi+12]
 	mov	edx, DWORD PTR [ecx+edi*8+4]
-	mov	DWORD PTR $T569854[esp+44], edx
+	mov	DWORD PTR $T605897[esp+44], edx
 	test	ebp, ebp
-	jne	SHORT $LN69@Insert@7
+	jne	SHORT $LN69@Insert@8
 	call	__invalid_parameter_noinfo
-$LN69@Insert@7:
+$LN69@Insert@8:
 	mov	eax, DWORD PTR [ebp]
 	test	ebx, ebx
-	je	SHORT $LN83@Insert@7
+	je	SHORT $LN83@Insert@8
 	cmp	ebx, eax
-	je	SHORT $LN84@Insert@7
-$LN83@Insert@7:
+	je	SHORT $LN84@Insert@8
+$LN83@Insert@8:
 	call	__invalid_parameter_noinfo
-$LN84@Insert@7:
+$LN84@Insert@8:
 	mov	edi, DWORD PTR __Plist$[esp+44]
-	cmp	edi, DWORD PTR $T569854[esp+44]
-	je	$LN17@Insert@7
+	cmp	edi, DWORD PTR $T605897[esp+44]
+	je	$LN17@Insert@8
 
 ; 841  : 			if (this->comp(this->_Kfn(_Val), this->_Kfn(*--_Plist)))
 
 	test	ebx, ebx
-	jne	SHORT $LN96@Insert@7
+	jne	SHORT $LN96@Insert@8
 	call	__invalid_parameter_noinfo
-$LN96@Insert@7:
+$LN96@Insert@8:
 	mov	edi, DWORD PTR [edi+4]
 	mov	DWORD PTR __Plist$[esp+44], edi
 	test	ebx, ebx
-	je	SHORT $LN106@Insert@7
+	je	SHORT $LN106@Insert@8
 	mov	eax, DWORD PTR [ebx]
-	jmp	SHORT $LN107@Insert@7
-$LN106@Insert@7:
+	jmp	SHORT $LN107@Insert@8
+$LN106@Insert@8:
 	xor	eax, eax
-$LN107@Insert@7:
+$LN107@Insert@8:
 	cmp	edi, DWORD PTR [eax+20]
-	jne	SHORT $LN94@Insert@7
+	jne	SHORT $LN94@Insert@8
 	call	__invalid_parameter_noinfo
-$LN94@Insert@7:
+$LN94@Insert@8:
 	test	ebx, ebx
-	jne	$LN430@Insert@7
+	jne	$LN430@Insert@8
 	call	__invalid_parameter_noinfo
 	xor	eax, eax
-$LN123@Insert@7:
+$LN123@Insert@8:
 	cmp	edi, DWORD PTR [eax+20]
-	jne	SHORT $LN112@Insert@7
+	jne	SHORT $LN112@Insert@8
 	call	__invalid_parameter_noinfo
-$LN112@Insert@7:
+$LN112@Insert@8:
 	mov	eax, DWORD PTR __Val$[esp+36]
 	mov	ecx, DWORD PTR [eax]
 	cmp	ecx, DWORD PTR [edi+8]
-	jne	$LN18@Insert@7
+	jne	$LN18@Insert@8
 
 ; 842  : 				;	// still too high in bucket list
 ; 843  : 			else if (_Multi
 ; 844  : 				|| this->comp(this->_Kfn(*_Plist), this->_Kfn(_Val)))
 
 	test	ebx, ebx
-	jne	SHORT $LN429@Insert@7
+	jne	SHORT $LN429@Insert@8
 	call	__invalid_parameter_noinfo
 	xor	eax, eax
-$LN151@Insert@7:
+$LN151@Insert@8:
 	mov	edi, DWORD PTR __Plist$[esp+44]
 	cmp	edi, DWORD PTR [eax+20]
-	jne	SHORT $LN140@Insert@7
+	jne	SHORT $LN140@Insert@8
 	call	__invalid_parameter_noinfo
-$LN140@Insert@7:
+$LN140@Insert@8:
 	mov	edx, DWORD PTR [edi+8]
 	mov	eax, DWORD PTR __Val$[esp+36]
 	cmp	edx, DWORD PTR [eax]
-	je	SHORT $LN14@Insert@7
+	je	SHORT $LN14@Insert@8
 
 ; 845  : 				{	// found insertion point, back up to it
 ; 846  : 				++_Plist;
 
 	test	ebx, ebx
-	jne	SHORT $LN428@Insert@7
+	jne	SHORT $LN428@Insert@8
 	call	__invalid_parameter_noinfo
 	xor	eax, eax
-$LN175@Insert@7:
+$LN175@Insert@8:
 	cmp	edi, DWORD PTR [eax+20]
-	jne	SHORT $LN164@Insert@7
+	jne	SHORT $LN164@Insert@8
 	call	__invalid_parameter_noinfo
-$LN164@Insert@7:
+$LN164@Insert@8:
 	mov	ecx, DWORD PTR [edi]
 	mov	DWORD PTR __Plist$[esp+44], ecx
 
 ; 847  : 				break;
 
 	mov	edi, ecx
-$LN17@Insert@7:
+$LN17@Insert@8:
 
 ; 854  : 				}
 ; 855  : 
@@ -11896,19 +12319,19 @@ $LN17@Insert@7:
 
 	mov	eax, DWORD PTR [ebp+20]
 	mov	ecx, DWORD PTR [ebp]
-	mov	DWORD PTR $T569859[esp+44], eax
+	mov	DWORD PTR $T605902[esp+44], eax
 	mov	eax, DWORD PTR __Where$[esp+36]
 	test	eax, eax
-	je	SHORT $LN231@Insert@7
+	je	SHORT $LN231@Insert@8
 	cmp	eax, ecx
-	je	SHORT $LN232@Insert@7
-$LN231@Insert@7:
+	je	SHORT $LN232@Insert@8
+$LN231@Insert@8:
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __Where$[esp+36]
-$LN232@Insert@7:
+$LN232@Insert@8:
 	mov	ecx, DWORD PTR __Where$[esp+40]
-	cmp	ecx, DWORD PTR $T569859[esp+44]
-	je	SHORT $LN10@Insert@7
+	cmp	ecx, DWORD PTR $T605902[esp+44]
+	je	SHORT $LN10@Insert@8
 
 ; 857  : 			_List.splice(_Plist, _List, _Where);	// move element into place
 
@@ -11922,29 +12345,29 @@ $LN232@Insert@7:
 
 ; 858  : 		else
 
-	jmp	SHORT $LL433@Insert@7
-$LN430@Insert@7:
+	jmp	SHORT $LL433@Insert@8
+$LN430@Insert@8:
 
 ; 841  : 			if (this->comp(this->_Kfn(_Val), this->_Kfn(*--_Plist)))
 
 	mov	eax, DWORD PTR [ebx]
-	jmp	$LN123@Insert@7
-$LN429@Insert@7:
+	jmp	$LN123@Insert@8
+$LN429@Insert@8:
 
 ; 842  : 				;	// still too high in bucket list
 ; 843  : 			else if (_Multi
 ; 844  : 				|| this->comp(this->_Kfn(*_Plist), this->_Kfn(_Val)))
 
 	mov	eax, DWORD PTR [ebx]
-	jmp	SHORT $LN151@Insert@7
-$LN428@Insert@7:
+	jmp	SHORT $LN151@Insert@8
+$LN428@Insert@8:
 
 ; 845  : 				{	// found insertion point, back up to it
 ; 846  : 				++_Plist;
 
 	mov	eax, DWORD PTR [ebx]
-	jmp	SHORT $LN175@Insert@7
-$LN14@Insert@7:
+	jmp	SHORT $LN175@Insert@8
+$LN14@Insert@8:
 
 ; 848  : 				}
 ; 849  : 			else
@@ -11955,27 +12378,27 @@ $LN14@Insert@7:
 	mov	esi, DWORD PTR [ebp+20]
 	mov	ecx, DWORD PTR [ebp]
 	test	eax, eax
-	je	SHORT $LN200@Insert@7
+	je	SHORT $LN200@Insert@8
 	cmp	eax, ecx
-	je	SHORT $LN201@Insert@7
-$LN200@Insert@7:
+	je	SHORT $LN201@Insert@8
+$LN200@Insert@8:
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __Where$[esp+36]
-$LN201@Insert@7:
+$LN201@Insert@8:
 	mov	ecx, DWORD PTR __Where$[esp+40]
 	cmp	ecx, esi
-	je	SHORT $LN11@Insert@7
+	je	SHORT $LN11@Insert@8
 
 ; 852  : 					_List.erase(_Where);
 
 	push	ecx
 	push	eax
-	lea	edx, DWORD PTR $T569857[esp+48]
+	lea	edx, DWORD PTR $T605900[esp+48]
 	push	edx
 	mov	edi, ebp
 	call	?erase@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@@Z ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::erase
 	mov	edi, DWORD PTR __Plist$[esp+44]
-$LN11@Insert@7:
+$LN11@Insert@8:
 
 ; 853  : 				return (_Pairib(_Plist, false));
 
@@ -11992,14 +12415,14 @@ $LN11@Insert@7:
 	pop	ebx
 	add	esp, 24					; 00000018H
 	ret	20					; 00000014H
-$LN10@Insert@7:
+$LN10@Insert@8:
 
 ; 859  : 			_Where = _List.insert(_Plist, _Val);	// insert new element
 
 	mov	edx, DWORD PTR __Val$[esp+36]
 	push	edi
 	push	ebx
-	lea	ecx, DWORD PTR $T569863[esp+48]
+	lea	ecx, DWORD PTR $T605906[esp+48]
 	push	ecx
 	push	ebp
 	call	?insert@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@QAE?AV?$_Iterator@$00@12@V?$_Const_iterator@$00@12@ABU?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@2@@Z ; std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::insert
@@ -12008,7 +12431,7 @@ $LN10@Insert@7:
 	mov	eax, DWORD PTR [eax+4]
 	mov	DWORD PTR __Where$[esp+40], eax
 	npad	3
-$LL433@Insert@7:
+$LL433@Insert@8:
 
 ; 860  : 		for (; _Plist == _Get_iter_from_vec(_Vec[_Bucket]); --_Bucket)
 
@@ -12017,37 +12440,37 @@ $LL433@Insert@7:
 	mov	edi, DWORD PTR __Bucket$[esp+40]
 	sar	ecx, 3
 	cmp	edi, ecx
-	jb	SHORT $LN240@Insert@7
+	jb	SHORT $LN240@Insert@8
 	call	__invalid_parameter_noinfo
-$LN240@Insert@7:
+$LN240@Insert@8:
 	mov	edx, DWORD PTR [esi+12]
 	mov	edi, DWORD PTR [edx+edi*8+4]
 	test	ebp, ebp
-	jne	SHORT $LN253@Insert@7
+	jne	SHORT $LN253@Insert@8
 	call	__invalid_parameter_noinfo
-$LN253@Insert@7:
+$LN253@Insert@8:
 	mov	eax, DWORD PTR [ebp]
 	test	ebx, ebx
-	je	SHORT $LN265@Insert@7
+	je	SHORT $LN265@Insert@8
 	cmp	ebx, eax
-	je	SHORT $LN266@Insert@7
-$LN265@Insert@7:
+	je	SHORT $LN266@Insert@8
+$LN265@Insert@8:
 	call	__invalid_parameter_noinfo
-$LN266@Insert@7:
+$LN266@Insert@8:
 	cmp	DWORD PTR __Plist$[esp+44], edi
-	jne	SHORT $LN424@Insert@7
+	jne	SHORT $LN424@Insert@8
 
 ; 861  : 			{	// update end iterators if new first bucket element
 ; 862  : 			_Vec[_Bucket] = _Where;
 
 	mov	eax, DWORD PTR __Where$[esp+36]
 	test	eax, eax
-	je	SHORT $LN278@Insert@7
+	je	SHORT $LN278@Insert@8
 	mov	eax, DWORD PTR [eax]
-	jmp	SHORT $LN279@Insert@7
-$LN278@Insert@7:
+	jmp	SHORT $LN279@Insert@8
+$LN278@Insert@8:
 	xor	eax, eax
-$LN279@Insert@7:
+$LN279@Insert@8:
 	mov	edi, DWORD PTR [eax]
 	mov	eax, DWORD PTR [esi+16]
 	sub	eax, DWORD PTR [esi+12]
@@ -12055,10 +12478,10 @@ $LN279@Insert@7:
 	mov	ebx, DWORD PTR __Where$[esp+40]
 	sar	eax, 3
 	cmp	ecx, eax
-	jb	SHORT $LN298@Insert@7
+	jb	SHORT $LN298@Insert@8
 	call	__invalid_parameter_noinfo
 	mov	ecx, DWORD PTR __Bucket$[esp+40]
-$LN298@Insert@7:
+$LN298@Insert@8:
 	mov	eax, DWORD PTR [esi+12]
 	mov	DWORD PTR [eax+ecx*8], edi
 	mov	DWORD PTR [eax+ecx*8+4], ebx
@@ -12066,12 +12489,12 @@ $LN298@Insert@7:
 ; 863  : 			if (_Bucket == 0)
 
 	test	ecx, ecx
-	je	SHORT $LN424@Insert@7
+	je	SHORT $LN424@Insert@8
 	mov	ebx, DWORD PTR __Plist$[esp+40]
 	dec	ecx
 	mov	DWORD PTR __Bucket$[esp+40], ecx
-	jmp	$LL433@Insert@7
-$LN424@Insert@7:
+	jmp	$LL433@Insert@8
+$LN424@Insert@8:
 
 ; 864  : 				break;
 ; 865  : 			}
@@ -12084,22 +12507,22 @@ $LN424@Insert@7:
 	mov	ebx, DWORD PTR [eax+64]
 	fild	DWORD PTR [eax+32]
 	test	ecx, ecx
-	jge	SHORT $LN438@Insert@7
+	jge	SHORT $LN438@Insert@8
 	fadd	DWORD PTR __real@4f800000
-$LN438@Insert@7:
+$LN438@Insert@8:
 	mov	edx, ebx
 	mov	DWORD PTR tv1569[esp+36], edx
 	fild	DWORD PTR tv1569[esp+36]
 	test	edx, edx
-	jge	SHORT $LN439@Insert@7
+	jge	SHORT $LN439@Insert@8
 	fadd	DWORD PTR __real@4f800000
-$LN439@Insert@7:
+$LN439@Insert@8:
 	fdivp	ST(1), ST(0)
 	fstp	DWORD PTR tv1566[esp+36]
 	fld	DWORD PTR tv1566[esp+36]
 	fcomip	ST(1)
 	fstp	ST(0)
-	jbe	$LN4@Insert@7
+	jbe	$LN4@Insert@8
 
 ; 868  :  #if _HAS_INCREMENTAL_HASH
 ; 869  : 			_Grow();	// too dense, need to grow hash table
@@ -12113,63 +12536,63 @@ $LN439@Insert@7:
 
 	xor	eax, eax
 	npad	6
-$LL3@Insert@7:
+$LL3@Insert@8:
 	cmp	ebx, 268435455				; 0fffffffH
-	jae	SHORT $LN1@Insert@7
+	jae	SHORT $LN1@Insert@8
 	inc	eax
 
 ; 877  : 				_Newsize *= 2;	// multiply safely by 8
 
 	add	ebx, ebx
 	cmp	eax, 3
-	jl	SHORT $LL3@Insert@7
-$LN1@Insert@7:
+	jl	SHORT $LL3@Insert@8
+$LN1@Insert@8:
 
 ; 878  : 			_Init(_Newsize);
 
 	mov	ecx, DWORD PTR [ebp+20]
 	mov	ebp, DWORD PTR [ebp]
 	test	ebp, ebp
-	je	SHORT $LN345@Insert@7
+	je	SHORT $LN345@Insert@8
 	mov	ebp, DWORD PTR [ebp]
-	jmp	SHORT $LN346@Insert@7
-$LN345@Insert@7:
+	jmp	SHORT $LN346@Insert@8
+$LN345@Insert@8:
 	xor	ebp, ebp
-$LN346@Insert@7:
+$LN346@Insert@8:
 	mov	edi, DWORD PTR [esi+16]
 	mov	eax, DWORD PTR [ebp]
-	mov	DWORD PTR __Tmp$571420[esp+40], eax
-	mov	DWORD PTR __Tmp$571420[esp+44], ecx
+	mov	DWORD PTR __Tmp$607434[esp+40], eax
+	mov	DWORD PTR __Tmp$607434[esp+44], ecx
 	cmp	DWORD PTR [esi+12], edi
-	jbe	SHORT $LN374@Insert@7
+	jbe	SHORT $LN374@Insert@8
 	call	__invalid_parameter_noinfo
-$LN374@Insert@7:
+$LN374@Insert@8:
 	mov	ebp, DWORD PTR [esi+12]
 	mov	eax, DWORD PTR [esi]
-	mov	DWORD PTR $T571423[esp+40], eax
+	mov	DWORD PTR $T607437[esp+40], eax
 	cmp	ebp, DWORD PTR [esi+16]
-	jbe	SHORT $LN390@Insert@7
+	jbe	SHORT $LN390@Insert@8
 	call	__invalid_parameter_noinfo
-$LN390@Insert@7:
-	mov	ecx, DWORD PTR $T571423[esp+40]
+$LN390@Insert@8:
+	mov	ecx, DWORD PTR $T607437[esp+40]
 	mov	eax, DWORD PTR [esi]
 	push	edi
 	push	ecx
 	push	ebp
 	push	eax
-	lea	edx, DWORD PTR $T571426[esp+56]
+	lea	edx, DWORD PTR $T607440[esp+56]
 	push	edx
 	mov	edi, esi
 	call	?erase@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@std@@QAE?AV?$_Vector_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@2@V?$_Vector_const_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@@std@@@2@0@Z ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_List_position> >::erase
 	mov	edi, DWORD PTR [esi+12]
 	cmp	edi, DWORD PTR [esi+16]
-	jbe	SHORT $LN406@Insert@7
+	jbe	SHORT $LN406@Insert@8
 	call	__invalid_parameter_noinfo
-$LN406@Insert@7:
+$LN406@Insert@8:
 	mov	eax, DWORD PTR [esi]
 	push	edi
 	push	eax
-	lea	eax, DWORD PTR __Tmp$571420[esp+48]
+	lea	eax, DWORD PTR __Tmp$607434[esp+48]
 	push	eax
 	lea	ecx, DWORD PTR [ebx+1]
 	mov	edx, esi
@@ -12182,7 +12605,7 @@ $LN406@Insert@7:
 ; 879  : 			_Reinsert();
 
 	call	?_Reinsert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXXZ ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Reinsert
-$LN4@Insert@7:
+$LN4@Insert@8:
 
 ; 880  : 			}
 ; 881  : #endif /* _HAS_INCREMENTAL_HASH */
@@ -12210,10 +12633,10 @@ $LN4@Insert@7:
 _TEXT	ENDS
 ;	COMDAT ?resize@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@std@@QAEXIU_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@Z
 _TEXT	SEGMENT
-$T571510 = -24						; size = 8
-$T571512 = -16						; size = 8
-$T571508 = -16						; size = 8
-$T571511 = -8						; size = 8
+$T607553 = -24						; size = 8
+$T607555 = -16						; size = 8
+$T607551 = -16						; size = 8
+$T607554 = -8						; size = 8
 __Newsize$ = 8						; size = 4
 __Val$ = 12						; size = 8
 ?resize@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@std@@QAEXIU_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@Z PROC ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position> >::resize, COMDAT
@@ -12279,27 +12702,27 @@ $LN33@resize@4:
 	mov	eax, DWORD PTR [edi]
 	push	ebp
 	mov	ebp, DWORD PTR [edi+12]
-	mov	DWORD PTR $T571508[esp+40], eax
+	mov	DWORD PTR $T607551[esp+40], eax
 	cmp	ebp, DWORD PTR [edi+16]
 	jbe	SHORT $LN49@resize@4
 	call	__invalid_parameter_noinfo
 $LN49@resize@4:
 	mov	ecx, DWORD PTR [edi]
 	push	ebx
-	lea	edx, DWORD PTR $T571511[esp+44]
+	lea	edx, DWORD PTR $T607554[esp+44]
 	push	edx
-	lea	eax, DWORD PTR $T571510[esp+48]
-	mov	DWORD PTR $T571510[esp+48], ecx
-	mov	DWORD PTR $T571510[esp+52], ebp
+	lea	eax, DWORD PTR $T607553[esp+48]
+	mov	DWORD PTR $T607553[esp+48], ecx
+	mov	DWORD PTR $T607553[esp+52], ebp
 	call	??H?$_Vector_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@std@@QBE?AV01@H@Z ; std::_Vector_iterator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position> >::operator+
-	mov	ecx, DWORD PTR $T571508[esp+40]
+	mov	ecx, DWORD PTR $T607551[esp+40]
 	mov	edx, DWORD PTR [eax+4]
 	mov	eax, DWORD PTR [eax]
 	push	esi
 	push	ecx
 	push	edx
 	push	eax
-	lea	ecx, DWORD PTR $T571512[esp+56]
+	lea	ecx, DWORD PTR $T607555[esp+56]
 	push	ecx
 	call	?erase@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@std@@QAE?AV?$_Vector_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@2@V?$_Vector_const_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@2@0@Z ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position> >::erase
 	pop	ebp
@@ -12370,18 +12793,18 @@ __ehfuncinfo$?_Copy@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@st
 xdata$x	ENDS
 ;	COMDAT ?_Copy@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@IAEXABV12@@Z
 _TEXT	SEGMENT
-$T571814 = -48						; size = 8
+$T607857 = -48						; size = 8
 __Wherefrom$ = -40					; size = 8
-$T571812 = -40						; size = 8
-$T571809 = -40						; size = 8
-$T571815 = -32						; size = 8
+$T607855 = -40						; size = 8
+$T607852 = -40						; size = 8
+$T607858 = -32						; size = 8
 tv728 = -28						; size = 4
-$T571806 = -28						; size = 4
+$T607849 = -28						; size = 4
 __Whereto$ = -24					; size = 8
-$T571813 = -24						; size = 8
-__Pnext$572019 = -20					; size = 4
+$T607856 = -24						; size = 8
+__Pnext$608062 = -20					; size = 4
 __$EHRec$ = -16						; size = 16
-$T572232 = 8						; size = 1
+$T608274 = 8						; size = 1
 _this$ = 8						; size = 4
 ?_Copy@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@IAEXABV12@@Z PROC ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Copy, COMDAT
 ; __Right$ = ecx
@@ -12413,7 +12836,7 @@ _this$ = 8						; size = 4
 	mov	ecx, DWORD PTR [ebx+28]
 	lea	esi, DWORD PTR [ebx+8]
 	sub	esp, 8
-	mov	DWORD PTR $T571806[ebp], esp
+	mov	DWORD PTR $T607849[ebp], esp
 	mov	eax, esp
 	test	edx, edx
 	je	SHORT $LN34@Copy@10
@@ -12464,9 +12887,9 @@ $LN35@Copy@10:
 $LL58@Copy@10:
 	mov	edx, DWORD PTR [ecx]
 	push	ecx
-	mov	DWORD PTR __Pnext$572019[ebp], edx
+	mov	DWORD PTR __Pnext$608062[ebp], edx
 	call	??3@YAXPAX@Z				; operator delete
-	mov	ecx, DWORD PTR __Pnext$572019[ebp]
+	mov	ecx, DWORD PTR __Pnext$608062[ebp]
 	add	esp, 4
 	cmp	ecx, DWORD PTR [esi+20]
 	jne	SHORT $LL58@Copy@10
@@ -12483,17 +12906,17 @@ $LN56@Copy@10:
 	mov	edx, DWORD PTR [edx]
 	mov	eax, DWORD PTR [esi+20]
 	mov	ecx, DWORD PTR [esi]
-	mov	DWORD PTR $T571809[ebp+4], edx
+	mov	DWORD PTR $T607852[ebp+4], edx
 	mov	edx, DWORD PTR [edi+28]
 	push	edx
 	mov	edx, DWORD PTR [edi+8]
 	push	edx
-	mov	edx, DWORD PTR $T571809[ebp+4]
+	mov	edx, DWORD PTR $T607852[ebp+4]
 	push	edx
 	mov	edx, DWORD PTR [edi+8]
 	push	edx
 	push	eax
-	mov	eax, DWORD PTR $T572232[ebp]
+	mov	eax, DWORD PTR $T608274[ebp]
 	push	ecx
 	push	eax
 	push	esi
@@ -12562,13 +12985,13 @@ $LN197@Copy@10:
 	sub	ecx, DWORD PTR [ebx+12]
 	mov	eax, DWORD PTR [eax]
 	sar	ecx, 3
-	mov	DWORD PTR $T571815[ebp], eax
+	mov	DWORD PTR $T607858[ebp], eax
 	cmp	esi, ecx
 	jb	SHORT $LN216@Copy@10
 	call	__invalid_parameter_noinfo
 $LN216@Copy@10:
 	mov	eax, DWORD PTR [ebx+12]
-	mov	edx, DWORD PTR $T571815[ebp]
+	mov	edx, DWORD PTR $T607858[ebp]
 	mov	ecx, DWORD PTR __Whereto$[ebp+4]
 	mov	DWORD PTR [eax+esi*8], edx
 	mov	DWORD PTR [eax+esi*8+4], ecx
@@ -12650,11 +13073,11 @@ __catch$?_Copy@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?
 	mov	eax, DWORD PTR [esi+20]
 	mov	ecx, DWORD PTR [esi]
 	add	edi, 36					; 00000024H
-	lea	esi, DWORD PTR $T571813[ebp]
-	mov	DWORD PTR $T571812[ebp+4], eax
-	mov	DWORD PTR $T571812[ebp], ecx
+	lea	esi, DWORD PTR $T607856[ebp]
+	mov	DWORD PTR $T607855[ebp+4], eax
+	mov	DWORD PTR $T607855[ebp], ecx
 	call	?end@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@std@@QAE?AV?$_Vector_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@2@XZ ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position> >::end
-	lea	esi, DWORD PTR $T571814[ebp]
+	lea	esi, DWORD PTR $T607857[ebp]
 	mov	ebx, eax
 	call	?begin@?$vector@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@std@@QAE?AV?$_Vector_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@2@XZ ; std::vector<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position> >::begin
 	mov	edx, DWORD PTR [ebx+4]
@@ -12665,7 +13088,7 @@ __catch$?_Copy@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?
 	push	ecx
 	push	edx
 	push	eax
-	lea	edi, DWORD PTR $T571812[ebp]
+	lea	edi, DWORD PTR $T607855[ebp]
 	call	??$fill@V?$_Vector_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@std@@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@2@@std@@YAXV?$_Vector_iterator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@V?$allocator@U_List_position@?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@@std@@@0@0ABV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@@Z ; std::fill<std::_Vector_iterator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position,std::allocator<stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_List_position> >,std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> >
 	add	esp, 16					; 00000010H
 
@@ -12694,10 +13117,10 @@ text$x	ENDS
 ; File c:\program files\microsoft visual studio 9.0\vc\include\unordered_map
 ;	COMDAT ??A?$unordered_map@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$hash@I@tr1@2@U?$equal_to@I@2@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@tr1@std@@QAEAAU?$pair@PAVTransaction@DRAMsimII@@PAV12@@2@ABI@Z
 _TEXT	SEGMENT
-$T572730 = -24						; size = 12
+$T608773 = -24						; size = 12
 __Where$ = -24						; size = 8
-$T572728 = -12						; size = 12
-$T572727 = -12						; size = 8
+$T608771 = -12						; size = 12
+$T608770 = -12						; size = 8
 __Keyval$ = 8						; size = 4
 ??A?$unordered_map@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$hash@I@tr1@2@U?$equal_to@I@2@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@tr1@std@@QAEAAU?$pair@PAVTransaction@DRAMsimII@@PAV12@@2@ABI@Z PROC ; std::tr1::unordered_map<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::operator[], COMDAT
 ; _this$ = esi
@@ -12723,50 +13146,50 @@ __Keyval$ = 8						; size = 4
 	mov	edi, DWORD PTR __Where$[esp+40]
 	mov	ecx, DWORD PTR [esi+28]
 	mov	eax, DWORD PTR [esi+8]
-	mov	DWORD PTR $T572727[esp+44], ecx
+	mov	DWORD PTR $T608770[esp+44], ecx
 	test	edi, edi
-	je	SHORT $LN22@operator@317
+	je	SHORT $LN22@operator@391
 	cmp	edi, eax
-	je	SHORT $LN23@operator@317
-$LN22@operator@317:
+	je	SHORT $LN23@operator@391
+$LN22@operator@391:
 	call	__invalid_parameter_noinfo
-$LN23@operator@317:
+$LN23@operator@391:
 	mov	ebp, DWORD PTR __Where$[esp+44]
-	cmp	ebp, DWORD PTR $T572727[esp+44]
-	jne	SHORT $LN1@operator@317
+	cmp	ebp, DWORD PTR $T608770[esp+44]
+	jne	SHORT $LN1@operator@391
 
 ; 212  : 			_Where = _Mybase::insert(value_type(_Keyval, mapped_type())).first;
 
 	mov	edx, DWORD PTR [ebx]
 	xor	eax, eax
 	xor	ecx, ecx
-	mov	DWORD PTR $T572728[esp+44], eax
+	mov	DWORD PTR $T608771[esp+44], eax
 	mov	eax, DWORD PTR [esi+28]
 	push	eax
-	mov	DWORD PTR $T572728[esp+52], ecx
+	mov	DWORD PTR $T608771[esp+52], ecx
 	mov	ecx, DWORD PTR [esi+8]
 	push	ecx
-	lea	eax, DWORD PTR $T572728[esp+48]
+	lea	eax, DWORD PTR $T608771[esp+48]
 	push	eax
-	lea	ecx, DWORD PTR $T572730[esp+52]
+	lea	ecx, DWORD PTR $T608773[esp+52]
 	push	ecx
 	push	esi
-	mov	DWORD PTR $T572728[esp+60], edx
+	mov	DWORD PTR $T608771[esp+60], edx
 	call	?_Insert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAE?AU?$pair@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@_N@std@@ABU?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@4@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@4@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Insert
-	mov	edi, DWORD PTR $T572730[esp+40]
-	mov	ebp, DWORD PTR $T572730[esp+44]
-$LN1@operator@317:
+	mov	edi, DWORD PTR $T608773[esp+40]
+	mov	ebp, DWORD PTR $T608773[esp+44]
+$LN1@operator@391:
 
 ; 213  : 		return ((*_Where).second);
 
 	test	edi, edi
-	jne	SHORT $LN73@operator@317
+	jne	SHORT $LN73@operator@391
 	call	__invalid_parameter_noinfo
-$LN68@operator@317:
+$LN68@operator@391:
 	cmp	ebp, DWORD PTR [edi+20]
-	jne	SHORT $LN74@operator@317
+	jne	SHORT $LN74@operator@391
 	call	__invalid_parameter_noinfo
-$LN74@operator@317:
+$LN74@operator@391:
 
 ; 214  : 		}
 
@@ -12776,156 +13199,190 @@ $LN74@operator@317:
 	pop	ebx
 	add	esp, 28					; 0000001cH
 	ret	4
-$LN73@operator@317:
+$LN73@operator@391:
 
 ; 213  : 		return ((*_Where).second);
 
 	mov	edi, DWORD PTR [edi]
-	jmp	SHORT $LN68@operator@317
+	jmp	SHORT $LN68@operator@391
 ??A?$unordered_map@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$hash@I@tr1@2@U?$equal_to@I@2@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@tr1@std@@QAEAAU?$pair@PAVTransaction@DRAMsimII@@PAV12@@2@ABI@Z ENDP ; std::tr1::unordered_map<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::operator[]
 _TEXT	ENDS
 ;	COMDAT xdata$x
-; File c:\program files\microsoft visual studio 9.0\vc\include\memory
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 xdata$x	SEGMENT
-__unwindtable$??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z DD 0ffffffffH
-	DD	FLAT:__unwindfunclet$??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z$2
+__unwindtable$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$2
 	DD	00H
 	DD	00H
 	DD	00H
 	DD	00H
-__ehfuncinfo$??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z DD 019930522H
+__catchsym$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$5 DD 040H
+	DD	00H
+	DD	00H
+	DD	FLAT:__catch$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$0
+__tryblocktable$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z DD 01H
+	DD	01H
+	DD	02H
+	DD	01H
+	DD	FLAT:__catchsym$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$5
+__ehfuncinfo$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z DD 019930522H
 	DD	03H
-	DD	FLAT:__unwindtable$??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z
-	DD	2 DUP(00H)
+	DD	FLAT:__unwindtable$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
+	DD	01H
+	DD	FLAT:__tryblocktable$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
 	DD	2 DUP(00H)
 	DD	00H
 	DD	01H
 ; Function compile flags: /Ogtpy
-; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 xdata$x	ENDS
-;	COMDAT ??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z
+;	COMDAT ??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
 _TEXT	SEGMENT
-__$EHRec$ = -12						; size = 12
+$T609238 = -20						; size = 4
+__$EHRec$ = -16						; size = 16
+__Cat$609372 = 8					; size = 1
 _this$ = 8						; size = 4
+$T609368 = 12						; size = 1
 __Right$ = 12						; size = 4
-??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z PROC ; std::vector<unsigned int,std::allocator<unsigned int> >::vector<unsigned int,std::allocator<unsigned int> >, COMDAT
+??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z PROC ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >, COMDAT
 
 ; 500  : 		{	// construct by copying _Right
 
+	push	ebp
+	mov	ebp, esp
 	push	-1
-	push	__ehhandler$??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z
+	push	__ehhandler$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
 	mov	eax, DWORD PTR fs:0
 	push	eax
+	sub	esp, 8
 	push	ebx
-	push	ebp
 	push	esi
 	push	edi
 	mov	eax, DWORD PTR ___security_cookie
-	xor	eax, esp
+	xor	eax, ebp
 	push	eax
-	lea	eax, DWORD PTR __$EHRec$[esp+32]
+	lea	eax, DWORD PTR __$EHRec$[ebp+4]
 	mov	DWORD PTR fs:0, eax
-	mov	ebx, DWORD PTR __Right$[esp+28]
-	mov	esi, DWORD PTR _this$[esp+28]
+	mov	DWORD PTR __$EHRec$[ebp], esp
+	mov	ebx, DWORD PTR __Right$[ebp]
+	mov	esi, DWORD PTR _this$[ebp]
 	push	4
 	call	??2@YAPAXI@Z				; operator new
-	xor	ecx, ecx
 	add	esp, 4
-	cmp	eax, ecx
-	je	SHORT $LN19@vector@45
+	test	eax, eax
+	je	SHORT $LN19@vector@68
 	mov	DWORD PTR [eax], esi
-	jmp	SHORT $LN20@vector@45
-$LN19@vector@45:
+	jmp	SHORT $LN20@vector@68
+$LN19@vector@68:
 	xor	eax, eax
-$LN20@vector@45:
+$LN20@vector@68:
 	mov	DWORD PTR [esi], eax
-	mov	DWORD PTR __$EHRec$[esp+40], ecx
+	mov	DWORD PTR __$EHRec$[ebp+12], 0
 
 ; 501  : 		if (_Buy(_Right.size()))
 
-	mov	edi, DWORD PTR [ebx+16]
-	sub	edi, DWORD PTR [ebx+12]
-	mov	DWORD PTR [esi+12], ecx
-	sar	edi, 2
-	mov	DWORD PTR [esi+16], ecx
-	mov	DWORD PTR [esi+20], ecx
-	cmp	edi, ecx
-	je	SHORT $LN5@vector@45
-	cmp	edi, 1073741823				; 3fffffffH
-	jbe	SHORT $LN46@vector@45
-	call	?_Xlen@?$vector@IV?$allocator@I@std@@@std@@KAXXZ ; std::vector<unsigned int,std::allocator<unsigned int> >::_Xlen
-$LN110@vector@45:
-$LN46@vector@45:
-	mov	ecx, edi
-	call	?allocate@?$allocator@I@std@@QAEPAII@Z	; std::allocator<unsigned int>::allocate
+	mov	ecx, DWORD PTR [ebx+16]
+	sub	ecx, DWORD PTR [ebx+12]
+	mov	eax, 715827883				; 2aaaaaabH
+	imul	ecx
+	sar	edx, 2
+	mov	edi, edx
+	mov	eax, 0
+	shr	edi, 31					; 0000001fH
+	add	edi, edx
 	mov	DWORD PTR [esi+12], eax
 	mov	DWORD PTR [esi+16], eax
-	lea	eax, DWORD PTR [eax+edi*4]
 	mov	DWORD PTR [esi+20], eax
+	je	SHORT $LN8@vector@68
+	cmp	edi, 178956970				; 0aaaaaaaH
+	jbe	SHORT $LN46@vector@68
+	call	?_Xlen@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@KAXXZ ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Xlen
+$LN107@vector@68:
+$LN46@vector@68:
+	mov	ecx, edi
+	call	?allocate@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@I@Z ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::allocate
+	lea	ecx, DWORD PTR [edi+edi*2]
+	lea	edx, DWORD PTR [eax+ecx*8]
+	mov	DWORD PTR [esi+12], eax
+	mov	DWORD PTR [esi+16], eax
+	mov	DWORD PTR [esi+20], edx
 
 ; 502  : 			_TRY_BEGIN
+
+	mov	BYTE PTR __$EHRec$[ebp+12], 1
+
 ; 503  : 			_Mylast = _Ucopy(_Right.begin(), _Right.end(), _Myfirst);
 
-	mov	edi, DWORD PTR [ebx+16]
-	cmp	DWORD PTR [ebx+12], edi
-	jbe	SHORT $LN60@vector@45
+	mov	eax, DWORD PTR [ebx+16]
+	mov	DWORD PTR $T609238[ebp], eax
+	cmp	DWORD PTR [ebx+12], eax
+	jbe	SHORT $LN60@vector@68
 	call	__invalid_parameter_noinfo
-$LN60@vector@45:
-	mov	ebp, DWORD PTR [ebx+12]
-	cmp	ebp, DWORD PTR [ebx+16]
-	jbe	SHORT $LN74@vector@45
+$LN60@vector@68:
+	mov	edi, DWORD PTR [ebx+12]
+	cmp	edi, DWORD PTR [ebx+16]
+	jbe	SHORT $LN74@vector@68
 	call	__invalid_parameter_noinfo
-$LN74@vector@45:
-	mov	ecx, DWORD PTR [esi+12]
-	sub	edi, ebp
-	sar	edi, 2
-	lea	eax, DWORD PTR [edi*4]
-	lea	ebx, DWORD PTR [eax+ecx]
-	test	edi, edi
-	jbe	SHORT $LN103@vector@45
-	push	eax
-	push	ebp
-	push	eax
+$LN74@vector@68:
+	mov	edx, DWORD PTR __Cat$609372[ebp]
+	mov	eax, DWORD PTR [esi+12]
+	mov	BYTE PTR $T609368[ebp], 0
+	mov	ecx, DWORD PTR $T609368[ebp]
 	push	ecx
-	call	_memmove_s
+	push	edx
+	push	eax
+	mov	eax, DWORD PTR $T609238[ebp]
+	push	eax
+	mov	ecx, edi
+	call	??$_Uninit_copy@PBV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > const *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
 	add	esp, 16					; 00000010H
-$LN103@vector@45:
-	mov	DWORD PTR [esi+16], ebx
-$LN5@vector@45:
+	mov	DWORD PTR [esi+16], eax
+$LN8@vector@68:
 
-; 504  : 			_CATCH_ALL
-; 505  : 			_Tidy();
-; 506  : 			_RERAISE;
 ; 507  : 			_CATCH_END
 ; 508  : 		}
 
 	mov	eax, esi
-	mov	ecx, DWORD PTR __$EHRec$[esp+32]
+	mov	ecx, DWORD PTR __$EHRec$[ebp+4]
 	mov	DWORD PTR fs:0, ecx
 	pop	ecx
 	pop	edi
 	pop	esi
-	pop	ebp
 	pop	ebx
-	add	esp, 12					; 0000000cH
+	mov	esp, ebp
+	pop	ebp
 	ret	8
-$LN109@vector@45:
+__catch$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$0:
+
+; 504  : 			_CATCH_ALL
+; 505  : 			_Tidy();
+
+	mov	esi, DWORD PTR _this$[ebp]
+	call	?_Tidy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Tidy
+
+; 506  : 			_RERAISE;
+
+	push	0
+	push	0
+	call	__CxxThrowException@8
+$LN108@vector@68:
+$LN106@vector@68:
+	int	3
 _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
-__unwindfunclet$??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z$2:
-	mov	eax, DWORD PTR _this$[ebp-4]
-	jmp	??1?$_Vector_val@IV?$allocator@I@std@@@std@@QAE@XZ
-__ehhandler$??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z:
+__unwindfunclet$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$2:
+	mov	eax, DWORD PTR _this$[ebp]
+	jmp	??1?$_Vector_val@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ
+__ehhandler$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z:
 	mov	edx, DWORD PTR [esp+8]
-	lea	eax, DWORD PTR [edx-16]
-	mov	ecx, DWORD PTR [edx-20]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-24]
 	xor	ecx, eax
 	call	@__security_check_cookie@4
-	mov	eax, OFFSET __ehfuncinfo$??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z
+	mov	eax, OFFSET __ehfuncinfo$??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
 	jmp	___CxxFrameHandler3
 text$x	ENDS
-??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z ENDP ; std::vector<unsigned int,std::allocator<unsigned int> >::vector<unsigned int,std::allocator<unsigned int> >
+??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z ENDP ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
 ;	COMDAT xdata$x
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
 xdata$x	SEGMENT
@@ -13010,6 +13467,182 @@ __ehhandler$??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?
 	jmp	___CxxFrameHandler3
 text$x	ENDS
 ??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE@ABV01@@Z ENDP ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >
+;	COMDAT xdata$x
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+xdata$x	SEGMENT
+__unwindtable$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$2
+	DD	00H
+	DD	00H
+	DD	00H
+	DD	00H
+__catchsym$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$5 DD 040H
+	DD	00H
+	DD	00H
+	DD	FLAT:__catch$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$0
+__tryblocktable$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z DD 01H
+	DD	01H
+	DD	02H
+	DD	01H
+	DD	FLAT:__catchsym$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$5
+__ehfuncinfo$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z DD 019930522H
+	DD	03H
+	DD	FLAT:__unwindtable$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
+	DD	01H
+	DD	FLAT:__tryblocktable$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Ogtpy
+xdata$x	ENDS
+;	COMDAT ??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
+_TEXT	SEGMENT
+$T609624 = -20						; size = 4
+__$EHRec$ = -16						; size = 16
+__Cat$609758 = 8					; size = 1
+_this$ = 8						; size = 4
+$T609755 = 12						; size = 1
+__Right$ = 12						; size = 4
+??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z PROC ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >, COMDAT
+
+; 500  : 		{	// construct by copying _Right
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 8
+	push	ebx
+	push	esi
+	push	edi
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR __$EHRec$[ebp], esp
+	mov	ebx, DWORD PTR __Right$[ebp]
+	mov	esi, DWORD PTR _this$[ebp]
+	push	4
+	call	??2@YAPAXI@Z				; operator new
+	add	esp, 4
+	test	eax, eax
+	je	SHORT $LN19@vector@69
+	mov	DWORD PTR [eax], esi
+	jmp	SHORT $LN20@vector@69
+$LN19@vector@69:
+	xor	eax, eax
+$LN20@vector@69:
+	mov	DWORD PTR [esi], eax
+	mov	DWORD PTR __$EHRec$[ebp+12], 0
+
+; 501  : 		if (_Buy(_Right.size()))
+
+	mov	ecx, DWORD PTR [ebx+16]
+	sub	ecx, DWORD PTR [ebx+12]
+	mov	eax, 715827883				; 2aaaaaabH
+	imul	ecx
+	sar	edx, 2
+	mov	edi, edx
+	mov	eax, 0
+	shr	edi, 31					; 0000001fH
+	add	edi, edx
+	mov	DWORD PTR [esi+12], eax
+	mov	DWORD PTR [esi+16], eax
+	mov	DWORD PTR [esi+20], eax
+	je	SHORT $LN8@vector@69
+	cmp	edi, 178956970				; 0aaaaaaaH
+	jbe	SHORT $LN46@vector@69
+	call	?_Xlen@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@KAXXZ ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Xlen
+$LN107@vector@69:
+$LN46@vector@69:
+	mov	ecx, edi
+	call	?allocate@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@I@Z ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::allocate
+	lea	ecx, DWORD PTR [edi+edi*2]
+	lea	edx, DWORD PTR [eax+ecx*8]
+	mov	DWORD PTR [esi+12], eax
+	mov	DWORD PTR [esi+16], eax
+	mov	DWORD PTR [esi+20], edx
+
+; 502  : 			_TRY_BEGIN
+
+	mov	BYTE PTR __$EHRec$[ebp+12], 1
+
+; 503  : 			_Mylast = _Ucopy(_Right.begin(), _Right.end(), _Myfirst);
+
+	mov	eax, DWORD PTR [ebx+16]
+	mov	DWORD PTR $T609624[ebp], eax
+	cmp	DWORD PTR [ebx+12], eax
+	jbe	SHORT $LN60@vector@69
+	call	__invalid_parameter_noinfo
+$LN60@vector@69:
+	mov	edi, DWORD PTR [ebx+12]
+	cmp	edi, DWORD PTR [ebx+16]
+	jbe	SHORT $LN74@vector@69
+	call	__invalid_parameter_noinfo
+$LN74@vector@69:
+	mov	edx, DWORD PTR __Cat$609758[ebp]
+	mov	eax, DWORD PTR [esi+12]
+	mov	BYTE PTR $T609755[ebp], 0
+	mov	ecx, DWORD PTR $T609755[ebp]
+	push	ecx
+	push	edx
+	push	eax
+	mov	eax, DWORD PTR $T609624[ebp]
+	push	eax
+	mov	ecx, edi
+	call	??$_Uninit_copy@PBV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@YAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > const *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+	add	esp, 16					; 00000010H
+	mov	DWORD PTR [esi+16], eax
+$LN8@vector@69:
+
+; 507  : 			_CATCH_END
+; 508  : 		}
+
+	mov	eax, esi
+	mov	ecx, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+__catch$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$0:
+
+; 504  : 			_CATCH_ALL
+; 505  : 			_Tidy();
+
+	mov	esi, DWORD PTR _this$[ebp]
+	call	?_Tidy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Tidy
+
+; 506  : 			_RERAISE;
+
+	push	0
+	push	0
+	call	__CxxThrowException@8
+$LN108@vector@69:
+$LN106@vector@69:
+	int	3
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z$2:
+	mov	eax, DWORD PTR _this$[ebp]
+	jmp	??1?$_Vector_val@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ
+__ehhandler$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-24]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z ENDP ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
 ; Function compile flags: /Ogtpy
 ;	COMDAT ??0?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@ABV012@@Z
 _TEXT	SEGMENT
@@ -13021,6 +13654,1242 @@ _TEXT	SEGMENT
 	mov	eax, esi
 	ret	0
 ??0?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@ABV012@@Z ENDP ; std::tr1::unordered_map<unsigned int,unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::unordered_map<unsigned int,unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >
+;	COMDAT xdata$x
+; File c:\program files\microsoft visual studio 9.0\vc\include\new
+xdata$x	SEGMENT
+__unwindtable$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 0ffffffffH
+	DD	00H
+	DD	00H
+	DD	FLAT:__unwindfunclet$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2
+	DD	0ffffffffH
+	DD	00H
+__catchsym$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$3 DD 040H
+	DD	00H
+	DD	00H
+	DD	FLAT:__catch$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$0
+__tryblocktable$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 00H
+	DD	01H
+	DD	02H
+	DD	01H
+	DD	FLAT:__catchsym$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$3
+__ehfuncinfo$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z DD 019930522H
+	DD	03H
+	DD	FLAT:__unwindtable$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	DD	01H
+	DD	FLAT:__tryblocktable$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\memory
+xdata$x	ENDS
+;	COMDAT ??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+_TEXT	SEGMENT
+$T625551 = -28						; size = 4
+__Vptr$625548 = -24					; size = 4
+__Next$ = -20						; size = 4
+__$EHRec$ = -16						; size = 16
+__Last$ = 8						; size = 4
+__Dest$ = 12						; size = 4
+___formal$ = 16						; size = 1
+___formal$ = 20						; size = 1
+??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z PROC ; std::_Uninit_copy<std::vector<unsigned int,std::allocator<unsigned int> > const *,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >, COMDAT
+; __First$ = ecx
+
+; 124  : 	{	// copy [_First, _Last) to raw _Dest, using _Al, arbitrary type
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 16					; 00000010H
+	push	ebx
+	push	esi
+	push	edi
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR __$EHRec$[ebp], esp
+	mov	esi, DWORD PTR __Dest$[ebp]
+	mov	edi, ecx
+
+; 125  : 	_DEBUG_RANGE(_First, _Last);
+; 126  : 	_DEBUG_POINTER(_Dest);
+; 127  : 	_FwdIt _Next = _Dest;
+; 128  : 
+; 129  : 	_TRY_BEGIN
+
+	xor	ebx, ebx
+	mov	DWORD PTR __Next$[ebp], esi
+	mov	DWORD PTR __$EHRec$[ebp+12], ebx
+$LL6@Uninit_cop@14:
+
+; 130  : 	for (; _First != _Last; ++_Dest, ++_First)
+
+	cmp	edi, DWORD PTR __Last$[ebp]
+	je	SHORT $LN4@Uninit_cop@14
+
+; 131  : 		_Al.construct(_Dest, *_First);
+
+	mov	DWORD PTR __Vptr$625548[ebp], esi
+	mov	DWORD PTR $T625551[ebp], esi
+	mov	BYTE PTR __$EHRec$[ebp+12], 1
+	cmp	esi, ebx
+	je	SHORT $LN18@Uninit_cop@14
+	push	edi
+	push	esi
+	call	??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z ; std::vector<unsigned int,std::allocator<unsigned int> >::vector<unsigned int,std::allocator<unsigned int> >
+$LN18@Uninit_cop@14:
+	add	esi, 24					; 00000018H
+	mov	BYTE PTR __$EHRec$[ebp+12], bl
+	mov	DWORD PTR __Dest$[ebp], esi
+	add	edi, 24					; 00000018H
+	jmp	SHORT $LL6@Uninit_cop@14
+__catch$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$0:
+
+; 132  : 	_CATCH_ALL
+; 133  : 	for (; _Next != _Dest; ++_Next)
+
+	mov	esi, DWORD PTR __Next$[ebp]
+	mov	edi, DWORD PTR __Dest$[ebp]
+	cmp	esi, edi
+	je	SHORT $LN1@Uninit_cop@14
+	npad	6
+$LL3@Uninit_cop@14:
+
+; 134  : 		_Al.destroy(_Next);
+
+	call	?destroy@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@@Z ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::destroy
+	add	esi, 24					; 00000018H
+	cmp	esi, edi
+	jne	SHORT $LL3@Uninit_cop@14
+$LN1@Uninit_cop@14:
+
+; 135  : 	_RERAISE;
+
+	xor	ebx, ebx
+	push	ebx
+	push	ebx
+	call	__CxxThrowException@8
+$LN29@Uninit_cop@14:
+$LN4@Uninit_cop@14:
+
+; 136  : 	_CATCH_END
+; 137  : 	return (_Dest);
+
+	mov	eax, esi
+
+; 138  : 	}
+
+	mov	ecx, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+$LN28@Uninit_cop@14:
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
+	mov	eax, DWORD PTR __Vptr$625548[ebp]
+	push	eax
+	mov	ecx, DWORD PTR $T625551[ebp]
+	push	ecx
+	call	??3@YAXPAX0@Z				; operator delete
+	add	esp, 8
+	ret	0
+__ehhandler$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-32]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ENDP ; std::_Uninit_copy<std::vector<unsigned int,std::allocator<unsigned int> > const *,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+; Function compile flags: /Ogtpy
+;	COMDAT ??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@PAV?$vector@IV?$allocator@I@std@@@2@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@stdext@@YAPAV?$vector@IV?$allocator@I@std@@@std@@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@Z
+_TEXT	SEGMENT
+$T625572 = -4						; size = 1
+__First$ = 8						; size = 8
+__Cat$625576 = 16					; size = 1
+__Last$ = 16						; size = 8
+??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@PAV?$vector@IV?$allocator@I@std@@@2@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@stdext@@YAPAV?$vector@IV?$allocator@I@std@@@std@@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@Z PROC ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >, COMDAT
+; __Dest$ = edx
+
+; 819  : 	{	// copy [_First, _Last) to raw _Dest, using _Al
+
+	push	ecx
+
+; 820  : 	return (_STD _Uninit_copy(_CHECKED_BASE(_First),
+; 821  : 		_CHECKED_BASE(_Last), _Dest, _Al,
+; 822  : 		_STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
+
+	mov	ecx, DWORD PTR __Cat$625576[esp]
+	mov	BYTE PTR $T625572[esp+4], 0
+	mov	eax, DWORD PTR $T625572[esp+4]
+	push	eax
+	mov	eax, DWORD PTR __Last$[esp+8]
+	push	ecx
+	mov	ecx, DWORD PTR __First$[esp+12]
+	push	edx
+	push	eax
+	call	??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<unsigned int,std::allocator<unsigned int> > const *,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+
+; 823  : 	}
+
+	add	esp, 20					; 00000014H
+	ret	0
+??$unchecked_uninitialized_copy@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@PAV?$vector@IV?$allocator@I@std@@@2@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@stdext@@YAPAV?$vector@IV?$allocator@I@std@@@std@@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@2@0PAV12@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@Z ENDP ; stdext::unchecked_uninitialized_copy<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+_TEXT	ENDS
+;	COMDAT ??$_Ucopy@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEPAV?$vector@IV?$allocator@I@std@@@1@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@1@0PAV21@@Z
+_TEXT	SEGMENT
+$T625658 = -4						; size = 1
+__First$ = 8						; size = 8
+__Cat$625661 = 16					; size = 1
+__Last$ = 16						; size = 8
+??$_Ucopy@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEPAV?$vector@IV?$allocator@I@std@@@1@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@1@0PAV21@@Z PROC ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Ucopy<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > > >, COMDAT
+; __Ptr$ = edx
+
+; 1138 : 		pointer _Ucopy(_Iter _First, _Iter _Last, pointer _Ptr)
+
+	push	ecx
+
+; 1139 : 		{	// copy initializing [_First, _Last), using allocator
+; 1140 : 		return (_STDEXT unchecked_uninitialized_copy(_First, _Last,
+; 1141 : 			_Ptr, this->_Alval));
+
+	mov	ecx, DWORD PTR __Cat$625661[esp]
+	mov	BYTE PTR $T625658[esp+4], 0
+	mov	eax, DWORD PTR $T625658[esp+4]
+	push	eax
+	mov	eax, DWORD PTR __Last$[esp+8]
+	push	ecx
+	mov	ecx, DWORD PTR __First$[esp+12]
+	push	edx
+	push	eax
+	call	??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<unsigned int,std::allocator<unsigned int> > const *,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+
+; 1142 : 		}
+
+	add	esp, 20					; 00000014H
+	ret	16					; 00000010H
+??$_Ucopy@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEPAV?$vector@IV?$allocator@I@std@@@1@V?$_Vector_const_iterator@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@1@0PAV21@@Z ENDP ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Ucopy<std::_Vector_const_iterator<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > > >
+; Function compile flags: /Ogtpy
+; File c:\program files\microsoft visual studio 9.0\vc\include\xhash
+_TEXT	ENDS
+;	COMDAT ?_Reinsert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXXZ
+_TEXT	SEGMENT
+$T625684 = -20						; size = 8
+$T625685 = -12						; size = 12
+?_Reinsert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXXZ PROC ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Reinsert, COMDAT
+; _this$ = ecx
+
+; 887  : 		{	// insert elements at beginning of list into table
+
+	sub	esp, 20					; 00000014H
+	push	ebx
+	push	ebp
+	push	esi
+	mov	ebx, ecx
+	push	edi
+	lea	edi, DWORD PTR [ebx+8]
+	npad	4
+$LL2@Reinsert:
+
+; 888  : 		iterator _First;
+; 889  : 		for (; (_First = _List.begin()) != _Get_iter_from_vec(_Vec[0]); )
+
+	mov	ecx, DWORD PTR [ebx+52]
+	sub	ecx, DWORD PTR [ebx+48]
+	mov	eax, DWORD PTR [edi+20]
+	mov	ebp, DWORD PTR [eax]
+	mov	esi, DWORD PTR [edi]
+	sar	ecx, 3
+	test	ecx, ecx
+	ja	SHORT $LN33@Reinsert
+	call	__invalid_parameter_noinfo
+$LN33@Reinsert:
+	mov	edx, DWORD PTR [ebx+48]
+	mov	eax, DWORD PTR [edx+4]
+	mov	DWORD PTR $T625684[esp+40], eax
+	test	edi, edi
+	jne	SHORT $LN46@Reinsert
+	call	__invalid_parameter_noinfo
+$LN46@Reinsert:
+	mov	eax, DWORD PTR [edi]
+	test	esi, esi
+	je	SHORT $LN60@Reinsert
+	cmp	esi, eax
+	je	SHORT $LN61@Reinsert
+$LN60@Reinsert:
+	call	__invalid_parameter_noinfo
+$LN61@Reinsert:
+	cmp	ebp, DWORD PTR $T625684[esp+40]
+	je	SHORT $LN1@Reinsert
+
+; 890  : 			_Insert(*_First, _First);
+
+	test	esi, esi
+	jne	SHORT $LN88@Reinsert
+	call	__invalid_parameter_noinfo
+	xor	eax, eax
+$LN82@Reinsert:
+	cmp	ebp, DWORD PTR [eax+20]
+	jne	SHORT $LN71@Reinsert
+	call	__invalid_parameter_noinfo
+$LN71@Reinsert:
+	push	ebp
+	push	esi
+	add	ebp, 8
+	push	ebp
+	lea	ecx, DWORD PTR $T625685[esp+48]
+	push	ecx
+	push	ebx
+	call	?_Insert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAE?AU?$pair@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@_N@std@@ABU?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@4@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@4@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Insert
+	jmp	SHORT $LL2@Reinsert
+$LN88@Reinsert:
+	mov	eax, DWORD PTR [esi]
+	jmp	SHORT $LN82@Reinsert
+$LN1@Reinsert:
+	pop	edi
+	pop	esi
+	pop	ebp
+	pop	ebx
+
+; 891  : 		}
+
+	add	esp, 20					; 00000014H
+	ret	0
+?_Reinsert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXXZ ENDP ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Reinsert
+_TEXT	ENDS
+;	COMDAT xdata$x
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+xdata$x	SEGMENT
+__unwindtable$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z$2
+	DD	00H
+	DD	00H
+	DD	00H
+	DD	00H
+__catchsym$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z$5 DD 040H
+	DD	00H
+	DD	00H
+	DD	FLAT:__catch$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z$0
+__tryblocktable$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z DD 01H
+	DD	01H
+	DD	02H
+	DD	01H
+	DD	FLAT:__catchsym$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z$5
+__ehfuncinfo$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z DD 019930522H
+	DD	03H
+	DD	FLAT:__unwindtable$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z
+	DD	01H
+	DD	FLAT:__tryblocktable$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Ogtpy
+xdata$x	ENDS
+;	COMDAT ??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z
+_TEXT	SEGMENT
+$T626173 = -20						; size = 4
+__$EHRec$ = -16						; size = 16
+__Cat$626308 = 8					; size = 1
+_this$ = 8						; size = 4
+$T626305 = 12						; size = 1
+__Right$ = 12						; size = 4
+??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z PROC ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >, COMDAT
+
+; 500  : 		{	// construct by copying _Right
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 8
+	push	ebx
+	push	esi
+	push	edi
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR __$EHRec$[ebp], esp
+	mov	ebx, DWORD PTR __Right$[ebp]
+	mov	esi, DWORD PTR _this$[ebp]
+	push	4
+	call	??2@YAPAXI@Z				; operator new
+	add	esp, 4
+	test	eax, eax
+	je	SHORT $LN19@vector@73
+	mov	DWORD PTR [eax], esi
+	jmp	SHORT $LN20@vector@73
+$LN19@vector@73:
+	xor	eax, eax
+$LN20@vector@73:
+	mov	DWORD PTR [esi], eax
+	mov	DWORD PTR __$EHRec$[ebp+12], 0
+
+; 501  : 		if (_Buy(_Right.size()))
+
+	mov	ecx, DWORD PTR [ebx+16]
+	sub	ecx, DWORD PTR [ebx+12]
+	mov	eax, 715827883				; 2aaaaaabH
+	imul	ecx
+	sar	edx, 2
+	mov	edi, edx
+	mov	eax, 0
+	shr	edi, 31					; 0000001fH
+	add	edi, edx
+	mov	DWORD PTR [esi+12], eax
+	mov	DWORD PTR [esi+16], eax
+	mov	DWORD PTR [esi+20], eax
+	je	SHORT $LN8@vector@73
+	cmp	edi, 178956970				; 0aaaaaaaH
+	jbe	SHORT $LN46@vector@73
+	call	?_Xlen@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@KAXXZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Xlen
+$LN107@vector@73:
+$LN46@vector@73:
+	mov	ecx, edi
+	call	?allocate@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEPAV?$vector@IV?$allocator@I@std@@@2@I@Z ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::allocate
+	lea	ecx, DWORD PTR [edi+edi*2]
+	lea	edx, DWORD PTR [eax+ecx*8]
+	mov	DWORD PTR [esi+12], eax
+	mov	DWORD PTR [esi+16], eax
+	mov	DWORD PTR [esi+20], edx
+
+; 502  : 			_TRY_BEGIN
+
+	mov	BYTE PTR __$EHRec$[ebp+12], 1
+
+; 503  : 			_Mylast = _Ucopy(_Right.begin(), _Right.end(), _Myfirst);
+
+	mov	eax, DWORD PTR [ebx+16]
+	mov	DWORD PTR $T626173[ebp], eax
+	cmp	DWORD PTR [ebx+12], eax
+	jbe	SHORT $LN60@vector@73
+	call	__invalid_parameter_noinfo
+$LN60@vector@73:
+	mov	edi, DWORD PTR [ebx+12]
+	cmp	edi, DWORD PTR [ebx+16]
+	jbe	SHORT $LN74@vector@73
+	call	__invalid_parameter_noinfo
+$LN74@vector@73:
+	mov	edx, DWORD PTR __Cat$626308[ebp]
+	mov	eax, DWORD PTR [esi+12]
+	mov	BYTE PTR $T626305[ebp], 0
+	mov	ecx, DWORD PTR $T626305[ebp]
+	push	ecx
+	push	edx
+	push	eax
+	mov	eax, DWORD PTR $T626173[ebp]
+	push	eax
+	mov	ecx, edi
+	call	??$_Uninit_copy@PBV?$vector@IV?$allocator@I@std@@@std@@PAV12@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@YAPAV?$vector@IV?$allocator@I@std@@@0@PBV10@0PAV10@AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z ; std::_Uninit_copy<std::vector<unsigned int,std::allocator<unsigned int> > const *,std::vector<unsigned int,std::allocator<unsigned int> > *,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+	add	esp, 16					; 00000010H
+	mov	DWORD PTR [esi+16], eax
+$LN8@vector@73:
+
+; 507  : 			_CATCH_END
+; 508  : 		}
+
+	mov	eax, esi
+	mov	ecx, DWORD PTR __$EHRec$[ebp+4]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+__catch$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z$0:
+
+; 504  : 			_CATCH_ALL
+; 505  : 			_Tidy();
+
+	mov	esi, DWORD PTR _this$[ebp]
+	call	?_Tidy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Tidy
+
+; 506  : 			_RERAISE;
+
+	push	0
+	push	0
+	call	__CxxThrowException@8
+$LN108@vector@73:
+$LN106@vector@73:
+	int	3
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z$2:
+	mov	eax, DWORD PTR _this$[ebp]
+	jmp	??1?$_Vector_val@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ
+__ehhandler$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-24]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z ENDP ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4OutputFileType@0@@Z ; DRAMsimII::operator<<
+; Function compile flags: /Ogtpy
+; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\system.cpp
+_TEXT	SEGMENT
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4OutputFileType@0@@Z PROC ; DRAMsimII::operator<<
+; _os$ = esi
+; _ot$ = eax
+
+; 614  : 	switch (ot)
+
+	cmp	eax, 4
+	ja	SHORT $LN1@operator@408
+	jmp	DWORD PTR $LN12@operator@408[eax*4]
+$LN6@operator@408:
+
+; 615  : 	{
+; 616  : 	case COUT:
+; 617  : 		os << "cout";
+
+	push	OFFSET ??_C@_04JNGDPEGD@cout?$AA@
+
+; 630  : 		break;
+; 631  : 	default:
+; 632  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 633  : 		break;
+; 634  : 	}
+; 635  : 
+; 636  : 	return os;
+
+	mov	eax, esi
+	add	esp, 8
+
+; 637  : }
+
+	ret	0
+$LN5@operator@408:
+
+; 618  : 		break;
+; 619  : 	case GZ:
+; 620  : 		os << "gz";
+
+	push	OFFSET ??_C@_02JIPGGKDE@gz?$AA@
+
+; 630  : 		break;
+; 631  : 	default:
+; 632  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 633  : 		break;
+; 634  : 	}
+; 635  : 
+; 636  : 	return os;
+
+	mov	eax, esi
+	add	esp, 8
+
+; 637  : }
+
+	ret	0
+$LN4@operator@408:
+
+; 621  : 		break;
+; 622  : 	case BZ:
+; 623  : 		os << "bz2";
+
+	push	OFFSET ??_C@_03PLICKGJM@bz2?$AA@
+
+; 630  : 		break;
+; 631  : 	default:
+; 632  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 633  : 		break;
+; 634  : 	}
+; 635  : 
+; 636  : 	return os;
+
+	mov	eax, esi
+	add	esp, 8
+
+; 637  : }
+
+	ret	0
+$LN3@operator@408:
+
+; 624  : 		break;
+; 625  : 	case UNCOMPRESSED:
+; 626  : 		os << "uncompressed";
+
+	push	OFFSET ??_C@_0N@NFCOPMLF@uncompressed?$AA@
+
+; 630  : 		break;
+; 631  : 	default:
+; 632  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 633  : 		break;
+; 634  : 	}
+; 635  : 
+; 636  : 	return os;
+
+	mov	eax, esi
+	add	esp, 8
+
+; 637  : }
+
+	ret	0
+$LN2@operator@408:
+
+; 627  : 		break;
+; 628  : 	case NONE:
+; 629  : 		os << "none";
+
+	push	OFFSET ??_C@_04CGFJFPFD@none?$AA@
+
+; 630  : 		break;
+; 631  : 	default:
+; 632  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 633  : 		break;
+; 634  : 	}
+; 635  : 
+; 636  : 	return os;
+
+	mov	eax, esi
+	add	esp, 8
+
+; 637  : }
+
+	ret	0
+$LN1@operator@408:
+
+; 630  : 		break;
+; 631  : 	default:
+; 632  : 		os << "unknown";
+
+	push	OFFSET ??_C@_07CIFAGBMG@unknown?$AA@
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 633  : 		break;
+; 634  : 	}
+; 635  : 
+; 636  : 	return os;
+
+	mov	eax, esi
+	add	esp, 8
+
+; 637  : }
+
+	ret	0
+	npad	2
+$LN12@operator@408:
+	DD	$LN6@operator@408
+	DD	$LN5@operator@408
+	DD	$LN4@operator@408
+	DD	$LN3@operator@408
+	DD	$LN2@operator@408
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4OutputFileType@0@@Z ENDP ; DRAMsimII::operator<<
+_TEXT	ENDS
+PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4TransactionOrderingAlgorithm@0@@Z ; DRAMsimII::operator<<
+; Function compile flags: /Ogtpy
+_TEXT	SEGMENT
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4TransactionOrderingAlgorithm@0@@Z PROC ; DRAMsimII::operator<<
+; _os$ = esi
+; _toa$ = eax
+
+; 597  : 	switch (toa)
+
+	sub	eax, 0
+	je	SHORT $LN3@operator@409
+	sub	eax, 1
+	je	SHORT $LN2@operator@409
+
+; 604  : 		break;
+; 605  : 	default:
+; 606  : 		os << "unknown";
+
+	push	OFFSET ??_C@_07CIFAGBMG@unknown?$AA@
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 607  : 		break;
+; 608  : 	}
+; 609  : 	return os;
+
+	mov	eax, esi
+
+; 610  : }
+
+	ret	0
+$LN2@operator@409:
+
+; 601  : 		break;
+; 602  : 	case STRICT:
+; 603  : 		os << "strict";
+
+	push	OFFSET ??_C@_06OLFOGHEN@strict?$AA@
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 607  : 		break;
+; 608  : 	}
+; 609  : 	return os;
+
+	mov	eax, esi
+
+; 610  : }
+
+	ret	0
+$LN3@operator@409:
+
+; 598  : 	{
+; 599  : 	case RIFF:
+; 600  : 		os << "RIFF";
+
+	push	OFFSET ??_C@_04EPCGJKAP@RIFF?$AA@
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 607  : 		break;
+; 608  : 	}
+; 609  : 	return os;
+
+	mov	eax, esi
+
+; 610  : }
+
+	ret	0
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4TransactionOrderingAlgorithm@0@@Z ENDP ; DRAMsimII::operator<<
+_TEXT	ENDS
+PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4RefreshPolicy@0@@Z ; DRAMsimII::operator<<
+; Function compile flags: /Ogtpy
+_TEXT	SEGMENT
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4RefreshPolicy@0@@Z PROC ; DRAMsimII::operator<<
+; _os$ = esi
+; _rp$ = eax
+
+; 573  : 	switch (rp)
+
+	cmp	eax, 3
+	ja	SHORT $LN1@operator@410
+	jmp	DWORD PTR $LN11@operator@410[eax*4]
+$LN5@operator@410:
+
+; 574  : 	{
+; 575  : 	case NO_REFRESH:
+; 576  : 		os << "none";
+
+	push	OFFSET ??_C@_04CGFJFPFD@none?$AA@
+
+; 586  : 		break;
+; 587  : 	default:
+; 588  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 589  : 		break;
+; 590  : 	}
+; 591  : 
+; 592  : 	return os;
+
+	mov	eax, esi
+
+; 593  : }
+
+	ret	0
+$LN4@operator@410:
+
+; 577  : 		break;
+; 578  : 	case BANK_CONCURRENT:
+; 579  : 		os << "bankConcurrent";
+
+	push	OFFSET ??_C@_0P@KFFKBIKA@bankConcurrent?$AA@
+
+; 586  : 		break;
+; 587  : 	default:
+; 588  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 589  : 		break;
+; 590  : 	}
+; 591  : 
+; 592  : 	return os;
+
+	mov	eax, esi
+
+; 593  : }
+
+	ret	0
+$LN3@operator@410:
+
+; 580  : 		break;
+; 581  : 	case BANK_STAGGERED_HIDDEN:
+; 582  : 		os << "bankStaggeredHidden";
+
+	push	OFFSET ??_C@_0BE@GGMPALAP@bankStaggeredHidden?$AA@
+
+; 586  : 		break;
+; 587  : 	default:
+; 588  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 589  : 		break;
+; 590  : 	}
+; 591  : 
+; 592  : 	return os;
+
+	mov	eax, esi
+
+; 593  : }
+
+	ret	0
+$LN2@operator@410:
+
+; 583  : 		break;
+; 584  : 	case ONE_CHANNEL_ALL_RANK_ALL_BANK:
+; 585  : 		os << "refreshOneChanAllRankAllBank";
+
+	push	OFFSET ??_C@_0BN@EACCCNHH@refreshOneChanAllRankAllBank?$AA@
+
+; 586  : 		break;
+; 587  : 	default:
+; 588  : 		os << "unknown";
+
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 589  : 		break;
+; 590  : 	}
+; 591  : 
+; 592  : 	return os;
+
+	mov	eax, esi
+
+; 593  : }
+
+	ret	0
+$LN1@operator@410:
+
+; 586  : 		break;
+; 587  : 	default:
+; 588  : 		os << "unknown";
+
+	push	OFFSET ??_C@_07CIFAGBMG@unknown?$AA@
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 589  : 		break;
+; 590  : 	}
+; 591  : 
+; 592  : 	return os;
+
+	mov	eax, esi
+
+; 593  : }
+
+	ret	0
+	npad	3
+$LN11@operator@410:
+	DD	$LN5@operator@410
+	DD	$LN4@operator@410
+	DD	$LN3@operator@410
+	DD	$LN2@operator@410
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4RefreshPolicy@0@@Z ENDP ; DRAMsimII::operator<<
+_TEXT	ENDS
+PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4SystemConfigurationType@0@@Z ; DRAMsimII::operator<<
+; Function compile flags: /Ogtpy
+_TEXT	SEGMENT
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4SystemConfigurationType@0@@Z PROC ; DRAMsimII::operator<<
+; _os$ = esi
+; _ct$ = eax
+
+; 556  : 	switch (ct)
+
+	sub	eax, 0
+	je	SHORT $LN3@operator@411
+	sub	eax, 1
+	je	SHORT $LN2@operator@411
+
+; 563  : 		break;
+; 564  : 	default:
+; 565  : 		os << "unknown";
+
+	push	OFFSET ??_C@_07CIFAGBMG@unknown?$AA@
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 566  : 		break;
+; 567  : 	}
+; 568  : 
+; 569  : 	return os;
+
+	mov	eax, esi
+
+; 570  : }
+
+	ret	0
+$LN2@operator@411:
+
+; 560  : 		break;
+; 561  : 	case FBD_CONFIG:
+; 562  : 		os << "fbd";
+
+	push	OFFSET ??_C@_03IKDEDJNB@fbd?$AA@
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 566  : 		break;
+; 567  : 	}
+; 568  : 
+; 569  : 	return os;
+
+	mov	eax, esi
+
+; 570  : }
+
+	ret	0
+$LN3@operator@411:
+
+; 557  : 	{
+; 558  : 	case BASELINE_CONFIG:
+; 559  : 		os << "baseline";
+
+	push	OFFSET ??_C@_08LCLEONAE@baseline?$AA@
+	push	esi
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 566  : 		break;
+; 567  : 	}
+; 568  : 
+; 569  : 	return os;
+
+	mov	eax, esi
+
+; 570  : }
+
+	ret	0
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4SystemConfigurationType@0@@Z ENDP ; DRAMsimII::operator<<
+_TEXT	ENDS
+PUBLIC	__real@3f1a36e2eb1c432d
+PUBLIC	__real@4059000000000000
+PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVSystem@0@@Z ; DRAMsimII::operator<<
+;	COMDAT __real@3f1a36e2eb1c432d
+; File c:\program files\microsoft visual studio 9.0\vc\include\iomanip
+CONST	SEGMENT
+__real@3f1a36e2eb1c432d DQ 03f1a36e2eb1c432dr	; 0.0001
+CONST	ENDS
+;	COMDAT __real@4059000000000000
+CONST	SEGMENT
+__real@4059000000000000 DQ 04059000000000000r	; 100
+; Function compile flags: /Ogtpy
+; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\system.cpp
+CONST	ENDS
+_TEXT	SEGMENT
+$T626372 = -24						; size = 8
+$T626376 = -16						; size = 8
+$T626352 = -8						; size = 8
+_os$ = 8						; size = 4
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVSystem@0@@Z PROC ; DRAMsimII::operator<<
+; _thisSystem$ = eax
+
+; 511  : {
+
+	sub	esp, 24					; 00000018H
+	push	ebx
+	mov	ebx, DWORD PTR _os$[esp+24]
+	push	ebp
+	push	esi
+	push	edi
+
+; 512  : 
+; 513  : 	os << "SYS[";
+
+	push	OFFSET ??_C@_04MHNOOJKH@SYS?$FL?$AA@
+	push	ebx
+	mov	esi, eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+
+; 514  : 	switch(thisSystem.systemConfig.getConfigType())
+
+	cmp	DWORD PTR [esi+304], 0
+	je	SHORT $LN10@operator@412
+
+; 518  : 		break;
+; 519  : 	default:
+; 520  : 		os << "UNKN] ";
+
+	push	OFFSET ??_C@_06IDCEFCJK@UNKN?$FN?5?$AA@
+
+; 521  : 		break;
+
+	jmp	SHORT $LN31@operator@412
+$LN10@operator@412:
+
+; 515  : 	{
+; 516  : 	case BASELINE_CONFIG:
+; 517  : 		os << "BASE] ";
+
+	push	OFFSET ??_C@_06FHJKBJEN@BASE?$FN?5?$AA@
+$LN31@operator@412:
+	push	ebx
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 522  : 	}
+; 523  : 	os << "RC[" << thisSystem.systemConfig.getRankCount() << "] ";
+
+	mov	eax, DWORD PTR [esi+368]
+	add	esp, 8
+	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
+	push	eax
+	push	OFFSET ??_C@_03JECMFAMM@RC?$FL?$AA@
+	push	ebx
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+	push	eax
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@I@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 524  : 	os << "BC[" << thisSystem.systemConfig.getBankCount() << "] ";
+
+	mov	eax, DWORD PTR [esi+372]
+	add	esp, 8
+	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
+	push	eax
+	push	OFFSET ??_C@_03MEDFAHFD@BC?$FL?$AA@
+	push	ebx
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+	push	eax
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@I@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 525  : 	os << "ALG[";
+
+	push	OFFSET ??_C@_04KBBGIBEE@ALG?$FL?$AA@
+	push	ebx
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 526  : 	switch(thisSystem.systemConfig.getCommandOrderingAlgorithm())
+
+	mov	eax, DWORD PTR [esi+296]
+	add	esp, 16					; 00000010H
+	cmp	eax, 6
+	ja	SHORT $LN1@operator@412
+	jmp	DWORD PTR $LN33@operator@412[eax*4]
+$LN6@operator@412:
+
+; 527  : 	{
+; 528  : 	case STRICT_ORDER:
+; 529  : 		os << "STR ] ";
+
+	push	OFFSET ??_C@_06PELADDJO@STR?5?$FN?5?$AA@
+
+; 530  : 		break;
+
+	jmp	SHORT $LN32@operator@412
+$LN5@operator@412:
+
+; 531  : 	case RANK_ROUND_ROBIN:
+; 532  : 		os << "RRR ] ";
+
+	push	OFFSET ??_C@_06IEJONLDH@RRR?5?$FN?5?$AA@
+
+; 533  : 		break;
+
+	jmp	SHORT $LN32@operator@412
+$LN4@operator@412:
+
+; 534  : 	case BANK_ROUND_ROBIN:
+; 535  : 		os << "BRR ] ";
+
+	push	OFFSET ??_C@_06ODEAEHPJ@BRR?5?$FN?5?$AA@
+
+; 536  : 		break;
+
+	jmp	SHORT $LN32@operator@412
+$LN3@operator@412:
+
+; 537  : 	case COMMAND_PAIR_RANK_HOPPING:
+; 538  : 		os << "CPRH] ";
+
+	push	OFFSET ??_C@_06PGGNDCKK@CPRH?$FN?5?$AA@
+
+; 539  : 		break;
+
+	jmp	SHORT $LN32@operator@412
+$LN2@operator@412:
+
+; 540  : 	case FIRST_AVAILABLE_AGE:
+; 541  : 		os << "GRDY] ";
+
+	push	OFFSET ??_C@_06EIOPOFGK@GRDY?$FN?5?$AA@
+
+; 542  : 		break;
+
+	jmp	SHORT $LN32@operator@412
+$LN1@operator@412:
+
+; 543  : 	default:
+; 544  : 		os << "UNKN] ";
+
+	push	OFFSET ??_C@_06IDCEFCJK@UNKN?$FN?5?$AA@
+$LN32@operator@412:
+	push	ebx
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+
+; 545  : 		break;
+; 546  : 	}
+; 547  : 	
+; 548  : 	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] "
+; 549  : 		<< "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] "<< thisSystem.systemConfig;
+
+	movsd	xmm0, QWORD PTR [esi+400]
+	add	esp, 8
+	lea	eax, DWORD PTR $T626352[esp+40]
+	movsd	QWORD PTR $T626372[esp+40], xmm0
+	movsd	xmm0, QWORD PTR [esi+392]
+	push	0
+	push	eax
+	movsd	QWORD PTR $T626376[esp+48], xmm0
+	call	?setprecision@std@@YA?AU?$_Smanip@H@1@H@Z ; std::setprecision
+	push	OFFSET ??_C@_04PMFLJKAP@BLR?$FL?$AA@
+	push	ebx
+	mov	edi, eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	mov	ebp, eax
+	add	esp, 16					; 00000010H
+	test	ebp, ebp
+	je	SHORT $LN30@operator@412
+$LN29@operator@412:
+	mov	ecx, DWORD PTR [ebp]
+	mov	eax, DWORD PTR [ecx+4]
+	add	eax, ebp
+$LN30@operator@412:
+	mov	edx, DWORD PTR [edi+4]
+	push	edx
+	push	eax
+	mov	eax, DWORD PTR [edi]
+	call	eax
+	movsd	xmm1, QWORD PTR __real@4059000000000000
+	movsd	xmm0, QWORD PTR $T626372[esp+48]
+	movsd	xmm2, QWORD PTR __real@4330000000000000
+	movsd	xmm4, QWORD PTR __real@3ff0000000000000
+	mulsd	xmm0, xmm1
+	cvttsd2si ecx, xmm0
+	movsd	xmm0, QWORD PTR $T626376[esp+48]
+	addsd	xmm0, QWORD PTR __real@3f1a36e2eb1c432d
+	add	esp, 8
+	mulsd	xmm0, xmm1
+	addsd	xmm0, QWORD PTR __real@3fe0000000000000
+	movsd	xmm1, QWORD PTR __real@8000000000000000
+	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
+	movapd	xmm3, xmm0
+	push	ecx
+	andpd	xmm1, xmm3
+	orpd	xmm2, xmm1
+	addsd	xmm0, xmm2
+	subsd	xmm0, xmm2
+	push	OFFSET ??_C@_03IKEMENOF@RP?$FL?$AA@
+	movapd	xmm2, xmm0
+	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
+	subsd	xmm2, xmm3
+	cmpnlesd xmm2, xmm1
+	sub	esp, 8
+	andpd	xmm2, xmm4
+	subsd	xmm0, xmm2
+	movsd	QWORD PTR [esp], xmm0
+	push	ebp
+	lea	edi, DWORD PTR [esi+8]
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@N@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+	push	eax
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@H@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 8
+	mov	esi, eax
+	call	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVSystemConfiguration@0@@Z ; DRAMsimII::operator<<
+	pop	edi
+	pop	esi
+	pop	ebp
+
+; 550  : 
+; 551  : 	return os;
+
+	mov	eax, ebx
+	pop	ebx
+
+; 552  : }
+
+	add	esp, 24					; 00000018H
+	ret	0
+	npad	1
+$LN33@operator@412:
+	DD	$LN6@operator@412
+	DD	$LN5@operator@412
+	DD	$LN4@operator@412
+	DD	$LN2@operator@412
+	DD	$LN1@operator@412
+	DD	$LN1@operator@412
+	DD	$LN3@operator@412
+??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVSystem@0@@Z ENDP ; DRAMsimII::operator<<
 _TEXT	ENDS
 ;	COMDAT xdata$x
 xdata$x	SEGMENT
@@ -13040,8 +14909,14 @@ __unwindtable$??0Statistics@DRAMsimII@@QAE@ABV01@@Z DD 0ffffffffH
 	DD	FLAT:__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$6
 	DD	06H
 	DD	FLAT:__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$7
-__ehfuncinfo$??0Statistics@DRAMsimII@@QAE@ABV01@@Z DD 019930522H
+	DD	07H
+	DD	FLAT:__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$8
 	DD	08H
+	DD	FLAT:__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$9
+	DD	09H
+	DD	FLAT:__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$10
+__ehfuncinfo$??0Statistics@DRAMsimII@@QAE@ABV01@@Z DD 019930522H
+	DD	0bH
 	DD	FLAT:__unwindtable$??0Statistics@DRAMsimII@@QAE@ABV01@@Z
 	DD	2 DUP(00H)
 	DD	2 DUP(00H)
@@ -13094,63 +14969,77 @@ ___that$ = 12						; size = 4
 	mov	edx, DWORD PTR [ebx+44]
 	mov	DWORD PTR [esi+44], edx
 	mov	eax, DWORD PTR [ebx+48]
+	lea	ecx, DWORD PTR [ebx+56]
 	mov	DWORD PTR [esi+48], eax
 	fld	DWORD PTR [ebx+52]
+	push	ecx
 	fstp	DWORD PTR [esi+52]
-	mov	ecx, DWORD PTR [ebx+56]
-	mov	DWORD PTR [esi+56], ecx
-	mov	edx, DWORD PTR [ebx+60]
-	mov	DWORD PTR [esi+60], edx
-	mov	eax, DWORD PTR [ebx+64]
-	mov	DWORD PTR [esi+64], eax
-	lea	eax, DWORD PTR [esi+68]
-	lea	edi, DWORD PTR [ebx+68]
+	lea	edx, DWORD PTR [esi+56]
+	push	edx
+	call	??0?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+	lea	eax, DWORD PTR [ebx+80]
 	push	eax
-	call	??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE@ABV01@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >
-	lea	eax, DWORD PTR [esi+140]
-	lea	edi, DWORD PTR [ebx+140]
+	lea	ecx, DWORD PTR [esi+80]
+	push	ecx
+	mov	DWORD PTR __$EHRec$[esp+44], 0
+	call	??0?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@ABV01@@Z ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+	mov	BYTE PTR __$EHRec$[esp+36], 1
+	mov	edx, DWORD PTR [ebx+104]
+	lea	eax, DWORD PTR [esi+108]
+	lea	edi, DWORD PTR [ebx+108]
 	push	eax
-	mov	DWORD PTR __$EHRec$[esp+40], 0
+	mov	DWORD PTR [esi+104], edx
 	call	??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE@ABV01@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >
-	lea	eax, DWORD PTR [esi+212]
-	lea	edi, DWORD PTR [ebx+212]
-	push	eax
-	mov	BYTE PTR __$EHRec$[esp+40], 1
-	call	??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE@ABV01@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >
-	lea	eax, DWORD PTR [esi+284]
-	lea	edi, DWORD PTR [ebx+284]
+	lea	eax, DWORD PTR [esi+180]
+	lea	edi, DWORD PTR [ebx+180]
 	push	eax
 	mov	BYTE PTR __$EHRec$[esp+40], 2
 	call	??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE@ABV01@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >
-	lea	eax, DWORD PTR [esi+356]
-	lea	edi, DWORD PTR [ebx+356]
+	lea	eax, DWORD PTR [esi+252]
+	lea	edi, DWORD PTR [ebx+252]
 	push	eax
 	mov	BYTE PTR __$EHRec$[esp+40], 3
 	call	??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE@ABV01@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >
-	lea	ecx, DWORD PTR [ebx+428]
-	lea	eax, DWORD PTR [esi+428]
+	lea	eax, DWORD PTR [esi+324]
+	lea	edi, DWORD PTR [ebx+324]
+	push	eax
+	mov	BYTE PTR __$EHRec$[esp+40], 4
+	call	??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE@ABV01@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >
+	lea	eax, DWORD PTR [esi+396]
+	lea	edi, DWORD PTR [ebx+396]
+	push	eax
+	mov	BYTE PTR __$EHRec$[esp+40], 5
+	call	??0?$_Hash@V?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@@stdext@@QAE@ABV01@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0> >
+	lea	ecx, DWORD PTR [ebx+468]
+	lea	eax, DWORD PTR [esi+468]
 	push	ecx
 	push	eax
-	mov	BYTE PTR __$EHRec$[esp+44], 4
+	mov	BYTE PTR __$EHRec$[esp+44], 6
 	call	??0?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV01@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >
-	lea	edx, DWORD PTR [ebx+460]
-	lea	eax, DWORD PTR [esi+460]
+	mov	BYTE PTR __$EHRec$[esp+36], 7
+	lea	edx, DWORD PTR [ebx+500]
+	lea	eax, DWORD PTR [esi+500]
 	push	edx
 	push	eax
-	mov	BYTE PTR __$EHRec$[esp+44], 5
 	call	??0?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV01@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >
-	lea	eax, DWORD PTR [ebx+492]
-	mov	BYTE PTR __$EHRec$[esp+36], 6
+	lea	eax, DWORD PTR [ebx+532]
 	push	eax
-	lea	ecx, DWORD PTR [esi+492]
+	lea	ecx, DWORD PTR [esi+532]
 	push	ecx
+	mov	BYTE PTR __$EHRec$[esp+44], 8
 	call	??0?$vector@IV?$allocator@I@std@@@std@@QAE@ABV01@@Z ; std::vector<unsigned int,std::allocator<unsigned int> >::vector<unsigned int,std::allocator<unsigned int> >
-	add	ebx, 516				; 00000204H
-	push	ebx
-	lea	edx, DWORD PTR [esi+516]
+	lea	edx, DWORD PTR [ebx+556]
 	push	edx
-	mov	BYTE PTR __$EHRec$[esp+44], 7
+	lea	eax, DWORD PTR [esi+556]
+	push	eax
+	mov	BYTE PTR __$EHRec$[esp+44], 9
 	call	??0?$vector@_JV?$allocator@_J@std@@@std@@QAE@ABV01@@Z ; std::vector<__int64,std::allocator<__int64> >::vector<__int64,std::allocator<__int64> >
+	add	ebx, 580				; 00000244H
+	push	ebx
+	lea	ecx, DWORD PTR [esi+580]
+	push	ecx
+	mov	BYTE PTR __$EHRec$[esp+44], 10		; 0000000aH
+	call	??0?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@ABV01@@Z ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
 	mov	eax, esi
 	mov	ecx, DWORD PTR __$EHRec$[esp+28]
 	mov	DWORD PTR fs:0, ecx
@@ -13164,41 +15053,53 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$0:
-	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 68					; 00000044H
-	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
+	mov	esi, DWORD PTR _this$[ebp-4]
+	add	esi, 56					; 00000038H
+	jmp	??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
 __unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$1:
-	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 140				; 0000008cH
-	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
+	mov	esi, DWORD PTR _this$[ebp-4]
+	add	esi, 80					; 00000050H
+	jmp	??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
 __unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$2:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 212				; 000000d4H
+	add	eax, 108				; 0000006cH
 	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 __unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$3:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 284				; 0000011cH
+	add	eax, 180				; 000000b4H
 	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 __unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$4:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 356				; 00000164H
+	add	eax, 252				; 000000fcH
 	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 __unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$5:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 428				; 000001acH
+	add	eax, 324				; 00000144H
+	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
+__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$6:
+	mov	eax, DWORD PTR _this$[ebp-4]
+	add	eax, 396				; 0000018cH
+	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
+__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$7:
+	mov	eax, DWORD PTR _this$[ebp-4]
+	add	eax, 468				; 000001d4H
 	push	eax
 	call	??1?$map@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@@std@@QAE@XZ
 	ret	0
-__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$6:
+__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$8:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 460				; 000001ccH
+	add	eax, 500				; 000001f4H
 	push	eax
 	call	??1?$map@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@@std@@QAE@XZ
 	ret	0
-__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$7:
+__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$9:
 	mov	esi, DWORD PTR _this$[ebp-4]
-	add	esi, 492				; 000001ecH
+	add	esi, 532				; 00000214H
 	jmp	??1?$vector@IV?$allocator@I@std@@@std@@QAE@XZ ; std::vector<unsigned int,std::allocator<unsigned int> >::~vector<unsigned int,std::allocator<unsigned int> >
+__unwindfunclet$??0Statistics@DRAMsimII@@QAE@ABV01@@Z$10:
+	mov	esi, DWORD PTR _this$[ebp-4]
+	add	esi, 556				; 0000022cH
+	jmp	??1?$vector@_JV?$allocator@_J@std@@@std@@QAE@XZ ; std::vector<__int64,std::allocator<__int64> >::~vector<__int64,std::allocator<__int64> >
 __ehhandler$??0Statistics@DRAMsimII@@QAE@ABV01@@Z:
 	mov	edx, DWORD PTR [esp+8]
 	lea	eax, DWORD PTR [edx-12]
@@ -13210,839 +15111,21 @@ __ehhandler$??0Statistics@DRAMsimII@@QAE@ABV01@@Z:
 text$x	ENDS
 ??0Statistics@DRAMsimII@@QAE@ABV01@@Z ENDP		; DRAMsimII::Statistics::Statistics
 ; Function compile flags: /Ogtpy
-;	COMDAT ?_Reinsert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXXZ
-_TEXT	SEGMENT
-$T586570 = -20						; size = 8
-$T586571 = -12						; size = 12
-?_Reinsert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXXZ PROC ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Reinsert, COMDAT
-; _this$ = ecx
-
-; 887  : 		{	// insert elements at beginning of list into table
-
-	sub	esp, 20					; 00000014H
-	push	ebx
-	push	ebp
-	push	esi
-	mov	ebx, ecx
-	push	edi
-	lea	edi, DWORD PTR [ebx+8]
-	npad	4
-$LL2@Reinsert:
-
-; 888  : 		iterator _First;
-; 889  : 		for (; (_First = _List.begin()) != _Get_iter_from_vec(_Vec[0]); )
-
-	mov	ecx, DWORD PTR [ebx+52]
-	sub	ecx, DWORD PTR [ebx+48]
-	mov	eax, DWORD PTR [edi+20]
-	mov	ebp, DWORD PTR [eax]
-	mov	esi, DWORD PTR [edi]
-	sar	ecx, 3
-	test	ecx, ecx
-	ja	SHORT $LN33@Reinsert
-	call	__invalid_parameter_noinfo
-$LN33@Reinsert:
-	mov	edx, DWORD PTR [ebx+48]
-	mov	eax, DWORD PTR [edx+4]
-	mov	DWORD PTR $T586570[esp+40], eax
-	test	edi, edi
-	jne	SHORT $LN46@Reinsert
-	call	__invalid_parameter_noinfo
-$LN46@Reinsert:
-	mov	eax, DWORD PTR [edi]
-	test	esi, esi
-	je	SHORT $LN60@Reinsert
-	cmp	esi, eax
-	je	SHORT $LN61@Reinsert
-$LN60@Reinsert:
-	call	__invalid_parameter_noinfo
-$LN61@Reinsert:
-	cmp	ebp, DWORD PTR $T586570[esp+40]
-	je	SHORT $LN1@Reinsert
-
-; 890  : 			_Insert(*_First, _First);
-
-	test	esi, esi
-	jne	SHORT $LN88@Reinsert
-	call	__invalid_parameter_noinfo
-	xor	eax, eax
-$LN82@Reinsert:
-	cmp	ebp, DWORD PTR [eax+20]
-	jne	SHORT $LN71@Reinsert
-	call	__invalid_parameter_noinfo
-$LN71@Reinsert:
-	push	ebp
-	push	esi
-	add	ebp, 8
-	push	ebp
-	lea	ecx, DWORD PTR $T586571[esp+48]
-	push	ecx
-	push	ebx
-	call	?_Insert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAE?AU?$pair@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@_N@std@@ABU?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@4@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@4@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Insert
-	jmp	SHORT $LL2@Reinsert
-$LN88@Reinsert:
-	mov	eax, DWORD PTR [esi]
-	jmp	SHORT $LN82@Reinsert
-$LN1@Reinsert:
-	pop	edi
-	pop	esi
-	pop	ebp
-	pop	ebx
-
-; 891  : 		}
-
-	add	esp, 20					; 00000014H
-	ret	0
-?_Reinsert@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@IAEXXZ ENDP ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Reinsert
-_TEXT	ENDS
-PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4OutputFileType@0@@Z ; DRAMsimII::operator<<
-; Function compile flags: /Ogtpy
-; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\system.cpp
-_TEXT	SEGMENT
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4OutputFileType@0@@Z PROC ; DRAMsimII::operator<<
-; _os$ = esi
-; _ot$ = eax
-
-; 606  : 	switch (ot)
-
-	cmp	eax, 4
-	ja	SHORT $LN1@operator@334
-	jmp	DWORD PTR $LN12@operator@334[eax*4]
-$LN6@operator@334:
-
-; 607  : 	{
-; 608  : 	case COUT:
-; 609  : 		os << "cout";
-
-	push	OFFSET ??_C@_04JNGDPEGD@cout?$AA@
-
-; 622  : 		break;
-; 623  : 	default:
-; 624  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 625  : 		break;
-; 626  : 	}
-; 627  : 
-; 628  : 	return os;
-
-	mov	eax, esi
-	add	esp, 8
-
-; 629  : }
-
-	ret	0
-$LN5@operator@334:
-
-; 610  : 		break;
-; 611  : 	case GZ:
-; 612  : 		os << "gz";
-
-	push	OFFSET ??_C@_02JIPGGKDE@gz?$AA@
-
-; 622  : 		break;
-; 623  : 	default:
-; 624  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 625  : 		break;
-; 626  : 	}
-; 627  : 
-; 628  : 	return os;
-
-	mov	eax, esi
-	add	esp, 8
-
-; 629  : }
-
-	ret	0
-$LN4@operator@334:
-
-; 613  : 		break;
-; 614  : 	case BZ:
-; 615  : 		os << "bz2";
-
-	push	OFFSET ??_C@_03PLICKGJM@bz2?$AA@
-
-; 622  : 		break;
-; 623  : 	default:
-; 624  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 625  : 		break;
-; 626  : 	}
-; 627  : 
-; 628  : 	return os;
-
-	mov	eax, esi
-	add	esp, 8
-
-; 629  : }
-
-	ret	0
-$LN3@operator@334:
-
-; 616  : 		break;
-; 617  : 	case UNCOMPRESSED:
-; 618  : 		os << "uncompressed";
-
-	push	OFFSET ??_C@_0N@NFCOPMLF@uncompressed?$AA@
-
-; 622  : 		break;
-; 623  : 	default:
-; 624  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 625  : 		break;
-; 626  : 	}
-; 627  : 
-; 628  : 	return os;
-
-	mov	eax, esi
-	add	esp, 8
-
-; 629  : }
-
-	ret	0
-$LN2@operator@334:
-
-; 619  : 		break;
-; 620  : 	case NONE:
-; 621  : 		os << "none";
-
-	push	OFFSET ??_C@_04CGFJFPFD@none?$AA@
-
-; 622  : 		break;
-; 623  : 	default:
-; 624  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 625  : 		break;
-; 626  : 	}
-; 627  : 
-; 628  : 	return os;
-
-	mov	eax, esi
-	add	esp, 8
-
-; 629  : }
-
-	ret	0
-$LN1@operator@334:
-
-; 622  : 		break;
-; 623  : 	default:
-; 624  : 		os << "unknown";
-
-	push	OFFSET ??_C@_07CIFAGBMG@unknown?$AA@
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 625  : 		break;
-; 626  : 	}
-; 627  : 
-; 628  : 	return os;
-
-	mov	eax, esi
-	add	esp, 8
-
-; 629  : }
-
-	ret	0
-	npad	2
-$LN12@operator@334:
-	DD	$LN6@operator@334
-	DD	$LN5@operator@334
-	DD	$LN4@operator@334
-	DD	$LN3@operator@334
-	DD	$LN2@operator@334
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4OutputFileType@0@@Z ENDP ; DRAMsimII::operator<<
-_TEXT	ENDS
-PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4TransactionOrderingAlgorithm@0@@Z ; DRAMsimII::operator<<
-; Function compile flags: /Ogtpy
-_TEXT	SEGMENT
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4TransactionOrderingAlgorithm@0@@Z PROC ; DRAMsimII::operator<<
-; _os$ = esi
-; _toa$ = eax
-
-; 589  : 	switch (toa)
-
-	sub	eax, 0
-	je	SHORT $LN3@operator@335
-	sub	eax, 1
-	je	SHORT $LN2@operator@335
-
-; 596  : 		break;
-; 597  : 	default:
-; 598  : 		os << "unknown";
-
-	push	OFFSET ??_C@_07CIFAGBMG@unknown?$AA@
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 599  : 		break;
-; 600  : 	}
-; 601  : 	return os;
-
-	mov	eax, esi
-
-; 602  : }
-
-	ret	0
-$LN2@operator@335:
-
-; 593  : 		break;
-; 594  : 	case STRICT:
-; 595  : 		os << "strict";
-
-	push	OFFSET ??_C@_06OLFOGHEN@strict?$AA@
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 599  : 		break;
-; 600  : 	}
-; 601  : 	return os;
-
-	mov	eax, esi
-
-; 602  : }
-
-	ret	0
-$LN3@operator@335:
-
-; 590  : 	{
-; 591  : 	case RIFF:
-; 592  : 		os << "RIFF";
-
-	push	OFFSET ??_C@_04EPCGJKAP@RIFF?$AA@
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 599  : 		break;
-; 600  : 	}
-; 601  : 	return os;
-
-	mov	eax, esi
-
-; 602  : }
-
-	ret	0
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4TransactionOrderingAlgorithm@0@@Z ENDP ; DRAMsimII::operator<<
-_TEXT	ENDS
-PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4RefreshPolicy@0@@Z ; DRAMsimII::operator<<
-; Function compile flags: /Ogtpy
-_TEXT	SEGMENT
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4RefreshPolicy@0@@Z PROC ; DRAMsimII::operator<<
-; _os$ = esi
-; _rp$ = eax
-
-; 565  : 	switch (rp)
-
-	cmp	eax, 3
-	ja	SHORT $LN1@operator@336
-	jmp	DWORD PTR $LN11@operator@336[eax*4]
-$LN5@operator@336:
-
-; 566  : 	{
-; 567  : 	case NO_REFRESH:
-; 568  : 		os << "none";
-
-	push	OFFSET ??_C@_04CGFJFPFD@none?$AA@
-
-; 578  : 		break;
-; 579  : 	default:
-; 580  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 581  : 		break;
-; 582  : 	}
-; 583  : 
-; 584  : 	return os;
-
-	mov	eax, esi
-
-; 585  : }
-
-	ret	0
-$LN4@operator@336:
-
-; 569  : 		break;
-; 570  : 	case BANK_CONCURRENT:
-; 571  : 		os << "bankConcurrent";
-
-	push	OFFSET ??_C@_0P@KFFKBIKA@bankConcurrent?$AA@
-
-; 578  : 		break;
-; 579  : 	default:
-; 580  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 581  : 		break;
-; 582  : 	}
-; 583  : 
-; 584  : 	return os;
-
-	mov	eax, esi
-
-; 585  : }
-
-	ret	0
-$LN3@operator@336:
-
-; 572  : 		break;
-; 573  : 	case BANK_STAGGERED_HIDDEN:
-; 574  : 		os << "bankStaggeredHidden";
-
-	push	OFFSET ??_C@_0BE@GGMPALAP@bankStaggeredHidden?$AA@
-
-; 578  : 		break;
-; 579  : 	default:
-; 580  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 581  : 		break;
-; 582  : 	}
-; 583  : 
-; 584  : 	return os;
-
-	mov	eax, esi
-
-; 585  : }
-
-	ret	0
-$LN2@operator@336:
-
-; 575  : 		break;
-; 576  : 	case ONE_CHANNEL_ALL_RANK_ALL_BANK:
-; 577  : 		os << "refreshOneChanAllRankAllBank";
-
-	push	OFFSET ??_C@_0BN@EACCCNHH@refreshOneChanAllRankAllBank?$AA@
-
-; 578  : 		break;
-; 579  : 	default:
-; 580  : 		os << "unknown";
-
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 581  : 		break;
-; 582  : 	}
-; 583  : 
-; 584  : 	return os;
-
-	mov	eax, esi
-
-; 585  : }
-
-	ret	0
-$LN1@operator@336:
-
-; 578  : 		break;
-; 579  : 	default:
-; 580  : 		os << "unknown";
-
-	push	OFFSET ??_C@_07CIFAGBMG@unknown?$AA@
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 581  : 		break;
-; 582  : 	}
-; 583  : 
-; 584  : 	return os;
-
-	mov	eax, esi
-
-; 585  : }
-
-	ret	0
-	npad	3
-$LN11@operator@336:
-	DD	$LN5@operator@336
-	DD	$LN4@operator@336
-	DD	$LN3@operator@336
-	DD	$LN2@operator@336
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4RefreshPolicy@0@@Z ENDP ; DRAMsimII::operator<<
-_TEXT	ENDS
-PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4SystemConfigurationType@0@@Z ; DRAMsimII::operator<<
-; Function compile flags: /Ogtpy
-_TEXT	SEGMENT
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4SystemConfigurationType@0@@Z PROC ; DRAMsimII::operator<<
-; _os$ = esi
-; _ct$ = eax
-
-; 548  : 	switch (ct)
-
-	sub	eax, 0
-	je	SHORT $LN3@operator@337
-	sub	eax, 1
-	je	SHORT $LN2@operator@337
-
-; 555  : 		break;
-; 556  : 	default:
-; 557  : 		os << "unknown";
-
-	push	OFFSET ??_C@_07CIFAGBMG@unknown?$AA@
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 558  : 		break;
-; 559  : 	}
-; 560  : 
-; 561  : 	return os;
-
-	mov	eax, esi
-
-; 562  : }
-
-	ret	0
-$LN2@operator@337:
-
-; 552  : 		break;
-; 553  : 	case FBD_CONFIG:
-; 554  : 		os << "fbd";
-
-	push	OFFSET ??_C@_03IKDEDJNB@fbd?$AA@
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 558  : 		break;
-; 559  : 	}
-; 560  : 
-; 561  : 	return os;
-
-	mov	eax, esi
-
-; 562  : }
-
-	ret	0
-$LN3@operator@337:
-
-; 549  : 	{
-; 550  : 	case BASELINE_CONFIG:
-; 551  : 		os << "baseline";
-
-	push	OFFSET ??_C@_08LCLEONAE@baseline?$AA@
-	push	esi
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 558  : 		break;
-; 559  : 	}
-; 560  : 
-; 561  : 	return os;
-
-	mov	eax, esi
-
-; 562  : }
-
-	ret	0
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@W4SystemConfigurationType@0@@Z ENDP ; DRAMsimII::operator<<
-_TEXT	ENDS
-PUBLIC	__real@3f1a36e2eb1c432d
-PUBLIC	__real@4059000000000000
-PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVSystem@0@@Z ; DRAMsimII::operator<<
-;	COMDAT __real@3f1a36e2eb1c432d
-; File c:\program files\microsoft visual studio 9.0\vc\include\iomanip
-CONST	SEGMENT
-__real@3f1a36e2eb1c432d DQ 03f1a36e2eb1c432dr	; 0.0001
-CONST	ENDS
-;	COMDAT __real@4059000000000000
-CONST	SEGMENT
-__real@4059000000000000 DQ 04059000000000000r	; 100
-; Function compile flags: /Ogtpy
-; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\system.cpp
-CONST	ENDS
-_TEXT	SEGMENT
-$T586898 = -24						; size = 8
-$T586902 = -16						; size = 8
-$T586878 = -8						; size = 8
-_os$ = 8						; size = 4
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVSystem@0@@Z PROC ; DRAMsimII::operator<<
-; _thisSystem$ = eax
-
-; 503  : {
-
-	sub	esp, 24					; 00000018H
-	push	ebx
-	mov	ebx, DWORD PTR _os$[esp+24]
-	push	ebp
-	push	esi
-	push	edi
-
-; 504  : 
-; 505  : 	os << "SYS[";
-
-	push	OFFSET ??_C@_04MHNOOJKH@SYS?$FL?$AA@
-	push	ebx
-	mov	esi, eax
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-
-; 506  : 	switch(thisSystem.systemConfig.getConfigType())
-
-	cmp	DWORD PTR [esi+304], 0
-	je	SHORT $LN10@operator@338
-
-; 510  : 		break;
-; 511  : 	default:
-; 512  : 		os << "UNKN] ";
-
-	push	OFFSET ??_C@_06IDCEFCJK@UNKN?$FN?5?$AA@
-
-; 513  : 		break;
-
-	jmp	SHORT $LN31@operator@338
-$LN10@operator@338:
-
-; 507  : 	{
-; 508  : 	case BASELINE_CONFIG:
-; 509  : 		os << "BASE] ";
-
-	push	OFFSET ??_C@_06FHJKBJEN@BASE?$FN?5?$AA@
-$LN31@operator@338:
-	push	ebx
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 514  : 	}
-; 515  : 	os << "RC[" << thisSystem.systemConfig.getRankCount() << "] ";
-
-	mov	eax, DWORD PTR [esi+368]
-	add	esp, 8
-	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
-	push	eax
-	push	OFFSET ??_C@_03JECMFAMM@RC?$FL?$AA@
-	push	ebx
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-	push	eax
-	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@I@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
-	push	eax
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 516  : 	os << "BC[" << thisSystem.systemConfig.getBankCount() << "] ";
-
-	mov	eax, DWORD PTR [esi+372]
-	add	esp, 8
-	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
-	push	eax
-	push	OFFSET ??_C@_03MEDFAHFD@BC?$FL?$AA@
-	push	ebx
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-	push	eax
-	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@I@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
-	push	eax
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 517  : 	os << "ALG[";
-
-	push	OFFSET ??_C@_04KBBGIBEE@ALG?$FL?$AA@
-	push	ebx
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 518  : 	switch(thisSystem.systemConfig.getCommandOrderingAlgorithm())
-
-	mov	eax, DWORD PTR [esi+296]
-	add	esp, 16					; 00000010H
-	cmp	eax, 6
-	ja	SHORT $LN1@operator@338
-	jmp	DWORD PTR $LN33@operator@338[eax*4]
-$LN6@operator@338:
-
-; 519  : 	{
-; 520  : 	case STRICT_ORDER:
-; 521  : 		os << "STR ] ";
-
-	push	OFFSET ??_C@_06PELADDJO@STR?5?$FN?5?$AA@
-
-; 522  : 		break;
-
-	jmp	SHORT $LN32@operator@338
-$LN5@operator@338:
-
-; 523  : 	case RANK_ROUND_ROBIN:
-; 524  : 		os << "RRR ] ";
-
-	push	OFFSET ??_C@_06IEJONLDH@RRR?5?$FN?5?$AA@
-
-; 525  : 		break;
-
-	jmp	SHORT $LN32@operator@338
-$LN4@operator@338:
-
-; 526  : 	case BANK_ROUND_ROBIN:
-; 527  : 		os << "BRR ] ";
-
-	push	OFFSET ??_C@_06ODEAEHPJ@BRR?5?$FN?5?$AA@
-
-; 528  : 		break;
-
-	jmp	SHORT $LN32@operator@338
-$LN3@operator@338:
-
-; 529  : 	case COMMAND_PAIR_RANK_HOPPING:
-; 530  : 		os << "CPRH] ";
-
-	push	OFFSET ??_C@_06PGGNDCKK@CPRH?$FN?5?$AA@
-
-; 531  : 		break;
-
-	jmp	SHORT $LN32@operator@338
-$LN2@operator@338:
-
-; 532  : 	case FIRST_AVAILABLE_AGE:
-; 533  : 		os << "GRDY] ";
-
-	push	OFFSET ??_C@_06EIOPOFGK@GRDY?$FN?5?$AA@
-
-; 534  : 		break;
-
-	jmp	SHORT $LN32@operator@338
-$LN1@operator@338:
-
-; 535  : 	default:
-; 536  : 		os << "UNKN] ";
-
-	push	OFFSET ??_C@_06IDCEFCJK@UNKN?$FN?5?$AA@
-$LN32@operator@338:
-	push	ebx
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-
-; 537  : 		break;
-; 538  : 	}
-; 539  : 	
-; 540  : 	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] "
-; 541  : 		<< "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] "<< thisSystem.systemConfig;
-
-	movsd	xmm0, QWORD PTR [esi+400]
-	add	esp, 8
-	lea	eax, DWORD PTR $T586878[esp+40]
-	movsd	QWORD PTR $T586898[esp+40], xmm0
-	movsd	xmm0, QWORD PTR [esi+392]
-	push	0
-	push	eax
-	movsd	QWORD PTR $T586902[esp+48], xmm0
-	call	?setprecision@std@@YA?AU?$_Smanip@H@1@H@Z ; std::setprecision
-	push	OFFSET ??_C@_04PMFLJKAP@BLR?$FL?$AA@
-	push	ebx
-	mov	edi, eax
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	mov	ebp, eax
-	add	esp, 16					; 00000010H
-	test	ebp, ebp
-	je	SHORT $LN30@operator@338
-$LN29@operator@338:
-	mov	ecx, DWORD PTR [ebp]
-	mov	eax, DWORD PTR [ecx+4]
-	add	eax, ebp
-$LN30@operator@338:
-	mov	edx, DWORD PTR [edi+4]
-	push	edx
-	push	eax
-	mov	eax, DWORD PTR [edi]
-	call	eax
-	movsd	xmm1, QWORD PTR __real@4059000000000000
-	movsd	xmm0, QWORD PTR $T586898[esp+48]
-	movsd	xmm2, QWORD PTR __real@4330000000000000
-	movsd	xmm4, QWORD PTR __real@3ff0000000000000
-	mulsd	xmm0, xmm1
-	cvttsd2si ecx, xmm0
-	movsd	xmm0, QWORD PTR $T586902[esp+48]
-	addsd	xmm0, QWORD PTR __real@3f1a36e2eb1c432d
-	add	esp, 8
-	mulsd	xmm0, xmm1
-	addsd	xmm0, QWORD PTR __real@3fe0000000000000
-	movsd	xmm1, QWORD PTR __real@8000000000000000
-	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
-	movapd	xmm3, xmm0
-	push	ecx
-	andpd	xmm1, xmm3
-	orpd	xmm2, xmm1
-	addsd	xmm0, xmm2
-	subsd	xmm0, xmm2
-	push	OFFSET ??_C@_03IKEMENOF@RP?$FL?$AA@
-	movapd	xmm2, xmm0
-	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
-	subsd	xmm2, xmm3
-	cmpnlesd xmm2, xmm1
-	sub	esp, 8
-	andpd	xmm2, xmm4
-	subsd	xmm0, xmm2
-	movsd	QWORD PTR [esp], xmm0
-	push	ebp
-	lea	edi, DWORD PTR [esi+8]
-	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@N@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
-	push	eax
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-	push	eax
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-	push	eax
-	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@H@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
-	push	eax
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	add	esp, 8
-	mov	esi, eax
-	call	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVSystemConfiguration@0@@Z ; DRAMsimII::operator<<
-	pop	edi
-	pop	esi
-	pop	ebp
-
-; 542  : 
-; 543  : 	return os;
-
-	mov	eax, ebx
-	pop	ebx
-
-; 544  : }
-
-	add	esp, 24					; 00000018H
-	ret	0
-	npad	1
-$LN33@operator@338:
-	DD	$LN6@operator@338
-	DD	$LN5@operator@338
-	DD	$LN4@operator@338
-	DD	$LN2@operator@338
-	DD	$LN1@operator@338
-	DD	$LN1@operator@338
-	DD	$LN3@operator@338
-??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVSystem@0@@Z ENDP ; DRAMsimII::operator<<
-; Function compile flags: /Ogtpy
 _TEXT	SEGMENT
 ?printStatistics@System@DRAMsimII@@MAEXXZ PROC		; DRAMsimII::System::printStatistics
 ; _this$ = ecx
 
-; 324  : 	systemConfig.statsOutStream << statistics;
+; 326  : {
+
+	push	ebp
+	mov	ebp, esp
+	and	esp, -8					; fffffff8H
+	push	ecx
+
+; 327  : 	systemConfig.statsOutStream << statistics;
 
 	lea	eax, DWORD PTR [ecx+152]
+	push	esi
 	test	eax, eax
 	je	SHORT $LN3@printStati
 	lea	eax, DWORD PTR [ecx+160]
@@ -14050,18 +15133,23 @@ _TEXT	SEGMENT
 $LN3@printStati:
 	xor	eax, eax
 $LN4@printStati:
-	push	esi
 	lea	esi, DWORD PTR [ecx+568]
+	push	esi
 	push	eax
-	mov	eax, esi
 	call	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVStatistics@0@@Z ; DRAMsimII::operator<<
-	add	esp, 4
+	add	esp, 8
 
-; 325  : 	statistics.clear();
+; 328  : 	statistics.clear();
 
-	mov	eax, esi
+	push	esi
+	call	?clear@Statistics@DRAMsimII@@QAEXXZ	; DRAMsimII::Statistics::clear
+
+; 329  : }
+
 	pop	esi
-	jmp	?clear@Statistics@DRAMsimII@@QAEXXZ	; DRAMsimII::Statistics::clear
+	mov	esp, ebp
+	pop	ebp
+	ret	0
 ?printStatistics@System@DRAMsimII@@MAEXXZ ENDP		; DRAMsimII::System::printStatistics
 _TEXT	ENDS
 PUBLIC	?enqueue@System@DRAMsimII@@QAE_NPAVTransaction@2@@Z ; DRAMsimII::System::enqueue
@@ -14071,16 +15159,17 @@ _currentTransaction$ = 8				; size = 4
 ?enqueue@System@DRAMsimII@@QAE_NPAVTransaction@2@@Z PROC ; DRAMsimII::System::enqueue
 ; _this$ = edi
 
-; 240  : 	assert(!currentTransaction->isRefresh());
-; 241  : 
-; 242  : 	// attempt to insert the transaction into the per-channel transaction queue
-; 243  : 	bool result = channel[currentTransaction->getAddress().getChannel()].enqueue(currentTransaction);
+; 243  : 	assert(!currentTransaction->isRefresh());
+; 244  : 
+; 245  : 	// attempt to insert the transaction into the per-channel transaction queue
+; 246  : 	bool result = channel[currentTransaction->getAddress().getChannel()].enqueue(currentTransaction);
 
-	mov	ecx, DWORD PTR [edi+1124]
-	sub	ecx, DWORD PTR [edi+1120]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	ecx, DWORD PTR [edi+1188]
+	sub	ecx, DWORD PTR [edi+1184]
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	push	ebx
 	mov	ebx, DWORD PTR _currentTransaction$[esp]
 	mov	eax, edx
@@ -14092,17 +15181,17 @@ _currentTransaction$ = 8				; size = 4
 	jb	SHORT $LN7@enqueue@2
 	call	__invalid_parameter_noinfo
 $LN7@enqueue@2:
-	imul	esi, 424				; 000001a8H
-	add	esi, DWORD PTR [edi+1120]
+	imul	esi, 456				; 000001c8H
+	add	esi, DWORD PTR [edi+1184]
 	push	ebx
 	push	esi
 	call	?enqueue@Channel@DRAMsimII@@QAE_NPAVTransaction@2@@Z ; DRAMsimII::Channel::enqueue
 
-; 244  : 
-; 245  : 	DEBUG_TRANSACTION_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ") " << *currentTransaction);
-; 246  : 
-; 247  : 	return result;
-; 248  : }
+; 247  : 
+; 248  : 	DEBUG_TRANSACTION_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ") " << *currentTransaction);
+; 249  : 
+; 250  : 	return result;
+; 251  : }
 
 	pop	esi
 	pop	ebx
@@ -14122,27 +15211,27 @@ __ehfuncinfo$?runSimulations@System@DRAMsimII@@QAEXI@Z DD 019930522H
 	DD	01H
 ; Function compile flags: /Ogtpy
 _TEXT	SEGMENT
-$T638889 = -200						; size = 4
+$T680159 = -200						; size = 4
 _inputTransaction$ = -200				; size = 4
-__Num$640395 = -196					; size = 4
-$T638928 = -196						; size = 2
-_foundOne$142260 = -196					; size = 1
+__Num$681655 = -196					; size = 4
+$T680198 = -196						; size = 2
+_foundOne$145455 = -196					; size = 1
 _finishedTransactions$ = -192				; size = 32
-$T640388 = -160						; size = 1
+$T681662 = -160						; size = 1
 _outstandingTransacitonCounter$ = -160			; size = 4
-_i$142060 = -156					; size = 8
-$T638877 = -148						; size = 8
-$T638878 = -140						; size = 8
-__Where$640394 = -132					; size = 16
+_i$145255 = -156					; size = 8
+$T680147 = -148						; size = 8
+$T680148 = -140						; size = 8
+__Where$681654 = -132					; size = 16
 _outstandingTransactions$ = -116			; size = 72
-$T638876 = -44						; size = 8
-$T638879 = -32						; size = 8
-$T640386 = -24						; size = 8
+$T680146 = -44						; size = 8
+$T680149 = -32						; size = 8
+$T681659 = -24						; size = 8
 __$EHRec$ = -12						; size = 12
 _this$ = 8						; size = 4
 ?runSimulations@System@DRAMsimII@@QAEXI@Z PROC		; DRAMsimII::System::runSimulations
 
-; 371  : {
+; 379  : {
 
 	push	-1
 	push	__ehhandler$?runSimulations@System@DRAMsimII@@QAEXI@Z
@@ -14160,18 +15249,18 @@ _this$ = 8						; size = 4
 	mov	DWORD PTR fs:0, eax
 	mov	ebp, DWORD PTR _this$[esp+220]
 
-; 372  : 	unsigned outstandingTransacitonCounter = 0;
-; 373  : 
-; 374  : 	Transaction *inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
+; 380  : 	unsigned outstandingTransacitonCounter = 0;
+; 381  : 
+; 382  : 	Transaction *inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
 
 	xor	ebx, ebx
-	lea	ecx, DWORD PTR [ebp+1136]
+	lea	ecx, DWORD PTR [ebp+1200]
 	push	ebx
 	call	?getNextIncomingTransaction@InputStream@DRAMsimII@@QAEPAVTransaction@2@I@Z ; DRAMsimII::InputStream::getNextIncomingTransaction
 	mov	esi, eax
 
-; 375  : 
-; 376  : 	resetToTime(inputTransaction->getArrivalTime());
+; 383  : 
+; 384  : 	resetToTime(inputTransaction->getArrivalTime());
 
 	mov	ecx, DWORD PTR [esi+12]
 	mov	eax, DWORD PTR [esi+8]
@@ -14182,17 +15271,17 @@ _this$ = 8						; size = 4
 	mov	DWORD PTR _outstandingTransacitonCounter$[esp+232], 1
 	call	?resetToTime@System@DRAMsimII@@QAEX_J@Z	; DRAMsimII::System::resetToTime
 
-; 377  : 
-; 378  : 	std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> > outstandingTransactions;
+; 385  : 
+; 386  : 	std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> > outstandingTransactions;
 
-	lea	eax, DWORD PTR $T638928[esp+224]
+	lea	eax, DWORD PTR $T680198[esp+224]
 	push	eax
 	lea	ecx, DWORD PTR _outstandingTransactions$[esp+228]
 	push	ecx
 	call	??0?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE@ABV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@1@ABV?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@std@@@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >
 
-; 379  : 
-; 380  : 	std::queue<std::pair<unsigned, tick> > finishedTransactions;
+; 387  : 
+; 388  : 	std::queue<std::pair<unsigned, tick> > finishedTransactions;
 
 	push	4
 	mov	DWORD PTR __$EHRec$[esp+236], ebx
@@ -14213,14 +15302,14 @@ $LN67@runSimulat:
 	mov	DWORD PTR _finishedTransactions$[esp+252], ebx
 	mov	BYTE PTR __$EHRec$[esp+232], 1
 
-; 381  : 
-; 382  : 	bool running = true;
-; 383  : 
-; 384  : 	if (inputTransaction)
-; 385  : 	{		
-; 386  : 		tick newTime = inputTransaction->getArrivalTime();// = (rand() % 65536) + 65536;
-; 387  : 
-; 388  : 		resetToTime(newTime);
+; 389  : 
+; 390  : 	bool running = true;
+; 391  : 
+; 392  : 	if (inputTransaction)
+; 393  : 	{		
+; 394  : 		tick newTime = inputTransaction->getArrivalTime();// = (rand() % 65536) + 65536;
+; 395  : 
+; 396  : 		resetToTime(newTime);
 
 	mov	eax, DWORD PTR [esi+12]
 	mov	ecx, DWORD PTR [esi+8]
@@ -14229,14 +15318,14 @@ $LN67@runSimulat:
 	mov	edi, ebp
 	call	?resetToTime@System@DRAMsimII@@QAEX_J@Z	; DRAMsimII::System::resetToTime
 
-; 389  : 
-; 390  : 		for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
+; 397  : 
+; 398  : 		for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
 
 	mov	eax, DWORD PTR [ebp+556]
 	cmp	eax, ebx
 	mov	ecx, DWORD PTR [ebp+552]
-	mov	DWORD PTR _i$142060[esp+224], ecx
-	mov	DWORD PTR _i$142060[esp+228], eax
+	mov	DWORD PTR _i$145255[esp+224], ecx
+	mov	DWORD PTR _i$145255[esp+228], eax
 	jl	$LN710@runSimulat
 	jg	SHORT $LL18@runSimulat
 	cmp	ecx, ebx
@@ -14244,36 +15333,36 @@ $LN67@runSimulat:
 	npad	2
 $LL18@runSimulat:
 
-; 391  : 		{				
-; 392  : 			moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
+; 399  : 		{				
+; 400  : 			moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
 
 	mov	eax, DWORD PTR _inputTransaction$[esp+224]
-	mov	edi, DWORD PTR [ebp+11480]
+	mov	edi, DWORD PTR [ebp+11544]
 	mov	edx, DWORD PTR [eax+8]
 	mov	ebx, DWORD PTR [eax+12]
-	mov	esi, DWORD PTR [ebp+11484]
+	mov	esi, DWORD PTR [ebp+11548]
 	mov	eax, DWORD PTR [ebp]
 	add	edi, 1
 	adc	esi, 0
-	mov	DWORD PTR $T638877[esp+224], edx
+	mov	DWORD PTR $T680147[esp+224], edx
 	mov	edx, DWORD PTR [eax+8]
 	mov	ecx, ebp
-	mov	DWORD PTR $T638876[esp+224], edi
-	mov	DWORD PTR $T638876[esp+228], esi
-	mov	DWORD PTR $T638877[esp+228], ebx
+	mov	DWORD PTR $T680146[esp+224], edi
+	mov	DWORD PTR $T680146[esp+228], esi
+	mov	DWORD PTR $T680147[esp+228], ebx
 	call	edx
 	cmp	ebx, edx
-	mov	DWORD PTR $T638878[esp+224], eax
-	mov	DWORD PTR $T638878[esp+228], edx
+	mov	DWORD PTR $T680148[esp+224], eax
+	mov	DWORD PTR $T680148[esp+228], edx
 	jg	SHORT $LN103@runSimulat
 	jl	SHORT $LN707@runSimulat
-	cmp	DWORD PTR $T638877[esp+224], eax
+	cmp	DWORD PTR $T680147[esp+224], eax
 	jae	SHORT $LN103@runSimulat
 $LN707@runSimulat:
-	lea	eax, DWORD PTR $T638877[esp+224]
+	lea	eax, DWORD PTR $T680147[esp+224]
 	jmp	SHORT $LN104@runSimulat
 $LN103@runSimulat:
-	lea	eax, DWORD PTR $T638878[esp+224]
+	lea	eax, DWORD PTR $T680148[esp+224]
 $LN104@runSimulat:
 	mov	ecx, DWORD PTR [eax+4]
 	cmp	ecx, esi
@@ -14283,7 +15372,7 @@ $LN104@runSimulat:
 	cmp	edx, edi
 	jae	SHORT $LN107@runSimulat
 $LN708@runSimulat:
-	lea	eax, DWORD PTR $T638876[esp+224]
+	lea	eax, DWORD PTR $T680146[esp+224]
 $LN107@runSimulat:
 	mov	ecx, DWORD PTR [eax+4]
 	mov	edx, DWORD PTR [eax]
@@ -14292,24 +15381,24 @@ $LN107@runSimulat:
 	mov	eax, ebp
 	call	?moveToTime@System@DRAMsimII@@QAE_N_J@Z	; DRAMsimII::System::moveToTime
 
-; 393  : 
-; 394  : 			if (this->pendingTransactionCount() > 0)
+; 401  : 
+; 402  : 			if (this->pendingTransactionCount() > 0)
 
 	push	ebp
 	call	?pendingTransactionCount@System@DRAMsimII@@QBEIXZ ; DRAMsimII::System::pendingTransactionCount
 	test	eax, eax
 	jbe	$LN702@runSimulat
 
-; 395  : 			{
-; 396  : 				getPendingTransactions(finishedTransactions);
+; 403  : 			{
+; 404  : 				getPendingTransactions(finishedTransactions);
 
 	lea	eax, DWORD PTR _finishedTransactions$[esp+224]
 	push	eax
 	push	ebp
 	call	?getPendingTransactions@System@DRAMsimII@@QAEXAAV?$queue@U?$pair@I_J@std@@V?$deque@U?$pair@I_J@std@@V?$allocator@U?$pair@I_J@std@@@2@@2@@std@@@Z ; DRAMsimII::System::getPendingTransactions
 
-; 397  : 
-; 398  : 				while (!finishedTransactions.empty())
+; 405  : 
+; 406  : 				while (!finishedTransactions.empty())
 
 	mov	ecx, DWORD PTR _finishedTransactions$[esp+252]
 	test	ecx, ecx
@@ -14317,8 +15406,8 @@ $LN107@runSimulat:
 	mov	eax, DWORD PTR _finishedTransactions$[esp+248]
 $LL15@runSimulat:
 
-; 399  : 				{
-; 400  : 					if (outstandingTransactions.find(finishedTransactions.front().first) == outstandingTransactions.end())
+; 407  : 				{
+; 408  : 					if (outstandingTransactions.find(finishedTransactions.front().first) == outstandingTransactions.end())
 
 	mov	ebx, DWORD PTR _outstandingTransactions$[esp+232]
 	add	ecx, eax
@@ -14373,12 +15462,12 @@ $LN188@runSimulat:
 	mov	edx, DWORD PTR [eax+16]
 	mov	eax, DWORD PTR [edx+esi*4]
 	push	eax
-	lea	ecx, DWORD PTR $T638879[esp+228]
+	lea	ecx, DWORD PTR $T680149[esp+228]
 	push	ecx
 	lea	edx, DWORD PTR _outstandingTransactions$[esp+232]
 	push	edx
 	call	?lower_bound@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE?AV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@ABI@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::lower_bound
-	mov	eax, DWORD PTR $T638879[esp+224]
+	mov	eax, DWORD PTR $T680149[esp+224]
 	test	eax, eax
 	je	SHORT $LN193@runSimulat
 	cmp	eax, ebx
@@ -14387,9 +15476,9 @@ $LN193@runSimulat:
 	call	__invalid_parameter_noinfo
 $LN194@runSimulat:
 
-; 401  : 						assert(outstandingTransactions.find(finishedTransactions.front().first) != outstandingTransactions.end());
-; 402  : 
-; 403  : 					delete outstandingTransactions[finishedTransactions.front().first].first;
+; 409  : 						assert(outstandingTransactions.find(finishedTransactions.front().first) != outstandingTransactions.end());
+; 410  : 
+; 411  : 					delete outstandingTransactions[finishedTransactions.front().first].first;
 
 	mov	esi, DWORD PTR _finishedTransactions$[esp+248]
 	mov	eax, DWORD PTR _finishedTransactions$[esp+252]
@@ -14455,8 +15544,8 @@ $LN259@runSimulat:
 	call	edx
 $LN24@runSimulat:
 
-; 404  : 
-; 405  : 					outstandingTransactions.erase(finishedTransactions.front().first);
+; 412  : 
+; 413  : 					outstandingTransactions.erase(finishedTransactions.front().first);
 
 	mov	esi, DWORD PTR _finishedTransactions$[esp+248]
 	mov	eax, DWORD PTR _finishedTransactions$[esp+252]
@@ -14511,37 +15600,37 @@ $LN319@runSimulat:
 	mov	edx, DWORD PTR [eax+16]
 	mov	eax, DWORD PTR [edx+esi*4]
 	push	eax
-	lea	ecx, DWORD PTR __Where$640394[esp+228]
+	lea	ecx, DWORD PTR __Where$681654[esp+228]
 	push	ecx
 	lea	edx, DWORD PTR _outstandingTransactions$[esp+232]
 	push	edx
 	call	?equal_range@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE?AU?$pair@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@V123@@std@@ABI@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::equal_range
-	mov	eax, DWORD PTR $T640388[esp+224]
-	mov	edi, DWORD PTR __Where$640394[esp+236]
-	mov	ebp, DWORD PTR __Where$640394[esp+232]
-	mov	ebx, DWORD PTR __Where$640394[esp+228]
-	mov	ecx, DWORD PTR __Where$640394[esp+224]
+	mov	eax, DWORD PTR $T681662[esp+224]
+	mov	edi, DWORD PTR __Where$681654[esp+236]
+	mov	ebp, DWORD PTR __Where$681654[esp+232]
+	mov	ebx, DWORD PTR __Where$681654[esp+228]
+	mov	ecx, DWORD PTR __Where$681654[esp+224]
 	push	eax
 	push	edi
 	push	ebp
 	push	ebx
 	push	ecx
-	lea	esi, DWORD PTR __Num$640395[esp+244]
-	mov	DWORD PTR __Num$640395[esp+244], 0
+	lea	esi, DWORD PTR __Num$681655[esp+244]
+	mov	DWORD PTR __Num$681655[esp+244], 0
 	call	??$_Distance2@V?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@I@std@@YAXV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@0@0AAIUbidirectional_iterator_tag@0@@Z ; std::_Distance2<std::list<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::_Iterator<1>,unsigned int>
-	mov	edx, DWORD PTR __Where$640394[esp+244]
+	mov	edx, DWORD PTR __Where$681654[esp+244]
 	add	esp, 20					; 00000014H
 	push	edi
 	push	ebp
 	push	ebx
 	push	edx
-	lea	eax, DWORD PTR $T640386[esp+240]
+	lea	eax, DWORD PTR $T681659[esp+240]
 	push	eax
 	lea	eax, DWORD PTR _outstandingTransactions$[esp+244]
 	call	?erase@?$_Hash@V?$_Umap_traits@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@$0A@@tr1@std@@@stdext@@QAE?AV?$_Iterator@$00@?$list@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@std@@V?$_Const_iterator@$00@45@0@Z ; stdext::_Hash<std::tr1::_Umap_traits<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > >,0> >::erase
 
-; 406  : 
-; 407  : 					finishedTransactions.pop();
+; 414  : 
+; 415  : 					finishedTransactions.pop();
 
 	mov	ecx, DWORD PTR _finishedTransactions$[esp+252]
 	test	ecx, ecx
@@ -14562,33 +15651,34 @@ $LN715@runSimulat:
 	mov	ebp, DWORD PTR _this$[esp+220]
 $LN702@runSimulat:
 
-; 408  : 				}
-; 409  : 
-; 410  : 			}
-; 411  : 
-; 412  : 			// attempt to enqueue external transactions
-; 413  : 			// as internal transactions (REFRESH) are enqueued automatically
-; 414  : 			if (time >= inputTransaction->getArrivalTime())
+; 416  : 				}
+; 417  : 
+; 418  : 			}
+; 419  : 
+; 420  : 			// attempt to enqueue external transactions
+; 421  : 			// as internal transactions (REFRESH) are enqueued automatically
+; 422  : 			if (time >= inputTransaction->getArrivalTime())
 
-	mov	ecx, DWORD PTR [ebp+11484]
+	mov	ecx, DWORD PTR [ebp+11548]
 	mov	edi, DWORD PTR _inputTransaction$[esp+224]
 	cmp	ecx, DWORD PTR [edi+12]
 	jl	$LN11@runSimulat
 	jg	SHORT $LN709@runSimulat
-	mov	edx, DWORD PTR [ebp+11480]
+	mov	edx, DWORD PTR [ebp+11544]
 	cmp	edx, DWORD PTR [edi+8]
 	jb	$LN11@runSimulat
 $LN709@runSimulat:
 
-; 415  : 			{
-; 416  : 				if (!isFull(inputTransaction->getAddress().getChannel()))
+; 423  : 			{
+; 424  : 				if (!isFull(inputTransaction->getAddress().getChannel()))
 
-	mov	ecx, DWORD PTR [ebp+1124]
-	sub	ecx, DWORD PTR [ebp+1120]
+	mov	ecx, DWORD PTR [ebp+1188]
+	sub	ecx, DWORD PTR [ebp+1184]
 	mov	esi, DWORD PTR [edi+56]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
@@ -14596,8 +15686,8 @@ $LN709@runSimulat:
 	jb	SHORT $LN345@runSimulat
 	call	__invalid_parameter_noinfo
 $LN345@runSimulat:
-	mov	ecx, DWORD PTR [ebp+1120]
-	imul	esi, 424				; 000001a8H
+	mov	ecx, DWORD PTR [ebp+1184]
+	imul	esi, 456				; 000001c8H
 	mov	edx, DWORD PTR [esi+ecx+140]
 	sub	edx, DWORD PTR [esi+ecx+136]
 	lea	esi, DWORD PTR [esi+ecx+112]
@@ -14605,18 +15695,19 @@ $LN345@runSimulat:
 	cmp	edx, DWORD PTR [esi]
 	je	$LN11@runSimulat
 
-; 417  : 				{
-; 418  : #ifndef NDEBUG
-; 419  : 					bool result =
-; 420  : #endif
-; 421  : 						enqueue(inputTransaction);
+; 425  : 				{
+; 426  : #ifndef NDEBUG
+; 427  : 					bool result =
+; 428  : #endif
+; 429  : 						enqueue(inputTransaction);
 
-	mov	ecx, DWORD PTR [ebp+1124]
-	sub	ecx, DWORD PTR [ebp+1120]
+	mov	ecx, DWORD PTR [ebp+1188]
+	sub	ecx, DWORD PTR [ebp+1184]
 	mov	esi, DWORD PTR [edi+56]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
@@ -14624,16 +15715,16 @@ $LN345@runSimulat:
 	jb	SHORT $LN362@runSimulat
 	call	__invalid_parameter_noinfo
 $LN362@runSimulat:
-	imul	esi, 424				; 000001a8H
-	add	esi, DWORD PTR [ebp+1120]
+	imul	esi, 456				; 000001c8H
+	add	esi, DWORD PTR [ebp+1184]
 	push	edi
 	push	esi
 	call	?enqueue@Channel@DRAMsimII@@QAE_NPAVTransaction@2@@Z ; DRAMsimII::Channel::enqueue
 
-; 422  : 
-; 423  : 					assert(result);
-; 424  : 
-; 425  : 					Transaction *duplicateTrans = new Transaction(*inputTransaction);
+; 430  : 
+; 431  : 					assert(result);
+; 432  : 
+; 433  : 					Transaction *duplicateTrans = new Transaction(*inputTransaction);
 
 	call	?acquireItem@?$Queue@VTransaction@DRAMsimII@@@DRAMsimII@@QAEPAVTransaction@2@XZ ; DRAMsimII::Queue<DRAMsimII::Transaction>::acquireItem
 	test	eax, eax
@@ -14646,32 +15737,32 @@ $LN26@runSimulat:
 	xor	ebx, ebx
 $LN27@runSimulat:
 
-; 426  : 
-; 427  : 					outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(duplicateTrans, inputTransaction);
+; 434  : 
+; 435  : 					outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(duplicateTrans, inputTransaction);
 
 	mov	ecx, DWORD PTR [edi+108]
-	lea	edx, DWORD PTR $T638889[esp+224]
+	lea	edx, DWORD PTR $T680159[esp+224]
 	push	edx
 	lea	esi, DWORD PTR _outstandingTransactions$[esp+228]
-	mov	DWORD PTR $T638889[esp+228], ecx
+	mov	DWORD PTR $T680159[esp+228], ecx
 	call	??A?$unordered_map@IU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@V?$hash@I@tr1@2@U?$equal_to@I@2@V?$allocator@U?$pair@$$CBIU?$pair@PAVTransaction@DRAMsimII@@PAV12@@std@@@std@@@2@@tr1@std@@QAEAAU?$pair@PAVTransaction@DRAMsimII@@PAV12@@2@ABI@Z ; std::tr1::unordered_map<unsigned int,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *>,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,std::pair<DRAMsimII::Transaction *,DRAMsimII::Transaction *> > > >::operator[]
 
-; 428  : 
-; 429  : 					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
+; 436  : 
+; 437  : 					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
 
 	mov	esi, DWORD PTR _outstandingTransacitonCounter$[esp+224]
 	mov	DWORD PTR [eax], ebx
 	push	esi
-	lea	ecx, DWORD PTR [ebp+1136]
+	lea	ecx, DWORD PTR [ebp+1200]
 	mov	DWORD PTR [eax+4], edi
 	call	?getNextIncomingTransaction@InputStream@DRAMsimII@@QAEPAVTransaction@2@I@Z ; DRAMsimII::InputStream::getNextIncomingTransaction
 	mov	DWORD PTR _inputTransaction$[esp+224], eax
 	inc	esi
 
-; 430  : 
-; 431  : 					bool foundOne = false;
-; 432  : 
-; 433  : 					if (outstandingTransacitonCounter % 5000 == 0)
+; 438  : 
+; 439  : 					bool foundOne = false;
+; 440  : 
+; 441  : 					if (outstandingTransacitonCounter % 5000 == 0)
 
 	mov	eax, -776530087				; d1b71759H
 	mul	esi
@@ -14679,11 +15770,11 @@ $LN27@runSimulat:
 	imul	edx, 5000				; 00001388H
 	mov	DWORD PTR _outstandingTransacitonCounter$[esp+224], esi
 	sub	esi, edx
-	mov	BYTE PTR _foundOne$142260[esp+224], 0
+	mov	BYTE PTR _foundOne$145455[esp+224], 0
 	jne	$LN484@runSimulat
 
-; 434  : 					{
-; 435  : 						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(); j != outstandingTransactions.end(); j++)
+; 442  : 					{
+; 443  : 						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(); j != outstandingTransactions.end(); j++)
 
 	mov	eax, DWORD PTR _outstandingTransactions$[esp+252]
 	mov	edi, DWORD PTR [eax]
@@ -14700,8 +15791,8 @@ $LN432@runSimulat:
 	cmp	edi, esi
 	je	$LN7@runSimulat
 
-; 436  : 						{
-; 437  : 							unsigned diff = time - j->second.first->getEnqueueTime();
+; 444  : 						{
+; 445  : 							unsigned diff = time - j->second.first->getEnqueueTime();
 
 	test	ebx, ebx
 	jne	$LN701@runSimulat
@@ -14713,21 +15804,21 @@ $LN453@runSimulat:
 	call	__invalid_parameter_noinfo
 $LN442@runSimulat:
 	mov	ecx, DWORD PTR [edi+12]
-	mov	esi, DWORD PTR [ebp+11480]
+	mov	esi, DWORD PTR [ebp+11544]
 	sub	esi, DWORD PTR [ecx+16]
 
-; 438  : 							if (diff > 10000)
+; 446  : 							if (diff > 10000)
 
 	cmp	esi, 10000				; 00002710H
 	jbe	SHORT $LN8@runSimulat
 
-; 439  : 							{
-; 440  : 								foundOne = true;
+; 447  : 							{
+; 448  : 								foundOne = true;
 
-	mov	BYTE PTR _foundOne$142260[esp+224], 1
+	mov	BYTE PTR _foundOne$145455[esp+224], 1
 
-; 441  : 								//assert(time - i->second.first->getEnqueueTime() < 10000);
-; 442  : 								std::cerr << j->first << " @ " << diff << std::endl;
+; 449  : 								//assert(time - i->second.first->getEnqueueTime() < 10000);
+; 450  : 								std::cerr << j->first << " @ " << diff << std::endl;
 
 	test	ebx, ebx
 	jne	SHORT $LN700@runSimulat
@@ -14760,8 +15851,8 @@ $LN462@runSimulat:
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 $LN8@runSimulat:
 
-; 434  : 					{
-; 435  : 						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(); j != outstandingTransactions.end(); j++)
+; 442  : 					{
+; 443  : 						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(); j != outstandingTransactions.end(); j++)
 
 	test	ebx, ebx
 	jne	SHORT $LN699@runSimulat
@@ -14776,37 +15867,37 @@ $LN395@runSimulat:
 	jmp	$LL399@runSimulat
 $LN701@runSimulat:
 
-; 436  : 						{
-; 437  : 							unsigned diff = time - j->second.first->getEnqueueTime();
+; 444  : 						{
+; 445  : 							unsigned diff = time - j->second.first->getEnqueueTime();
 
 	mov	eax, DWORD PTR [ebx]
 	jmp	$LN453@runSimulat
 $LN700@runSimulat:
 
-; 441  : 								//assert(time - i->second.first->getEnqueueTime() < 10000);
-; 442  : 								std::cerr << j->first << " @ " << diff << std::endl;
+; 449  : 								//assert(time - i->second.first->getEnqueueTime() < 10000);
+; 450  : 								std::cerr << j->first << " @ " << diff << std::endl;
 
 	mov	eax, DWORD PTR [ebx]
 	jmp	SHORT $LN473@runSimulat
 $LN699@runSimulat:
 
-; 434  : 					{
-; 435  : 						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(); j != outstandingTransactions.end(); j++)
+; 442  : 					{
+; 443  : 						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(); j != outstandingTransactions.end(); j++)
 
 	mov	eax, DWORD PTR [ebx]
 	jmp	SHORT $LN406@runSimulat
 $LN7@runSimulat:
 
-; 443  : 							}
-; 444  : 						}
-; 445  : 					}
-; 446  : 
-; 447  : 					if (foundOne)
+; 451  : 							}
+; 452  : 						}
+; 453  : 					}
+; 454  : 
+; 455  : 					if (foundOne)
 
-	cmp	BYTE PTR _foundOne$142260[esp+224], 0
+	cmp	BYTE PTR _foundOne$145455[esp+224], 0
 	je	SHORT $LN484@runSimulat
 
-; 448  : 						cerr << "-----------------------------" << endl;
+; 456  : 						cerr << "-----------------------------" << endl;
 
 	push	OFFSET ??_C@_0BO@OCAALIAC@?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?$AA@
 	push	OFFSET ?cerr@std@@3V?$basic_ostream@DU?$char_traits@D@std@@@1@A ; std::cerr
@@ -14820,32 +15911,32 @@ $LN7@runSimulat:
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 $LN484@runSimulat:
 
-; 449  : 
-; 450  : 					if (!inputTransaction)
-; 451  : 						running = false;
-; 452  : 
-; 453  : 					i--;
+; 457  : 
+; 458  : 					if (!inputTransaction)
+; 459  : 						running = false;
+; 460  : 
+; 461  : 					i--;
 
 	or	eax, -1
-	add	DWORD PTR _i$142060[esp+224], eax
-	adc	DWORD PTR _i$142060[esp+228], eax
+	add	DWORD PTR _i$145255[esp+224], eax
+	adc	DWORD PTR _i$145255[esp+228], eax
 $LN11@runSimulat:
 
-; 389  : 
-; 390  : 		for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
+; 397  : 
+; 398  : 		for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
 
-	cmp	DWORD PTR _i$142060[esp+228], 0
+	cmp	DWORD PTR _i$145255[esp+228], 0
 	jg	$LL18@runSimulat
 	jl	SHORT $LN710@runSimulat
-	cmp	DWORD PTR _i$142060[esp+224], 0
+	cmp	DWORD PTR _i$145255[esp+224], 0
 	ja	$LL18@runSimulat
 $LN710@runSimulat:
 
-; 454  : 				}
-; 455  : 			}
-; 456  : 		}
-; 457  : 
-; 458  : 		delete inputTransaction;
+; 462  : 				}
+; 463  : 			}
+; 464  : 		}
+; 465  : 
+; 466  : 		delete inputTransaction;
 
 	mov	ecx, DWORD PTR _inputTransaction$[esp+224]
 	xor	ebp, ebp
@@ -14857,14 +15948,14 @@ $LN710@runSimulat:
 	call	edx
 $LN28@runSimulat:
 
-; 459  : 
-; 460  : 	}
-; 461  : 	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
+; 467  : 
+; 468  : 	}
+; 469  : 	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
 
 	mov	eax, DWORD PTR _outstandingTransactions$[esp+252]
 	mov	ebx, DWORD PTR [eax]
 	mov	edi, DWORD PTR _outstandingTransactions$[esp+232]
-	npad	9
+	npad	5
 $LL514@runSimulat:
 	mov	esi, DWORD PTR _outstandingTransactions$[esp+252]
 	cmp	edi, ebp
@@ -14877,8 +15968,8 @@ $LN547@runSimulat:
 	cmp	ebx, esi
 	je	SHORT $LN1@runSimulat
 
-; 462  : 	{
-; 463  : 		delete i->second.first;
+; 470  : 	{
+; 471  : 		delete i->second.first;
 
 	cmp	edi, ebp
 	jne	SHORT $LN698@runSimulat
@@ -14898,7 +15989,7 @@ $LN559@runSimulat:
 	call	eax
 $LN30@runSimulat:
 
-; 464  : 		delete i->second.second;
+; 472  : 		delete i->second.second;
 
 	cmp	edi, ebp
 	jne	SHORT $LN697@runSimulat
@@ -14918,9 +16009,9 @@ $LN579@runSimulat:
 	call	eax
 $LN2@runSimulat:
 
-; 459  : 
-; 460  : 	}
-; 461  : 	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
+; 467  : 
+; 468  : 	}
+; 469  : 	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
 
 	cmp	edi, ebp
 	jne	SHORT $LN696@runSimulat
@@ -14935,30 +16026,30 @@ $LN510@runSimulat:
 	jmp	SHORT $LL514@runSimulat
 $LN698@runSimulat:
 
-; 462  : 	{
-; 463  : 		delete i->second.first;
+; 470  : 	{
+; 471  : 		delete i->second.first;
 
 	mov	eax, DWORD PTR [edi]
 	jmp	SHORT $LN570@runSimulat
 $LN697@runSimulat:
 
-; 464  : 		delete i->second.second;
+; 472  : 		delete i->second.second;
 
 	mov	eax, DWORD PTR [edi]
 	jmp	SHORT $LN590@runSimulat
 $LN696@runSimulat:
 
-; 459  : 
-; 460  : 	}
-; 461  : 	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
+; 467  : 
+; 468  : 	}
+; 469  : 	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
 
 	mov	eax, DWORD PTR [edi]
 	jmp	SHORT $LN521@runSimulat
 $LN1@runSimulat:
 
-; 465  : 	}
-; 466  : 	//	moveToTime(channel[0].getTime() + 64000000);
-; 467  : }
+; 473  : 	}
+; 474  : 	//	moveToTime(channel[0].getTime() + 64000000);
+; 475  : }
 
 	mov	eax, DWORD PTR _finishedTransactions$[esp+252]
 	cmp	eax, ebp
@@ -15086,7 +16177,7 @@ __ehfuncinfo$??$_Construct@VChannel@DRAMsimII@@V12@@std@@YAXPAVChannel@DRAMsimII
 xdata$x	ENDS
 ;	COMDAT ??$_Construct@VChannel@DRAMsimII@@V12@@std@@YAXPAVChannel@DRAMsimII@@ABV12@@Z
 _TEXT	SEGMENT
-$T657223 = -16						; size = 4
+$T699283 = -16						; size = 4
 __$EHRec$ = -12						; size = 12
 __Vptr$ = 8						; size = 4
 __Ptr$ = 8						; size = 4
@@ -15113,14 +16204,14 @@ __Ptr$ = 8						; size = 4
 
 ; 52   : 	::new (_Vptr) _T1(_Val);
 
-	mov	DWORD PTR $T657223[esp+24], eax
+	mov	DWORD PTR $T699283[esp+24], eax
 	mov	DWORD PTR __$EHRec$[esp+32], 0
 	test	eax, eax
-	je	SHORT $LN3@Construct@22
+	je	SHORT $LN3@Construct@31
 	push	ecx
 	push	eax
 	call	??0Channel@DRAMsimII@@QAE@ABV01@@Z	; DRAMsimII::Channel::Channel
-$LN3@Construct@22:
+$LN3@Construct@31:
 
 ; 53   : 	}
 
@@ -15135,7 +16226,7 @@ text$x	SEGMENT
 __unwindfunclet$??$_Construct@VChannel@DRAMsimII@@V12@@std@@YAXPAVChannel@DRAMsimII@@ABV12@@Z$0:
 	mov	eax, DWORD PTR __Vptr$[ebp-4]
 	push	eax
-	mov	ecx, DWORD PTR $T657223[ebp]
+	mov	ecx, DWORD PTR $T699283[ebp]
 	push	ecx
 	call	??3@YAXPAX0@Z				; operator delete
 	add	esp, 8
@@ -15183,8 +16274,8 @@ $LL3@Copy_opt@12:
 
 	mov	ecx, esi
 	call	??4Channel@DRAMsimII@@QAEAAV01@ABV01@@Z	; DRAMsimII::Channel::operator=
-	add	esi, 424				; 000001a8H
-	add	edi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
+	add	edi, 456				; 000001c8H
 	cmp	esi, ebx
 	jne	SHORT $LL3@Copy_opt@12
 
@@ -15218,9 +16309,9 @@ __ehfuncinfo$?construct@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRA
 xdata$x	ENDS
 ;	COMDAT ?construct@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRAMsimII@@ABV34@@Z
 _TEXT	SEGMENT
-$T657258 = -16						; size = 4
+$T699318 = -16						; size = 4
 __$EHRec$ = -12						; size = 12
-__Vptr$657255 = 8					; size = 4
+__Vptr$699315 = 8					; size = 4
 __Ptr$ = 8						; size = 4
 ?construct@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRAMsimII@@ABV34@@Z PROC ; std::allocator<DRAMsimII::Channel>::construct, COMDAT
 ; __Val$ = ecx
@@ -15241,15 +16332,15 @@ __Ptr$ = 8						; size = 4
 
 ; 155  : 		_Construct(_Ptr, _Val);
 
-	mov	DWORD PTR __Vptr$657255[esp+20], eax
-	mov	DWORD PTR $T657258[esp+24], eax
+	mov	DWORD PTR __Vptr$699315[esp+20], eax
+	mov	DWORD PTR $T699318[esp+24], eax
 	mov	DWORD PTR __$EHRec$[esp+32], 0
 	test	eax, eax
-	je	SHORT $LN5@construct@18
+	je	SHORT $LN5@construct@26
 	push	ecx
 	push	eax
 	call	??0Channel@DRAMsimII@@QAE@ABV01@@Z	; DRAMsimII::Channel::Channel
-$LN5@construct@18:
+$LN5@construct@26:
 
 ; 156  : 		}
 
@@ -15262,9 +16353,9 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?construct@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRAMsimII@@ABV34@@Z$0:
-	mov	eax, DWORD PTR __Vptr$657255[ebp-4]
+	mov	eax, DWORD PTR __Vptr$699315[ebp-4]
 	push	eax
-	mov	ecx, DWORD PTR $T657258[ebp]
+	mov	ecx, DWORD PTR $T699318[ebp]
 	push	ecx
 	call	??3@YAXPAX0@Z				; operator delete
 	add	esp, 8
@@ -15309,8 +16400,8 @@ __ehfuncinfo$??$_Uninit_fill_n@PAVChannel@DRAMsimII@@IV12@V?$allocator@VChannel@
 xdata$x	ENDS
 ;	COMDAT ??$_Uninit_fill_n@PAVChannel@DRAMsimII@@IV12@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAXPAVChannel@DRAMsimII@@IABV12@AAV?$allocator@VChannel@DRAMsimII@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
 _TEXT	SEGMENT
-$T657301 = -28						; size = 4
-__Vptr$657298 = -24					; size = 4
+$T699361 = -28						; size = 4
+__Vptr$699358 = -24					; size = 4
 __Next$ = -20						; size = 4
 __$EHRec$ = -16						; size = 16
 __First$ = 8						; size = 4
@@ -15357,30 +16448,30 @@ ___formal$ = 20						; size = 1
 	mov	DWORD PTR __$EHRec$[ebp+12], 0
 	mov	ebx, 1
 	npad	1
-$LL6@Uninit_fil@15:
+$LL6@Uninit_fil@24:
 
 ; 403  : 	for (; 0 < _Count; --_Count, ++_First)
 
 	test	edi, edi
-	jbe	SHORT $LN4@Uninit_fil@15
+	jbe	SHORT $LN4@Uninit_fil@24
 
 ; 404  : 		_Al.construct(_First, _Val);
 
-	mov	DWORD PTR __Vptr$657298[ebp], esi
-	mov	DWORD PTR $T657301[ebp], esi
+	mov	DWORD PTR __Vptr$699358[ebp], esi
+	mov	DWORD PTR $T699361[ebp], esi
 	mov	BYTE PTR __$EHRec$[ebp+12], bl
 	test	esi, esi
-	je	SHORT $LN18@Uninit_fil@15
+	je	SHORT $LN18@Uninit_fil@24
 	mov	eax, DWORD PTR __Val$[ebp]
 	push	eax
 	push	esi
 	call	??0Channel@DRAMsimII@@QAE@ABV01@@Z	; DRAMsimII::Channel::Channel
-$LN18@Uninit_fil@15:
+$LN18@Uninit_fil@24:
 	sub	edi, ebx
-	add	esi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	mov	DWORD PTR __First$[ebp], esi
-	jmp	SHORT $LL6@Uninit_fil@15
+	jmp	SHORT $LL6@Uninit_fil@24
 __catch$??$_Uninit_fill_n@PAVChannel@DRAMsimII@@IV12@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAXPAVChannel@DRAMsimII@@IABV12@AAV?$allocator@VChannel@DRAMsimII@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$0:
 
 ; 405  : 	_CATCH_ALL
@@ -15389,8 +16480,8 @@ __catch$??$_Uninit_fill_n@PAVChannel@DRAMsimII@@IV12@V?$allocator@VChannel@DRAMs
 	mov	esi, DWORD PTR __Next$[ebp]
 	mov	edi, DWORD PTR __First$[ebp]
 	cmp	esi, edi
-	je	SHORT $LN1@Uninit_fil@15
-$LL3@Uninit_fil@15:
+	je	SHORT $LN1@Uninit_fil@24
+$LL3@Uninit_fil@24:
 
 ; 407  : 		_Al.destroy(_Next);
 
@@ -15399,18 +16490,18 @@ $LL3@Uninit_fil@15:
 	push	0
 	mov	ecx, esi
 	call	eax
-	add	esi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
 	cmp	esi, edi
-	jne	SHORT $LL3@Uninit_fil@15
-$LN1@Uninit_fil@15:
+	jne	SHORT $LL3@Uninit_fil@24
+$LN1@Uninit_fil@24:
 
 ; 408  : 	_RERAISE;
 
 	push	0
 	push	0
 	call	__CxxThrowException@8
-$LN34@Uninit_fil@15:
-$LN4@Uninit_fil@15:
+$LN34@Uninit_fil@24:
+$LN4@Uninit_fil@24:
 
 ; 409  : 	_CATCH_END
 ; 410  : 	}
@@ -15424,14 +16515,14 @@ $LN4@Uninit_fil@15:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN33@Uninit_fil@15:
+$LN33@Uninit_fil@24:
 _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$_Uninit_fill_n@PAVChannel@DRAMsimII@@IV12@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAXPAVChannel@DRAMsimII@@IABV12@AAV?$allocator@VChannel@DRAMsimII@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
-	mov	eax, DWORD PTR __Vptr$657298[ebp]
+	mov	eax, DWORD PTR __Vptr$699358[ebp]
 	push	eax
-	mov	ecx, DWORD PTR $T657301[ebp]
+	mov	ecx, DWORD PTR $T699361[ebp]
 	push	ecx
 	call	??3@YAXPAX0@Z				; operator delete
 	add	esp, 8
@@ -15474,14 +16565,15 @@ ___formal$ = 20						; size = 1
 
 	mov	ecx, ebp
 	sub	ecx, esi
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
 	mov	ebx, eax
-	imul	ebx, 424				; 000001a8H
+	imul	ebx, 456				; 000001c8H
 	add	ebx, edi
 
 ; 2484 : 	_Copy_opt(_First, _Last, _CHECKED_BASE(_Dest), 
@@ -15493,14 +16585,14 @@ ___formal$ = 20						; size = 1
 	sub	eax, esi
 	mov	DWORD PTR tv148[esp+12], eax
 	jmp	SHORT $LN9@Copy_opt@13
-	npad	7
+	npad	5
 $LL15@Copy_opt@13:
 	mov	eax, DWORD PTR tv148[esp+12]
 $LN9@Copy_opt@13:
 	lea	edi, DWORD PTR [eax+esi]
 	mov	ecx, esi
 	call	??4Channel@DRAMsimII@@QAEAAV01@ABV01@@Z	; DRAMsimII::Channel::operator=
-	add	esi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
 	cmp	esi, ebp
 	jne	SHORT $LL15@Copy_opt@13
 $LN14@Copy_opt@13:
@@ -15522,8 +16614,8 @@ $LN14@Copy_opt@13:
 _TEXT	ENDS
 ;	COMDAT ??$unchecked_uninitialized_fill_n@PAVChannel@DRAMsimII@@IV12@V?$allocator@VChannel@DRAMsimII@@@std@@@stdext@@YAXPAVChannel@DRAMsimII@@IABV12@AAV?$allocator@VChannel@DRAMsimII@@@std@@@Z
 _TEXT	SEGMENT
-$T657360 = -4						; size = 1
-__Cat$657364 = -4					; size = 1
+$T699420 = -4						; size = 1
+__Cat$699425 = -4					; size = 1
 __First$ = 8						; size = 4
 __Count$ = 12						; size = 4
 ??$unchecked_uninitialized_fill_n@PAVChannel@DRAMsimII@@IV12@V?$allocator@VChannel@DRAMsimII@@@std@@@stdext@@YAXPAVChannel@DRAMsimII@@IABV12@AAV?$allocator@VChannel@DRAMsimII@@@std@@@Z PROC ; stdext::unchecked_uninitialized_fill_n<DRAMsimII::Channel *,unsigned int,DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >, COMDAT
@@ -15536,9 +16628,9 @@ __Count$ = 12						; size = 4
 ; 941  : 	_STD _Uninit_fill_n(_First, _Count, _Val, _Al,
 ; 942  : 		_STD _Ptr_cat(_First, _First), _STD _Range_checked_iterator_tag());
 
-	mov	BYTE PTR $T657360[esp+4], 0
-	mov	eax, DWORD PTR $T657360[esp+4]
-	mov	ecx, DWORD PTR __Cat$657364[esp+4]
+	mov	BYTE PTR $T699420[esp+4], 0
+	mov	eax, DWORD PTR $T699420[esp+4]
+	mov	ecx, DWORD PTR __Cat$699425[esp+4]
 	push	eax
 	mov	eax, DWORD PTR __First$[esp+4]
 	push	ecx
@@ -15557,10 +16649,10 @@ __Count$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$unchecked_copy@PAVChannel@DRAMsimII@@PAV12@@stdext@@YAPAVChannel@DRAMsimII@@PAV12@00@Z
 _TEXT	SEGMENT
-$T657369 = -4						; size = 1
+$T699429 = -4						; size = 1
 __First$ = 8						; size = 4
-__Cat$657374 = 12					; size = 1
-$T657371 = 12						; size = 1
+__Cat$699435 = 12					; size = 1
+$T699431 = 12						; size = 1
 __Last$ = 12						; size = 4
 __Dest$ = 16						; size = 4
 ??$unchecked_copy@PAVChannel@DRAMsimII@@PAV12@@stdext@@YAPAVChannel@DRAMsimII@@PAV12@00@Z PROC ; stdext::unchecked_copy<DRAMsimII::Channel *,DRAMsimII::Channel *>, COMDAT
@@ -15572,10 +16664,10 @@ __Dest$ = 16						; size = 4
 ; 3605 : 		return (_STD _Copy_opt(_CHECKED_BASE(_First), _CHECKED_BASE(_Last), _Dest,
 ; 3606 : 			_STD _Iter_random(_First, _Dest), _STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
 
-	mov	ecx, DWORD PTR __Cat$657374[esp]
-	mov	edx, DWORD PTR $T657371[esp]
-	mov	BYTE PTR $T657369[esp+4], 0
-	mov	eax, DWORD PTR $T657369[esp+4]
+	mov	ecx, DWORD PTR __Cat$699435[esp]
+	mov	edx, DWORD PTR $T699431[esp]
+	mov	BYTE PTR $T699429[esp+4], 0
+	mov	eax, DWORD PTR $T699429[esp+4]
 	push	eax
 	mov	eax, DWORD PTR __Last$[esp+4]
 	push	ecx
@@ -15595,8 +16687,8 @@ __Dest$ = 16						; size = 4
 _TEXT	ENDS
 ;	COMDAT ?_Ufill@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAEPAVChannel@DRAMsimII@@PAV34@IABV34@@Z
 _TEXT	SEGMENT
-$T657414 = -4						; size = 1
-__Cat$657410 = -4					; size = 1
+$T699471 = -4						; size = 1
+__Cat$699475 = -4					; size = 1
 ?_Ufill@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAEPAVChannel@DRAMsimII@@PAV34@IABV34@@Z PROC ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Ufill, COMDAT
 ; __Ptr$ = edi
 ; __Count$ = esi
@@ -15608,9 +16700,9 @@ __Cat$657410 = -4					; size = 1
 
 ; 1254 : 		_STDEXT unchecked_uninitialized_fill_n(_Ptr, _Count, _Val, this->_Alval);
 
-	mov	BYTE PTR $T657414[esp+4], 0
-	mov	eax, DWORD PTR $T657414[esp+4]
-	mov	ecx, DWORD PTR __Cat$657410[esp+4]
+	mov	BYTE PTR $T699471[esp+4], 0
+	mov	eax, DWORD PTR $T699471[esp+4]
+	mov	ecx, DWORD PTR __Cat$699475[esp+4]
 	push	eax
 	push	ecx
 	push	edx
@@ -15621,7 +16713,7 @@ __Cat$657410 = -4					; size = 1
 ; 1255 : 		return (_Ptr + _Count);
 
 	mov	eax, esi
-	imul	eax, 424				; 000001a8H
+	imul	eax, 456				; 000001c8H
 	add	eax, edi
 
 ; 1256 : 		}
@@ -15633,9 +16725,9 @@ __Cat$657410 = -4					; size = 1
 _TEXT	ENDS
 ;	COMDAT ?erase@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@0@Z
 _TEXT	SEGMENT
-$T657606 = -4						; size = 1
-__Cat$657610 = 8					; size = 1
-$T657608 = 8						; size = 1
+$T699667 = -4						; size = 1
+__Cat$699672 = 8					; size = 1
+$T699669 = 8						; size = 1
 ___$ReturnUdt$ = 8					; size = 4
 __First_arg$ = 12					; size = 8
 __Last_arg$ = 20					; size = 8
@@ -15653,16 +16745,16 @@ __Last_arg$ = 20					; size = 8
 	push	esi
 	mov	DWORD PTR [ebx], 0
 	test	edi, edi
-	je	SHORT $LN8@erase@33
+	je	SHORT $LN8@erase@35
 	mov	eax, DWORD PTR __First_arg$[esp+12]
 	cmp	DWORD PTR [edi+12], eax
-	ja	SHORT $LN8@erase@33
+	ja	SHORT $LN8@erase@35
 	cmp	eax, DWORD PTR [edi+16]
-	jbe	SHORT $LN9@erase@33
-$LN8@erase@33:
+	jbe	SHORT $LN9@erase@35
+$LN8@erase@35:
 	call	__invalid_parameter_noinfo
 	mov	eax, DWORD PTR __First_arg$[esp+12]
-$LN9@erase@33:
+$LN9@erase@35:
 
 ; 1030 : 		iterator _Last = _Make_iter(_Last_arg);
 
@@ -15671,13 +16763,13 @@ $LN9@erase@33:
 	mov	DWORD PTR [ebx], ecx
 	mov	DWORD PTR [ebx+4], eax
 	cmp	DWORD PTR [edi+12], esi
-	ja	SHORT $LN24@erase@33
+	ja	SHORT $LN24@erase@35
 	cmp	esi, DWORD PTR [edi+16]
-	jbe	SHORT $LN25@erase@33
-$LN24@erase@33:
+	jbe	SHORT $LN25@erase@35
+$LN24@erase@35:
 	call	__invalid_parameter_noinfo
 	mov	esi, DWORD PTR __Last_arg$[esp+12]
-$LN25@erase@33:
+$LN25@erase@35:
 
 ; 1031 : 
 ; 1032 : 		if (_First != _Last)
@@ -15685,15 +16777,15 @@ $LN25@erase@33:
 	mov	eax, DWORD PTR [ebx]
 	mov	ecx, DWORD PTR [edi]
 	test	eax, eax
-	je	SHORT $LN38@erase@33
+	je	SHORT $LN38@erase@35
 	cmp	eax, ecx
-	je	SHORT $LN39@erase@33
-$LN38@erase@33:
+	je	SHORT $LN39@erase@35
+$LN38@erase@35:
 	call	__invalid_parameter_noinfo
-$LN39@erase@33:
+$LN39@erase@35:
 	mov	eax, DWORD PTR [ebx+4]
 	cmp	eax, esi
-	je	SHORT $LN77@erase@33
+	je	SHORT $LN77@erase@35
 
 ; 1033 : 			{	// worth doing, copy down over hole
 ; 1034 : 
@@ -15711,12 +16803,12 @@ $LN39@erase@33:
 
 	mov	ecx, DWORD PTR [edi+16]
 	push	ebp
-	mov	BYTE PTR $T657606[esp+16], 0
-	mov	edx, DWORD PTR $T657606[esp+16]
+	mov	BYTE PTR $T699667[esp+16], 0
+	mov	edx, DWORD PTR $T699667[esp+16]
 	push	edx
-	mov	edx, DWORD PTR __Cat$657610[esp+16]
+	mov	edx, DWORD PTR __Cat$699672[esp+16]
 	push	edx
-	mov	edx, DWORD PTR $T657608[esp+20]
+	mov	edx, DWORD PTR $T699669[esp+20]
 	push	edx
 	push	ecx
 	mov	ecx, esi
@@ -15731,18 +16823,18 @@ $LN39@erase@33:
 	add	esp, 16					; 00000010H
 	mov	esi, ebp
 	cmp	ebp, ebx
-	je	SHORT $LN66@erase@33
+	je	SHORT $LN66@erase@35
 	npad	4
-$LL68@erase@33:
+$LL68@erase@35:
 	mov	eax, DWORD PTR [esi]
 	mov	edx, DWORD PTR [eax+16]
 	push	0
 	mov	ecx, esi
 	call	edx
-	add	esi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
 	cmp	esi, ebx
-	jne	SHORT $LL68@erase@33
-$LN66@erase@33:
+	jne	SHORT $LL68@erase@35
+$LN66@erase@35:
 
 ; 1049 : 			_Mylast = _Ptr;
 ; 1050 : 			}
@@ -15762,7 +16854,7 @@ $LN66@erase@33:
 
 	pop	ecx
 	ret	20					; 00000014H
-$LN77@erase@33:
+$LN77@erase@35:
 	pop	esi
 
 ; 1049 : 			_Mylast = _Ptr;
@@ -15785,7 +16877,7 @@ $LN77@erase@33:
 _TEXT	ENDS
 ;	COMDAT ?clear@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEXXZ
 _TEXT	SEGMENT
-$T657701 = -8						; size = 8
+$T699761 = -8						; size = 8
 ?clear@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEXXZ PROC ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::clear, COMDAT
 ; _this$ = eax
 
@@ -15802,21 +16894,21 @@ $T657701 = -8						; size = 8
 
 	mov	ebp, DWORD PTR [edi+16]
 	cmp	DWORD PTR [edi+12], ebp
-	jbe	SHORT $LN8@clear@24
+	jbe	SHORT $LN8@clear@25
 	call	__invalid_parameter_noinfo
-$LN8@clear@24:
+$LN8@clear@25:
 	mov	esi, DWORD PTR [edi+12]
 	mov	ebx, DWORD PTR [edi]
 	cmp	esi, DWORD PTR [edi+16]
-	jbe	SHORT $LN24@clear@24
+	jbe	SHORT $LN24@clear@25
 	call	__invalid_parameter_noinfo
-$LN24@clear@24:
+$LN24@clear@25:
 	mov	eax, DWORD PTR [edi]
 	push	ebp
 	push	ebx
 	push	esi
 	push	eax
-	lea	eax, DWORD PTR $T657701[esp+40]
+	lea	eax, DWORD PTR $T699761[esp+40]
 	push	eax
 	call	?erase@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE?AV?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@V?$_Vector_const_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@2@0@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::erase
 	pop	edi
@@ -15859,10 +16951,10 @@ __ehfuncinfo$?_Construct_n@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DR
 xdata$x	ENDS
 ;	COMDAT ?_Construct_n@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEXIABVChannel@DRAMsimII@@@Z
 _TEXT	SEGMENT
-$T657887 = -20						; size = 1
+$T699948 = -20						; size = 1
 __$EHRec$ = -16						; size = 16
 _this$ = 8						; size = 4
-__Cat$657890 = 12					; size = 1
+__Cat$699952 = 12					; size = 1
 __Count$ = 12						; size = 4
 __Val$ = 16						; size = 4
 ?_Construct_n@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEXIABVChannel@DRAMsimII@@@Z PROC ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Construct_n, COMDAT
@@ -15895,15 +16987,15 @@ __Val$ = 16						; size = 4
 	mov	DWORD PTR [esi+16], eax
 	mov	DWORD PTR [esi+20], eax
 	cmp	ebx, eax
-	je	SHORT $LN7@Construct_@10
-	cmp	ebx, 10129639				; 009a90e7H
-	jbe	SHORT $LN10@Construct_@10
+	je	SHORT $LN7@Construct_@19
+	cmp	ebx, 9418787				; 008fb823H
+	jbe	SHORT $LN10@Construct_@19
 	call	?_Xlen@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@KAXXZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Xlen
-$LN32@Construct_@10:
-$LN10@Construct_@10:
+$LN32@Construct_@19:
+$LN10@Construct_@19:
 	mov	ecx, ebx
 	call	?allocate@?$allocator@VChannel@DRAMsimII@@@std@@QAEPAVChannel@DRAMsimII@@I@Z ; std::allocator<DRAMsimII::Channel>::allocate
-	imul	ebx, 424				; 000001a8H
+	imul	ebx, 456				; 000001c8H
 	mov	edi, eax
 
 ; 547  : 			{	// nonzero, fill it
@@ -15913,9 +17005,9 @@ $LN10@Construct_@10:
 
 ; 549  : 			_Mylast = _Ufill(_Myfirst, _Count, _Val);
 
-	mov	edx, DWORD PTR __Cat$657890[ebp]
-	mov	BYTE PTR $T657887[ebp], 0
-	mov	ecx, DWORD PTR $T657887[ebp]
+	mov	edx, DWORD PTR __Cat$699952[ebp]
+	mov	BYTE PTR $T699948[ebp], 0
+	mov	ecx, DWORD PTR $T699948[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR __Count$[ebp]
 	lea	eax, DWORD PTR [ebx+edi]
@@ -15930,7 +17022,7 @@ $LN10@Construct_@10:
 	add	esp, 16					; 00000010H
 	add	ebx, edi
 	mov	DWORD PTR [esi+16], ebx
-$LN7@Construct_@10:
+$LN7@Construct_@19:
 
 ; 553  : 			_CATCH_END
 ; 554  : 			}
@@ -15959,8 +17051,8 @@ __catch$?_Construct_n@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsim
 	push	0
 	push	0
 	call	__CxxThrowException@8
-$LN33@Construct_@10:
-$LN31@Construct_@10:
+$LN33@Construct_@19:
+$LN31@Construct_@19:
 	int	3
 _TEXT	ENDS
 ;	COMDAT text$x
@@ -16016,12 +17108,12 @@ __Val$ = 16						; size = 4
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
 	test	eax, eax
-	je	SHORT $LN13@vector@50
+	je	SHORT $LN13@vector@78
 	mov	DWORD PTR [eax], esi
-	jmp	SHORT $LN14@vector@50
-$LN13@vector@50:
+	jmp	SHORT $LN14@vector@78
+$LN13@vector@78:
 	xor	eax, eax
-$LN14@vector@50:
+$LN14@vector@78:
 	mov	DWORD PTR [esi], eax
 
 ; 489  : 		_Construct_n(_Count, _Val);
@@ -16062,63 +17154,124 @@ text$x	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\system.cpp
 _TEXT	SEGMENT
-$T658041 = -16						; size = 16
-$T658038 = -16						; size = 16
 ?doPowerCalculation@System@DRAMsimII@@MAEXXZ PROC	; DRAMsimII::System::doPowerCalculation
 ; _this$ = ecx
 
-; 333  : {
+; 336  : {
 
 	push	ebp
 	mov	ebp, esp
 	and	esp, -8					; fffffff8H
-	sub	esp, 16					; 00000010H
 	push	ebx
 	push	ebp
 	push	esi
 	mov	esi, ecx
-
-; 334  : 	// waiting for OpenMP 3.0
-; 335  : 	//#pragma omp parallel
-; 336  : 
-; 337  : 	//#pragma omp for
-; 338  : 
-; 339  : 	for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time));
-
-	mov	ebp, DWORD PTR [esi+1124]
-	mov	eax, DWORD PTR [esi+11480]
-	mov	ecx, DWORD PTR [esi+11484]
 	push	edi
-	mov	DWORD PTR $T658038[esp+32], OFFSET ?doPowerCalculation@Channel@DRAMsimII@@QAEX_J@Z ; DRAMsimII::Channel::doPowerCalculation
-	mov	DWORD PTR $T658038[esp+40], eax
-	mov	DWORD PTR $T658038[esp+44], ecx
-	cmp	DWORD PTR [esi+1120], ebp
-	jbe	SHORT $LN16@doPowerCal@2
+
+; 337  : 	// waiting for OpenMP 3.0
+; 338  : 	//#pragma omp parallel
+; 339  : 
+; 340  : 	//#pragma omp for
+; 341  : 
+; 342  : 	//for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time, systemConfig.powerOutStream));
+; 343  : 
+; 344  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+
+	mov	edi, DWORD PTR [esi+1184]
+	cmp	edi, DWORD PTR [esi+1188]
+	jbe	SHORT $LN13@doPowerCal@2
 	call	__invalid_parameter_noinfo
-$LN16@doPowerCal@2:
-	mov	edi, DWORD PTR [esi+1120]
-	mov	ebx, DWORD PTR [esi+1108]
-	cmp	edi, DWORD PTR [esi+1124]
-	jbe	SHORT $LN32@doPowerCal@2
+$LN13@doPowerCal@2:
+	mov	ebx, DWORD PTR [esi+1172]
+	npad	11
+$LL30@doPowerCal@2:
+	mov	ebp, DWORD PTR [esi+1188]
+	cmp	DWORD PTR [esi+1184], ebp
+	jbe	SHORT $LN45@doPowerCal@2
 	call	__invalid_parameter_noinfo
-$LN32@doPowerCal@2:
-	mov	esi, DWORD PTR [esi+1108]
-	movq	xmm0, QWORD PTR $T658038[esp+32]
-	sub	esp, 16					; 00000010H
-	mov	eax, esp
+$LN45@doPowerCal@2:
+	mov	eax, DWORD PTR [esi+1172]
+	test	ebx, ebx
+	je	SHORT $LN58@doPowerCal@2
+	cmp	ebx, eax
+	je	SHORT $LN59@doPowerCal@2
+$LN58@doPowerCal@2:
+	call	__invalid_parameter_noinfo
+$LN59@doPowerCal@2:
+	cmp	edi, ebp
+	je	SHORT $LN1@doPowerCal@2
+
+; 345  : 	{
+; 346  : 		i->doPowerCalculation(time, systemConfig.powerOutStream);
+
+	lea	eax, DWORD PTR [esi+80]
+	test	eax, eax
+	je	SHORT $LN6@doPowerCal@2
+	lea	ebp, DWORD PTR [esi+88]
+	jmp	SHORT $LN7@doPowerCal@2
+$LN6@doPowerCal@2:
+	xor	ebp, ebp
+$LN7@doPowerCal@2:
+	test	ebx, ebx
+	jne	SHORT $LN84@doPowerCal@2
+	call	__invalid_parameter_noinfo
+	xor	eax, eax
+$LN79@doPowerCal@2:
+	cmp	edi, DWORD PTR [eax+16]
+	jb	SHORT $LN70@doPowerCal@2
+	call	__invalid_parameter_noinfo
+$LN70@doPowerCal@2:
+	mov	ecx, DWORD PTR [esi+11548]
+	mov	edx, DWORD PTR [esi+11544]
 	push	ebp
-	push	ebx
-	push	edi
-	movq	QWORD PTR [eax], xmm0
-	movq	xmm0, QWORD PTR $T658038[esp+68]
-	lea	edx, DWORD PTR $T658041[esp+60]
-	push	esi
+	push	ecx
 	push	edx
-	movq	QWORD PTR [eax+8], xmm0
-	call	??$for_each@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@V?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@2@@std@@YA?AV?$binder2nd@V?$mem_fun1_ref_t@XVChannel@DRAMsimII@@_J@std@@@0@V?$_Vector_iterator@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@0@0V10@@Z ; std::for_each<std::_Vector_iterator<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >,std::binder2nd<std::mem_fun1_ref_t<void,DRAMsimII::Channel,__int64> > >
-	add	esp, 36					; 00000024H
+	call	?doPowerCalculation@Channel@DRAMsimII@@QAEX_JAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@@Z ; DRAMsimII::Channel::doPowerCalculation
+	test	ebx, ebx
+	jne	SHORT $LN83@doPowerCal@2
+	call	__invalid_parameter_noinfo
+	xor	eax, eax
+$LN37@doPowerCal@2:
 
-; 340  : }
+; 337  : 	// waiting for OpenMP 3.0
+; 338  : 	//#pragma omp parallel
+; 339  : 
+; 340  : 	//#pragma omp for
+; 341  : 
+; 342  : 	//for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time, systemConfig.powerOutStream));
+; 343  : 
+; 344  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+
+	cmp	edi, DWORD PTR [eax+16]
+	jb	SHORT $LN28@doPowerCal@2
+	call	__invalid_parameter_noinfo
+$LN28@doPowerCal@2:
+	add	edi, 456				; 000001c8H
+	jmp	SHORT $LL30@doPowerCal@2
+$LN84@doPowerCal@2:
+
+; 345  : 	{
+; 346  : 		i->doPowerCalculation(time, systemConfig.powerOutStream);
+
+	mov	eax, DWORD PTR [ebx]
+	jmp	SHORT $LN79@doPowerCal@2
+$LN83@doPowerCal@2:
+
+; 337  : 	// waiting for OpenMP 3.0
+; 338  : 	//#pragma omp parallel
+; 339  : 
+; 340  : 	//#pragma omp for
+; 341  : 
+; 342  : 	//for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time, systemConfig.powerOutStream));
+; 343  : 
+; 344  : 	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+
+	mov	eax, DWORD PTR [ebx]
+	jmp	SHORT $LN37@doPowerCal@2
+$LN1@doPowerCal@2:
+
+; 347  : 	}
+; 348  : }
 
 	pop	edi
 	pop	esi
@@ -16129,16 +17282,14 @@ $LN32@doPowerCal@2:
 	ret	0
 ?doPowerCalculation@System@DRAMsimII@@MAEXXZ ENDP	; DRAMsimII::System::doPowerCalculation
 _TEXT	ENDS
+PUBLIC	__real@3f50000000000000
 PUBLIC	_this$GSCopy$
 PUBLIC	__$ArrayPad$
 PUBLIC	??0System@DRAMsimII@@QAE@ABVSettings@1@@Z	; DRAMsimII::System::System
-__ehfuncinfo$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z DD 019930522H
-	DD	08H
-	DD	FLAT:__unwindtable$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z
-	DD	2 DUP(00H)
-	DD	2 DUP(00H)
-	DD	00H
-	DD	01H
+;	COMDAT __real@3f50000000000000
+; File c:\program files\microsoft visual studio 9.0\vc\include\iosfwd
+CONST	SEGMENT
+__real@3f50000000000000 DQ 03f50000000000000r	; 0.000976563
 __unwindtable$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z DD 0ffffffffH
 	DD	FLAT:__unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$0
 	DD	00H
@@ -16155,35 +17306,38 @@ __unwindtable$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z DD 0ffffffffH
 	DD	FLAT:__unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$5
 	DD	06H
 	DD	FLAT:__unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$6
+__ehfuncinfo$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z DD 019930522H
+	DD	08H
+	DD	FLAT:__unwindtable$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
 ; Function compile flags: /Ogtpy
+; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\system.cpp
 _TEXT	SEGMENT
-tv1366 = -520						; size = 4
-tv1210 = -520						; size = 4
-tv1156 = -520						; size = 4
-tv1123 = -520						; size = 4
-tv1117 = -520						; size = 4
-tv1114 = -520						; size = 4
-tv1096 = -520						; size = 4
-tv1092 = -520						; size = 4
-tv1090 = -520						; size = 4
-tv1076 = -520						; size = 4
-tv1061 = -520						; size = 4
-$T658505 = -520						; size = 4
-$T658487 = -520						; size = 4
-$T658469 = -520						; size = 4
-$T658451 = -520						; size = 4
-tv620 = -520						; size = 4
-tv587 = -520						; size = 4
-_begin$140189 = -520					; size = 4
-$T658361 = -516						; size = 1
-$T658365 = -516						; size = 1
-$T658206 = -512						; size = 8
-$T658203 = -512						; size = 8
-$T658200 = -512						; size = 8
-$T658197 = -512						; size = 8
-_this$GSCopy$ = -504					; size = 4
-$T658192 = -500						; size = 28
-$T658191 = -472						; size = 424
+$T700556 = -552						; size = 1
+$T700560 = -552						; size = 1
+tv1237 = -548						; size = 4
+tv1235 = -548						; size = 4
+tv1232 = -548						; size = 4
+tv1155 = -548						; size = 4
+tv1122 = -548						; size = 4
+tv1116 = -548						; size = 4
+tv1114 = -548						; size = 4
+tv1100 = -548						; size = 4
+tv1095 = -548						; size = 4
+tv1093 = -548						; size = 4
+tv922 = -548						; size = 4
+tv723 = -548						; size = 4
+$T700598 = -544						; size = 4
+$T700401 = -544						; size = 8
+$T700398 = -544						; size = 8
+$T700395 = -544						; size = 8
+$T700392 = -544						; size = 8
+_this$GSCopy$ = -536					; size = 4
+$T700387 = -532						; size = 28
+$T700386 = -504						; size = 456
 _commandLine$ = -44					; size = 28
 __$ArrayPad$ = -16					; size = 4
 __$EHRec$ = -12						; size = 12
@@ -16197,10 +17351,10 @@ _settings$ = 12						; size = 4
 	push	__ehhandler$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z
 	mov	eax, DWORD PTR fs:0
 	push	eax
-	sub	esp, 508				; 000001fcH
+	sub	esp, 540				; 0000021cH
 	mov	eax, DWORD PTR ___security_cookie
 	xor	eax, esp
-	mov	DWORD PTR __$ArrayPad$[esp+520], eax
+	mov	DWORD PTR __$ArrayPad$[esp+552], eax
 	push	ebx
 	push	ebp
 	push	esi
@@ -16208,17 +17362,17 @@ _settings$ = 12						; size = 4
 	mov	eax, DWORD PTR ___security_cookie
 	xor	eax, esp
 	push	eax
-	lea	eax, DWORD PTR __$EHRec$[esp+540]
+	lea	eax, DWORD PTR __$EHRec$[esp+572]
 	mov	DWORD PTR fs:0, eax
-	mov	ebx, DWORD PTR _this$[esp+536]
-	mov	ebp, DWORD PTR _settings$[esp+536]
+	mov	ebx, DWORD PTR _this$[esp+568]
+	mov	ebp, DWORD PTR _settings$[esp+568]
 	lea	esi, DWORD PTR [ebx+8]
 	push	ebp
 	mov	edi, esi
-	mov	DWORD PTR _this$GSCopy$[esp+544], ebx
+	mov	DWORD PTR _this$GSCopy$[esp+576], ebx
 	mov	DWORD PTR [ebx], OFFSET ??_7System@DRAMsimII@@6B@
 	call	??0SystemConfiguration@DRAMsimII@@QAE@ABVSettings@1@@Z ; DRAMsimII::SystemConfiguration::SystemConfiguration
-	mov	DWORD PTR __$EHRec$[esp+548], 0
+	mov	DWORD PTR __$EHRec$[esp+580], 0
 	mov	eax, DWORD PTR [ebp+184]
 	mov	DWORD PTR [ebx+552], eax
 	mov	ecx, DWORD PTR [ebp+188]
@@ -16231,37 +17385,37 @@ _settings$ = 12						; size = 4
 	push	edi
 	push	esi
 	push	ebp
-	lea	edx, DWORD PTR $T658191[esp+552]
+	lea	edx, DWORD PTR $T700386[esp+584]
 	push	edx
-	mov	BYTE PTR __$EHRec$[esp+564], 1
+	mov	BYTE PTR __$EHRec$[esp+596], 1
 	call	??0Channel@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@AAVStatistics@1@@Z ; DRAMsimII::Channel::Channel
-	mov	BYTE PTR __$EHRec$[esp+548], 2
+	mov	BYTE PTR __$EHRec$[esp+580], 2
 	mov	ecx, DWORD PTR [ebx+364]
 	push	eax
 	push	ecx
-	lea	edi, DWORD PTR [ebx+1108]
+	lea	edi, DWORD PTR [ebx+1172]
 	push	edi
 	call	??0?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@IABVChannel@DRAMsimII@@@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
-	lea	ecx, DWORD PTR $T658191[esp+540]
-	mov	BYTE PTR __$EHRec$[esp+548], 4
+	lea	ecx, DWORD PTR $T700386[esp+572]
+	mov	BYTE PTR __$EHRec$[esp+580], 4
 	call	??1Channel@DRAMsimII@@UAE@XZ		; DRAMsimII::Channel::~Channel
 	push	edi
 	push	ebp
-	lea	eax, DWORD PTR [ebx+1136]
+	lea	eax, DWORD PTR [ebx+1200]
 	push	eax
 	mov	edx, esi
 	call	??0InputStream@DRAMsimII@@QAE@ABVSettings@1@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z ; DRAMsimII::InputStream::InputStream
-	mov	BYTE PTR __$EHRec$[esp+548], 5
+	mov	BYTE PTR __$EHRec$[esp+580], 5
 	xor	esi, esi
-	mov	DWORD PTR [ebx+11480], esi
-	mov	DWORD PTR [ebx+11484], esi
+	mov	DWORD PTR [ebx+11544], esi
+	mov	DWORD PTR [ebx+11548], esi
 	mov	ecx, DWORD PTR [ebp+28]
-	mov	DWORD PTR [ebx+11488], ecx
+	mov	DWORD PTR [ebx+11552], ecx
 
 ; 61   : 	Address::initialize(settings);
 
 	mov	ecx, ebp
-	mov	DWORD PTR [ebx+11492], esi
+	mov	DWORD PTR [ebx+11556], esi
 	call	?initialize@Address@DRAMsimII@@SAXABVSettings@2@@Z ; DRAMsimII::Address::initialize
 
 ; 62   : 
@@ -16271,17 +17425,17 @@ _settings$ = 12						; size = 4
 	lea	eax, DWORD PTR [ebp+152]
 	push	esi
 	push	eax
-	lea	ecx, DWORD PTR _commandLine$[esp+552]
-	mov	DWORD PTR _commandLine$[esp+576], 15	; 0000000fH
-	mov	DWORD PTR _commandLine$[esp+572], esi
-	mov	BYTE PTR _commandLine$[esp+556], 0
+	lea	ecx, DWORD PTR _commandLine$[esp+584]
+	mov	DWORD PTR _commandLine$[esp+608], 15	; 0000000fH
+	mov	DWORD PTR _commandLine$[esp+604], esi
+	mov	BYTE PTR _commandLine$[esp+588], 0
 	call	?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@ABV12@II@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::assign
-	mov	BYTE PTR __$EHRec$[esp+548], 6
+	mov	BYTE PTR __$EHRec$[esp+580], 6
 
 ; 64   : 
 ; 65   : 	if (commandLine.length() < 1)
 
-	cmp	DWORD PTR _commandLine$[esp+560], 1
+	cmp	DWORD PTR _commandLine$[esp+592], 1
 	jae	$LN82@System
 
 ; 66   : 	{
@@ -16295,7 +17449,7 @@ _settings$ = 12						; size = 4
 
 	push	6
 	push	OFFSET ??_C@_06BEOPDEGP@Random?$AA@
-	lea	ecx, DWORD PTR _commandLine$[esp+548]
+	lea	ecx, DWORD PTR _commandLine$[esp+580]
 	call	?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@PBDI@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::assign
 	jmp	$LN82@System
 $LN9@System:
@@ -16313,56 +17467,55 @@ $LN6@System:
 
 	push	1
 	push	-1
-	lea	edx, DWORD PTR $T658361[esp+548]
+	lea	edx, DWORD PTR $T700556[esp+580]
 	lea	esi, DWORD PTR [ebp+32]
 	push	edx
 	mov	ecx, esi
-	mov	BYTE PTR $T658361[esp+552], 47		; 0000002fH
+	mov	BYTE PTR $T700556[esp+584], 47		; 0000002fH
 	call	?rfind@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEIPBDII@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::rfind
 
 ; 72   : 			size_t end = settings.inFile.find_last_of('.');
 
 	push	1
-	mov	DWORD PTR _begin$140189[esp+544], eax
+	mov	edi, eax
 	push	-1
-	lea	eax, DWORD PTR $T658365[esp+548]
+	lea	eax, DWORD PTR $T700560[esp+580]
 	push	eax
 	mov	ecx, esi
-	mov	BYTE PTR $T658365[esp+552], 46		; 0000002eH
+	mov	BYTE PTR $T700560[esp+584], 46		; 0000002eH
 	call	?rfind@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBEIPBDII@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::rfind
 
 ; 73   : 			if (begin != string::npos && end != string::npos)
 
-	mov	ecx, DWORD PTR _begin$140189[esp+540]
-	cmp	ecx, -1
+	cmp	edi, -1
 	je	SHORT $LN5@System
 	cmp	eax, -1
 	je	SHORT $LN5@System
 
 ; 74   : 				commandLine = settings.inFile.substr(begin + 1,end - begin - 1);
 
-	sub	eax, ecx
+	sub	eax, edi
 	dec	eax
-	inc	ecx
 	push	eax
-	push	ecx
-	lea	ecx, DWORD PTR $T658192[esp+548]
+	inc	edi
+	push	edi
+	lea	ecx, DWORD PTR $T700387[esp+580]
 	push	ecx
 	mov	ecx, esi
 	call	?substr@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QBE?AV12@II@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::substr
 	push	-1
 	push	0
 	push	eax
-	lea	ecx, DWORD PTR _commandLine$[esp+552]
-	mov	BYTE PTR __$EHRec$[esp+560], 7
+	lea	ecx, DWORD PTR _commandLine$[esp+584]
+	mov	BYTE PTR __$EHRec$[esp+592], 7
 	call	?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@ABV12@II@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::assign
-	lea	ecx, DWORD PTR $T658192[esp+540]
-	mov	BYTE PTR __$EHRec$[esp+548], 6
+	lea	ecx, DWORD PTR $T700387[esp+572]
+	mov	BYTE PTR __$EHRec$[esp+580], 6
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 
 ; 75   : 			else
 
-	jmp	SHORT $LN221@System
+	jmp	SHORT $LN222@System
 $LN5@System:
 
 ; 76   : 				commandLine = settings.inFile;
@@ -16370,9 +17523,9 @@ $LN5@System:
 	push	-1
 	push	0
 	push	esi
-	lea	ecx, DWORD PTR _commandLine$[esp+552]
+	lea	ecx, DWORD PTR _commandLine$[esp+584]
 	call	?assign@?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAEAAV12@ABV12@II@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::assign
-$LN221@System:
+$LN222@System:
 	xor	esi, esi
 $LN82@System:
 
@@ -16388,7 +17541,10 @@ $LN82@System:
 ; 86   : 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 ; 87   : 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 ; 88   : 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-; 89   : 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
+; 89   : 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
+; 90   : 		"cache[" << settings.cacheSize / 1024.0F << "kB] " <<
+; 91   : 		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize / settings.blockSize / settings.associativity << "]"
+; 92   : 		<< endl;
 
 	lea	eax, DWORD PTR [ebx+152]
 	cmp	eax, esi
@@ -16450,7 +17606,7 @@ $LN14@System:
 	push	ecx
 	push	OFFSET ??_C@_04MOAEGBAM@?5ch?$FL?$AA@
 	push	ecx
-	lea	edx, DWORD PTR _commandLine$[esp+708]
+	lea	edx, DWORD PTR _commandLine$[esp+740]
 	push	edx
 	push	ecx
 	push	OFFSET ??_C@_0BD@NKGPPGBC@?9?9?9?9Command?5Line?3?5?$AA@
@@ -16528,33 +17684,72 @@ $LN14@System:
 	cmp	eax, 7
 	ja	SHORT $LN86@System
 	call	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABW4AddressMappingScheme@Address@0@@Z ; DRAMsimII::operator<<
+	mov	DWORD PTR $T700598[esp+572], eax
 	jmp	SHORT $LN97@System
 $LN86@System:
 	push	OFFSET ??_C@_05LOKBKELC@UNKWN?$AA@
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
-	mov	eax, esi
+	mov	DWORD PTR $T700598[esp+572], esi
 $LN97@System:
-	mov	edx, DWORD PTR [ebp+220]
-	fild	DWORD PTR [ebp+204]
+	mov	ecx, DWORD PTR [ebp+480]
+	mov	esi, DWORD PTR [ebp+484]
+	xor	edx, edx
+	mov	eax, ecx
+	div	esi
+	mov	edi, DWORD PTR [ebp+476]
+	xor	edx, edx
 	push	OFFSET ??_C@_01LBDDMOBJ@?$FN?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+340]
+	mov	DWORD PTR tv1237[esp+580], ecx
+	fild	DWORD PTR tv1237[esp+580]
+	div	edi
+	push	eax
 	push	ecx
+	push	OFFSET ??_C@_07KMICBNBC@?$FN?5sets?$FL?$AA@
+	push	ecx
+	push	edi
+	push	ecx
+	push	OFFSET ??_C@_08NADJLLE@?$FN?5assoc?$FL?$AA@
+	push	ecx
+	push	esi
+	push	ecx
+	push	OFFSET ??_C@_06DGPPDNGF@blkSz?$FL?$AA@
+	push	ecx
+	push	OFFSET ??_C@_04BHMCEHEJ@kB?$FN?5?$AA@
+	push	ecx
+	test	ecx, ecx
+	jge	SHORT $LN213@System
+	fadd	DWORD PTR __real@4f800000
+$LN213@System:
+	fmul	QWORD PTR __real@3f50000000000000
+	mov	eax, DWORD PTR [ebp+340]
+	sub	esp, 8
+	mov	edx, DWORD PTR [ebp+204]
+	fstp	DWORD PTR tv1235[esp+644]
+	fld	DWORD PTR tv1235[esp+644]
+	fstp	DWORD PTR [esp+4]
+	push	OFFSET ??_C@_06CMDGPFCD@cache?$FL?$AA@
+	fild	DWORD PTR [ebp+204]
+	push	ecx
+	push	OFFSET ??_C@_02PBFOLPKM@?$FN?5?$AA@
+	push	ecx
+	push	eax
 	push	ecx
 	push	OFFSET ??_C@_0L@EIAHPKIN@?$FN?5t_?$HLFAW?$HN?$FL?$AA@
 	push	ecx
-	push	edx
+	mov	ecx, DWORD PTR [ebp+220]
+	push	ecx
 	push	ecx
 	push	OFFSET ??_C@_07FANEOFIO@M?$FN?5PBQ?$FL?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+204]
-	test	ecx, ecx
-	jge	SHORT $LN213@System
+	test	edx, edx
+	jge	SHORT $LN214@System
 	fadd	QWORD PTR __real@41f0000000000000
-$LN213@System:
+$LN214@System:
 	fdiv	QWORD PTR __real@412e848000000000
+	mov	eax, DWORD PTR $T700598[esp+692]
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
 	push	OFFSET ??_C@_05BNONNLFK@?$FN?5DR?$FL?$AA@
@@ -16596,6 +17791,36 @@ $LN213@System:
 	add	esp, 4
 	push	eax
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 12					; 0000000cH
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 12					; 0000000cH
+	push	eax
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@M@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	add	esp, 4
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 12					; 0000000cH
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 12					; 0000000cH
+	push	eax
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@I@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	add	esp, 4
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 12					; 0000000cH
+	push	eax
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@I@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	add	esp, 4
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	add	esp, 12					; 0000000cH
+	push	eax
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@I@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	add	esp, 4
+	push	eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 	mov	esi, eax
 	push	10					; 0000000aH
@@ -16604,14 +17829,14 @@ $LN213@System:
 	mov	ecx, esi
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 
-; 90   : 
-; 91   : 	systemConfig.powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
-; 92   : 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-; 93   : 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
-; 94   : 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-; 95   : 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
-; 96   : 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-; 97   : 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
+; 93   : 
+; 94   : 	systemConfig.powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
+; 95   : 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
+; 96   : 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
+; 97   : 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
+; 98   : 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
+; 99   : 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
+; 100  : 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
 
 	lea	eax, DWORD PTR [ebx+80]
 	test	eax, eax
@@ -16623,58 +17848,58 @@ $LN15@System:
 $LN16@System:
 	push	OFFSET ??_C@_06BOCDPGPG@?$FN?5AMP?$FL?$AA@
 	push	ecx
-	mov	edx, DWORD PTR [ebp+348]
-	push	edx
+	mov	ecx, DWORD PTR [ebp+348]
+	push	ecx
 	push	ecx
 	push	OFFSET ??_C@_09IABIPHAA@?$FN?5t_?$HLRC?$HN?$FL?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+352]
-	push	ecx
+	mov	edx, DWORD PTR [ebp+352]
+	push	edx
 	push	ecx
 	push	OFFSET ??_C@_0L@OICMBBBB@?$FN?5t_?$HLRCD?$HN?$FL?$AA@
 	push	ecx
-	mov	edx, DWORD PTR [ebp+332]
-	push	edx
+	mov	ecx, DWORD PTR [ebp+332]
+	push	ecx
 	push	ecx
 	push	OFFSET ??_C@_0L@JHKIPMGJ@?$FN?5t_?$HLCAS?$HN?$FL?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+344]
+	mov	edx, DWORD PTR [ebp+344]
+	push	edx
 	push	ecx
-	push	ecx
-	mov	edx, DWORD PTR [ebp+416]
 	push	OFFSET ??_C@_0L@FPCCCNFH@?$FN?5t_?$HLRAS?$HN?$FL?$AA@
 	push	ecx
-	push	edx
+	mov	ecx, DWORD PTR [ebp+416]
+	push	ecx
+	mov	edx, DWORD PTR [ebp+236]
 	push	ecx
 	push	OFFSET ??_C@_04NOGDJOAJ@?$FN?5?$FLx?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+236]
-	mov	edx, DWORD PTR [ebp+240]
+	push	edx
 	push	ecx
-	push	ecx
+	mov	edx, DWORD PTR [ebp+308]
 	push	OFFSET ??_C@_06ICGIPBND@?$FN?5col?$FL?$AA@
 	push	ecx
-	push	edx
-	mov	edx, DWORD PTR [ebp+304]
+	mov	ecx, DWORD PTR [ebp+240]
+	push	ecx
 	push	ecx
 	push	OFFSET ??_C@_06MPJLADHA@?$FN?5row?$FL?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+308]
-	push	ecx
+	push	edx
+	mov	edx, DWORD PTR [ebp+300]
 	push	ecx
 	push	OFFSET ??_C@_05LDAOPFKH@?$FN?5bk?$FL?$AA@
 	push	ecx
-	push	edx
+	mov	ecx, DWORD PTR [ebp+304]
+	push	ecx
 	push	ecx
 	push	OFFSET ??_C@_05ODBHKCDI@?$FN?5rk?$FL?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+300]
-	push	ecx
+	push	edx
 	push	ecx
 	push	OFFSET ??_C@_04MOAEGBAM@?5ch?$FL?$AA@
 	push	ecx
-	lea	edx, DWORD PTR _commandLine$[esp+708]
-	push	edx
+	lea	ecx, DWORD PTR _commandLine$[esp+740]
+	push	ecx
 	push	ecx
 	push	OFFSET ??_C@_0BD@NKGPPGBC@?9?9?9?9Command?5Line?3?5?$AA@
 	push	eax
@@ -16759,24 +17984,24 @@ $LN107@System:
 	add	esp, 8
 	mov	eax, esi
 $LN118@System:
-	mov	edx, DWORD PTR [ebp+220]
+	mov	edx, DWORD PTR [ebp+340]
 	fild	DWORD PTR [ebp+204]
 	push	OFFSET ??_C@_01LBDDMOBJ@?$FN?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+340]
-	push	ecx
+	push	edx
+	mov	edx, DWORD PTR [ebp+204]
 	push	ecx
 	push	OFFSET ??_C@_0L@EIAHPKIN@?$FN?5t_?$HLFAW?$HN?$FL?$AA@
 	push	ecx
-	push	edx
+	mov	ecx, DWORD PTR [ebp+220]
+	push	ecx
 	push	ecx
 	push	OFFSET ??_C@_07FANEOFIO@M?$FN?5PBQ?$FL?$AA@
 	push	ecx
-	mov	ecx, DWORD PTR [ebp+204]
-	test	ecx, ecx
-	jge	SHORT $LN214@System
+	test	edx, edx
+	jge	SHORT $LN215@System
 	fadd	QWORD PTR __real@41f0000000000000
-$LN214@System:
+$LN215@System:
 	fdiv	QWORD PTR __real@412e848000000000
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
@@ -16827,19 +18052,19 @@ $LN214@System:
 	mov	ecx, esi
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 
-; 98   : 
-; 99   : #ifndef NDEBUG
-; 100  : 	systemConfig.timingOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
-; 101  : 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-; 102  : 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
-; 103  : 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-; 104  : 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
-; 105  : 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-; 106  : 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
-; 107  : #endif
-; 108  : 
-; 109  : 
-; 110  : 	systemConfig.statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
+; 101  : 
+; 102  : #ifndef NDEBUG 
+; 103  : 	systemConfig.timingOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
+; 104  : 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
+; 105  : 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
+; 106  : 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
+; 107  : 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
+; 108  : 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
+; 109  : 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
+; 110  : #endif
+; 111  : 
+; 112  : 
+; 113  : 	systemConfig.statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
 	lea	eax, DWORD PTR [ebx+152]
 	test	eax, eax
@@ -16849,45 +18074,44 @@ $LN214@System:
 $LN17@System:
 	xor	esi, esi
 $LN18@System:
-	lea	edx, DWORD PTR $T658197[esp+540]
+	lea	eax, DWORD PTR $T700392[esp+572]
 	push	5
-	push	edx
+	push	eax
 	call	?setprecision@std@@YA?AU?$_Smanip@H@1@H@Z ; std::setprecision
 	push	OFFSET ??_C@_0L@IOLOEHIE@?9?9?9?9Epoch?5?$AA@
 	push	esi
-	mov	DWORD PTR $T658451[esp+556], eax
+	mov	edi, eax
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	mov	esi, eax
 	add	esp, 16					; 00000010H
 	test	esi, esi
 	je	SHORT $LN131@System
 $LN130@System:
-	mov	eax, DWORD PTR [esi]
-	mov	eax, DWORD PTR [eax+4]
+	mov	ecx, DWORD PTR [esi]
+	mov	eax, DWORD PTR [ecx+4]
 	add	eax, esi
 $LN131@System:
-	mov	ecx, DWORD PTR $T658451[esp+540]
-	mov	edx, DWORD PTR [ecx+4]
+	mov	edx, DWORD PTR [edi+4]
 	push	edx
 	push	eax
-	mov	eax, DWORD PTR [ecx]
+	mov	eax, DWORD PTR [edi]
 	call	eax
 	fild	DWORD PTR [ebp+28]
 	mov	ecx, DWORD PTR [ebp+28]
 	test	ecx, ecx
-	jge	SHORT $LN215@System
-	fadd	DWORD PTR __real@4f800000
-$LN215@System:
-	mov	edx, DWORD PTR [ebp+204]
-	fild	DWORD PTR [ebp+204]
-	test	edx, edx
 	jge	SHORT $LN216@System
 	fadd	DWORD PTR __real@4f800000
 $LN216@System:
+	mov	edx, DWORD PTR [ebp+204]
+	fild	DWORD PTR [ebp+204]
+	test	edx, edx
+	jge	SHORT $LN217@System
+	fadd	DWORD PTR __real@4f800000
+$LN217@System:
 	fdivp	ST(1), ST(0)
 	add	esp, 4
-	fstp	DWORD PTR tv1114[esp+544]
-	fld	DWORD PTR tv1114[esp+544]
+	fstp	DWORD PTR tv1114[esp+576]
+	fld	DWORD PTR tv1114[esp+576]
 	fstp	DWORD PTR [esp]
 	push	esi
 	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@M@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
@@ -16898,8 +18122,8 @@ $LN216@System:
 	mov	ecx, esi
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 
-; 111  : 
-; 112  : 	systemConfig.powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
+; 114  : 
+; 115  : 	systemConfig.powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
 	lea	eax, DWORD PTR [ebx+80]
 	test	eax, eax
@@ -16909,13 +18133,13 @@ $LN216@System:
 $LN19@System:
 	xor	esi, esi
 $LN20@System:
-	lea	eax, DWORD PTR $T658200[esp+540]
+	lea	eax, DWORD PTR $T700395[esp+572]
 	push	5
 	push	eax
 	call	?setprecision@std@@YA?AU?$_Smanip@H@1@H@Z ; std::setprecision
 	push	OFFSET ??_C@_0L@IOLOEHIE@?9?9?9?9Epoch?5?$AA@
 	push	esi
-	mov	DWORD PTR $T658469[esp+556], eax
+	mov	edi, eax
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	mov	esi, eax
 	add	esp, 16					; 00000010H
@@ -16926,28 +18150,27 @@ $LN138@System:
 	mov	eax, DWORD PTR [ecx+4]
 	add	eax, esi
 $LN139@System:
-	mov	ecx, DWORD PTR $T658469[esp+540]
-	mov	edx, DWORD PTR [ecx+4]
+	mov	edx, DWORD PTR [edi+4]
 	push	edx
 	push	eax
-	mov	eax, DWORD PTR [ecx]
+	mov	eax, DWORD PTR [edi]
 	call	eax
 	fild	DWORD PTR [ebp+28]
 	mov	ecx, DWORD PTR [ebp+28]
 	test	ecx, ecx
-	jge	SHORT $LN217@System
-	fadd	DWORD PTR __real@4f800000
-$LN217@System:
-	mov	edx, DWORD PTR [ebp+204]
-	fild	DWORD PTR [ebp+204]
-	test	edx, edx
 	jge	SHORT $LN218@System
 	fadd	DWORD PTR __real@4f800000
 $LN218@System:
+	mov	edx, DWORD PTR [ebp+204]
+	fild	DWORD PTR [ebp+204]
+	test	edx, edx
+	jge	SHORT $LN219@System
+	fadd	DWORD PTR __real@4f800000
+$LN219@System:
 	fdivp	ST(1), ST(0)
 	add	esp, 4
-	fstp	DWORD PTR tv1090[esp+544]
-	fld	DWORD PTR tv1090[esp+544]
+	fstp	DWORD PTR tv1093[esp+576]
+	fld	DWORD PTR tv1093[esp+576]
 	fstp	DWORD PTR [esp]
 	push	esi
 	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@M@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
@@ -16958,8 +18181,8 @@ $LN218@System:
 	mov	ecx, esi
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 
-; 113  : 
-; 114  : 	systemConfig.statsOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
+; 116  : 
+; 117  : 	systemConfig.statsOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
 
 	lea	eax, DWORD PTR [ebx+152]
 	test	eax, eax
@@ -16969,13 +18192,13 @@ $LN218@System:
 $LN21@System:
 	xor	esi, esi
 $LN22@System:
-	lea	eax, DWORD PTR $T658203[esp+540]
+	lea	eax, DWORD PTR $T700398[esp+572]
 	push	5
 	push	eax
 	call	?setprecision@std@@YA?AU?$_Smanip@H@1@H@Z ; std::setprecision
 	push	OFFSET ??_C@_0O@GPPBLPGF@?9?9?9?9Datarate?5?$AA@
 	push	esi
-	mov	DWORD PTR $T658487[esp+556], eax
+	mov	edi, eax
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	mov	esi, eax
 	add	esp, 16					; 00000010H
@@ -16986,62 +18209,10 @@ $LN146@System:
 	mov	eax, DWORD PTR [ecx+4]
 	add	eax, esi
 $LN147@System:
-	mov	ecx, DWORD PTR $T658487[esp+540]
-	mov	edx, DWORD PTR [ecx+4]
+	mov	edx, DWORD PTR [edi+4]
 	push	edx
 	push	eax
-	mov	eax, DWORD PTR [ecx]
-	call	eax
-	fild	DWORD PTR [ebp+204]
-	mov	ecx, DWORD PTR [ebp+204]
-	test	ecx, ecx
-	jge	SHORT $LN219@System
-	fadd	DWORD PTR __real@4f800000
-$LN219@System:
-	add	esp, 4
-	fstp	DWORD PTR [esp]
-	push	esi
-	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@M@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
-	mov	esi, eax
-	push	10					; 0000000aH
-	mov	ecx, esi
-	call	?put@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@D@Z ; std::basic_ostream<char,std::char_traits<char> >::put
-	mov	ecx, esi
-	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
-
-; 115  : 
-; 116  : 	systemConfig.powerOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
-
-	lea	eax, DWORD PTR [ebx+80]
-	test	eax, eax
-	je	SHORT $LN23@System
-	lea	esi, DWORD PTR [ebx+88]
-	jmp	SHORT $LN24@System
-$LN23@System:
-	xor	esi, esi
-$LN24@System:
-	lea	edx, DWORD PTR $T658206[esp+540]
-	push	5
-	push	edx
-	call	?setprecision@std@@YA?AU?$_Smanip@H@1@H@Z ; std::setprecision
-	push	OFFSET ??_C@_0O@GPPBLPGF@?9?9?9?9Datarate?5?$AA@
-	push	esi
-	mov	DWORD PTR $T658505[esp+556], eax
-	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
-	mov	esi, eax
-	add	esp, 16					; 00000010H
-	test	esi, esi
-	je	SHORT $LN155@System
-$LN154@System:
-	mov	eax, DWORD PTR [esi]
-	mov	eax, DWORD PTR [eax+4]
-	add	eax, esi
-$LN155@System:
-	mov	ecx, DWORD PTR $T658505[esp+540]
-	mov	edx, DWORD PTR [ecx+4]
-	push	edx
-	push	eax
-	mov	eax, DWORD PTR [ecx]
+	mov	eax, DWORD PTR [edi]
 	call	eax
 	fild	DWORD PTR [ebp+204]
 	mov	ecx, DWORD PTR [ebp+204]
@@ -17060,38 +18231,87 @@ $LN220@System:
 	mov	ecx, esi
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 
-; 117  : 
-; 118  : 	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
+; 118  : 
+; 119  : 	systemConfig.powerOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
+
+	lea	eax, DWORD PTR [ebx+80]
+	test	eax, eax
+	je	SHORT $LN23@System
+	lea	esi, DWORD PTR [ebx+88]
+	jmp	SHORT $LN24@System
+$LN23@System:
+	xor	esi, esi
+$LN24@System:
+	lea	edx, DWORD PTR $T700401[esp+572]
+	push	5
+	push	edx
+	call	?setprecision@std@@YA?AU?$_Smanip@H@1@H@Z ; std::setprecision
+	push	OFFSET ??_C@_0O@GPPBLPGF@?9?9?9?9Datarate?5?$AA@
+	push	esi
+	mov	edi, eax
+	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
+	mov	esi, eax
+	add	esp, 16					; 00000010H
+	test	esi, esi
+	je	SHORT $LN155@System
+$LN154@System:
+	mov	eax, DWORD PTR [esi]
+	mov	eax, DWORD PTR [eax+4]
+	add	eax, esi
+$LN155@System:
+	mov	ecx, DWORD PTR [edi+4]
+	mov	edx, DWORD PTR [edi]
+	push	ecx
+	push	eax
+	call	edx
+	fild	DWORD PTR [ebp+204]
+	mov	eax, DWORD PTR [ebp+204]
+	test	eax, eax
+	jge	SHORT $LN221@System
+	fadd	DWORD PTR __real@4f800000
+$LN221@System:
+	add	esp, 4
+	fstp	DWORD PTR [esp]
+	push	esi
+	call	??6?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV01@M@Z ; std::basic_ostream<char,std::char_traits<char> >::operator<<
+	mov	esi, eax
+	push	10					; 0000000aH
+	mov	ecx, esi
+	call	?put@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@D@Z ; std::basic_ostream<char,std::char_traits<char> >::put
+	mov	ecx, esi
+	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
+
+; 120  : 
+; 121  : 	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
 
 	lea	eax, DWORD PTR [ebx+80]
 	test	eax, eax
 	je	SHORT $LN25@System
-	lea	edx, DWORD PTR [ebx+88]
-	mov	DWORD PTR tv587[esp+540], edx
+	lea	edi, DWORD PTR [ebx+88]
 	jmp	SHORT $LN26@System
 $LN25@System:
-	mov	DWORD PTR tv587[esp+540], 0
+	xor	edi, edi
 $LN26@System:
-	mov	ecx, DWORD PTR [edi+16]
-	sub	ecx, DWORD PTR [edi+12]
+	mov	ecx, DWORD PTR [ebx+1188]
+	sub	ecx, DWORD PTR [ebx+1184]
 	mov	esi, DWORD PTR [ebx+368]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
 	push	OFFSET ??_C@_05CLDNIALB@?$FN?$CL?$CL?$CL?9?$AA@
 	push	ecx
 	push	esi
 	push	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	push	OFFSET ??_C@_04CFKFMLNB@?$FNrk?$FL?$AA@
 	mov	eax, edx
-	shr	eax, 31					; 0000001fH
 	push	ecx
+	shr	eax, 31					; 0000001fH
 	add	eax, edx
 	push	eax
-	mov	eax, DWORD PTR tv587[esp+568]
 	push	ecx
 	push	OFFSET ??_C@_07NIHGJHHN@?9?$CL?$CL?$CLch?$FL?$AA@
-	push	eax
+	push	edi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 12					; 0000000cH
 	push	eax
@@ -17113,38 +18333,37 @@ $LN26@System:
 	mov	ecx, esi
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 
-; 119  : 
-; 120  : 	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
+; 122  : 
+; 123  : 	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
 
 	lea	eax, DWORD PTR [ebx+152]
 	test	eax, eax
 	je	SHORT $LN27@System
-	lea	ecx, DWORD PTR [ebx+160]
-	mov	DWORD PTR tv620[esp+540], ecx
+	lea	edi, DWORD PTR [ebx+160]
 	jmp	SHORT $LN28@System
 $LN27@System:
-	mov	DWORD PTR tv620[esp+540], 0
+	xor	edi, edi
 $LN28@System:
-	mov	ecx, DWORD PTR [edi+16]
-	sub	ecx, DWORD PTR [edi+12]
+	mov	ecx, DWORD PTR [ebx+1188]
+	sub	ecx, DWORD PTR [ebx+1184]
 	mov	esi, DWORD PTR [ebx+368]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
 	push	OFFSET ??_C@_05CLDNIALB@?$FN?$CL?$CL?$CL?9?$AA@
 	push	ecx
 	push	esi
 	push	ecx
-	sar	edx, 7
-	mov	eax, edx
+	add	edx, ecx
+	sar	edx, 8
 	push	OFFSET ??_C@_04CFKFMLNB@?$FNrk?$FL?$AA@
+	mov	eax, edx
 	push	ecx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
-	mov	edx, DWORD PTR tv620[esp+564]
 	push	eax
 	push	ecx
 	push	OFFSET ??_C@_07NIHGJHHN@?9?$CL?$CL?$CLch?$FL?$AA@
-	push	edx
+	push	edi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 12					; 0000000cH
 	push	eax
@@ -17166,68 +18385,66 @@ $LN28@System:
 	mov	ecx, esi
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 
-; 121  : 
-; 122  : 	// set the channelID so that each channel may know its ordinal value
-; 123  : 	for (unsigned i = 0; i < settings.channelCount; i++)
+; 124  : 
+; 125  : 	// set the channelID so that each channel may know its ordinal value
+; 126  : 	for (unsigned i = 0; i < settings.channelCount; i++)
 
 	xor	esi, esi
 	cmp	DWORD PTR [ebp+300], esi
 	jbe	SHORT $LN1@System
 
-; 119  : 
-; 120  : 	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
+; 122  : 
+; 123  : 	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
 
-	mov	DWORD PTR tv1366[esp+540], esi
-	npad	8
+	xor	edi, edi
 $LL3@System:
 
-; 124  : 	{
-; 125  : 		channel[i].setChannelID(i);		
+; 127  : 	{
+; 128  : 		channel[i].setChannelID(i);		
 
-	mov	ecx, DWORD PTR [edi+16]
-	sub	ecx, DWORD PTR [edi+12]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	ecx, DWORD PTR [ebx+1188]
+	sub	ecx, DWORD PTR [ebx+1184]
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
-	mov	eax, edx
-	shr	eax, 31					; 0000001fH
-	add	eax, edx
-	cmp	esi, eax
+	add	edx, ecx
+	sar	edx, 8
+	mov	ecx, edx
+	shr	ecx, 31					; 0000001fH
+	add	ecx, edx
+	cmp	esi, ecx
 	jb	SHORT $LN176@System
 	call	__invalid_parameter_noinfo
 $LN176@System:
-	mov	eax, DWORD PTR tv1366[esp+540]
-	mov	ecx, DWORD PTR [edi+12]
-	mov	DWORD PTR [ecx+eax+360], esi
+	mov	edx, DWORD PTR [ebx+1184]
+	mov	DWORD PTR [edi+edx+392], esi
 	inc	esi
-	add	eax, 424				; 000001a8H
-	mov	DWORD PTR tv1366[esp+540], eax
+	add	edi, 456				; 000001c8H
 	cmp	esi, DWORD PTR [ebp+300]
 	jb	SHORT $LL3@System
 $LN1@System:
 
-; 126  : 	}
-; 127  : }
+; 129  : 	}
+; 130  : }
 
-	cmp	DWORD PTR _commandLine$[esp+564], 16	; 00000010H
+	cmp	DWORD PTR _commandLine$[esp+596], 16	; 00000010H
 	jb	SHORT $LN211@System
-	mov	edx, DWORD PTR _commandLine$[esp+544]
-	push	edx
+	mov	eax, DWORD PTR _commandLine$[esp+576]
+	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	add	esp, 4
 $LN211@System:
 	mov	eax, ebx
-	mov	ecx, DWORD PTR __$EHRec$[esp+540]
+	mov	ecx, DWORD PTR __$EHRec$[esp+572]
 	mov	DWORD PTR fs:0, ecx
 	pop	ecx
 	pop	edi
 	pop	esi
 	pop	ebp
 	pop	ebx
-	mov	ecx, DWORD PTR __$ArrayPad$[esp+520]
+	mov	ecx, DWORD PTR __$ArrayPad$[esp+552]
 	xor	ecx, esp
 	call	@__security_check_cookie@4
-	add	esp, 520				; 00000208H
+	add	esp, 552				; 00000228H
 	ret	8
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$0:
 	mov	eax, DWORD PTR _this$GSCopy$[ebp]
@@ -17242,17 +18459,17 @@ __unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$1:
 	call	??1Statistics@DRAMsimII@@QAE@XZ
 	ret	0
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$2:
-	lea	ecx, DWORD PTR $T658191[ebp]
+	lea	ecx, DWORD PTR $T700386[ebp]
 	jmp	??1Channel@DRAMsimII@@UAE@XZ		; DRAMsimII::Channel::~Channel
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$3:
 	mov	eax, DWORD PTR _this$GSCopy$[ebp]
-	add	eax, 1108				; 00000454H
+	add	eax, 1172				; 00000494H
 	push	eax
 	call	??1?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::~vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
 	ret	0
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$4:
 	mov	eax, DWORD PTR _this$GSCopy$[ebp]
-	add	eax, 1136				; 00000470H
+	add	eax, 1200				; 000004b0H
 	push	eax
 	call	??1InputStream@DRAMsimII@@QAE@XZ	; DRAMsimII::InputStream::~InputStream
 	ret	0
@@ -17260,12 +18477,12 @@ __unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$5:
 	lea	ecx, DWORD PTR _commandLine$[ebp]
 	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z$6:
-	lea	ecx, DWORD PTR $T658192[ebp]
+	lea	ecx, DWORD PTR $T700387[ebp]
 	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 __ehhandler$??0System@DRAMsimII@@QAE@ABVSettings@1@@Z:
 	mov	edx, DWORD PTR [esp+8]
-	lea	eax, DWORD PTR [edx-524]
-	mov	ecx, DWORD PTR [edx-528]
+	lea	eax, DWORD PTR [edx-556]
+	mov	ecx, DWORD PTR [edx-560]
 	xor	ecx, eax
 	call	@__security_check_cookie@4
 	add	eax, 16					; 00000010H
@@ -17306,8 +18523,8 @@ __ehfuncinfo$??$_Uninit_copy@PAVChannel@DRAMsimII@@PAV12@V?$allocator@VChannel@D
 xdata$x	ENDS
 ;	COMDAT ??$_Uninit_copy@PAVChannel@DRAMsimII@@PAV12@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAPAVChannel@DRAMsimII@@PAV12@00AAV?$allocator@VChannel@DRAMsimII@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z
 _TEXT	SEGMENT
-$T659098 = -28						; size = 4
-__Vptr$659104 = -24					; size = 4
+$T701298 = -28						; size = 4
+__Vptr$701295 = -24					; size = 4
 __Next$ = -20						; size = 4
 __$EHRec$ = -16						; size = 16
 __Last$ = 8						; size = 4
@@ -17350,29 +18567,29 @@ ___formal$ = 20						; size = 1
 	mov	DWORD PTR __$EHRec$[ebp+12], 0
 	mov	bl, 1
 	npad	4
-$LL6@Uninit_cop@11:
+$LL6@Uninit_cop@19:
 
 ; 130  : 	for (; _First != _Last; ++_Dest, ++_First)
 
 	cmp	edi, DWORD PTR __Last$[ebp]
-	je	SHORT $LN4@Uninit_cop@11
+	je	SHORT $LN4@Uninit_cop@19
 
 ; 131  : 		_Al.construct(_Dest, *_First);
 
-	mov	DWORD PTR __Vptr$659104[ebp], esi
-	mov	DWORD PTR $T659098[ebp], esi
+	mov	DWORD PTR __Vptr$701295[ebp], esi
+	mov	DWORD PTR $T701298[ebp], esi
 	mov	BYTE PTR __$EHRec$[ebp+12], bl
 	test	esi, esi
-	je	SHORT $LN18@Uninit_cop@11
+	je	SHORT $LN18@Uninit_cop@19
 	push	edi
 	push	esi
 	call	??0Channel@DRAMsimII@@QAE@ABV01@@Z	; DRAMsimII::Channel::Channel
-$LN18@Uninit_cop@11:
-	add	esi, 424				; 000001a8H
+$LN18@Uninit_cop@19:
+	add	esi, 456				; 000001c8H
 	mov	BYTE PTR __$EHRec$[ebp+12], 0
 	mov	DWORD PTR __Dest$[ebp], esi
-	add	edi, 424				; 000001a8H
-	jmp	SHORT $LL6@Uninit_cop@11
+	add	edi, 456				; 000001c8H
+	jmp	SHORT $LL6@Uninit_cop@19
 __catch$??$_Uninit_copy@PAVChannel@DRAMsimII@@PAV12@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAPAVChannel@DRAMsimII@@PAV12@00AAV?$allocator@VChannel@DRAMsimII@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$0:
 
 ; 132  : 	_CATCH_ALL
@@ -17381,8 +18598,8 @@ __catch$??$_Uninit_copy@PAVChannel@DRAMsimII@@PAV12@V?$allocator@VChannel@DRAMsi
 	mov	esi, DWORD PTR __Next$[ebp]
 	mov	edi, DWORD PTR __Dest$[ebp]
 	cmp	esi, edi
-	je	SHORT $LN1@Uninit_cop@11
-$LL3@Uninit_cop@11:
+	je	SHORT $LN1@Uninit_cop@19
+$LL3@Uninit_cop@19:
 
 ; 134  : 		_Al.destroy(_Next);
 
@@ -17391,18 +18608,18 @@ $LL3@Uninit_cop@11:
 	push	0
 	mov	ecx, esi
 	call	edx
-	add	esi, 424				; 000001a8H
+	add	esi, 456				; 000001c8H
 	cmp	esi, edi
-	jne	SHORT $LL3@Uninit_cop@11
-$LN1@Uninit_cop@11:
+	jne	SHORT $LL3@Uninit_cop@19
+$LN1@Uninit_cop@19:
 
 ; 135  : 	_RERAISE;
 
 	push	0
 	push	0
 	call	__CxxThrowException@8
-$LN34@Uninit_cop@11:
-$LN4@Uninit_cop@11:
+$LN34@Uninit_cop@19:
+$LN4@Uninit_cop@19:
 
 ; 136  : 	_CATCH_END
 ; 137  : 	return (_Dest);
@@ -17420,14 +18637,14 @@ $LN4@Uninit_cop@11:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-$LN33@Uninit_cop@11:
+$LN33@Uninit_cop@19:
 _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$??$_Uninit_copy@PAVChannel@DRAMsimII@@PAV12@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAPAVChannel@DRAMsimII@@PAV12@00AAV?$allocator@VChannel@DRAMsimII@@@0@U_Nonscalar_ptr_iterator_tag@0@U_Range_checked_iterator_tag@0@@Z$2:
-	mov	eax, DWORD PTR __Vptr$659104[ebp]
+	mov	eax, DWORD PTR __Vptr$701295[ebp]
 	push	eax
-	mov	ecx, DWORD PTR $T659098[ebp]
+	mov	ecx, DWORD PTR $T701298[ebp]
 	push	ecx
 	call	??3@YAXPAX0@Z				; operator delete
 	add	esp, 8
@@ -17445,9 +18662,9 @@ text$x	ENDS
 ; Function compile flags: /Ogtpy
 ;	COMDAT ??$unchecked_uninitialized_copy@PAVChannel@DRAMsimII@@PAV12@V?$allocator@VChannel@DRAMsimII@@@std@@@stdext@@YAPAVChannel@DRAMsimII@@PAV12@00AAV?$allocator@VChannel@DRAMsimII@@@std@@@Z
 _TEXT	SEGMENT
-$T659130 = -4						; size = 1
+$T701328 = -4						; size = 1
 __First$ = 8						; size = 4
-__Cat$659134 = 12					; size = 1
+__Cat$701332 = 12					; size = 1
 __Last$ = 12						; size = 4
 ??$unchecked_uninitialized_copy@PAVChannel@DRAMsimII@@PAV12@V?$allocator@VChannel@DRAMsimII@@@std@@@stdext@@YAPAVChannel@DRAMsimII@@PAV12@00AAV?$allocator@VChannel@DRAMsimII@@@std@@@Z PROC ; stdext::unchecked_uninitialized_copy<DRAMsimII::Channel *,DRAMsimII::Channel *,std::allocator<DRAMsimII::Channel> >, COMDAT
 ; __Dest$ = edx
@@ -17460,9 +18677,9 @@ __Last$ = 12						; size = 4
 ; 821  : 		_CHECKED_BASE(_Last), _Dest, _Al,
 ; 822  : 		_STD _Ptr_cat(_First, _Dest), _STD _Range_checked_iterator_tag()));
 
-	mov	ecx, DWORD PTR __Cat$659134[esp]
-	mov	BYTE PTR $T659130[esp+4], 0
-	mov	eax, DWORD PTR $T659130[esp+4]
+	mov	ecx, DWORD PTR __Cat$701332[esp]
+	mov	BYTE PTR $T701328[esp+4], 0
+	mov	eax, DWORD PTR $T701328[esp+4]
 	push	eax
 	mov	eax, DWORD PTR __Last$[esp+4]
 	push	ecx
@@ -17481,9 +18698,9 @@ __Last$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$_Ucopy@PAVChannel@DRAMsimII@@@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAEPAVChannel@DRAMsimII@@PAV23@00@Z
 _TEXT	SEGMENT
-$T659188 = -4						; size = 1
+$T701386 = -4						; size = 1
 __First$ = 8						; size = 4
-__Cat$659191 = 12					; size = 1
+__Cat$701389 = 12					; size = 1
 __Last$ = 12						; size = 4
 ??$_Ucopy@PAVChannel@DRAMsimII@@@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAEPAVChannel@DRAMsimII@@PAV23@00@Z PROC ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Ucopy<DRAMsimII::Channel *>, COMDAT
 ; __Ptr$ = edx
@@ -17496,9 +18713,9 @@ __Last$ = 12						; size = 4
 ; 1140 : 		return (_STDEXT unchecked_uninitialized_copy(_First, _Last,
 ; 1141 : 			_Ptr, this->_Alval));
 
-	mov	ecx, DWORD PTR __Cat$659191[esp]
-	mov	BYTE PTR $T659188[esp+4], 0
-	mov	eax, DWORD PTR $T659188[esp+4]
+	mov	ecx, DWORD PTR __Cat$701389[esp]
+	mov	BYTE PTR $T701386[esp+4], 0
+	mov	eax, DWORD PTR $T701386[esp+4]
 	push	eax
 	mov	eax, DWORD PTR __Last$[esp+4]
 	push	ecx
@@ -17516,9 +18733,10 @@ __Last$ = 12						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??4?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z
 _TEXT	SEGMENT
-$T659252 = 8						; size = 1
-__Cat$659256 = 8					; size = 1
-$T659254 = 8						; size = 1
+tv292 = 8						; size = 4
+$T701455 = 8						; size = 1
+__Cat$701459 = 8					; size = 1
+$T701457 = 8						; size = 1
 __Right$ = 8						; size = 4
 ??4?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z PROC ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator=, COMDAT
 ; _this$ = esi
@@ -17531,7 +18749,7 @@ __Right$ = 8						; size = 4
 ; 564  : 		if (this != &_Right)
 
 	cmp	esi, ebp
-	je	$LN47@operator@363
+	je	$LN47@operator@437
 
 ; 565  : 			{	// worth doing
 ; 566  : 
@@ -17544,14 +18762,15 @@ __Right$ = 8						; size = 4
 	mov	eax, DWORD PTR [ebp+12]
 	mov	ecx, DWORD PTR [ebp+16]
 	sub	ecx, eax
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
+	add	edx, ecx
 	push	edi
-	sar	edx, 7
+	sar	edx, 8
 	mov	edi, edx
 	shr	edi, 31					; 0000001fH
 	add	edi, edx
-	jne	SHORT $LN8@operator@363
+	jne	SHORT $LN8@operator@437
 
 ; 572  : 				clear();	// new sequence empty, erase existing sequence
 
@@ -17569,32 +18788,33 @@ __Right$ = 8						; size = 4
 ; 599  : 		}
 
 	ret	4
-$LN8@operator@363:
+$LN8@operator@437:
 
 ; 573  : 			else if (_Right.size() <= size())
 
-	mov	edx, DWORD PTR [esi+16]
 	mov	ecx, DWORD PTR [esi+12]
-	sub	edx, ecx
-	mov	eax, 1296593901				; 4d4873edH
-	imul	edx
-	sar	edx, 7
 	push	ebx
+	mov	ebx, DWORD PTR [esi+16]
+	sub	ebx, ecx
+	mov	eax, -1883757585			; 8fb823efH
+	imul	ebx
+	add	edx, ebx
+	sar	edx, 8
 	mov	ebx, edx
 	shr	ebx, 31					; 0000001fH
 	add	ebx, edx
 	cmp	edi, ebx
-	ja	SHORT $LN6@operator@363
+	ja	SHORT $LN6@operator@437
 
 ; 574  : 				{	// enough elements, copy new and destroy old
 ; 575  : 				pointer _Ptr = _STDEXT unchecked_copy(_Right._Myfirst, _Right._Mylast,
 ; 576  : 					_Myfirst);	// copy new
 
-	mov	BYTE PTR $T659252[esp+8], 0
-	mov	eax, DWORD PTR $T659252[esp+8]
-	mov	edx, DWORD PTR __Cat$659256[esp+8]
+	mov	BYTE PTR $T701455[esp+8], 0
+	mov	eax, DWORD PTR $T701455[esp+8]
+	mov	edx, DWORD PTR __Cat$701459[esp+8]
 	push	eax
-	mov	eax, DWORD PTR $T659254[esp+12]
+	mov	eax, DWORD PTR $T701457[esp+12]
 	push	edx
 	push	eax
 	mov	eax, DWORD PTR [ebp+16]
@@ -17613,13 +18833,14 @@ $LN8@operator@363:
 
 	mov	ecx, DWORD PTR [ebp+16]
 	sub	ecx, DWORD PTR [ebp+12]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	ecx, edx
 	shr	ecx, 31					; 0000001fH
 	add	ecx, edx
-	imul	ecx, 424				; 000001a8H
+	imul	ecx, 456				; 000001c8H
 	add	ecx, DWORD PTR [esi+12]
 	pop	ebx
 	pop	edi
@@ -17635,33 +18856,35 @@ $LN8@operator@363:
 ; 599  : 		}
 
 	ret	4
-$LN6@operator@363:
+$LN6@operator@437:
 
 ; 579  : 				}
 ; 580  : 			else if (_Right.size() <= capacity())
 
 	test	ecx, ecx
-	jne	SHORT $LN38@operator@363
+	jne	SHORT $LN38@operator@437
 	xor	eax, eax
-	jmp	SHORT $LN39@operator@363
-$LN38@operator@363:
+	jmp	SHORT $LN39@operator@437
+$LN38@operator@437:
 	mov	edx, DWORD PTR [esi+20]
 	sub	edx, ecx
-	mov	eax, 1296593901				; 4d4873edH
+	mov	DWORD PTR tv292[esp+8], edx
+	mov	eax, -1883757585			; 8fb823efH
 	imul	edx
-	sar	edx, 7
+	add	edx, DWORD PTR tv292[esp+8]
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
-$LN39@operator@363:
+$LN39@operator@437:
 	cmp	edi, eax
-	ja	SHORT $LN4@operator@363
+	ja	SHORT $LN4@operator@437
 
 ; 581  : 				{	// enough room, copy and construct new
 ; 582  : 				pointer _Ptr = _Right._Myfirst + size();
 
 	mov	eax, DWORD PTR [ebp+12]
-	imul	ebx, 424				; 000001a8H
+	imul	ebx, 456				; 000001c8H
 
 ; 583  : 				_STDEXT unchecked_copy(_Right._Myfirst, _Ptr, _Myfirst);
 
@@ -17693,7 +18916,7 @@ $LN39@operator@363:
 ; 599  : 		}
 
 	ret	4
-$LN4@operator@363:
+$LN4@operator@437:
 
 ; 585  : 				}
 ; 586  : 			else
@@ -17701,7 +18924,7 @@ $LN4@operator@363:
 ; 588  : 				if (_Myfirst != 0)
 
 	test	ecx, ecx
-	je	SHORT $LN42@operator@363
+	je	SHORT $LN42@operator@437
 
 ; 589  : 					{	// discard old array
 ; 590  : 					_Destroy(_Myfirst, _Mylast);
@@ -17716,23 +18939,24 @@ $LN4@operator@363:
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	add	esp, 4
-$LN42@operator@363:
+$LN42@operator@437:
 
 ; 592  : 					}
 ; 593  : 				if (_Buy(_Right.size()))
 
 	mov	ecx, DWORD PTR [ebp+16]
 	sub	ecx, DWORD PTR [ebp+12]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
 	mov	edi, esi
 	call	?_Buy@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAE_NI@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Buy
 	test	al, al
-	je	SHORT $LN46@operator@363
+	je	SHORT $LN46@operator@437
 
 ; 594  : 					_Mylast = _Ucopy(_Right._Myfirst, _Right._Mylast,
 ; 595  : 						_Myfirst);
@@ -17744,10 +18968,10 @@ $LN42@operator@363:
 	mov	edx, DWORD PTR [esi+12]
 	call	??$_Ucopy@PAVChannel@DRAMsimII@@@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAEPAVChannel@DRAMsimII@@PAV23@00@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Ucopy<DRAMsimII::Channel *>
 	mov	DWORD PTR [esi+16], eax
-$LN46@operator@363:
+$LN46@operator@437:
 	pop	ebx
 	pop	edi
-$LN47@operator@363:
+$LN47@operator@437:
 
 ; 596  : 				}
 ; 597  : 			}
@@ -17784,8 +19008,8 @@ __ehfuncinfo$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChan
 ; Function compile flags: /Ogtpy
 ; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\system.cpp
 _TEXT	SEGMENT
-tv148 = -440						; size = 4
-$T659308 = -436						; size = 424
+tv148 = -472						; size = 4
+$T701506 = -468						; size = 456
 __$EHRec$ = -12						; size = 12
 _this$ = 8						; size = 4
 _sysConfig$ = 12					; size = 4
@@ -17795,13 +19019,13 @@ _stats$ = 24						; size = 4
 _inputStr$ = 28						; size = 4
 ??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@ABVSimulationParameters@1@ABVStatistics@1@ABVInputStream@1@@Z PROC ; DRAMsimII::System::System
 
-; 159  : {
+; 162  : {
 
 	push	-1
 	push	__ehhandler$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@ABVSimulationParameters@1@ABVStatistics@1@ABVInputStream@1@@Z
 	mov	eax, DWORD PTR fs:0
 	push	eax
-	sub	esp, 428				; 000001acH
+	sub	esp, 460				; 000001ccH
 	push	ebx
 	push	ebp
 	push	esi
@@ -17809,98 +19033,100 @@ _inputStr$ = 28						; size = 4
 	mov	eax, DWORD PTR ___security_cookie
 	xor	eax, esp
 	push	eax
-	lea	eax, DWORD PTR __$EHRec$[esp+460]
+	lea	eax, DWORD PTR __$EHRec$[esp+492]
 	mov	DWORD PTR fs:0, eax
-	mov	ebp, DWORD PTR _rhsChan$[esp+456]
-	mov	ebx, DWORD PTR _this$[esp+456]
-	mov	edi, DWORD PTR _sysConfig$[esp+456]
+	mov	ebp, DWORD PTR _rhsChan$[esp+488]
+	mov	ebx, DWORD PTR _this$[esp+488]
+	mov	edi, DWORD PTR _sysConfig$[esp+488]
 	lea	esi, DWORD PTR [ebx+8]
 	push	esi
 	mov	DWORD PTR [ebx], OFFSET ??_7System@DRAMsimII@@6B@
 	call	??0SystemConfiguration@DRAMsimII@@QAE@ABV01@@Z ; DRAMsimII::SystemConfiguration::SystemConfiguration
-	mov	eax, DWORD PTR _simParams$[esp+456]
-	mov	DWORD PTR __$EHRec$[esp+468], 0
+	mov	eax, DWORD PTR _simParams$[esp+488]
+	mov	DWORD PTR __$EHRec$[esp+500], 0
 	movq	xmm0, QWORD PTR [eax]
 	movq	QWORD PTR [ebx+552], xmm0
 	movq	xmm0, QWORD PTR [eax+8]
-	mov	eax, DWORD PTR _stats$[esp+456]
+	mov	eax, DWORD PTR _stats$[esp+488]
 	push	eax
 	lea	edi, DWORD PTR [ebx+568]
 	push	edi
 	movq	QWORD PTR [ebx+560], xmm0
 	call	??0Statistics@DRAMsimII@@QAE@ABV01@@Z
-	mov	BYTE PTR __$EHRec$[esp+468], 1
+	mov	BYTE PTR __$EHRec$[esp+500], 1
 	mov	ecx, DWORD PTR [ebp+16]
 	sub	ecx, DWORD PTR [ebp+12]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	ecx, edx
 	shr	ecx, 31					; 0000001fH
 	add	ecx, edx
 	jne	SHORT $LN8@System@2
 	call	__invalid_parameter_noinfo
 $LN8@System@2:
-	mov	edx, DWORD PTR _sysConfig$[esp+456]
+	mov	edx, DWORD PTR _sysConfig$[esp+488]
 	mov	eax, DWORD PTR [ebp+12]
 	push	edi
 	push	edx
 	push	eax
-	lea	eax, DWORD PTR $T659308[esp+472]
+	lea	eax, DWORD PTR $T701506[esp+504]
 	push	eax
 	call	??0Channel@DRAMsimII@@QAE@ABV01@ABVSystemConfiguration@1@AAVStatistics@1@@Z ; DRAMsimII::Channel::Channel
-	mov	DWORD PTR tv148[esp+460], eax
-	mov	BYTE PTR __$EHRec$[esp+468], 2
+	mov	DWORD PTR tv148[esp+492], eax
+	mov	BYTE PTR __$EHRec$[esp+500], 2
 	mov	ecx, DWORD PTR [ebp+16]
 	sub	ecx, DWORD PTR [ebp+12]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	mov	ecx, DWORD PTR tv148[esp+460]
-	sar	edx, 7
+	add	edx, ecx
+	mov	ecx, DWORD PTR tv148[esp+492]
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	push	ecx
 	add	eax, edx
 	push	eax
-	lea	edi, DWORD PTR [ebx+1108]
+	lea	edi, DWORD PTR [ebx+1172]
 	push	edi
 	call	??0?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@IABVChannel@DRAMsimII@@@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
-	lea	ecx, DWORD PTR $T659308[esp+460]
-	mov	BYTE PTR __$EHRec$[esp+468], 4
+	lea	ecx, DWORD PTR $T701506[esp+492]
+	mov	BYTE PTR __$EHRec$[esp+500], 4
 	call	??1Channel@DRAMsimII@@UAE@XZ		; DRAMsimII::Channel::~Channel
-	mov	ecx, DWORD PTR _inputStr$[esp+456]
-	lea	edx, DWORD PTR [ebx+1136]
+	mov	ecx, DWORD PTR _inputStr$[esp+488]
+	lea	edx, DWORD PTR [ebx+1200]
 	push	edx
 	call	??0InputStream@DRAMsimII@@QAE@ABV01@@Z	; DRAMsimII::InputStream::InputStream
 	xor	eax, eax
-	mov	BYTE PTR __$EHRec$[esp+468], 5
+	mov	BYTE PTR __$EHRec$[esp+500], 5
 
-; 160  : 	Address::initialize(systemConfig);
+; 163  : 	Address::initialize(systemConfig);
 
 	mov	ecx, esi
-	mov	DWORD PTR [ebx+11480], eax
-	mov	DWORD PTR [ebx+11484], eax
-	mov	DWORD PTR [ebx+11488], eax
-	mov	DWORD PTR [ebx+11492], eax
+	mov	DWORD PTR [ebx+11544], eax
+	mov	DWORD PTR [ebx+11548], eax
+	mov	DWORD PTR [ebx+11552], eax
+	mov	DWORD PTR [ebx+11556], eax
 	call	?initialize@Address@DRAMsimII@@SAXABVSystemConfiguration@2@@Z ; DRAMsimII::Address::initialize
 
-; 161  : 	channel = rhsChan;
+; 164  : 	channel = rhsChan;
 
 	push	ebp
 	mov	esi, edi
 	call	??4?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator=
 
-; 162  : }
+; 165  : }
 
 	mov	eax, ebx
-	mov	ecx, DWORD PTR __$EHRec$[esp+460]
+	mov	ecx, DWORD PTR __$EHRec$[esp+492]
 	mov	DWORD PTR fs:0, ecx
 	pop	ecx
 	pop	edi
 	pop	esi
 	pop	ebp
 	pop	ebx
-	add	esp, 440				; 000001b8H
+	add	esp, 472				; 000001d8H
 	ret	24					; 00000018H
 __unwindfunclet$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@ABVSimulationParameters@1@ABVStatistics@1@ABVInputStream@1@@Z$0:
 	mov	eax, DWORD PTR _this$[ebp-4]
@@ -17915,24 +19141,24 @@ __unwindfunclet$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VC
 	call	??1Statistics@DRAMsimII@@QAE@XZ
 	ret	0
 __unwindfunclet$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@ABVSimulationParameters@1@ABVStatistics@1@ABVInputStream@1@@Z$2:
-	lea	ecx, DWORD PTR $T659308[ebp]
+	lea	ecx, DWORD PTR $T701506[ebp]
 	jmp	??1Channel@DRAMsimII@@UAE@XZ		; DRAMsimII::Channel::~Channel
 __unwindfunclet$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@ABVSimulationParameters@1@ABVStatistics@1@ABVInputStream@1@@Z$3:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 1108				; 00000454H
+	add	eax, 1172				; 00000494H
 	push	eax
 	call	??1?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::~vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
 	ret	0
 __unwindfunclet$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@ABVSimulationParameters@1@ABVStatistics@1@ABVInputStream@1@@Z$4:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 1136				; 00000470H
+	add	eax, 1200				; 000004b0H
 	push	eax
 	call	??1InputStream@DRAMsimII@@QAE@XZ	; DRAMsimII::InputStream::~InputStream
 	ret	0
 __ehhandler$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@ABVSimulationParameters@1@ABVStatistics@1@ABVInputStream@1@@Z:
 	mov	edx, DWORD PTR [esp+8]
-	lea	eax, DWORD PTR [edx-444]
-	mov	ecx, DWORD PTR [edx-448]
+	lea	eax, DWORD PTR [edx-476]
+	mov	ecx, DWORD PTR [edx-480]
 	xor	ecx, eax
 	call	@__security_check_cookie@4
 	mov	eax, OFFSET __ehfuncinfo$??0System@DRAMsimII@@AAE@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@ABVSimulationParameters@1@ABVStatistics@1@ABVInputStream@1@@Z
@@ -17960,19 +19186,19 @@ __ehfuncinfo$??0System@DRAMsimII@@QAE@ABV01@@Z DD 019930522H
 	DD	01H
 ; Function compile flags: /Ogtpy
 _TEXT	SEGMENT
-$T659333 = -436						; size = 424
+$T701531 = -468						; size = 456
 __$EHRec$ = -12						; size = 12
 _this$ = 8						; size = 4
 _rhs$ = 12						; size = 4
 ??0System@DRAMsimII@@QAE@ABV01@@Z PROC			; DRAMsimII::System::System
 
-; 142  : {
+; 145  : {
 
 	push	-1
 	push	__ehhandler$??0System@DRAMsimII@@QAE@ABV01@@Z
 	mov	eax, DWORD PTR fs:0
 	push	eax
-	sub	esp, 424				; 000001a8H
+	sub	esp, 456				; 000001c8H
 	push	ebx
 	push	ebp
 	push	esi
@@ -17980,16 +19206,16 @@ _rhs$ = 12						; size = 4
 	mov	eax, DWORD PTR ___security_cookie
 	xor	eax, esp
 	push	eax
-	lea	eax, DWORD PTR __$EHRec$[esp+456]
+	lea	eax, DWORD PTR __$EHRec$[esp+488]
 	mov	DWORD PTR fs:0, eax
-	mov	ebp, DWORD PTR _rhs$[esp+452]
-	mov	ebx, DWORD PTR _this$[esp+452]
+	mov	ebp, DWORD PTR _rhs$[esp+484]
+	mov	ebx, DWORD PTR _this$[esp+484]
 	lea	esi, DWORD PTR [ebx+8]
 	lea	edi, DWORD PTR [ebp+8]
 	push	esi
 	mov	DWORD PTR [ebx], OFFSET ??_7System@DRAMsimII@@6B@
 	call	??0SystemConfiguration@DRAMsimII@@QAE@ABV01@@Z ; DRAMsimII::SystemConfiguration::SystemConfiguration
-	mov	DWORD PTR __$EHRec$[esp+464], 0
+	mov	DWORD PTR __$EHRec$[esp+496], 0
 	movq	xmm0, QWORD PTR [ebp+552]
 	lea	ecx, DWORD PTR [ebp+568]
 	movq	QWORD PTR [ebx+552], xmm0
@@ -17999,13 +19225,14 @@ _rhs$ = 12						; size = 4
 	push	eax
 	movq	QWORD PTR [ebx+560], xmm0
 	call	??0Statistics@DRAMsimII@@QAE@ABV01@@Z
-	lea	edi, DWORD PTR [ebp+1108]
-	mov	BYTE PTR __$EHRec$[esp+464], 1
+	lea	edi, DWORD PTR [ebp+1172]
+	mov	BYTE PTR __$EHRec$[esp+496], 1
 	mov	ecx, DWORD PTR [edi+16]
 	sub	ecx, DWORD PTR [edi+12]
-	mov	eax, 1296593901				; 4d4873edH
+	mov	eax, -1883757585			; 8fb823efH
 	imul	ecx
-	sar	edx, 7
+	add	edx, ecx
+	sar	edx, 8
 	mov	eax, edx
 	shr	eax, 31					; 0000001fH
 	add	eax, edx
@@ -18017,57 +19244,57 @@ $LN8@System@3:
 	push	eax
 	push	esi
 	push	ecx
-	lea	ecx, DWORD PTR $T659333[esp+468]
+	lea	ecx, DWORD PTR $T701531[esp+500]
 	push	ecx
 	call	??0Channel@DRAMsimII@@QAE@ABV01@ABVSystemConfiguration@1@AAVStatistics@1@@Z ; DRAMsimII::Channel::Channel
-	mov	BYTE PTR __$EHRec$[esp+464], 2
+	mov	BYTE PTR __$EHRec$[esp+496], 2
 	mov	edx, DWORD PTR [ebx+364]
 	push	eax
-	lea	ecx, DWORD PTR [ebx+1108]
+	lea	ecx, DWORD PTR [ebx+1172]
 	push	edx
 	push	ecx
 	call	??0?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@IABVChannel@DRAMsimII@@@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
-	lea	ecx, DWORD PTR $T659333[esp+456]
-	mov	BYTE PTR __$EHRec$[esp+464], 4
+	lea	ecx, DWORD PTR $T701531[esp+488]
+	mov	BYTE PTR __$EHRec$[esp+496], 4
 	call	??1Channel@DRAMsimII@@UAE@XZ		; DRAMsimII::Channel::~Channel
-	lea	edx, DWORD PTR [ebp+1136]
+	lea	edx, DWORD PTR [ebp+1200]
 	push	edx
-	lea	eax, DWORD PTR [ebx+1136]
+	lea	eax, DWORD PTR [ebx+1200]
 	push	eax
-	lea	edx, DWORD PTR [ebx+1108]
+	lea	edx, DWORD PTR [ebx+1172]
 	mov	ecx, esi
 	call	??0InputStream@DRAMsimII@@QAE@ABV01@ABVSystemConfiguration@1@ABV?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@@Z ; DRAMsimII::InputStream::InputStream
-	mov	BYTE PTR __$EHRec$[esp+464], 5
+	mov	BYTE PTR __$EHRec$[esp+496], 5
 	xor	eax, eax
-	mov	DWORD PTR [ebx+11480], eax
-	mov	DWORD PTR [ebx+11484], eax
-	mov	ecx, DWORD PTR [ebp+11488]
-	mov	DWORD PTR [ebx+11488], ecx
-	mov	edx, DWORD PTR [ebp+11492]
+	mov	DWORD PTR [ebx+11544], eax
+	mov	DWORD PTR [ebx+11548], eax
+	mov	ecx, DWORD PTR [ebp+11552]
+	mov	DWORD PTR [ebx+11552], ecx
+	mov	edx, DWORD PTR [ebp+11556]
 
-; 143  : 	Address::initialize(systemConfig);
+; 146  : 	Address::initialize(systemConfig);
 
 	mov	ecx, esi
-	mov	DWORD PTR [ebx+11492], edx
+	mov	DWORD PTR [ebx+11556], edx
 	call	?initialize@Address@DRAMsimII@@SAXABVSystemConfiguration@2@@Z ; DRAMsimII::Address::initialize
 
-; 144  : 	channel = rhs.channel;
+; 147  : 	channel = rhs.channel;
 
 	push	edi
-	lea	esi, DWORD PTR [ebx+1108]
+	lea	esi, DWORD PTR [ebx+1172]
 	call	??4?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAEAAV01@ABV01@@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::operator=
 
-; 145  : }
+; 148  : }
 
 	mov	eax, ebx
-	mov	ecx, DWORD PTR __$EHRec$[esp+456]
+	mov	ecx, DWORD PTR __$EHRec$[esp+488]
 	mov	DWORD PTR fs:0, ecx
 	pop	ecx
 	pop	edi
 	pop	esi
 	pop	ebp
 	pop	ebx
-	add	esp, 436				; 000001b4H
+	add	esp, 468				; 000001d4H
 	ret	8
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABV01@@Z$0:
 	mov	eax, DWORD PTR _this$[ebp-4]
@@ -18082,24 +19309,24 @@ __unwindfunclet$??0System@DRAMsimII@@QAE@ABV01@@Z$1:
 	call	??1Statistics@DRAMsimII@@QAE@XZ
 	ret	0
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABV01@@Z$2:
-	lea	ecx, DWORD PTR $T659333[ebp]
+	lea	ecx, DWORD PTR $T701531[ebp]
 	jmp	??1Channel@DRAMsimII@@UAE@XZ		; DRAMsimII::Channel::~Channel
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABV01@@Z$3:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 1108				; 00000454H
+	add	eax, 1172				; 00000494H
 	push	eax
 	call	??1?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::~vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
 	ret	0
 __unwindfunclet$??0System@DRAMsimII@@QAE@ABV01@@Z$4:
 	mov	eax, DWORD PTR _this$[ebp-4]
-	add	eax, 1136				; 00000470H
+	add	eax, 1200				; 000004b0H
 	push	eax
 	call	??1InputStream@DRAMsimII@@QAE@XZ	; DRAMsimII::InputStream::~InputStream
 	ret	0
 __ehhandler$??0System@DRAMsimII@@QAE@ABV01@@Z:
 	mov	edx, DWORD PTR [esp+8]
-	lea	eax, DWORD PTR [edx-440]
-	mov	ecx, DWORD PTR [edx-444]
+	lea	eax, DWORD PTR [edx-472]
+	mov	ecx, DWORD PTR [edx-476]
 	xor	ecx, eax
 	call	@__security_check_cookie@4
 	mov	eax, OFFSET __ehfuncinfo$??0System@DRAMsimII@@QAE@ABV01@@Z

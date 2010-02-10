@@ -1938,9 +1938,9 @@ __RTC_InitBase.rtc$IMZ DD FLAT:__RTC_InitBase
 rtc$IMZ	ENDS
 ;	COMDAT _main
 _TEXT	SEGMENT
-$T170523 = -12192					; size = 4
-_ds$146504 = -11988					; size = 11464
-_settings$ = -516					; size = 496
+$T174429 = -12272					; size = 4
+_ds$148804 = -12068					; size = 11520
+_settings$ = -540					; size = 520
 __$ArrayPad$ = -16					; size = 4
 __$EHRec$ = -12						; size = 12
 _argc$ = 8						; size = 4
@@ -1956,13 +1956,13 @@ _main	PROC						; COMDAT
 	push	__ehhandler$_main
 	mov	eax, DWORD PTR fs:0
 	push	eax
-	mov	eax, 12184				; 00002f98H
+	mov	eax, 12264				; 00002fe8H
 	call	__chkstk
 	push	ebx
 	push	esi
 	push	edi
-	lea	edi, DWORD PTR [ebp-12196]
-	mov	ecx, 3046				; 00000be6H
+	lea	edi, DWORD PTR [ebp-12276]
+	mov	ecx, 3066				; 00000bfaH
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
 	mov	eax, DWORD PTR ___security_cookie
@@ -2007,20 +2007,20 @@ $LN2@main:
 
 	lea	eax, DWORD PTR _settings$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR _ds$146504[ebp]
+	lea	ecx, DWORD PTR _ds$148804[ebp]
 	call	??0System@DRAMsimII@@QAE@ABVSettings@1@@Z ; DRAMsimII::System::System
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 
 ; 48   : 		ds.runSimulations();
 
 	push	0
-	lea	ecx, DWORD PTR _ds$146504[ebp]
+	lea	ecx, DWORD PTR _ds$148804[ebp]
 	call	?runSimulations@System@DRAMsimII@@QAEXI@Z ; DRAMsimII::System::runSimulations
 
 ; 49   : 	}
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR _ds$146504[ebp]
+	lea	ecx, DWORD PTR _ds$148804[ebp]
 	call	??1System@DRAMsimII@@QAE@XZ
 $LN1@main:
 
@@ -2031,11 +2031,11 @@ $LN1@main:
 ; 54   : 	//_CrtDumpMemoryLeaks();
 ; 55   : 	return 0;
 
-	mov	DWORD PTR $T170523[ebp], 0
+	mov	DWORD PTR $T174429[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR _settings$[ebp]
 	call	??1Settings@DRAMsimII@@QAE@XZ
-	mov	eax, DWORD PTR $T170523[ebp]
+	mov	eax, DWORD PTR $T174429[ebp]
 
 ; 56   : }
 
@@ -2055,7 +2055,7 @@ $LN1@main:
 	mov	ecx, DWORD PTR __$ArrayPad$[ebp]
 	xor	ecx, ebp
 	call	@__security_check_cookie@4
-	add	esp, 12196				; 00002fa4H
+	add	esp, 12276				; 00002ff4H
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp
@@ -2066,11 +2066,11 @@ $LN11@main:
 	DD	2
 	DD	$LN10@main
 $LN10@main:
-	DD	-516					; fffffdfcH
-	DD	496					; 000001f0H
+	DD	-540					; fffffde4H
+	DD	520					; 00000208H
 	DD	$LN7@main
-	DD	-11988					; ffffd12cH
-	DD	11464					; 00002cc8H
+	DD	-12068					; ffffd0dcH
+	DD	11520					; 00002d00H
 	DD	$LN8@main
 $LN8@main:
 	DB	100					; 00000064H
@@ -2093,12 +2093,12 @@ __unwindfunclet$_main$0:
 	lea	ecx, DWORD PTR _settings$[ebp]
 	jmp	??1Settings@DRAMsimII@@QAE@XZ
 __unwindfunclet$_main$1:
-	lea	ecx, DWORD PTR _ds$146504[ebp]
+	lea	ecx, DWORD PTR _ds$148804[ebp]
 	jmp	??1System@DRAMsimII@@QAE@XZ
 __ehhandler$_main:
 	mov	edx, DWORD PTR [esp+8]
 	lea	eax, DWORD PTR [edx+12]
-	mov	ecx, DWORD PTR [edx-12200]
+	mov	ecx, DWORD PTR [edx-12280]
 	xor	ecx, eax
 	call	@__security_check_cookie@4
 	mov	ecx, DWORD PTR [edx-4]
@@ -2309,11 +2309,11 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1096				; 00000448H
+	add	ecx, 1152				; 00000480H
 	call	??1InputStream@DRAMsimII@@QAE@XZ	; DRAMsimII::InputStream::~InputStream
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1076				; 00000434H
+	add	ecx, 1128				; 00000468H
 	call	??1?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::~vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -2348,7 +2348,7 @@ __unwindfunclet$??1System@DRAMsimII@@QAE@XZ$1:
 	jmp	??1Statistics@DRAMsimII@@QAE@XZ
 __unwindfunclet$??1System@DRAMsimII@@QAE@XZ$2:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 1076				; 00000434H
+	add	ecx, 1128				; 00000468H
 	jmp	??1?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::~vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
 __ehhandler$??1System@DRAMsimII@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -2360,15 +2360,18 @@ __ehhandler$??1System@DRAMsimII@@QAE@XZ:
 	jmp	___CxxFrameHandler3
 text$x	ENDS
 ??1System@DRAMsimII@@QAE@XZ ENDP			; DRAMsimII::System::~System
+PUBLIC	??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+PUBLIC	??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
 PUBLIC	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ ; std::tr1::unordered_map<unsigned int,unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::~unordered_map<unsigned int,unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >
 PUBLIC	??1?$map@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@@std@@QAE@XZ ; std::map<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> > >::~map<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> > >
 PUBLIC	??1?$map@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@@std@@QAE@XZ ; std::map<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> > >::~map<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> > >
 PUBLIC	??1?$vector@IV?$allocator@I@std@@@std@@QAE@XZ	; std::vector<unsigned int,std::allocator<unsigned int> >::~vector<unsigned int,std::allocator<unsigned int> >
 PUBLIC	??1?$vector@_JV?$allocator@_J@std@@@std@@QAE@XZ	; std::vector<__int64,std::allocator<__int64> >::~vector<__int64,std::allocator<__int64> >
+PUBLIC	??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
 ;	COMDAT xdata$x
 xdata$x	SEGMENT
 __ehfuncinfo$??1Statistics@DRAMsimII@@QAE@XZ DD 019930522H
-	DD	08H
+	DD	0bH
 	DD	FLAT:__unwindtable$??1Statistics@DRAMsimII@@QAE@XZ
 	DD	2 DUP(00H)
 	DD	2 DUP(00H)
@@ -2390,6 +2393,12 @@ __unwindtable$??1Statistics@DRAMsimII@@QAE@XZ DD 0ffffffffH
 	DD	FLAT:__unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$6
 	DD	06H
 	DD	FLAT:__unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$7
+	DD	07H
+	DD	FLAT:__unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$8
+	DD	08H
+	DD	FLAT:__unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$9
+	DD	09H
+	DD	FLAT:__unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$10
 ; Function compile flags: /Odtp /RTCcsu /ZI
 xdata$x	ENDS
 ;	COMDAT ??1Statistics@DRAMsimII@@QAE@XZ
@@ -2420,42 +2429,54 @@ __$EHRec$ = -12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR __$EHRec$[ebp+8], 7
+	mov	DWORD PTR __$EHRec$[ebp+8], 10		; 0000000aH
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 464				; 000001d0H
+	add	ecx, 516				; 00000204H
+	call	??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+	mov	BYTE PTR __$EHRec$[ebp+8], 9
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 496				; 000001f0H
 	call	??1?$vector@_JV?$allocator@_J@std@@@std@@QAE@XZ ; std::vector<__int64,std::allocator<__int64> >::~vector<__int64,std::allocator<__int64> >
+	mov	BYTE PTR __$EHRec$[ebp+8], 8
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 476				; 000001dcH
+	call	??1?$vector@IV?$allocator@I@std@@@std@@QAE@XZ ; std::vector<unsigned int,std::allocator<unsigned int> >::~vector<unsigned int,std::allocator<unsigned int> >
+	mov	BYTE PTR __$EHRec$[ebp+8], 7
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 448				; 000001c0H
+	call	??1?$map@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 6
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 444				; 000001bcH
-	call	??1?$vector@IV?$allocator@I@std@@@std@@QAE@XZ ; std::vector<unsigned int,std::allocator<unsigned int> >::~vector<unsigned int,std::allocator<unsigned int> >
+	add	ecx, 420				; 000001a4H
+	call	??1?$map@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 416				; 000001a0H
-	call	??1?$map@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@@std@@QAE@XZ
+	add	ecx, 356				; 00000164H
+	call	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 388				; 00000184H
-	call	??1?$map@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@@std@@QAE@XZ
+	add	ecx, 292				; 00000124H
+	call	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 324				; 00000144H
+	add	ecx, 228				; 000000e4H
 	call	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 260				; 00000104H
+	add	ecx, 164				; 000000a4H
 	call	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 196				; 000000c4H
+	add	ecx, 100				; 00000064H
 	call	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 132				; 00000084H
-	call	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
+	add	ecx, 76					; 0000004cH
+	call	??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 68					; 00000044H
-	call	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
+	add	ecx, 56					; 00000038H
+	call	??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
 	mov	ecx, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, ecx
 	pop	ecx
@@ -2473,36 +2494,48 @@ _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$0:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 68					; 00000044H
-	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
+	add	ecx, 56					; 00000038H
+	jmp	??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
 __unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$1:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 132				; 00000084H
-	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
+	add	ecx, 76					; 0000004cH
+	jmp	??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
 __unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$2:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 196				; 000000c4H
+	add	ecx, 100				; 00000064H
 	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 __unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$3:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 260				; 00000104H
+	add	ecx, 164				; 000000a4H
 	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 __unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$4:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 324				; 00000144H
+	add	ecx, 228				; 000000e4H
 	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 __unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$5:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 388				; 00000184H
-	jmp	??1?$map@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@@std@@QAE@XZ
+	add	ecx, 292				; 00000124H
+	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 __unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$6:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 416				; 000001a0H
-	jmp	??1?$map@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@@std@@QAE@XZ
+	add	ecx, 356				; 00000164H
+	jmp	??1?$unordered_map@IIV?$hash@I@tr1@std@@U?$equal_to@I@3@V?$allocator@U?$pair@$$CBII@std@@@3@@tr1@std@@QAE@XZ
 __unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$7:
 	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 444				; 000001bcH
+	add	ecx, 420				; 000001a4H
+	jmp	??1?$map@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@@std@@QAE@XZ
+__unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$8:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 448				; 000001c0H
+	jmp	??1?$map@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@@std@@QAE@XZ
+__unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$9:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 476				; 000001dcH
 	jmp	??1?$vector@IV?$allocator@I@std@@@std@@QAE@XZ ; std::vector<unsigned int,std::allocator<unsigned int> >::~vector<unsigned int,std::allocator<unsigned int> >
+__unwindfunclet$??1Statistics@DRAMsimII@@QAE@XZ$10:
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 496				; 000001f0H
+	jmp	??1?$vector@_JV?$allocator@_J@std@@@std@@QAE@XZ ; std::vector<__int64,std::allocator<__int64> >::~vector<__int64,std::allocator<__int64> >
 __ehhandler$??1Statistics@DRAMsimII@@QAE@XZ:
 	mov	edx, DWORD PTR [esp+8]
 	lea	eax, DWORD PTR [edx+12]
@@ -2612,6 +2645,179 @@ _this$ = -8						; size = 4
 	ret	0
 ??1?$map@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@@std@@QAE@XZ ENDP ; std::map<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> > >::~map<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> > >
 _TEXT	ENDS
+PUBLIC	??1?$_Vector_val@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ ; std::_Vector_val<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~_Vector_val<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+PUBLIC	?_Tidy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Tidy
+;	COMDAT xdata$x
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+xdata$x	SEGMENT
+__unwindtable$??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ$0
+__ehfuncinfo$??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ DD 019930522H
+	DD	01H
+	DD	FLAT:__unwindtable$??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Odtp /RTCcsu /ZI
+xdata$x	ENDS
+;	COMDAT ??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -20						; size = 4
+__$EHRec$ = -12						; size = 12
+??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ PROC ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >, COMDAT
+; _this$ = ecx
+
+; 558  : 		{	// destroy the object
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-216]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	DWORD PTR __$EHRec$[ebp+8], 0
+
+; 559  : 		_Tidy();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Tidy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Tidy
+
+; 560  : 		}
+
+	mov	DWORD PTR __$EHRec$[ebp+8], -1
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Vector_val@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ
+	mov	ecx, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 216				; 000000d8H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ$0:
+	mov	ecx, DWORD PTR _this$[ebp]
+	jmp	??1?$_Vector_val@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ
+__ehhandler$??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-220]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??1?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ ENDP ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+PUBLIC	??1?$_Vector_val@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ ; std::_Vector_val<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~_Vector_val<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+PUBLIC	?_Tidy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Tidy
+;	COMDAT xdata$x
+xdata$x	SEGMENT
+__unwindtable$??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ$0
+__ehfuncinfo$??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ DD 019930522H
+	DD	01H
+	DD	FLAT:__unwindtable$??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Odtp /RTCcsu /ZI
+xdata$x	ENDS
+;	COMDAT ??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -20						; size = 4
+__$EHRec$ = -12						; size = 12
+??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ PROC ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >, COMDAT
+; _this$ = ecx
+
+; 558  : 		{	// destroy the object
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-216]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	DWORD PTR __$EHRec$[ebp+8], 0
+
+; 559  : 		_Tidy();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Tidy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Tidy
+
+; 560  : 		}
+
+	mov	DWORD PTR __$EHRec$[ebp+8], -1
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Vector_val@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ
+	mov	ecx, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 216				; 000000d8H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ$0:
+	mov	ecx, DWORD PTR _this$[ebp]
+	jmp	??1?$_Vector_val@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ
+__ehhandler$??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-220]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??1?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ ENDP ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
 PUBLIC	??1?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@QAE@XZ ; std::tr1::_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0>::~_Umap_traits<unsigned int,unsigned int,stdext::_Hash_compare<unsigned int,std::tr1::hash<unsigned int>,std::equal_to<unsigned int> >,std::allocator<std::pair<unsigned int const ,unsigned int> >,0>
 PUBLIC	??1?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QAE@XZ ; std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::~list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >
 PUBLIC	??1?$vector@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@V?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@3@@std@@QAE@XZ ; std::vector<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1>,std::allocator<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> > >::~vector<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1>,std::allocator<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> > >
@@ -3054,6 +3260,92 @@ __ehhandler$??1?$vector@_JV?$allocator@_J@std@@@std@@QAE@XZ:
 	jmp	___CxxFrameHandler3
 text$x	ENDS
 ??1?$vector@_JV?$allocator@_J@std@@@std@@QAE@XZ ENDP	; std::vector<__int64,std::allocator<__int64> >::~vector<__int64,std::allocator<__int64> >
+PUBLIC	??1?$_Vector_val@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ ; std::_Vector_val<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~_Vector_val<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+PUBLIC	?_Tidy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Tidy
+;	COMDAT xdata$x
+xdata$x	SEGMENT
+__unwindtable$??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ$0
+__ehfuncinfo$??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ DD 019930522H
+	DD	01H
+	DD	FLAT:__unwindtable$??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Odtp /RTCcsu /ZI
+xdata$x	ENDS
+;	COMDAT ??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -20						; size = 4
+__$EHRec$ = -12						; size = 12
+??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ PROC ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >, COMDAT
+; _this$ = ecx
+
+; 558  : 		{	// destroy the object
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-216]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	DWORD PTR __$EHRec$[ebp+8], 0
+
+; 559  : 		_Tidy();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Tidy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXXZ ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Tidy
+
+; 560  : 		}
+
+	mov	DWORD PTR __$EHRec$[ebp+8], -1
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Vector_val@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ
+	mov	ecx, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 216				; 000000d8H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ$0:
+	mov	ecx, DWORD PTR _this$[ebp]
+	jmp	??1?$_Vector_val@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ
+__ehhandler$??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-220]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??1?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ ENDP ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
 PUBLIC	??1?$_Vector_val@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ ; std::_Vector_val<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::~_Vector_val<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
 PUBLIC	?_Tidy@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAEXXZ ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Tidy
 ;	COMDAT xdata$x
@@ -3140,6 +3432,72 @@ __ehhandler$??1?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@st
 	jmp	___CxxFrameHandler3
 text$x	ENDS
 ??1?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@QAE@XZ ENDP ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::~vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >
+PUBLIC	??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??1?$_Vector_val@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Vector_val@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ PROC ; std::_Vector_val<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~_Vector_val<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >, COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Vector_val@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@QAE@XZ ENDP ; std::_Vector_val<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~_Vector_val<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+_TEXT	ENDS
+PUBLIC	??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??1?$_Vector_val@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Vector_val@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ PROC ; std::_Vector_val<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~_Vector_val<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >, COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Vector_val@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@QAE@XZ ENDP ; std::_Vector_val<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~_Vector_val<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+_TEXT	ENDS
 EXTRN	__imp_??1_Container_base_secure@std@@QAE@XZ:PROC
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??1?$_Umap_traits@IIV?$_Hash_compare@IV?$hash@I@tr1@std@@U?$equal_to@I@3@@stdext@@V?$allocator@U?$pair@$$CBII@std@@@std@@$0A@@tr1@std@@QAE@XZ
@@ -3307,6 +3665,39 @@ _this$ = -8						; size = 4
 	pop	ebp
 	ret	0
 ??1?$_Vector_val@_JV?$allocator@_J@std@@@std@@QAE@XZ ENDP ; std::_Vector_val<__int64,std::allocator<__int64> >::~_Vector_val<__int64,std::allocator<__int64> >
+_TEXT	ENDS
+PUBLIC	??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??1?$_Vector_val@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Vector_val@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ PROC ; std::_Vector_val<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~_Vector_val<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >, COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Vector_val@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@QAE@XZ ENDP ; std::_Vector_val<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~_Vector_val<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
 _TEXT	ENDS
 PUBLIC	??1?$_Container_base_aux_alloc_empty@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<DRAMsimII::Channel> >::~_Container_base_aux_alloc_empty<std::allocator<DRAMsimII::Channel> >
 ; Function compile flags: /Odtp /RTCcsu /ZI
@@ -3539,6 +3930,278 @@ _this$ = -8						; size = 4
 	ret	0
 ??1?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@QAE@XZ ENDP ; std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0>::~_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0>
 _TEXT	ENDS
+PUBLIC	?deallocate@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@I@Z ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::deallocate
+PUBLIC	?_Destroy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@0@Z ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Destroy
+EXTRN	__imp_?_Orphan_all@_Container_base_secure@std@@QBEXXZ:PROC
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ?_Tidy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXXZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+?_Tidy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXXZ PROC ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Tidy, COMDAT
+; _this$ = ecx
+
+; 1123 : 		{	// free all storage
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1124 : 		if (_Myfirst != 0)
+
+	mov	eax, DWORD PTR _this$[ebp]
+	cmp	DWORD PTR [eax+8], 0
+	je	SHORT $LN1@Tidy
+
+; 1125 : 			{	// something to free, destroy and deallocate it
+; 1126 : 
+; 1127 :  #if _HAS_ITERATOR_DEBUGGING
+; 1128 : 			this->_Orphan_all();
+
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_?_Orphan_all@_Container_base_secure@std@@QBEXXZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 1129 :  #endif /* _HAS_ITERATOR_DEBUGGING */
+; 1130 : 
+; 1131 : 			_Destroy(_Myfirst, _Mylast);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+12]
+	push	ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Destroy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@0@Z ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Destroy
+
+; 1132 : 			this->_Alval.deallocate(_Myfirst, _Myend - _Myfirst);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [eax+16]
+	sub	eax, DWORD PTR [ecx+8]
+	cdq
+	mov	ecx, 20					; 00000014H
+	idiv	ecx
+	push	eax
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 4
+	call	?deallocate@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@I@Z ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::deallocate
+$LN1@Tidy:
+
+; 1133 : 			}
+; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+8], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+12], 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [edx+16], 0
+
+; 1135 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?_Tidy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXXZ ENDP ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Tidy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@IAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@IAE@XZ PROC ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >, COMDAT
+; _this$ = ecx
+
+; 627  : 	~_Container_base_aux_alloc_empty() { }
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_??1_Container_base_secure@std@@QAE@XZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@IAE@XZ ENDP ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+_TEXT	ENDS
+PUBLIC	?deallocate@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@I@Z ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::deallocate
+PUBLIC	?_Destroy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXPAV?$vector@IV?$allocator@I@std@@@2@0@Z ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+;	COMDAT ?_Tidy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXXZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+?_Tidy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXXZ PROC ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Tidy, COMDAT
+; _this$ = ecx
+
+; 1123 : 		{	// free all storage
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1124 : 		if (_Myfirst != 0)
+
+	mov	eax, DWORD PTR _this$[ebp]
+	cmp	DWORD PTR [eax+8], 0
+	je	SHORT $LN1@Tidy@2
+
+; 1125 : 			{	// something to free, destroy and deallocate it
+; 1126 : 
+; 1127 :  #if _HAS_ITERATOR_DEBUGGING
+; 1128 : 			this->_Orphan_all();
+
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_?_Orphan_all@_Container_base_secure@std@@QBEXXZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 1129 :  #endif /* _HAS_ITERATOR_DEBUGGING */
+; 1130 : 
+; 1131 : 			_Destroy(_Myfirst, _Mylast);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+12]
+	push	ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Destroy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXPAV?$vector@IV?$allocator@I@std@@@2@0@Z ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Destroy
+
+; 1132 : 			this->_Alval.deallocate(_Myfirst, _Myend - _Myfirst);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [eax+16]
+	sub	eax, DWORD PTR [ecx+8]
+	cdq
+	mov	ecx, 20					; 00000014H
+	idiv	ecx
+	push	eax
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 4
+	call	?deallocate@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@I@Z ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::deallocate
+$LN1@Tidy@2:
+
+; 1133 : 			}
+; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+8], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+12], 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [edx+16], 0
+
+; 1135 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?_Tidy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXXZ ENDP ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Tidy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@IAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@IAE@XZ PROC ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >, COMDAT
+; _this$ = ecx
+
+; 627  : 	~_Container_base_aux_alloc_empty() { }
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_??1_Container_base_secure@std@@QAE@XZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@IAE@XZ ENDP ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+_TEXT	ENDS
 PUBLIC	??1?$_List_val@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QAE@XZ ; std::_List_val<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::~_List_val<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >
 PUBLIC	?_Tidy@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@IAEXXZ ; std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Tidy
 ;	COMDAT xdata$x
@@ -3754,11 +4417,11 @@ tv189 = -316						; size = 4
 tv198 = -312						; size = 4
 tv187 = -308						; size = 4
 tv197 = -304						; size = 4
-$T170716 = -296						; size = 4
-$T170717 = -284						; size = 12
-$T170718 = -264						; size = 4
-$T170719 = -252						; size = 12
-$T170720 = -232						; size = 12
+$T174671 = -296						; size = 4
+$T174672 = -284						; size = 12
+$T174673 = -264						; size = 4
+$T174674 = -252						; size = 12
+$T174675 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Tidy, COMDAT
@@ -3791,7 +4454,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 1421 : 		erase(begin(), end());
 
-	lea	eax, DWORD PTR $T170717[ebp]
+	lea	eax, DWORD PTR $T174672[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::end
@@ -3801,7 +4464,7 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T170716[ebp], esp
+	mov	DWORD PTR $T174671[ebp], esp
 	mov	edx, DWORD PTR tv187[ebp]
 	push	edx
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -3809,7 +4472,7 @@ __$EHRec$ = -12						; size = 12
 	mov	eax, DWORD PTR tv198[ebp]
 	mov	DWORD PTR tv189[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T170719[ebp]
+	lea	ecx, DWORD PTR $T174674[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::begin
@@ -3819,24 +4482,24 @@ __$EHRec$ = -12						; size = 12
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T170718[ebp], esp
+	mov	DWORD PTR $T174673[ebp], esp
 	mov	eax, DWORD PTR tv192[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
 	mov	DWORD PTR tv195[ebp], eax
-	lea	ecx, DWORD PTR $T170720[ebp]
+	lea	ecx, DWORD PTR $T174675[ebp]
 	push	ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::erase
 	mov	DWORD PTR tv190[ebp], eax
-	lea	ecx, DWORD PTR $T170720[ebp]
+	lea	ecx, DWORD PTR $T174675[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T170719[ebp]
+	lea	ecx, DWORD PTR $T174674[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T170717[ebp]
+	lea	ecx, DWORD PTR $T174672[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 
 ; 1422 : 		this->_Alptr.destroy(&_Left(_Myhead));
@@ -3910,13 +4573,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ$0:
-	lea	ecx, DWORD PTR $T170717[ebp]
+	lea	ecx, DWORD PTR $T174672[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ$1:
-	mov	ecx, DWORD PTR $T170716[ebp]
+	mov	ecx, DWORD PTR $T174671[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ$2:
-	lea	ecx, DWORD PTR $T170719[ebp]
+	lea	ecx, DWORD PTR $T174674[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __ehhandler$?_Tidy@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -4008,11 +4671,11 @@ tv189 = -316						; size = 4
 tv198 = -312						; size = 4
 tv187 = -308						; size = 4
 tv197 = -304						; size = 4
-$T170737 = -296						; size = 4
-$T170738 = -284						; size = 12
-$T170739 = -264						; size = 4
-$T170740 = -252						; size = 12
-$T170741 = -232						; size = 12
+$T174692 = -296						; size = 4
+$T174693 = -284						; size = 12
+$T174694 = -264						; size = 4
+$T174695 = -252						; size = 12
+$T174696 = -232						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Tidy, COMDAT
@@ -4045,7 +4708,7 @@ __$EHRec$ = -12						; size = 12
 
 ; 1421 : 		erase(begin(), end());
 
-	lea	eax, DWORD PTR $T170738[ebp]
+	lea	eax, DWORD PTR $T174693[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::end
@@ -4055,7 +4718,7 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T170737[ebp], esp
+	mov	DWORD PTR $T174692[ebp], esp
 	mov	edx, DWORD PTR tv187[ebp]
 	push	edx
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -4063,7 +4726,7 @@ __$EHRec$ = -12						; size = 12
 	mov	eax, DWORD PTR tv198[ebp]
 	mov	DWORD PTR tv189[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T170740[ebp]
+	lea	ecx, DWORD PTR $T174695[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::begin
@@ -4073,24 +4736,24 @@ __$EHRec$ = -12						; size = 12
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T170739[ebp], esp
+	mov	DWORD PTR $T174694[ebp], esp
 	mov	eax, DWORD PTR tv192[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
 	mov	DWORD PTR tv195[ebp], eax
-	lea	ecx, DWORD PTR $T170741[ebp]
+	lea	ecx, DWORD PTR $T174696[ebp]
 	push	ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::erase
 	mov	DWORD PTR tv190[ebp], eax
-	lea	ecx, DWORD PTR $T170741[ebp]
+	lea	ecx, DWORD PTR $T174696[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
-	lea	ecx, DWORD PTR $T170740[ebp]
+	lea	ecx, DWORD PTR $T174695[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T170738[ebp]
+	lea	ecx, DWORD PTR $T174693[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 
 ; 1422 : 		this->_Alptr.destroy(&_Left(_Myhead));
@@ -4164,13 +4827,13 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ$0:
-	lea	ecx, DWORD PTR $T170738[ebp]
+	lea	ecx, DWORD PTR $T174693[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ$1:
-	mov	ecx, DWORD PTR $T170737[ebp]
+	mov	ecx, DWORD PTR $T174692[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ$2:
-	lea	ecx, DWORD PTR $T170740[ebp]
+	lea	ecx, DWORD PTR $T174695[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __ehhandler$?_Tidy@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
@@ -4223,7 +4886,6 @@ _this$ = -8						; size = 4
 _TEXT	ENDS
 PUBLIC	?deallocate@?$allocator@I@std@@QAEXPAII@Z	; std::allocator<unsigned int>::deallocate
 PUBLIC	?_Destroy@?$vector@IV?$allocator@I@std@@@std@@IAEXPAI0@Z ; std::vector<unsigned int,std::allocator<unsigned int> >::_Destroy
-EXTRN	__imp_?_Orphan_all@_Container_base_secure@std@@QBEXXZ:PROC
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ; File c:\program files\microsoft visual studio 9.0\vc\include\vector
 ;	COMDAT ?_Tidy@?$vector@IV?$allocator@I@std@@@std@@IAEXXZ
@@ -4252,7 +4914,7 @@ _this$ = -8						; size = 4
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+8], 0
-	je	SHORT $LN1@Tidy
+	je	SHORT $LN1@Tidy@3
 
 ; 1125 : 			{	// something to free, destroy and deallocate it
 ; 1126 : 
@@ -4292,7 +4954,7 @@ _this$ = -8						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?deallocate@?$allocator@I@std@@QAEXPAII@Z ; std::allocator<unsigned int>::deallocate
-$LN1@Tidy:
+$LN1@Tidy@3:
 
 ; 1133 : 			}
 ; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
@@ -4386,7 +5048,7 @@ _this$ = -8						; size = 4
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+8], 0
-	je	SHORT $LN1@Tidy@2
+	je	SHORT $LN1@Tidy@4
 
 ; 1125 : 			{	// something to free, destroy and deallocate it
 ; 1126 : 
@@ -4426,7 +5088,7 @@ _this$ = -8						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?deallocate@?$allocator@_J@std@@QAEXPA_JI@Z ; std::allocator<__int64>::deallocate
-$LN1@Tidy@2:
+$LN1@Tidy@4:
 
 ; 1133 : 			}
 ; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
@@ -4490,6 +5152,142 @@ _this$ = -8						; size = 4
 	ret	0
 ??1?$_Container_base_aux_alloc_empty@V?$allocator@_J@std@@@std@@IAE@XZ ENDP ; std::_Container_base_aux_alloc_empty<std::allocator<__int64> >::~_Container_base_aux_alloc_empty<std::allocator<__int64> >
 _TEXT	ENDS
+PUBLIC	?deallocate@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@I@Z ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::deallocate
+PUBLIC	?_Destroy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@0@Z ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+;	COMDAT ?_Tidy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXXZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+?_Tidy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXXZ PROC ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Tidy, COMDAT
+; _this$ = ecx
+
+; 1123 : 		{	// free all storage
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1124 : 		if (_Myfirst != 0)
+
+	mov	eax, DWORD PTR _this$[ebp]
+	cmp	DWORD PTR [eax+8], 0
+	je	SHORT $LN1@Tidy@5
+
+; 1125 : 			{	// something to free, destroy and deallocate it
+; 1126 : 
+; 1127 :  #if _HAS_ITERATOR_DEBUGGING
+; 1128 : 			this->_Orphan_all();
+
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_?_Orphan_all@_Container_base_secure@std@@QBEXXZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 1129 :  #endif /* _HAS_ITERATOR_DEBUGGING */
+; 1130 : 
+; 1131 : 			_Destroy(_Myfirst, _Mylast);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+12]
+	push	ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Destroy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@0@Z ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Destroy
+
+; 1132 : 			this->_Alval.deallocate(_Myfirst, _Myend - _Myfirst);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [eax+16]
+	sub	eax, DWORD PTR [ecx+8]
+	cdq
+	mov	ecx, 20					; 00000014H
+	idiv	ecx
+	push	eax
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 4
+	call	?deallocate@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@I@Z ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::deallocate
+$LN1@Tidy@5:
+
+; 1133 : 			}
+; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+8], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+12], 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [edx+16], 0
+
+; 1135 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?_Tidy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXXZ ENDP ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Tidy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@IAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@IAE@XZ PROC ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >, COMDAT
+; _this$ = ecx
+
+; 627  : 	~_Container_base_aux_alloc_empty() { }
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_??1_Container_base_secure@std@@QAE@XZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Container_base_aux_alloc_empty@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@IAE@XZ ENDP ; std::_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::~_Container_base_aux_alloc_empty<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+_TEXT	ENDS
 PUBLIC	?deallocate@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRAMsimII@@I@Z ; std::allocator<DRAMsimII::Channel>::deallocate
 PUBLIC	?_Destroy@?$vector@VChannel@DRAMsimII@@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@IAEXPAVChannel@DRAMsimII@@0@Z ; std::vector<DRAMsimII::Channel,std::allocator<DRAMsimII::Channel> >::_Destroy
 ; Function compile flags: /Odtp /RTCcsu /ZI
@@ -4520,7 +5318,7 @@ _this$ = -8						; size = 4
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+8], 0
-	je	SHORT $LN1@Tidy@3
+	je	SHORT $LN1@Tidy@6
 
 ; 1125 : 			{	// something to free, destroy and deallocate it
 ; 1126 : 
@@ -4553,7 +5351,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR [eax+16]
 	sub	eax, DWORD PTR [ecx+8]
 	cdq
-	mov	ecx, 408				; 00000198H
+	mov	ecx, 440				; 000001b8H
 	idiv	ecx
 	push	eax
 	mov	edx, DWORD PTR _this$[ebp]
@@ -4562,7 +5360,7 @@ _this$ = -8						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?deallocate@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRAMsimII@@I@Z ; std::allocator<DRAMsimII::Channel>::deallocate
-$LN1@Tidy@3:
+$LN1@Tidy@6:
 
 ; 1133 : 			}
 ; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
@@ -5870,6 +6668,203 @@ _this$ = -8						; size = 4
 	ret	0
 ??1?$_Iterator_with_base@Ubidirectional_iterator_tag@std@@U?$pair@$$CB_KI@2@HPBU32@ABU32@V_Iterator_base@2@@std@@QAE@XZ ENDP ; std::_Iterator_with_base<std::bidirectional_iterator_tag,std::pair<unsigned __int64 const ,unsigned int>,int,std::pair<unsigned __int64 const ,unsigned int> const *,std::pair<unsigned __int64 const ,unsigned int> const &,std::_Iterator_base>::~_Iterator_with_base<std::bidirectional_iterator_tag,std::pair<unsigned __int64 const ,unsigned int>,int,std::pair<unsigned __int64 const ,unsigned int> const *,std::pair<unsigned __int64 const ,unsigned int> const &,std::_Iterator_base>
 _TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+;	COMDAT ?_Destroy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@0@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+?_Destroy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@0@Z PROC ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Destroy, COMDAT
+; _this$ = ecx
+
+; 1118 : 		{	// destroy [_First, _Last) using allocator
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1119 : 		_Destroy_range(_First, _Last, this->_Alval);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 4
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+	add	esp, 12					; 0000000cH
+
+; 1120 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?_Destroy@?$vector@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@0@Z ENDP ; std::vector<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >,std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >::_Destroy
+_TEXT	ENDS
+EXTRN	??3@YAXPAX@Z:PROC				; operator delete
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+;	COMDAT ?deallocate@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@I@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+___formal$ = 12						; size = 4
+?deallocate@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@I@Z PROC ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::deallocate, COMDAT
+; _this$ = ecx
+
+; 139  : 		{	// deallocate object at _Ptr, ignore size
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 140  : 		::operator delete(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+
+; 141  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?deallocate@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@I@Z ENDP ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::deallocate
+_TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+;	COMDAT ?_Destroy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXPAV?$vector@IV?$allocator@I@std@@@2@0@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+?_Destroy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXPAV?$vector@IV?$allocator@I@std@@@2@0@Z PROC ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Destroy, COMDAT
+; _this$ = ecx
+
+; 1118 : 		{	// destroy [_First, _Last) using allocator
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1119 : 		_Destroy_range(_First, _Last, this->_Alval);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 4
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+	add	esp, 12					; 0000000cH
+
+; 1120 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?_Destroy@?$vector@V?$vector@IV?$allocator@I@std@@@std@@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@2@@std@@IAEXPAV?$vector@IV?$allocator@I@std@@@2@0@Z ENDP ; std::vector<std::vector<unsigned int,std::allocator<unsigned int> >,std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >::_Destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+_TEXT	ENDS
+;	COMDAT ?deallocate@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@I@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+___formal$ = 12						; size = 4
+?deallocate@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@I@Z PROC ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::deallocate, COMDAT
+; _this$ = ecx
+
+; 139  : 		{	// deallocate object at _Ptr, ignore size
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 140  : 		::operator delete(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+
+; 141  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?deallocate@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@I@Z ENDP ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::deallocate
+_TEXT	ENDS
 PUBLIC	?deallocate@?$allocator@U_Node@?$_List_nod@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@QAEXPAU_Node@?$_List_nod@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@2@I@Z ; std::allocator<std::_List_nod<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Node>::deallocate
 PUBLIC	?_Prevnode@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@KAAAPAU_Node@?$_List_nod@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@2@PAU342@@Z ; std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Prevnode
 PUBLIC	?destroy@?$allocator@PAU_Node@?$_List_nod@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@QAEXPAPAU_Node@?$_List_nod@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@2@@Z ; std::allocator<std::_List_nod<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Node *>::destroy
@@ -6025,7 +7020,7 @@ _this$ = -8						; size = 4
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+8], 0
-	je	SHORT $LN1@Tidy@4
+	je	SHORT $LN1@Tidy@7
 
 ; 1125 : 			{	// something to free, destroy and deallocate it
 ; 1126 : 
@@ -6067,7 +7062,7 @@ _this$ = -8						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?deallocate@?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@QAEXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@2@I@Z ; std::allocator<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> >::deallocate
-$LN1@Tidy@4:
+$LN1@Tidy@7:
 
 ; 1133 : 			}
 ; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
@@ -6238,7 +7233,7 @@ PUBLIC	?_Lmost@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T170884 = -212						; size = 4
+$T174852 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::begin, COMDAT
@@ -6259,7 +7254,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170884[ebp], 0
+	mov	DWORD PTR $T174852[ebp], 0
 
 ; 556  : 		return (_TREE_ITERATOR(_Lmost()));
 
@@ -6271,9 +7266,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::iterator::iterator
-	mov	edx, DWORD PTR $T170884[ebp]
+	mov	edx, DWORD PTR $T174852[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T170884[ebp], edx
+	mov	DWORD PTR $T174852[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 557  : 		}
@@ -6292,7 +7287,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T170889 = -212						; size = 4
+$T174857 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::end, COMDAT
@@ -6313,7 +7308,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170889[ebp], 0
+	mov	DWORD PTR $T174857[ebp], 0
 
 ; 566  : 		return (_TREE_ITERATOR(_Myhead));
 
@@ -6324,9 +7319,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::iterator::iterator
-	mov	eax, DWORD PTR $T170889[ebp]
+	mov	eax, DWORD PTR $T174857[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170889[ebp], eax
+	mov	DWORD PTR $T174857[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 567  : 		}
@@ -6381,13 +7376,13 @@ tv183 = -332						; size = 4
 tv209 = -328						; size = 4
 tv204 = -328						; size = 4
 tv200 = -328						; size = 4
-$T170893 = -317						; size = 1
-$T170894 = -308						; size = 12
-$T170895 = -288						; size = 12
-$T170898 = -268						; size = 4
-$T170899 = -256						; size = 12
-$T170900 = -236						; size = 4
-$T170903 = -224						; size = 4
+$T174861 = -317						; size = 1
+$T174862 = -308						; size = 12
+$T174863 = -288						; size = 12
+$T174866 = -268						; size = 4
+$T174867 = -256						; size = 12
+$T174868 = -236						; size = 4
+$T174871 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -6420,12 +7415,12 @@ __Last$ = 24						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170903[ebp], 0
+	mov	DWORD PTR $T174871[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
 
 ; 935  : 		if (_First == begin() && _Last == end())
 
-	lea	eax, DWORD PTR $T170894[ebp]
+	lea	eax, DWORD PTR $T174862[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::begin
@@ -6433,9 +7428,9 @@ __Last$ = 24						; size = 12
 	mov	ecx, DWORD PTR tv209[ebp]
 	mov	DWORD PTR tv183[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	mov	edx, DWORD PTR $T170903[ebp]
+	mov	edx, DWORD PTR $T174871[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T170903[ebp], edx
+	mov	DWORD PTR $T174871[ebp], edx
 	mov	eax, DWORD PTR tv183[ebp]
 	push	eax
 	lea	ecx, DWORD PTR __First$[ebp]
@@ -6443,7 +7438,7 @@ __Last$ = 24						; size = 12
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN7@erase
-	lea	edx, DWORD PTR $T170895[ebp]
+	lea	edx, DWORD PTR $T174863[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::end
@@ -6451,9 +7446,9 @@ __Last$ = 24						; size = 12
 	mov	eax, DWORD PTR tv211[ebp]
 	mov	DWORD PTR tv188[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 4
-	mov	ecx, DWORD PTR $T170903[ebp]
+	mov	ecx, DWORD PTR $T174871[ebp]
 	or	ecx, 2
-	mov	DWORD PTR $T170903[ebp], ecx
+	mov	DWORD PTR $T174871[ebp], ecx
 	mov	edx, DWORD PTR tv188[ebp]
 	push	edx
 	lea	ecx, DWORD PTR __Last$[ebp]
@@ -6468,24 +7463,24 @@ $LN7@erase:
 $LN8@erase:
 	mov	ecx, DWORD PTR tv94[ebp]
 	call	@_RTC_Check_4_to_1@4
-	mov	BYTE PTR $T170893[ebp], al
+	mov	BYTE PTR $T174861[ebp], al
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
-	mov	ecx, DWORD PTR $T170903[ebp]
+	mov	ecx, DWORD PTR $T174871[ebp]
 	and	ecx, 2
 	je	SHORT $LN15@erase
-	and	DWORD PTR $T170903[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T170895[ebp]
+	and	DWORD PTR $T174871[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T174863[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN15@erase:
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
-	mov	edx, DWORD PTR $T170903[ebp]
+	mov	edx, DWORD PTR $T174871[ebp]
 	and	edx, 1
 	je	SHORT $LN16@erase
-	and	DWORD PTR $T170903[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T170894[ebp]
+	and	DWORD PTR $T174871[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T174862[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN16@erase:
-	movzx	eax, BYTE PTR $T170893[ebp]
+	movzx	eax, BYTE PTR $T174861[ebp]
 	test	eax, eax
 	je	SHORT $LN2@erase
 
@@ -6501,9 +7496,9 @@ $LN16@erase:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::begin
-	mov	ecx, DWORD PTR $T170903[ebp]
+	mov	ecx, DWORD PTR $T174871[ebp]
 	or	ecx, 4
-	mov	DWORD PTR $T170903[ebp], ecx
+	mov	DWORD PTR $T174871[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
@@ -6534,18 +7529,18 @@ $LN2@erase:
 
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T170898[ebp], esp
+	mov	DWORD PTR $T174866[ebp], esp
 	push	0
 	push	eax
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AV012@H@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::const_iterator::operator++
 	mov	DWORD PTR tv200[ebp], eax
-	lea	ecx, DWORD PTR $T170899[ebp]
+	lea	ecx, DWORD PTR $T174867[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::erase
 	mov	DWORD PTR tv201[ebp], eax
-	lea	ecx, DWORD PTR $T170899[ebp]
+	lea	ecx, DWORD PTR $T174867[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 	jmp	SHORT $LN2@erase
 $LN1@erase:
@@ -6554,7 +7549,7 @@ $LN1@erase:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T170900[ebp], esp
+	mov	DWORD PTR $T174868[ebp], esp
 	lea	eax, DWORD PTR __First$[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -6564,9 +7559,9 @@ $LN1@erase:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Make_iter
 	mov	DWORD PTR tv205[ebp], eax
-	mov	edx, DWORD PTR $T170903[ebp]
+	mov	edx, DWORD PTR $T174871[ebp]
 	or	edx, 4
-	mov	DWORD PTR $T170903[ebp], edx
+	mov	DWORD PTR $T174871[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
@@ -6609,28 +7604,28 @@ __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsi
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$2:
-	mov	eax, DWORD PTR $T170903[ebp]
+	mov	eax, DWORD PTR $T174871[ebp]
 	and	eax, 1
 	je	$LN12@erase
-	and	DWORD PTR $T170903[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T170894[ebp]
+	and	DWORD PTR $T174871[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T174862[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN12@erase:
 	ret	0
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$3:
-	mov	eax, DWORD PTR $T170903[ebp]
+	mov	eax, DWORD PTR $T174871[ebp]
 	and	eax, 2
 	je	$LN14@erase
-	and	DWORD PTR $T170903[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T170895[ebp]
+	and	DWORD PTR $T174871[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T174863[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN14@erase:
 	ret	0
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$4:
-	mov	eax, DWORD PTR $T170903[ebp]
+	mov	eax, DWORD PTR $T174871[ebp]
 	and	eax, 4
 	je	$LN18@erase
-	and	DWORD PTR $T170903[ebp], -5		; fffffffbH
+	and	DWORD PTR $T174871[ebp], -5		; fffffffbH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN18@erase:
@@ -6645,7 +7640,6 @@ __ehhandler$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@
 	jmp	___CxxFrameHandler3
 text$x	ENDS
 ?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z ENDP ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::erase
-EXTRN	??3@YAXPAX@Z:PROC				; operator delete
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
 ;	COMDAT ?deallocate@?$allocator@U_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@@std@@QAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@I@Z
@@ -6844,7 +7838,7 @@ PUBLIC	?_Lmost@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T170935 = -212						; size = 4
+$T174903 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::begin, COMDAT
@@ -6865,7 +7859,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170935[ebp], 0
+	mov	DWORD PTR $T174903[ebp], 0
 
 ; 556  : 		return (_TREE_ITERATOR(_Lmost()));
 
@@ -6877,9 +7871,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	ecx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::iterator::iterator
-	mov	edx, DWORD PTR $T170935[ebp]
+	mov	edx, DWORD PTR $T174903[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T170935[ebp], edx
+	mov	DWORD PTR $T174903[ebp], edx
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 557  : 		}
@@ -6898,7 +7892,7 @@ ___$ReturnUdt$ = 8					; size = 4
 _TEXT	ENDS
 ;	COMDAT ?end@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ
 _TEXT	SEGMENT
-$T170940 = -212						; size = 4
+$T174908 = -212						; size = 4
 _this$ = -8						; size = 4
 ___$ReturnUdt$ = 8					; size = 4
 ?end@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::end, COMDAT
@@ -6919,7 +7913,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	rep stosd
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170940[ebp], 0
+	mov	DWORD PTR $T174908[ebp], 0
 
 ; 566  : 		return (_TREE_ITERATOR(_Myhead));
 
@@ -6930,9 +7924,9 @@ ___$ReturnUdt$ = 8					; size = 4
 	push	edx
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::iterator::iterator
-	mov	eax, DWORD PTR $T170940[ebp]
+	mov	eax, DWORD PTR $T174908[ebp]
 	or	eax, 1
-	mov	DWORD PTR $T170940[ebp], eax
+	mov	DWORD PTR $T174908[ebp], eax
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
 ; 567  : 		}
@@ -6986,13 +7980,13 @@ tv183 = -332						; size = 4
 tv209 = -328						; size = 4
 tv204 = -328						; size = 4
 tv200 = -328						; size = 4
-$T170944 = -317						; size = 1
-$T170945 = -308						; size = 12
-$T170946 = -288						; size = 12
-$T170949 = -268						; size = 4
-$T170950 = -256						; size = 12
-$T170951 = -236						; size = 4
-$T170954 = -224						; size = 4
+$T174912 = -317						; size = 1
+$T174913 = -308						; size = 12
+$T174914 = -288						; size = 12
+$T174917 = -268						; size = 4
+$T174918 = -256						; size = 12
+$T174919 = -236						; size = 4
+$T174922 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -7025,12 +8019,12 @@ __Last$ = 24						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T170954[ebp], 0
+	mov	DWORD PTR $T174922[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
 
 ; 935  : 		if (_First == begin() && _Last == end())
 
-	lea	eax, DWORD PTR $T170945[ebp]
+	lea	eax, DWORD PTR $T174913[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::begin
@@ -7038,9 +8032,9 @@ __Last$ = 24						; size = 12
 	mov	ecx, DWORD PTR tv209[ebp]
 	mov	DWORD PTR tv183[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	mov	edx, DWORD PTR $T170954[ebp]
+	mov	edx, DWORD PTR $T174922[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T170954[ebp], edx
+	mov	DWORD PTR $T174922[ebp], edx
 	mov	eax, DWORD PTR tv183[ebp]
 	push	eax
 	lea	ecx, DWORD PTR __First$[ebp]
@@ -7048,7 +8042,7 @@ __Last$ = 24						; size = 12
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN7@erase@2
-	lea	edx, DWORD PTR $T170946[ebp]
+	lea	edx, DWORD PTR $T174914[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?end@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::end
@@ -7056,9 +8050,9 @@ __Last$ = 24						; size = 12
 	mov	eax, DWORD PTR tv211[ebp]
 	mov	DWORD PTR tv188[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 4
-	mov	ecx, DWORD PTR $T170954[ebp]
+	mov	ecx, DWORD PTR $T174922[ebp]
 	or	ecx, 2
-	mov	DWORD PTR $T170954[ebp], ecx
+	mov	DWORD PTR $T174922[ebp], ecx
 	mov	edx, DWORD PTR tv188[ebp]
 	push	edx
 	lea	ecx, DWORD PTR __Last$[ebp]
@@ -7073,24 +8067,24 @@ $LN7@erase@2:
 $LN8@erase@2:
 	mov	ecx, DWORD PTR tv94[ebp]
 	call	@_RTC_Check_4_to_1@4
-	mov	BYTE PTR $T170944[ebp], al
+	mov	BYTE PTR $T174912[ebp], al
 	mov	DWORD PTR __$EHRec$[ebp+8], 3
-	mov	ecx, DWORD PTR $T170954[ebp]
+	mov	ecx, DWORD PTR $T174922[ebp]
 	and	ecx, 2
 	je	SHORT $LN15@erase@2
-	and	DWORD PTR $T170954[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T170946[ebp]
+	and	DWORD PTR $T174922[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T174914[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN15@erase@2:
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
-	mov	edx, DWORD PTR $T170954[ebp]
+	mov	edx, DWORD PTR $T174922[ebp]
 	and	edx, 1
 	je	SHORT $LN16@erase@2
-	and	DWORD PTR $T170954[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T170945[ebp]
+	and	DWORD PTR $T174922[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T174913[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN16@erase@2:
-	movzx	eax, BYTE PTR $T170944[ebp]
+	movzx	eax, BYTE PTR $T174912[ebp]
 	test	eax, eax
 	je	SHORT $LN2@erase@2
 
@@ -7106,9 +8100,9 @@ $LN16@erase@2:
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?begin@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@XZ ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::begin
-	mov	ecx, DWORD PTR $T170954[ebp]
+	mov	ecx, DWORD PTR $T174922[ebp]
 	or	ecx, 4
-	mov	DWORD PTR $T170954[ebp], ecx
+	mov	DWORD PTR $T174922[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
@@ -7139,18 +8133,18 @@ $LN2@erase@2:
 
 	sub	esp, 12					; 0000000cH
 	mov	eax, esp
-	mov	DWORD PTR $T170949[ebp], esp
+	mov	DWORD PTR $T174917[ebp], esp
 	push	0
 	push	eax
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AV012@H@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::const_iterator::operator++
 	mov	DWORD PTR tv200[ebp], eax
-	lea	ecx, DWORD PTR $T170950[ebp]
+	lea	ecx, DWORD PTR $T174918[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::erase
 	mov	DWORD PTR tv201[ebp], eax
-	lea	ecx, DWORD PTR $T170950[ebp]
+	lea	ecx, DWORD PTR $T174918[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 	jmp	SHORT $LN2@erase@2
 $LN1@erase@2:
@@ -7159,7 +8153,7 @@ $LN1@erase@2:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T170951[ebp], esp
+	mov	DWORD PTR $T174919[ebp], esp
 	lea	eax, DWORD PTR __First$[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -7169,9 +8163,9 @@ $LN1@erase@2:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Make_iter
 	mov	DWORD PTR tv205[ebp], eax
-	mov	edx, DWORD PTR $T170954[ebp]
+	mov	edx, DWORD PTR $T174922[ebp]
 	or	edx, 4
-	mov	DWORD PTR $T170954[ebp], edx
+	mov	DWORD PTR $T174922[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR __First$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
@@ -7214,28 +8208,28 @@ __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U
 	lea	ecx, DWORD PTR __First$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$2:
-	mov	eax, DWORD PTR $T170954[ebp]
+	mov	eax, DWORD PTR $T174922[ebp]
 	and	eax, 1
 	je	$LN12@erase@2
-	and	DWORD PTR $T170954[ebp], -2		; fffffffeH
-	lea	ecx, DWORD PTR $T170945[ebp]
+	and	DWORD PTR $T174922[ebp], -2		; fffffffeH
+	lea	ecx, DWORD PTR $T174913[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN12@erase@2:
 	ret	0
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$3:
-	mov	eax, DWORD PTR $T170954[ebp]
+	mov	eax, DWORD PTR $T174922[ebp]
 	and	eax, 2
 	je	$LN14@erase@2
-	and	DWORD PTR $T170954[ebp], -3		; fffffffdH
-	lea	ecx, DWORD PTR $T170946[ebp]
+	and	DWORD PTR $T174922[ebp], -3		; fffffffdH
+	lea	ecx, DWORD PTR $T174914[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN14@erase@2:
 	ret	0
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@0@Z$4:
-	mov	eax, DWORD PTR $T170954[ebp]
+	mov	eax, DWORD PTR $T174922[ebp]
 	and	eax, 4
 	je	$LN18@erase@2
-	and	DWORD PTR $T170954[ebp], -5		; fffffffbH
+	and	DWORD PTR $T174922[ebp], -5		; fffffffbH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN18@erase@2:
@@ -7536,6 +8530,104 @@ ___formal$ = 12						; size = 4
 	pop	ebp
 	ret	8
 ?deallocate@?$allocator@_J@std@@QAEXPA_JI@Z ENDP	; std::allocator<__int64>::deallocate
+_TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+;	COMDAT ?_Destroy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@0@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+?_Destroy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@0@Z PROC ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Destroy, COMDAT
+; _this$ = ecx
+
+; 1118 : 		{	// destroy [_First, _Last) using allocator
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1119 : 		_Destroy_range(_First, _Last, this->_Alval);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 4
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+	add	esp, 12					; 0000000cH
+
+; 1120 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?_Destroy@?$vector@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@2@@std@@IAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@0@Z ENDP ; std::vector<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >,std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >::_Destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+_TEXT	ENDS
+;	COMDAT ?deallocate@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@I@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+___formal$ = 12						; size = 4
+?deallocate@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@I@Z PROC ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::deallocate, COMDAT
+; _this$ = ecx
+
+; 139  : 		{	// deallocate object at _Ptr, ignore size
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 140  : 		::operator delete(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+
+; 141  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?deallocate@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@I@Z ENDP ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::deallocate
 _TEXT	ENDS
 PUBLIC	??$_Destroy_range@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAXPAVChannel@DRAMsimII@@0AAV?$allocator@VChannel@DRAMsimII@@@0@@Z ; std::_Destroy_range<std::allocator<DRAMsimII::Channel> >
 ; Function compile flags: /Odtp /RTCcsu /ZI
@@ -8050,8 +9142,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv77 = -256						; size = 4
 tv83 = -252						; size = 4
-$T171008 = -244						; size = 4
-$T171004 = -232						; size = 12
+$T174976 = -244						; size = 12
+$T174980 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -8083,7 +9175,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T171008[ebp], 0
+	mov	DWORD PTR $T174980[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 576  : 		return (iterator(_TREE_ITERATOR(_Where._Ptr)));
@@ -8092,7 +9184,7 @@ __Where$ = 12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR __Where$[ebp+8]
 	push	ecx
-	lea	ecx, DWORD PTR $T171004[ebp]
+	lea	ecx, DWORD PTR $T174976[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::iterator::iterator
 	mov	DWORD PTR tv83[ebp], eax
 	mov	edx, DWORD PTR tv83[ebp]
@@ -8102,11 +9194,11 @@ __Where$ = 12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T171008[ebp]
+	mov	ecx, DWORD PTR $T174980[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T171008[ebp], ecx
+	mov	DWORD PTR $T174980[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T171004[ebp]
+	lea	ecx, DWORD PTR $T174976[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
@@ -8134,13 +9226,13 @@ __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@D
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z$1:
-	lea	ecx, DWORD PTR $T171004[ebp]
+	lea	ecx, DWORD PTR $T174976[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z$2:
-	mov	eax, DWORD PTR $T171008[ebp]
+	mov	eax, DWORD PTR $T174980[ebp]
 	and	eax, 1
 	je	$LN6@Make_iter
-	and	DWORD PTR $T171008[ebp], -2		; fffffffeH
+	and	DWORD PTR $T174980[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN6@Make_iter:
@@ -8215,8 +9307,8 @@ tv423 = -296						; size = 4
 tv422 = -292						; size = 4
 tv186 = -292						; size = 4
 tv174 = -292						; size = 4
-$T171022 = -284						; size = 4
-$T171026 = -272						; size = 4
+$T174994 = -284						; size = 4
+$T174998 = -272						; size = 4
 __Pnode$ = -68						; size = 4
 __Fixnodeparent$ = -56					; size = 4
 __Fixnode$ = -44					; size = 4
@@ -8252,7 +9344,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T171026[ebp], 0
+	mov	DWORD PTR $T174998[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 765  : 
@@ -9324,7 +10416,7 @@ $LN1@erase@3:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171022[ebp], esp
+	mov	DWORD PTR $T174994[ebp], esp
 	lea	eax, DWORD PTR __Where$[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -9334,9 +10426,9 @@ $LN1@erase@3:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Make_iter
 	mov	DWORD PTR tv423[ebp], eax
-	mov	edx, DWORD PTR $T171026[ebp]
+	mov	edx, DWORD PTR $T174998[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T171026[ebp], edx
+	mov	DWORD PTR $T174998[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
@@ -9363,10 +10455,10 @@ __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsi
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@@Z$2:
-	mov	eax, DWORD PTR $T171026[ebp]
+	mov	eax, DWORD PTR $T174998[ebp]
 	and	eax, 1
 	je	$LN51@erase@3
-	and	DWORD PTR $T171026[ebp], -2		; fffffffeH
+	and	DWORD PTR $T174998[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN51@erase@3:
@@ -9528,8 +10620,8 @@ xdata$x	ENDS
 _TEXT	SEGMENT
 tv77 = -256						; size = 4
 tv83 = -252						; size = 4
-$T171040 = -244						; size = 12
-$T171044 = -224						; size = 4
+$T175012 = -244						; size = 12
+$T175016 = -224						; size = 4
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
 ___$ReturnUdt$ = 8					; size = 4
@@ -9561,7 +10653,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T171044[ebp], 0
+	mov	DWORD PTR $T175016[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 576  : 		return (iterator(_TREE_ITERATOR(_Where._Ptr)));
@@ -9570,7 +10662,7 @@ __Where$ = 12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR __Where$[ebp+8]
 	push	ecx
-	lea	ecx, DWORD PTR $T171040[ebp]
+	lea	ecx, DWORD PTR $T175012[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PBV12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::iterator::iterator
 	mov	DWORD PTR tv83[ebp], eax
 	mov	edx, DWORD PTR tv83[ebp]
@@ -9580,11 +10672,11 @@ __Where$ = 12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T171044[ebp]
+	mov	ecx, DWORD PTR $T175016[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T171044[ebp], ecx
+	mov	DWORD PTR $T175016[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	lea	ecx, DWORD PTR $T171040[ebp]
+	lea	ecx, DWORD PTR $T175012[ebp]
 	call	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
@@ -9612,13 +10704,13 @@ __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$alloca
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z$1:
-	lea	ecx, DWORD PTR $T171040[ebp]
+	lea	ecx, DWORD PTR $T175012[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z$2:
-	mov	eax, DWORD PTR $T171044[ebp]
+	mov	eax, DWORD PTR $T175016[ebp]
 	and	eax, 1
 	je	$LN6@Make_iter@2
-	and	DWORD PTR $T171044[ebp], -2		; fffffffeH
+	and	DWORD PTR $T175016[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN6@Make_iter@2:
@@ -9666,8 +10758,8 @@ tv423 = -296						; size = 4
 tv422 = -292						; size = 4
 tv186 = -292						; size = 4
 tv174 = -292						; size = 4
-$T171058 = -284						; size = 4
-$T171062 = -272						; size = 4
+$T175030 = -284						; size = 4
+$T175034 = -272						; size = 4
 __Pnode$ = -68						; size = 4
 __Fixnodeparent$ = -56					; size = 4
 __Fixnode$ = -44					; size = 4
@@ -9703,7 +10795,7 @@ __Where$ = 12						; size = 12
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T171062[ebp], 0
+	mov	DWORD PTR $T175034[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 
 ; 765  : 
@@ -10775,7 +11867,7 @@ $LN1@erase@4:
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
-	mov	DWORD PTR $T171058[ebp], esp
+	mov	DWORD PTR $T175030[ebp], esp
 	lea	eax, DWORD PTR __Where$[ebp]
 	push	eax
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
@@ -10785,9 +11877,9 @@ $LN1@erase@4:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?_Make_iter@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QBE?AViterator@12@Vconst_iterator@12@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Make_iter
 	mov	DWORD PTR tv423[ebp], eax
-	mov	edx, DWORD PTR $T171062[ebp]
+	mov	edx, DWORD PTR $T175034[ebp]
 	or	edx, 1
-	mov	DWORD PTR $T171062[ebp], edx
+	mov	DWORD PTR $T175034[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Where$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
@@ -10814,10 +11906,10 @@ __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U
 	lea	ecx, DWORD PTR __Where$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$?erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AViterator@12@Vconst_iterator@12@@Z$2:
-	mov	eax, DWORD PTR $T171062[ebp]
+	mov	eax, DWORD PTR $T175034[ebp]
 	and	eax, 1
 	je	$LN51@erase@4
-	and	DWORD PTR $T171062[ebp], -2		; fffffffeH
+	and	DWORD PTR $T175034[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN51@erase@4:
@@ -11020,7 +12112,7 @@ __ehfuncinfo$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistic
 xdata$x	ENDS
 ;	COMDAT ??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AV012@H@Z
 _TEXT	SEGMENT
-$T171081 = -244						; size = 4
+$T175053 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -11053,7 +12145,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T171081[ebp], 0
+	mov	DWORD PTR $T175053[ebp], 0
 
 ; 280  : 			const_iterator _Tmp = *this;
 
@@ -11074,9 +12166,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T171081[ebp]
+	mov	ecx, DWORD PTR $T175053[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T171081[ebp], ecx
+	mov	DWORD PTR $T175053[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
@@ -11124,10 +12216,10 @@ __unwindfunclet$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statis
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE?AV012@H@Z$1:
-	mov	eax, DWORD PTR $T171081[ebp]
+	mov	eax, DWORD PTR $T175053[ebp]
 	and	eax, 1
 	je	$LN5@operator@2
-	and	DWORD PTR $T171081[ebp], -2		; fffffffeH
+	and	DWORD PTR $T175053[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAE@XZ
 $LN5@operator@2:
@@ -11443,7 +12535,7 @@ __ehfuncinfo$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$all
 xdata$x	ENDS
 ;	COMDAT ??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AV012@H@Z
 _TEXT	SEGMENT
-$T171104 = -244						; size = 4
+$T175076 = -244						; size = 4
 __Tmp$ = -40						; size = 12
 _this$ = -20						; size = 4
 __$EHRec$ = -12						; size = 12
@@ -11476,7 +12568,7 @@ ___formal$ = 12						; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-	mov	DWORD PTR $T171104[ebp], 0
+	mov	DWORD PTR $T175076[ebp], 0
 
 ; 280  : 			const_iterator _Tmp = *this;
 
@@ -11497,9 +12589,9 @@ ___formal$ = 12						; size = 4
 	push	eax
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	call	??0const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@ABV012@@Z
-	mov	ecx, DWORD PTR $T171104[ebp]
+	mov	ecx, DWORD PTR $T175076[ebp]
 	or	ecx, 1
-	mov	DWORD PTR $T171104[ebp], ecx
+	mov	DWORD PTR $T175076[ebp], ecx
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	call	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
@@ -11547,10 +12639,10 @@ __unwindfunclet$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$
 	lea	ecx, DWORD PTR __Tmp$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 __unwindfunclet$??Econst_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE?AV012@H@Z$1:
-	mov	eax, DWORD PTR $T171104[ebp]
+	mov	eax, DWORD PTR $T175076[ebp]
 	and	eax, 1
 	je	$LN5@operator@4
-	and	DWORD PTR $T171104[ebp], -2		; fffffffeH
+	and	DWORD PTR $T175076[ebp], -2		; fffffffeH
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	jmp	??1const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAE@XZ
 $LN5@operator@4:
@@ -12090,7 +13182,7 @@ __Pnode$ = 8						; size = 4
 _TEXT	ENDS
 ;	COMDAT ?_Erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@@Z
 _TEXT	SEGMENT
-__Pnode$156286 = -20					; size = 4
+__Pnode$159380 = -20					; size = 4
 _this$ = -8						; size = 4
 __Rootnode$ = 8						; size = 4
 ?_Erase@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@IAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@@Z PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Erase, COMDAT
@@ -12115,13 +13207,13 @@ __Rootnode$ = 8						; size = 4
 ; 1167 : 		for (_Nodeptr _Pnode = _Rootnode; !_Isnil(_Pnode); _Rootnode = _Pnode)
 
 	mov	eax, DWORD PTR __Rootnode$[ebp]
-	mov	DWORD PTR __Pnode$156286[ebp], eax
+	mov	DWORD PTR __Pnode$159380[ebp], eax
 	jmp	SHORT $LN3@Erase
 $LN2@Erase:
-	mov	eax, DWORD PTR __Pnode$156286[ebp]
+	mov	eax, DWORD PTR __Pnode$159380[ebp]
 	mov	DWORD PTR __Rootnode$[ebp], eax
 $LN3@Erase:
-	mov	eax, DWORD PTR __Pnode$156286[ebp]
+	mov	eax, DWORD PTR __Pnode$159380[ebp]
 	push	eax
 	call	?_Isnil@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAADPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Isnil
 	add	esp, 4
@@ -12132,7 +13224,7 @@ $LN3@Erase:
 ; 1168 : 			{	// free subtrees, then node
 ; 1169 : 			_Erase(_Right(_Pnode));
 
-	mov	eax, DWORD PTR __Pnode$156286[ebp]
+	mov	eax, DWORD PTR __Pnode$159380[ebp]
 	push	eax
 	call	?_Right@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Right
 	add	esp, 4
@@ -12143,12 +13235,12 @@ $LN3@Erase:
 
 ; 1170 : 			_Pnode = _Left(_Pnode);
 
-	mov	eax, DWORD PTR __Pnode$156286[ebp]
+	mov	eax, DWORD PTR __Pnode$159380[ebp]
 	push	eax
 	call	?_Left@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Left
 	add	esp, 4
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Pnode$156286[ebp], ecx
+	mov	DWORD PTR __Pnode$159380[ebp], ecx
 
 ; 1171 : 			this->_Alnod.destroy(_Rootnode);	// destroy, free erased node
 
@@ -13027,7 +14119,7 @@ __Pnode$ = 8						; size = 4
 _TEXT	ENDS
 ;	COMDAT ?_Erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@@Z
 _TEXT	SEGMENT
-__Pnode$156343 = -20					; size = 4
+__Pnode$159437 = -20					; size = 4
 _this$ = -8						; size = 4
 __Rootnode$ = 8						; size = 4
 ?_Erase@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@IAEXPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@@Z PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Erase, COMDAT
@@ -13052,13 +14144,13 @@ __Rootnode$ = 8						; size = 4
 ; 1167 : 		for (_Nodeptr _Pnode = _Rootnode; !_Isnil(_Pnode); _Rootnode = _Pnode)
 
 	mov	eax, DWORD PTR __Rootnode$[ebp]
-	mov	DWORD PTR __Pnode$156343[ebp], eax
+	mov	DWORD PTR __Pnode$159437[ebp], eax
 	jmp	SHORT $LN3@Erase@2
 $LN2@Erase@2:
-	mov	eax, DWORD PTR __Pnode$156343[ebp]
+	mov	eax, DWORD PTR __Pnode$159437[ebp]
 	mov	DWORD PTR __Rootnode$[ebp], eax
 $LN3@Erase@2:
-	mov	eax, DWORD PTR __Pnode$156343[ebp]
+	mov	eax, DWORD PTR __Pnode$159437[ebp]
 	push	eax
 	call	?_Isnil@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAADPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Isnil
 	add	esp, 4
@@ -13069,7 +14161,7 @@ $LN3@Erase@2:
 ; 1168 : 			{	// free subtrees, then node
 ; 1169 : 			_Erase(_Right(_Pnode));
 
-	mov	eax, DWORD PTR __Pnode$156343[ebp]
+	mov	eax, DWORD PTR __Pnode$159437[ebp]
 	push	eax
 	call	?_Right@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Right
 	add	esp, 4
@@ -13080,12 +14172,12 @@ $LN3@Erase@2:
 
 ; 1170 : 			_Pnode = _Left(_Pnode);
 
-	mov	eax, DWORD PTR __Pnode$156343[ebp]
+	mov	eax, DWORD PTR __Pnode$159437[ebp]
 	push	eax
 	call	?_Left@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Left
 	add	esp, 4
 	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR __Pnode$156343[ebp], ecx
+	mov	DWORD PTR __Pnode$159437[ebp], ecx
 
 ; 1171 : 			this->_Alnod.destroy(_Rootnode);	// destroy, free erased node
 
@@ -14502,7 +15594,7 @@ CONST	SEGMENT
 CONST	ENDS
 ;	COMDAT ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAEXXZ
 _TEXT	SEGMENT
-__Pnode$156585 = -20					; size = 4
+__Pnode$159684 = -20					; size = 4
 _this$ = -8						; size = 4
 ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@QAEXXZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::const_iterator::_Inc, COMDAT
 ; _this$ = ecx
@@ -14643,15 +15735,15 @@ $LN2@Inc:
 	call	?_Parent@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Parent
 	add	esp, 4
 	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR __Pnode$156585[ebp], edx
-	mov	eax, DWORD PTR __Pnode$156585[ebp]
+	mov	DWORD PTR __Pnode$159684[ebp], edx
+	mov	eax, DWORD PTR __Pnode$159684[ebp]
 	push	eax
 	call	?_Isnil@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAADPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Isnil
 	add	esp, 4
 	movsx	ecx, BYTE PTR [eax]
 	test	ecx, ecx
 	jne	SHORT $LN1@Inc
-	mov	eax, DWORD PTR __Pnode$156585[ebp]
+	mov	eax, DWORD PTR __Pnode$159684[ebp]
 	push	eax
 	call	?_Right@?$_Tree@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,DRAMsimII::Statistics::DelayCounter,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,DRAMsimII::Statistics::DelayCounter> >,0> >::_Right
 	add	esp, 4
@@ -14663,7 +15755,7 @@ $LN2@Inc:
 ; 403  : 					_Ptr = _Pnode;	// ==> parent while right subtree
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Pnode$156585[ebp]
+	mov	ecx, DWORD PTR __Pnode$159684[ebp]
 	mov	DWORD PTR [eax+8], ecx
 	jmp	SHORT $LN2@Inc
 $LN1@Inc:
@@ -14671,7 +15763,7 @@ $LN1@Inc:
 ; 404  : 				_Ptr = _Pnode;	// ==> parent (head if end())
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Pnode$156585[ebp]
+	mov	ecx, DWORD PTR __Pnode$159684[ebp]
 	mov	DWORD PTR [eax+8], ecx
 $LN8@Inc:
 
@@ -14729,7 +15821,7 @@ CONST	SEGMENT
 CONST	ENDS
 ;	COMDAT ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAEXXZ
 _TEXT	SEGMENT
-__Pnode$156598 = -20					; size = 4
+__Pnode$159697 = -20					; size = 4
 _this$ = -8						; size = 4
 ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAEXXZ PROC ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::const_iterator::_Inc, COMDAT
 ; _this$ = ecx
@@ -14870,15 +15962,15 @@ $LN2@Inc@2:
 	call	?_Parent@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Parent
 	add	esp, 4
 	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR __Pnode$156598[ebp], edx
-	mov	eax, DWORD PTR __Pnode$156598[ebp]
+	mov	DWORD PTR __Pnode$159697[ebp], edx
+	mov	eax, DWORD PTR __Pnode$159697[ebp]
 	push	eax
 	call	?_Isnil@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAADPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Isnil
 	add	esp, 4
 	movsx	ecx, BYTE PTR [eax]
 	test	ecx, ecx
 	jne	SHORT $LN1@Inc@2
-	mov	eax, DWORD PTR __Pnode$156598[ebp]
+	mov	eax, DWORD PTR __Pnode$159697[ebp]
 	push	eax
 	call	?_Right@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@KAAAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@2@PAU342@@Z ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::_Right
 	add	esp, 4
@@ -14890,7 +15982,7 @@ $LN2@Inc@2:
 ; 403  : 					_Ptr = _Pnode;	// ==> parent while right subtree
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Pnode$156598[ebp]
+	mov	ecx, DWORD PTR __Pnode$159697[ebp]
 	mov	DWORD PTR [eax+8], ecx
 	jmp	SHORT $LN2@Inc@2
 $LN1@Inc@2:
@@ -14898,7 +15990,7 @@ $LN1@Inc@2:
 ; 404  : 				_Ptr = _Pnode;	// ==> parent (head if end())
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR __Pnode$156598[ebp]
+	mov	ecx, DWORD PTR __Pnode$159697[ebp]
 	mov	DWORD PTR [eax+8], ecx
 $LN8@Inc@2:
 
@@ -14915,8 +16007,122 @@ $LN8@Inc@2:
 	pop	ebp
 	ret	0
 ?_Inc@const_iterator@?$_Tree@V?$_Tmap_traits@_KIU?$less@_K@std@@V?$allocator@U?$pair@$$CB_KI@std@@@2@$0A@@std@@@std@@QAEXXZ ENDP ; std::_Tree<std::_Tmap_traits<unsigned __int64,unsigned int,std::less<unsigned __int64>,std::allocator<std::pair<unsigned __int64 const ,unsigned int> >,0> >::const_iterator::_Inc
+_TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+PUBLIC	??$_Ptr_cat@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0@Z ; std::_Ptr_cat<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *>
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+;	COMDAT ??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@@Z
+_TEXT	SEGMENT
+$T175206 = -197						; size = 1
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@@Z PROC ; std::_Destroy_range<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >, COMDAT
+
+; 224  : 	{	// destroy [_First, _Last)
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 225  : 	_Destroy_range(_First, _Last, _Al, _Ptr_cat(_First, _Last));
+
+	lea	eax, DWORD PTR __Last$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR __First$[ebp]
+	push	ecx
+	call	??$_Ptr_cat@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0@Z ; std::_Ptr_cat<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *>
+	add	esp, 8
+	mov	BYTE PTR $T175206[ebp], al
+	movzx	edx, BYTE PTR $T175206[ebp]
+	push	edx
+	mov	eax, DWORD PTR __Al$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+	add	esp, 16					; 00000010H
+
+; 226  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+_TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+PUBLIC	??$_Ptr_cat@PAV?$vector@IV?$allocator@I@std@@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@IV?$allocator@I@std@@@0@0@Z ; std::_Ptr_cat<std::vector<unsigned int,std::allocator<unsigned int> > *,std::vector<unsigned int,std::allocator<unsigned int> > *>
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@@Z
+_TEXT	SEGMENT
+$T175209 = -197						; size = 1
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@@Z PROC ; std::_Destroy_range<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >, COMDAT
+
+; 224  : 	{	// destroy [_First, _Last)
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 225  : 	_Destroy_range(_First, _Last, _Al, _Ptr_cat(_First, _Last));
+
+	lea	eax, DWORD PTR __Last$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR __First$[ebp]
+	push	ecx
+	call	??$_Ptr_cat@PAV?$vector@IV?$allocator@I@std@@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@IV?$allocator@I@std@@@0@0@Z ; std::_Ptr_cat<std::vector<unsigned int,std::allocator<unsigned int> > *,std::vector<unsigned int,std::allocator<unsigned int> > *>
+	add	esp, 8
+	mov	BYTE PTR $T175209[ebp], al
+	movzx	edx, BYTE PTR $T175209[ebp]
+	push	edx
+	mov	eax, DWORD PTR __Al$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+	add	esp, 16					; 00000010H
+
+; 226  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
 _TEXT	ENDS
 ;	COMDAT ??$_Destroy@PAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@std@@@std@@YAXPAPAU_Node@?$_Tree_nod@V?$_Tmap_traits@_KVDelayCounter@Statistics@DRAMsimII@@U?$less@_K@std@@V?$allocator@U?$pair@$$CB_KVDelayCounter@Statistics@DRAMsimII@@@std@@@5@$0A@@std@@@0@@Z
 _TEXT	SEGMENT
@@ -14982,7 +16188,7 @@ PUBLIC	??$_Ptr_cat@PAIPAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAI0@Z ; std::_
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy_range@V?$allocator@I@std@@@std@@YAXPAI0AAV?$allocator@I@0@@Z
 _TEXT	SEGMENT
-$T171238 = -197						; size = 1
+$T175216 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -15009,8 +16215,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PAIPAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAI0@Z ; std::_Ptr_cat<unsigned int *,unsigned int *>
 	add	esp, 8
-	mov	BYTE PTR $T171238[ebp], al
-	movzx	edx, BYTE PTR $T171238[ebp]
+	mov	BYTE PTR $T175216[ebp], al
+	movzx	edx, BYTE PTR $T175216[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -15039,7 +16245,7 @@ PUBLIC	??$_Ptr_cat@PA_JPA_J@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPA_J0@Z ; std
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy_range@V?$allocator@_J@std@@@std@@YAXPA_J0AAV?$allocator@_J@0@@Z
 _TEXT	SEGMENT
-$T171241 = -197						; size = 1
+$T175219 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -15066,8 +16272,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PA_JPA_J@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPA_J0@Z ; std::_Ptr_cat<__int64 *,__int64 *>
 	add	esp, 8
-	mov	BYTE PTR $T171241[ebp], al
-	movzx	edx, BYTE PTR $T171241[ebp]
+	mov	BYTE PTR $T175219[ebp], al
+	movzx	edx, BYTE PTR $T175219[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -15091,12 +16297,69 @@ __Al$ = 16						; size = 4
 	ret	0
 ??$_Destroy_range@V?$allocator@_J@std@@@std@@YAXPA_J0AAV?$allocator@_J@0@@Z ENDP ; std::_Destroy_range<std::allocator<__int64> >
 _TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+PUBLIC	??$_Ptr_cat@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0@Z ; std::_Ptr_cat<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *>
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@@Z
+_TEXT	SEGMENT
+$T175222 = -197						; size = 1
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@@Z PROC ; std::_Destroy_range<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >, COMDAT
+
+; 224  : 	{	// destroy [_First, _Last)
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 225  : 	_Destroy_range(_First, _Last, _Al, _Ptr_cat(_First, _Last));
+
+	lea	eax, DWORD PTR __Last$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR __First$[ebp]
+	push	ecx
+	call	??$_Ptr_cat@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0@Z ; std::_Ptr_cat<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *>
+	add	esp, 8
+	mov	BYTE PTR $T175222[ebp], al
+	movzx	edx, BYTE PTR $T175222[ebp]
+	push	edx
+	mov	eax, DWORD PTR __Al$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+	add	esp, 16					; 00000010H
+
+; 226  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+_TEXT	ENDS
 PUBLIC	??$_Destroy_range@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAXPAVChannel@DRAMsimII@@0AAV?$allocator@VChannel@DRAMsimII@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<DRAMsimII::Channel> >
 PUBLIC	??$_Ptr_cat@PAVChannel@DRAMsimII@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAVChannel@DRAMsimII@@0@Z ; std::_Ptr_cat<DRAMsimII::Channel *,DRAMsimII::Channel *>
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy_range@V?$allocator@VChannel@DRAMsimII@@@std@@@std@@YAXPAVChannel@DRAMsimII@@0AAV?$allocator@VChannel@DRAMsimII@@@0@@Z
 _TEXT	SEGMENT
-$T171244 = -197						; size = 1
+$T175225 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -15123,8 +16386,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PAVChannel@DRAMsimII@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAVChannel@DRAMsimII@@0@Z ; std::_Ptr_cat<DRAMsimII::Channel *,DRAMsimII::Channel *>
 	add	esp, 8
-	mov	BYTE PTR $T171244[ebp], al
-	movzx	edx, BYTE PTR $T171244[ebp]
+	mov	BYTE PTR $T175225[ebp], al
+	movzx	edx, BYTE PTR $T175225[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -15152,7 +16415,7 @@ __Al$ = 16						; size = 4
 _TEXT	ENDS
 ;	COMDAT ??$swap@D@std@@YAXAAD0@Z
 _TEXT	SEGMENT
-__Tmp$158670 = -5					; size = 1
+__Tmp$162045 = -5					; size = 1
 __Left$ = 8						; size = 4
 __Right$ = 12						; size = 4
 ??$swap@D@std@@YAXAAD0@Z PROC				; std::swap<char>, COMDAT
@@ -15181,7 +16444,7 @@ __Right$ = 12						; size = 4
 
 	mov	eax, DWORD PTR __Left$[ebp]
 	mov	cl, BYTE PTR [eax]
-	mov	BYTE PTR __Tmp$158670[ebp], cl
+	mov	BYTE PTR __Tmp$162045[ebp], cl
 
 ; 21   : 
 ; 22   : 		_Left = _Right;
@@ -15194,7 +16457,7 @@ __Right$ = 12						; size = 4
 ; 23   : 		_Right = _Tmp;
 
 	mov	eax, DWORD PTR __Right$[ebp]
-	mov	cl, BYTE PTR __Tmp$158670[ebp]
+	mov	cl, BYTE PTR __Tmp$162045[ebp]
 	mov	BYTE PTR [eax], cl
 $LN2@swap:
 
@@ -15245,7 +16508,7 @@ PUBLIC	??$_Ptr_cat@PAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy_range@V?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@@std@@YAXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@0AAV?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@0@@Z
 _TEXT	SEGMENT
-$T171251 = -197						; size = 1
+$T175232 = -197						; size = 1
 __First$ = 8						; size = 4
 __Last$ = 12						; size = 4
 __Al$ = 16						; size = 4
@@ -15272,8 +16535,8 @@ __Al$ = 16						; size = 4
 	push	ecx
 	call	??$_Ptr_cat@PAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@PAV123@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@0@Z ; std::_Ptr_cat<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> *,std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> *>
 	add	esp, 8
-	mov	BYTE PTR $T171251[ebp], al
-	movzx	edx, BYTE PTR $T171251[ebp]
+	mov	BYTE PTR $T175232[ebp], al
+	movzx	edx, BYTE PTR $T175232[ebp]
 	push	edx
 	mov	eax, DWORD PTR __Al$[ebp]
 	push	eax
@@ -15389,12 +16652,12 @@ __Ptr$ = 8						; size = 4
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 _TEXT	ENDS
-;	COMDAT ??$_Ptr_cat@PAIPAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAI0@Z
+;	COMDAT ??$_Ptr_cat@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0@Z
 _TEXT	SEGMENT
 __Cat$ = -5						; size = 1
 ___formal$ = 8						; size = 4
 ___formal$ = 12						; size = 4
-??$_Ptr_cat@PAIPAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAI0@Z PROC ; std::_Ptr_cat<unsigned int *,unsigned int *>, COMDAT
+??$_Ptr_cat@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0@Z PROC ; std::_Ptr_cat<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *>, COMDAT
 
 ; 1509 : 	{
 
@@ -15438,6 +16701,238 @@ $LN4@Ptr_cat:
 	DD	1
 	DD	$LN3@Ptr_cat
 $LN3@Ptr_cat:
+	DB	95					; 0000005fH
+	DB	67					; 00000043H
+	DB	97					; 00000061H
+	DB	116					; 00000074H
+	DB	0
+??$_Ptr_cat@PAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0@Z ENDP ; std::_Ptr_cat<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *,std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > *>
+_TEXT	ENDS
+PUBLIC	?destroy@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@Z ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+;	COMDAT ??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z
+_TEXT	SEGMENT
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+___formal$ = 20						; size = 1
+??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z PROC ; std::_Destroy_range<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >, COMDAT
+
+; 232  : 	{	// destroy [_First, _Last), arbitrary type
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 233  : 	for (; _First != _Last; ++_First)
+
+	jmp	SHORT $LN3@Destroy_ra
+$LN2@Destroy_ra:
+	mov	eax, DWORD PTR __First$[ebp]
+	add	eax, 20					; 00000014H
+	mov	DWORD PTR __First$[ebp], eax
+$LN3@Destroy_ra:
+	mov	eax, DWORD PTR __First$[ebp]
+	cmp	eax, DWORD PTR __Last$[ebp]
+	je	SHORT $LN4@Destroy_ra
+
+; 234  : 		_Al.destroy(_First);
+
+	mov	eax, DWORD PTR __First$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Al$[ebp]
+	call	?destroy@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@Z ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::destroy
+	jmp	SHORT $LN2@Destroy_ra
+$LN4@Destroy_ra:
+
+; 235  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 192				; 000000c0H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??$_Ptr_cat@PAV?$vector@IV?$allocator@I@std@@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@IV?$allocator@I@std@@@0@0@Z
+_TEXT	SEGMENT
+__Cat$ = -5						; size = 1
+___formal$ = 8						; size = 4
+___formal$ = 12						; size = 4
+??$_Ptr_cat@PAV?$vector@IV?$allocator@I@std@@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@IV?$allocator@I@std@@@0@0@Z PROC ; std::_Ptr_cat<std::vector<unsigned int,std::allocator<unsigned int> > *,std::vector<unsigned int,std::allocator<unsigned int> > *>, COMDAT
+
+; 1509 : 	{
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 1510 : 	typename _Ptr_cat_helper<_T1, _T2>::_Ptr_cat _Cat;
+; 1511 : 	return (_Cat);
+
+	mov	al, BYTE PTR __Cat$[ebp]
+
+; 1512 : 	}
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN5@Ptr_cat@2
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+	npad	3
+$LN5@Ptr_cat@2:
+	DD	1
+	DD	$LN4@Ptr_cat@2
+$LN4@Ptr_cat@2:
+	DD	-5					; fffffffbH
+	DD	1
+	DD	$LN3@Ptr_cat@2
+$LN3@Ptr_cat@2:
+	DB	95					; 0000005fH
+	DB	67					; 00000043H
+	DB	97					; 00000061H
+	DB	116					; 00000074H
+	DB	0
+??$_Ptr_cat@PAV?$vector@IV?$allocator@I@std@@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@IV?$allocator@I@std@@@0@0@Z ENDP ; std::_Ptr_cat<std::vector<unsigned int,std::allocator<unsigned int> > *,std::vector<unsigned int,std::allocator<unsigned int> > *>
+_TEXT	ENDS
+PUBLIC	?destroy@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@@Z ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+;	COMDAT ??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z
+_TEXT	SEGMENT
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+___formal$ = 20						; size = 1
+??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z PROC ; std::_Destroy_range<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >, COMDAT
+
+; 232  : 	{	// destroy [_First, _Last), arbitrary type
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 233  : 	for (; _First != _Last; ++_First)
+
+	jmp	SHORT $LN3@Destroy_ra@2
+$LN2@Destroy_ra@2:
+	mov	eax, DWORD PTR __First$[ebp]
+	add	eax, 20					; 00000014H
+	mov	DWORD PTR __First$[ebp], eax
+$LN3@Destroy_ra@2:
+	mov	eax, DWORD PTR __First$[ebp]
+	cmp	eax, DWORD PTR __Last$[ebp]
+	je	SHORT $LN4@Destroy_ra@2
+
+; 234  : 		_Al.destroy(_First);
+
+	mov	eax, DWORD PTR __First$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Al$[ebp]
+	call	?destroy@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@@Z ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::destroy
+	jmp	SHORT $LN2@Destroy_ra@2
+$LN4@Destroy_ra@2:
+
+; 235  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 192				; 000000c0H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@0AAV?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??$_Ptr_cat@PAIPAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAI0@Z
+_TEXT	SEGMENT
+__Cat$ = -5						; size = 1
+___formal$ = 8						; size = 4
+___formal$ = 12						; size = 4
+??$_Ptr_cat@PAIPAI@std@@YA?AU_Scalar_ptr_iterator_tag@0@AAPAI0@Z PROC ; std::_Ptr_cat<unsigned int *,unsigned int *>, COMDAT
+
+; 1509 : 	{
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 1510 : 	typename _Ptr_cat_helper<_T1, _T2>::_Ptr_cat _Cat;
+; 1511 : 	return (_Cat);
+
+	mov	al, BYTE PTR __Cat$[ebp]
+
+; 1512 : 	}
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN5@Ptr_cat@3
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+	npad	3
+$LN5@Ptr_cat@3:
+	DD	1
+	DD	$LN4@Ptr_cat@3
+$LN4@Ptr_cat@3:
+	DD	-5					; fffffffbH
+	DD	1
+	DD	$LN3@Ptr_cat@3
+$LN3@Ptr_cat@3:
 	DB	95					; 0000005fH
 	DB	67					; 00000043H
 	DB	97					; 00000061H
@@ -15510,7 +17005,7 @@ ___formal$ = 12						; size = 4
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN5@Ptr_cat@2
+	lea	edx, DWORD PTR $LN5@Ptr_cat@4
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -15521,14 +17016,14 @@ ___formal$ = 12						; size = 4
 	pop	ebp
 	ret	0
 	npad	3
-$LN5@Ptr_cat@2:
+$LN5@Ptr_cat@4:
 	DD	1
-	DD	$LN4@Ptr_cat@2
-$LN4@Ptr_cat@2:
+	DD	$LN4@Ptr_cat@4
+$LN4@Ptr_cat@4:
 	DD	-5					; fffffffbH
 	DD	1
-	DD	$LN3@Ptr_cat@2
-$LN3@Ptr_cat@2:
+	DD	$LN3@Ptr_cat@4
+$LN3@Ptr_cat@4:
 	DB	95					; 0000005fH
 	DB	67					; 00000043H
 	DB	97					; 00000061H
@@ -15571,6 +17066,122 @@ ___formal$ = 20						; size = 1
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
 _TEXT	ENDS
+;	COMDAT ??$_Ptr_cat@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0@Z
+_TEXT	SEGMENT
+__Cat$ = -5						; size = 1
+___formal$ = 8						; size = 4
+___formal$ = 12						; size = 4
+??$_Ptr_cat@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0@Z PROC ; std::_Ptr_cat<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *>, COMDAT
+
+; 1509 : 	{
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 1510 : 	typename _Ptr_cat_helper<_T1, _T2>::_Ptr_cat _Cat;
+; 1511 : 	return (_Cat);
+
+	mov	al, BYTE PTR __Cat$[ebp]
+
+; 1512 : 	}
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN5@Ptr_cat@5
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+	npad	3
+$LN5@Ptr_cat@5:
+	DD	1
+	DD	$LN4@Ptr_cat@5
+$LN4@Ptr_cat@5:
+	DD	-5					; fffffffbH
+	DD	1
+	DD	$LN3@Ptr_cat@5
+$LN3@Ptr_cat@5:
+	DB	95					; 0000005fH
+	DB	67					; 00000043H
+	DB	97					; 00000061H
+	DB	116					; 00000074H
+	DB	0
+??$_Ptr_cat@PAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0@Z ENDP ; std::_Ptr_cat<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *,std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > *>
+_TEXT	ENDS
+PUBLIC	?destroy@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@Z ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+;	COMDAT ??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z
+_TEXT	SEGMENT
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+___formal$ = 20						; size = 1
+??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z PROC ; std::_Destroy_range<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >, COMDAT
+
+; 232  : 	{	// destroy [_First, _Last), arbitrary type
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 233  : 	for (; _First != _Last; ++_First)
+
+	jmp	SHORT $LN3@Destroy_ra@3
+$LN2@Destroy_ra@3:
+	mov	eax, DWORD PTR __First$[ebp]
+	add	eax, 20					; 00000014H
+	mov	DWORD PTR __First$[ebp], eax
+$LN3@Destroy_ra@3:
+	mov	eax, DWORD PTR __First$[ebp]
+	cmp	eax, DWORD PTR __Last$[ebp]
+	je	SHORT $LN4@Destroy_ra@3
+
+; 234  : 		_Al.destroy(_First);
+
+	mov	eax, DWORD PTR __First$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Al$[ebp]
+	call	?destroy@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@Z ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::destroy
+	jmp	SHORT $LN2@Destroy_ra@3
+$LN4@Destroy_ra@3:
+
+; 235  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 192				; 000000c0H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@0AAV?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
 ;	COMDAT ??$_Ptr_cat@PAVChannel@DRAMsimII@@PAV12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAVChannel@DRAMsimII@@0@Z
 _TEXT	SEGMENT
 __Cat$ = -5						; size = 1
@@ -15601,7 +17212,7 @@ ___formal$ = 12						; size = 4
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN5@Ptr_cat@3
+	lea	edx, DWORD PTR $LN5@Ptr_cat@6
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -15612,14 +17223,14 @@ ___formal$ = 12						; size = 4
 	pop	ebp
 	ret	0
 	npad	3
-$LN5@Ptr_cat@3:
+$LN5@Ptr_cat@6:
 	DD	1
-	DD	$LN4@Ptr_cat@3
-$LN4@Ptr_cat@3:
+	DD	$LN4@Ptr_cat@6
+$LN4@Ptr_cat@6:
 	DD	-5					; fffffffbH
 	DD	1
-	DD	$LN3@Ptr_cat@3
-$LN3@Ptr_cat@3:
+	DD	$LN3@Ptr_cat@6
+$LN3@Ptr_cat@6:
 	DB	95					; 0000005fH
 	DB	67					; 00000043H
 	DB	97					; 00000061H
@@ -15653,15 +17264,15 @@ ___formal$ = 20						; size = 1
 
 ; 233  : 	for (; _First != _Last; ++_First)
 
-	jmp	SHORT $LN3@Destroy_ra
-$LN2@Destroy_ra:
+	jmp	SHORT $LN3@Destroy_ra@4
+$LN2@Destroy_ra@4:
 	mov	eax, DWORD PTR __First$[ebp]
-	add	eax, 408				; 00000198H
+	add	eax, 440				; 000001b8H
 	mov	DWORD PTR __First$[ebp], eax
-$LN3@Destroy_ra:
+$LN3@Destroy_ra@4:
 	mov	eax, DWORD PTR __First$[ebp]
 	cmp	eax, DWORD PTR __Last$[ebp]
-	je	SHORT $LN4@Destroy_ra
+	je	SHORT $LN4@Destroy_ra@4
 
 ; 234  : 		_Al.destroy(_First);
 
@@ -15669,8 +17280,8 @@ $LN3@Destroy_ra:
 	push	eax
 	mov	ecx, DWORD PTR __Al$[ebp]
 	call	?destroy@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRAMsimII@@@Z ; std::allocator<DRAMsimII::Channel>::destroy
-	jmp	SHORT $LN2@Destroy_ra
-$LN4@Destroy_ra:
+	jmp	SHORT $LN2@Destroy_ra@4
+$LN4@Destroy_ra@4:
 
 ; 235  : 	}
 
@@ -15717,7 +17328,7 @@ ___formal$ = 12						; size = 4
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN5@Ptr_cat@4
+	lea	edx, DWORD PTR $LN5@Ptr_cat@7
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -15728,14 +17339,14 @@ ___formal$ = 12						; size = 4
 	pop	ebp
 	ret	0
 	npad	3
-$LN5@Ptr_cat@4:
+$LN5@Ptr_cat@7:
 	DD	1
-	DD	$LN4@Ptr_cat@4
-$LN4@Ptr_cat@4:
+	DD	$LN4@Ptr_cat@7
+$LN4@Ptr_cat@7:
 	DD	-5					; fffffffbH
 	DD	1
-	DD	$LN3@Ptr_cat@4
-$LN3@Ptr_cat@4:
+	DD	$LN3@Ptr_cat@7
+$LN3@Ptr_cat@7:
 	DB	95					; 0000005fH
 	DB	67					; 00000043H
 	DB	97					; 00000061H
@@ -15769,15 +17380,15 @@ ___formal$ = 20						; size = 1
 
 ; 233  : 	for (; _First != _Last; ++_First)
 
-	jmp	SHORT $LN3@Destroy_ra@2
-$LN2@Destroy_ra@2:
+	jmp	SHORT $LN3@Destroy_ra@5
+$LN2@Destroy_ra@5:
 	mov	eax, DWORD PTR __First$[ebp]
 	add	eax, 12					; 0000000cH
 	mov	DWORD PTR __First$[ebp], eax
-$LN3@Destroy_ra@2:
+$LN3@Destroy_ra@5:
 	mov	eax, DWORD PTR __First$[ebp]
 	cmp	eax, DWORD PTR __Last$[ebp]
-	je	SHORT $LN4@Destroy_ra@2
+	je	SHORT $LN4@Destroy_ra@5
 
 ; 234  : 		_Al.destroy(_First);
 
@@ -15785,8 +17396,8 @@ $LN3@Destroy_ra@2:
 	push	eax
 	mov	ecx, DWORD PTR __Al$[ebp]
 	call	?destroy@?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@QAEXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@2@@Z ; std::allocator<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> >::destroy
-	jmp	SHORT $LN2@Destroy_ra@2
-$LN4@Destroy_ra@2:
+	jmp	SHORT $LN2@Destroy_ra@5
+$LN4@Destroy_ra@5:
 
 ; 235  : 	}
 
@@ -15800,6 +17411,96 @@ $LN4@Destroy_ra@2:
 	pop	ebp
 	ret	0
 ??$_Destroy_range@V?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@@std@@YAXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@0AAV?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> > >
+_TEXT	ENDS
+PUBLIC	??$_Destroy@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z ; std::_Destroy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ?destroy@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+?destroy@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@Z PROC ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::destroy, COMDAT
+; _this$ = ecx
+
+; 159  : 		{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 160  : 		_Destroy(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??$_Destroy@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z ; std::_Destroy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >
+	add	esp, 4
+
+; 161  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?destroy@?$allocator@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@2@@Z ENDP ; std::allocator<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >::destroy
+_TEXT	ENDS
+PUBLIC	??$_Destroy@V?$vector@IV?$allocator@I@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@@Z ; std::_Destroy<std::vector<unsigned int,std::allocator<unsigned int> > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ?destroy@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+?destroy@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@@Z PROC ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::destroy, COMDAT
+; _this$ = ecx
+
+; 159  : 		{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 160  : 		_Destroy(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??$_Destroy@V?$vector@IV?$allocator@I@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@@Z ; std::_Destroy<std::vector<unsigned int,std::allocator<unsigned int> > >
+	add	esp, 4
+
+; 161  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?destroy@?$allocator@V?$vector@IV?$allocator@I@std@@@std@@@std@@QAEXPAV?$vector@IV?$allocator@I@std@@@2@@Z ENDP ; std::allocator<std::vector<unsigned int,std::allocator<unsigned int> > >::destroy
 _TEXT	ENDS
 PUBLIC	??$_Destroy@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@YAXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@@Z ; std::_Destroy<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> >
 ; Function compile flags: /Odtp /RTCcsu /ZI
@@ -15846,6 +17547,51 @@ __Ptr$ = 8						; size = 4
 	ret	4
 ?destroy@?$allocator@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@QAEXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@2@@Z ENDP ; std::allocator<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> >::destroy
 _TEXT	ENDS
+PUBLIC	??$_Destroy@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z ; std::_Destroy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ?destroy@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+?destroy@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@Z PROC ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::destroy, COMDAT
+; _this$ = ecx
+
+; 159  : 		{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 160  : 		_Destroy(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??$_Destroy@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z ; std::_Destroy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >
+	add	esp, 4
+
+; 161  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?destroy@?$allocator@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@QAEXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@2@@Z ENDP ; std::allocator<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >::destroy
+_TEXT	ENDS
 PUBLIC	??$_Destroy@VChannel@DRAMsimII@@@std@@YAXPAVChannel@DRAMsimII@@@Z ; std::_Destroy<DRAMsimII::Channel>
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ?destroy@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRAMsimII@@@Z
@@ -15891,6 +17637,84 @@ __Ptr$ = 8						; size = 4
 	ret	4
 ?destroy@?$allocator@VChannel@DRAMsimII@@@std@@QAEXPAVChannel@DRAMsimII@@@Z ENDP ; std::allocator<DRAMsimII::Channel>::destroy
 _TEXT	ENDS
+PUBLIC	??_G?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAEPAXI@Z ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::`scalar deleting destructor'
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??$_Destroy@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z
+_TEXT	SEGMENT
+__Ptr$ = 8						; size = 4
+??$_Destroy@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z PROC ; std::_Destroy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >, COMDAT
+
+; 58   : 	{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 59   : 	_DESTRUCTOR(_Ty, _Ptr);
+
+	push	0
+	mov	ecx, DWORD PTR __Ptr$[ebp]
+	call	??_G?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAEPAXI@Z
+
+; 60   : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 192				; 000000c0H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy@V?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@0@@Z ENDP ; std::_Destroy<std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > > >
+_TEXT	ENDS
+PUBLIC	??_G?$vector@IV?$allocator@I@std@@@std@@QAEPAXI@Z ; std::vector<unsigned int,std::allocator<unsigned int> >::`scalar deleting destructor'
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??$_Destroy@V?$vector@IV?$allocator@I@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@@Z
+_TEXT	SEGMENT
+__Ptr$ = 8						; size = 4
+??$_Destroy@V?$vector@IV?$allocator@I@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@@Z PROC ; std::_Destroy<std::vector<unsigned int,std::allocator<unsigned int> > >, COMDAT
+
+; 58   : 	{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 59   : 	_DESTRUCTOR(_Ty, _Ptr);
+
+	push	0
+	mov	ecx, DWORD PTR __Ptr$[ebp]
+	call	??_G?$vector@IV?$allocator@I@std@@@std@@QAEPAXI@Z
+
+; 60   : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 192				; 000000c0H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy@V?$vector@IV?$allocator@I@std@@@std@@@std@@YAXPAV?$vector@IV?$allocator@I@std@@@0@@Z ENDP ; std::_Destroy<std::vector<unsigned int,std::allocator<unsigned int> > >
+_TEXT	ENDS
 PUBLIC	??_G?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QAEPAXI@Z ; std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1>::`scalar deleting destructor'
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??$_Destroy@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@YAXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@@Z
@@ -15929,6 +17753,45 @@ __Ptr$ = 8						; size = 4
 	pop	ebp
 	ret	0
 ??$_Destroy@V?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@@std@@YAXPAV?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@0@@Z ENDP ; std::_Destroy<std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1> >
+_TEXT	ENDS
+PUBLIC	??_G?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAEPAXI@Z ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::`scalar deleting destructor'
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??$_Destroy@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z
+_TEXT	SEGMENT
+__Ptr$ = 8						; size = 4
+??$_Destroy@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z PROC ; std::_Destroy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >, COMDAT
+
+; 58   : 	{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 59   : 	_DESTRUCTOR(_Ty, _Ptr);
+
+	push	0
+	mov	ecx, DWORD PTR __Ptr$[ebp]
+	call	??_G?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAEPAXI@Z
+
+; 60   : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 192				; 000000c0H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy@V?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@@std@@YAXPAV?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@0@@Z ENDP ; std::_Destroy<std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > > >
 ; Function compile flags: /Odtp /RTCcsu /ZI
 _TEXT	ENDS
 ;	COMDAT ??$_Destroy@VChannel@DRAMsimII@@@std@@YAXPAVChannel@DRAMsimII@@@Z
@@ -15974,6 +17837,91 @@ __Ptr$ = 8						; size = 4
 	ret	0
 ??$_Destroy@VChannel@DRAMsimII@@@std@@YAXPAVChannel@DRAMsimII@@@Z ENDP ; std::_Destroy<DRAMsimII::Channel>
 _TEXT	ENDS
+PUBLIC	??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::~vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??_G?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAEPAXI@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+___flags$ = 8						; size = 4
+??_G?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAEPAXI@Z PROC ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::`scalar deleting destructor', COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::~vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >
+	mov	eax, DWORD PTR ___flags$[ebp]
+	and	eax, 1
+	je	SHORT $LN1@scalar
+	mov	eax, DWORD PTR _this$[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+$LN1@scalar:
+	mov	eax, DWORD PTR _this$[ebp]
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+??_G?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAEPAXI@Z ENDP ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::`scalar deleting destructor'
+; Function compile flags: /Odtp /RTCcsu /ZI
+_TEXT	ENDS
+;	COMDAT ??_G?$vector@IV?$allocator@I@std@@@std@@QAEPAXI@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+___flags$ = 8						; size = 4
+??_G?$vector@IV?$allocator@I@std@@@std@@QAEPAXI@Z PROC	; std::vector<unsigned int,std::allocator<unsigned int> >::`scalar deleting destructor', COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$vector@IV?$allocator@I@std@@@std@@QAE@XZ ; std::vector<unsigned int,std::allocator<unsigned int> >::~vector<unsigned int,std::allocator<unsigned int> >
+	mov	eax, DWORD PTR ___flags$[ebp]
+	and	eax, 1
+	je	SHORT $LN1@scalar@2
+	mov	eax, DWORD PTR _this$[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+$LN1@scalar@2:
+	mov	eax, DWORD PTR _this$[ebp]
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+??_G?$vector@IV?$allocator@I@std@@@std@@QAEPAXI@Z ENDP	; std::vector<unsigned int,std::allocator<unsigned int> >::`scalar deleting destructor'
+_TEXT	ENDS
 PUBLIC	??1?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QAE@XZ ; std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1>::~_Iterator<1>
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??_G?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QAEPAXI@Z
@@ -15999,12 +17947,12 @@ ___flags$ = 8						; size = 4
 	call	??1?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QAE@XZ
 	mov	eax, DWORD PTR ___flags$[ebp]
 	and	eax, 1
-	je	SHORT $LN1@scalar
+	je	SHORT $LN1@scalar@3
 	mov	eax, DWORD PTR _this$[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	add	esp, 4
-$LN1@scalar:
+$LN1@scalar@3:
 	mov	eax, DWORD PTR _this$[ebp]
 	pop	edi
 	pop	esi
@@ -16016,6 +17964,49 @@ $LN1@scalar:
 	pop	ebp
 	ret	4
 ??_G?$_Iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QAEPAXI@Z ENDP ; std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Iterator<1>::`scalar deleting destructor'
+_TEXT	ENDS
+PUBLIC	??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??_G?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAEPAXI@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+___flags$ = 8						; size = 4
+??_G?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAEPAXI@Z PROC ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::`scalar deleting destructor', COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+	mov	eax, DWORD PTR ___flags$[ebp]
+	and	eax, 1
+	je	SHORT $LN1@scalar@4
+	mov	eax, DWORD PTR _this$[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+$LN1@scalar@4:
+	mov	eax, DWORD PTR _this$[ebp]
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+??_G?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAEPAXI@Z ENDP ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::`scalar deleting destructor'
 _TEXT	ENDS
 PUBLIC	??1?$_Const_iterator@$00@?$list@U?$pair@$$CBII@std@@V?$allocator@U?$pair@$$CBII@std@@@2@@std@@QAE@XZ ; std::list<std::pair<unsigned int const ,unsigned int>,std::allocator<std::pair<unsigned int const ,unsigned int> > >::_Const_iterator<1>::~_Const_iterator<1>
 ; Function compile flags: /Odtp /RTCcsu /ZI
@@ -16147,5 +18138,1203 @@ _this$ = -8						; size = 4
 	pop	ebp
 	ret	0
 ??1?$_Iterator_with_base@Ubidirectional_iterator_tag@std@@U?$pair@$$CBII@2@HPBU32@ABU32@V_Iterator_base@2@@std@@QAE@XZ ENDP ; std::_Iterator_with_base<std::bidirectional_iterator_tag,std::pair<unsigned int const ,unsigned int>,int,std::pair<unsigned int const ,unsigned int> const *,std::pair<unsigned int const ,unsigned int> const &,std::_Iterator_base>::~_Iterator_with_base<std::bidirectional_iterator_tag,std::pair<unsigned int const ,unsigned int>,int,std::pair<unsigned int const ,unsigned int> const *,std::pair<unsigned int const ,unsigned int> const &,std::_Iterator_base>
+_TEXT	ENDS
+PUBLIC	??1?$_Vector_val@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ ; std::_Vector_val<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::~_Vector_val<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >
+PUBLIC	?_Tidy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXXZ ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::_Tidy
+;	COMDAT xdata$x
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+xdata$x	SEGMENT
+__unwindtable$??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ$0
+__ehfuncinfo$??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ DD 019930522H
+	DD	01H
+	DD	FLAT:__unwindtable$??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Odtp /RTCcsu /ZI
+xdata$x	ENDS
+;	COMDAT ??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -20						; size = 4
+__$EHRec$ = -12						; size = 12
+??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ PROC ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::~vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >, COMDAT
+; _this$ = ecx
+
+; 558  : 		{	// destroy the object
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-216]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	DWORD PTR __$EHRec$[ebp+8], 0
+
+; 559  : 		_Tidy();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Tidy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXXZ ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::_Tidy
+
+; 560  : 		}
+
+	mov	DWORD PTR __$EHRec$[ebp+8], -1
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Vector_val@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ
+	mov	ecx, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 216				; 000000d8H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ$0:
+	mov	ecx, DWORD PTR _this$[ebp]
+	jmp	??1?$_Vector_val@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ
+__ehhandler$??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-220]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??1?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ ENDP ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::~vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >
+PUBLIC	??1?$_Vector_val@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ ; std::_Vector_val<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~_Vector_val<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+PUBLIC	?_Tidy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXXZ ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::_Tidy
+;	COMDAT xdata$x
+xdata$x	SEGMENT
+__unwindtable$??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ DD 0ffffffffH
+	DD	FLAT:__unwindfunclet$??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ$0
+__ehfuncinfo$??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ DD 019930522H
+	DD	01H
+	DD	FLAT:__unwindtable$??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ
+	DD	2 DUP(00H)
+	DD	2 DUP(00H)
+	DD	00H
+	DD	01H
+; Function compile flags: /Odtp /RTCcsu /ZI
+xdata$x	ENDS
+;	COMDAT ??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -20						; size = 4
+__$EHRec$ = -12						; size = 12
+??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ PROC ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >, COMDAT
+; _this$ = ecx
+
+; 558  : 		{	// destroy the object
+
+	push	ebp
+	mov	ebp, esp
+	push	-1
+	push	__ehhandler$??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ
+	mov	eax, DWORD PTR fs:0
+	push	eax
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-216]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	eax, DWORD PTR ___security_cookie
+	xor	eax, ebp
+	push	eax
+	lea	eax, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, eax
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	DWORD PTR __$EHRec$[ebp+8], 0
+
+; 559  : 		_Tidy();
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Tidy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXXZ ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::_Tidy
+
+; 560  : 		}
+
+	mov	DWORD PTR __$EHRec$[ebp+8], -1
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Vector_val@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ
+	mov	ecx, DWORD PTR __$EHRec$[ebp]
+	mov	DWORD PTR fs:0, ecx
+	pop	ecx
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 216				; 000000d8H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+_TEXT	ENDS
+;	COMDAT text$x
+text$x	SEGMENT
+__unwindfunclet$??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ$0:
+	mov	ecx, DWORD PTR _this$[ebp]
+	jmp	??1?$_Vector_val@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ
+__ehhandler$??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ:
+	mov	edx, DWORD PTR [esp+8]
+	lea	eax, DWORD PTR [edx+12]
+	mov	ecx, DWORD PTR [edx-220]
+	xor	ecx, eax
+	call	@__security_check_cookie@4
+	mov	eax, OFFSET __ehfuncinfo$??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ
+	jmp	___CxxFrameHandler3
+text$x	ENDS
+??1?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ ENDP ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+PUBLIC	??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@II@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::pair<unsigned int,unsigned int> > >::~_Container_base_aux_alloc_empty<std::allocator<std::pair<unsigned int,unsigned int> > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??1?$_Vector_val@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Vector_val@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ PROC ; std::_Vector_val<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::~_Vector_val<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >, COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@II@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::pair<unsigned int,unsigned int> > >::~_Container_base_aux_alloc_empty<std::allocator<std::pair<unsigned int,unsigned int> > >
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Vector_val@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@QAE@XZ ENDP ; std::_Vector_val<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::~_Vector_val<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >
+_TEXT	ENDS
+PUBLIC	??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~_Container_base_aux_alloc_empty<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??1?$_Vector_val@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Vector_val@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ PROC ; std::_Vector_val<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~_Vector_val<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >, COMDAT
+; _this$ = ecx
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@IAE@XZ ; std::_Container_base_aux_alloc_empty<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~_Container_base_aux_alloc_empty<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Vector_val@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@QAE@XZ ENDP ; std::_Vector_val<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~_Vector_val<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+_TEXT	ENDS
+PUBLIC	?deallocate@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@I@Z ; std::allocator<std::pair<unsigned int,unsigned int> >::deallocate
+PUBLIC	?_Destroy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXPAU?$pair@II@2@0@Z ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::_Destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ?_Tidy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXXZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+?_Tidy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXXZ PROC ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::_Tidy, COMDAT
+; _this$ = ecx
+
+; 1123 : 		{	// free all storage
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1124 : 		if (_Myfirst != 0)
+
+	mov	eax, DWORD PTR _this$[ebp]
+	cmp	DWORD PTR [eax+8], 0
+	je	SHORT $LN1@Tidy@8
+
+; 1125 : 			{	// something to free, destroy and deallocate it
+; 1126 : 
+; 1127 :  #if _HAS_ITERATOR_DEBUGGING
+; 1128 : 			this->_Orphan_all();
+
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_?_Orphan_all@_Container_base_secure@std@@QBEXXZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 1129 :  #endif /* _HAS_ITERATOR_DEBUGGING */
+; 1130 : 
+; 1131 : 			_Destroy(_Myfirst, _Mylast);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+12]
+	push	ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Destroy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXPAU?$pair@II@2@0@Z ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::_Destroy
+
+; 1132 : 			this->_Alval.deallocate(_Myfirst, _Myend - _Myfirst);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [eax+16]
+	sub	edx, DWORD PTR [ecx+8]
+	sar	edx, 3
+	push	edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 4
+	call	?deallocate@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@I@Z ; std::allocator<std::pair<unsigned int,unsigned int> >::deallocate
+$LN1@Tidy@8:
+
+; 1133 : 			}
+; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+8], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+12], 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [edx+16], 0
+
+; 1135 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?_Tidy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXXZ ENDP ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::_Tidy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@II@std@@@std@@@std@@IAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@II@std@@@std@@@std@@IAE@XZ PROC ; std::_Container_base_aux_alloc_empty<std::allocator<std::pair<unsigned int,unsigned int> > >::~_Container_base_aux_alloc_empty<std::allocator<std::pair<unsigned int,unsigned int> > >, COMDAT
+; _this$ = ecx
+
+; 627  : 	~_Container_base_aux_alloc_empty() { }
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_??1_Container_base_secure@std@@QAE@XZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@II@std@@@std@@@std@@IAE@XZ ENDP ; std::_Container_base_aux_alloc_empty<std::allocator<std::pair<unsigned int,unsigned int> > >::~_Container_base_aux_alloc_empty<std::allocator<std::pair<unsigned int,unsigned int> > >
+_TEXT	ENDS
+PUBLIC	?deallocate@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@I@Z ; std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >::deallocate
+PUBLIC	?_Destroy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@0@Z ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::_Destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+;	COMDAT ?_Tidy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXXZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+?_Tidy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXXZ PROC ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::_Tidy, COMDAT
+; _this$ = ecx
+
+; 1123 : 		{	// free all storage
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1124 : 		if (_Myfirst != 0)
+
+	mov	eax, DWORD PTR _this$[ebp]
+	cmp	DWORD PTR [eax+8], 0
+	je	SHORT $LN1@Tidy@9
+
+; 1125 : 			{	// something to free, destroy and deallocate it
+; 1126 : 
+; 1127 :  #if _HAS_ITERATOR_DEBUGGING
+; 1128 : 			this->_Orphan_all();
+
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_?_Orphan_all@_Container_base_secure@std@@QBEXXZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+
+; 1129 :  #endif /* _HAS_ITERATOR_DEBUGGING */
+; 1130 : 
+; 1131 : 			_Destroy(_Myfirst, _Mylast);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+12]
+	push	ecx
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [edx+8]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	?_Destroy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@0@Z ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::_Destroy
+
+; 1132 : 			this->_Alval.deallocate(_Myfirst, _Myend - _Myfirst);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	edx, DWORD PTR [eax+16]
+	sub	edx, DWORD PTR [ecx+8]
+	sar	edx, 5
+	push	edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+8]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 4
+	call	?deallocate@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@I@Z ; std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >::deallocate
+$LN1@Tidy@9:
+
+; 1133 : 			}
+; 1134 : 		_Myfirst = 0, _Mylast = 0, _Myend = 0;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+8], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [ecx+12], 0
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [edx+16], 0
+
+; 1135 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?_Tidy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXXZ ENDP ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::_Tidy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@IAE@XZ
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@IAE@XZ PROC ; std::_Container_base_aux_alloc_empty<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~_Container_base_aux_alloc_empty<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >, COMDAT
+; _this$ = ecx
+
+; 627  : 	~_Container_base_aux_alloc_empty() { }
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	esi, esp
+	mov	ecx, DWORD PTR _this$[ebp]
+	call	DWORD PTR __imp_??1_Container_base_secure@std@@QAE@XZ
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??1?$_Container_base_aux_alloc_empty@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@IAE@XZ ENDP ; std::_Container_base_aux_alloc_empty<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::~_Container_base_aux_alloc_empty<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+_TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::pair<unsigned int,unsigned int> > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+;	COMDAT ?_Destroy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXPAU?$pair@II@2@0@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+?_Destroy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXPAU?$pair@II@2@0@Z PROC ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::_Destroy, COMDAT
+; _this$ = ecx
+
+; 1118 : 		{	// destroy [_First, _Last) using allocator
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1119 : 		_Destroy_range(_First, _Last, this->_Alval);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 4
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::pair<unsigned int,unsigned int> > >
+	add	esp, 12					; 0000000cH
+
+; 1120 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?_Destroy@?$vector@U?$pair@II@std@@V?$allocator@U?$pair@II@std@@@2@@std@@IAEXPAU?$pair@II@2@0@Z ENDP ; std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int> > >::_Destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+_TEXT	ENDS
+;	COMDAT ?deallocate@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@I@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+___formal$ = 12						; size = 4
+?deallocate@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@I@Z PROC ; std::allocator<std::pair<unsigned int,unsigned int> >::deallocate, COMDAT
+; _this$ = ecx
+
+; 139  : 		{	// deallocate object at _Ptr, ignore size
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 140  : 		::operator delete(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+
+; 141  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?deallocate@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@I@Z ENDP ; std::allocator<std::pair<unsigned int,unsigned int> >::deallocate
+_TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\vector
+;	COMDAT ?_Destroy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@0@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+?_Destroy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@0@Z PROC ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::_Destroy, COMDAT
+; _this$ = ecx
+
+; 1118 : 		{	// destroy [_First, _Last) using allocator
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 1119 : 		_Destroy_range(_First, _Last, this->_Alval);
+
+	mov	eax, DWORD PTR _this$[ebp]
+	add	eax, 4
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@@Z ; std::_Destroy_range<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+	add	esp, 12					; 0000000cH
+
+; 1120 : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?_Destroy@?$vector@U?$pair@U?$pair@_K_K@std@@U12@@std@@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@2@@std@@IAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@0@Z ENDP ; std::vector<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> >,std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >::_Destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+_TEXT	ENDS
+;	COMDAT ?deallocate@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@I@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+___formal$ = 12						; size = 4
+?deallocate@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@I@Z PROC ; std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >::deallocate, COMDAT
+; _this$ = ecx
+
+; 139  : 		{	// deallocate object at _Ptr, ignore size
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 140  : 		::operator delete(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??3@YAXPAX@Z				; operator delete
+	add	esp, 4
+
+; 141  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	8
+?deallocate@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@I@Z ENDP ; std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >::deallocate
+_TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::pair<unsigned int,unsigned int> > >
+PUBLIC	??$_Ptr_cat@PAU?$pair@II@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@II@0@0@Z ; std::_Ptr_cat<std::pair<unsigned int,unsigned int> *,std::pair<unsigned int,unsigned int> *>
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@@Z
+_TEXT	SEGMENT
+$T175372 = -197						; size = 1
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@@Z PROC ; std::_Destroy_range<std::allocator<std::pair<unsigned int,unsigned int> > >, COMDAT
+
+; 224  : 	{	// destroy [_First, _Last)
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 225  : 	_Destroy_range(_First, _Last, _Al, _Ptr_cat(_First, _Last));
+
+	lea	eax, DWORD PTR __Last$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR __First$[ebp]
+	push	ecx
+	call	??$_Ptr_cat@PAU?$pair@II@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@II@0@0@Z ; std::_Ptr_cat<std::pair<unsigned int,unsigned int> *,std::pair<unsigned int,unsigned int> *>
+	add	esp, 8
+	mov	BYTE PTR $T175372[ebp], al
+	movzx	edx, BYTE PTR $T175372[ebp]
+	push	edx
+	mov	eax, DWORD PTR __Al$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::pair<unsigned int,unsigned int> > >
+	add	esp, 16					; 00000010H
+
+; 226  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::pair<unsigned int,unsigned int> > >
+_TEXT	ENDS
+PUBLIC	??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+PUBLIC	??$_Ptr_cat@PAU?$pair@U?$pair@_K_K@std@@U12@@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@U?$pair@_K_K@std@@U12@@0@0@Z ; std::_Ptr_cat<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > *,std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > *>
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@@Z
+_TEXT	SEGMENT
+$T175375 = -197						; size = 1
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@@Z PROC ; std::_Destroy_range<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >, COMDAT
+
+; 224  : 	{	// destroy [_First, _Last)
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 225  : 	_Destroy_range(_First, _Last, _Al, _Ptr_cat(_First, _Last));
+
+	lea	eax, DWORD PTR __Last$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR __First$[ebp]
+	push	ecx
+	call	??$_Ptr_cat@PAU?$pair@U?$pair@_K_K@std@@U12@@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@U?$pair@_K_K@std@@U12@@0@0@Z ; std::_Ptr_cat<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > *,std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > *>
+	add	esp, 8
+	mov	BYTE PTR $T175375[ebp], al
+	movzx	edx, BYTE PTR $T175375[ebp]
+	push	edx
+	mov	eax, DWORD PTR __Al$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Last$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR __First$[ebp]
+	push	edx
+	call	??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ; std::_Destroy_range<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+	add	esp, 16					; 00000010H
+
+; 226  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??$_Ptr_cat@PAU?$pair@II@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@II@0@0@Z
+_TEXT	SEGMENT
+__Cat$ = -5						; size = 1
+___formal$ = 8						; size = 4
+___formal$ = 12						; size = 4
+??$_Ptr_cat@PAU?$pair@II@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@II@0@0@Z PROC ; std::_Ptr_cat<std::pair<unsigned int,unsigned int> *,std::pair<unsigned int,unsigned int> *>, COMDAT
+
+; 1509 : 	{
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 1510 : 	typename _Ptr_cat_helper<_T1, _T2>::_Ptr_cat _Cat;
+; 1511 : 	return (_Cat);
+
+	mov	al, BYTE PTR __Cat$[ebp]
+
+; 1512 : 	}
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN5@Ptr_cat@8
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+	npad	3
+$LN5@Ptr_cat@8:
+	DD	1
+	DD	$LN4@Ptr_cat@8
+$LN4@Ptr_cat@8:
+	DD	-5					; fffffffbH
+	DD	1
+	DD	$LN3@Ptr_cat@8
+$LN3@Ptr_cat@8:
+	DB	95					; 0000005fH
+	DB	67					; 00000043H
+	DB	97					; 00000061H
+	DB	116					; 00000074H
+	DB	0
+??$_Ptr_cat@PAU?$pair@II@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@II@0@0@Z ENDP ; std::_Ptr_cat<std::pair<unsigned int,unsigned int> *,std::pair<unsigned int,unsigned int> *>
+_TEXT	ENDS
+PUBLIC	?destroy@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@@Z ; std::allocator<std::pair<unsigned int,unsigned int> >::destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+;	COMDAT ??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z
+_TEXT	SEGMENT
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+___formal$ = 20						; size = 1
+??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z PROC ; std::_Destroy_range<std::allocator<std::pair<unsigned int,unsigned int> > >, COMDAT
+
+; 232  : 	{	// destroy [_First, _Last), arbitrary type
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 233  : 	for (; _First != _Last; ++_First)
+
+	jmp	SHORT $LN3@Destroy_ra@6
+$LN2@Destroy_ra@6:
+	mov	eax, DWORD PTR __First$[ebp]
+	add	eax, 8
+	mov	DWORD PTR __First$[ebp], eax
+$LN3@Destroy_ra@6:
+	mov	eax, DWORD PTR __First$[ebp]
+	cmp	eax, DWORD PTR __Last$[ebp]
+	je	SHORT $LN4@Destroy_ra@6
+
+; 234  : 		_Al.destroy(_First);
+
+	mov	eax, DWORD PTR __First$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Al$[ebp]
+	call	?destroy@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@@Z ; std::allocator<std::pair<unsigned int,unsigned int> >::destroy
+	jmp	SHORT $LN2@Destroy_ra@6
+$LN4@Destroy_ra@6:
+
+; 235  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 192				; 000000c0H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@U?$pair@II@std@@@std@@@std@@YAXPAU?$pair@II@0@0AAV?$allocator@U?$pair@II@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::pair<unsigned int,unsigned int> > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xutility
+_TEXT	ENDS
+;	COMDAT ??$_Ptr_cat@PAU?$pair@U?$pair@_K_K@std@@U12@@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@U?$pair@_K_K@std@@U12@@0@0@Z
+_TEXT	SEGMENT
+__Cat$ = -5						; size = 1
+___formal$ = 8						; size = 4
+___formal$ = 12						; size = 4
+??$_Ptr_cat@PAU?$pair@U?$pair@_K_K@std@@U12@@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@U?$pair@_K_K@std@@U12@@0@0@Z PROC ; std::_Ptr_cat<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > *,std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > *>, COMDAT
+
+; 1509 : 	{
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 1510 : 	typename _Ptr_cat_helper<_T1, _T2>::_Ptr_cat _Cat;
+; 1511 : 	return (_Cat);
+
+	mov	al, BYTE PTR __Cat$[ebp]
+
+; 1512 : 	}
+
+	push	edx
+	mov	ecx, ebp
+	push	eax
+	lea	edx, DWORD PTR $LN5@Ptr_cat@9
+	call	@_RTC_CheckStackVars@8
+	pop	eax
+	pop	edx
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+	npad	3
+$LN5@Ptr_cat@9:
+	DD	1
+	DD	$LN4@Ptr_cat@9
+$LN4@Ptr_cat@9:
+	DD	-5					; fffffffbH
+	DD	1
+	DD	$LN3@Ptr_cat@9
+$LN3@Ptr_cat@9:
+	DB	95					; 0000005fH
+	DB	67					; 00000043H
+	DB	97					; 00000061H
+	DB	116					; 00000074H
+	DB	0
+??$_Ptr_cat@PAU?$pair@U?$pair@_K_K@std@@U12@@std@@PAU12@@std@@YA?AU_Nonscalar_ptr_iterator_tag@0@AAPAU?$pair@U?$pair@_K_K@std@@U12@@0@0@Z ENDP ; std::_Ptr_cat<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > *,std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > *>
+_TEXT	ENDS
+PUBLIC	?destroy@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@@Z ; std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >::destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+; File c:\program files\microsoft visual studio 9.0\vc\include\xmemory
+;	COMDAT ??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z
+_TEXT	SEGMENT
+__First$ = 8						; size = 4
+__Last$ = 12						; size = 4
+__Al$ = 16						; size = 4
+___formal$ = 20						; size = 1
+??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z PROC ; std::_Destroy_range<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >, COMDAT
+
+; 232  : 	{	// destroy [_First, _Last), arbitrary type
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 233  : 	for (; _First != _Last; ++_First)
+
+	jmp	SHORT $LN3@Destroy_ra@7
+$LN2@Destroy_ra@7:
+	mov	eax, DWORD PTR __First$[ebp]
+	add	eax, 32					; 00000020H
+	mov	DWORD PTR __First$[ebp], eax
+$LN3@Destroy_ra@7:
+	mov	eax, DWORD PTR __First$[ebp]
+	cmp	eax, DWORD PTR __Last$[ebp]
+	je	SHORT $LN4@Destroy_ra@7
+
+; 234  : 		_Al.destroy(_First);
+
+	mov	eax, DWORD PTR __First$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR __Al$[ebp]
+	call	?destroy@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@@Z ; std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >::destroy
+	jmp	SHORT $LN2@Destroy_ra@7
+$LN4@Destroy_ra@7:
+
+; 235  : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 192				; 000000c0H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy_range@V?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@0AAV?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@0@U_Nonscalar_ptr_iterator_tag@0@@Z ENDP ; std::_Destroy_range<std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > > >
+_TEXT	ENDS
+PUBLIC	??$_Destroy@U?$pair@II@std@@@std@@YAXPAU?$pair@II@0@@Z ; std::_Destroy<std::pair<unsigned int,unsigned int> >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ?destroy@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+?destroy@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@@Z PROC ; std::allocator<std::pair<unsigned int,unsigned int> >::destroy, COMDAT
+; _this$ = ecx
+
+; 159  : 		{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 160  : 		_Destroy(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??$_Destroy@U?$pair@II@std@@@std@@YAXPAU?$pair@II@0@@Z ; std::_Destroy<std::pair<unsigned int,unsigned int> >
+	add	esp, 4
+
+; 161  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?destroy@?$allocator@U?$pair@II@std@@@std@@QAEXPAU?$pair@II@2@@Z ENDP ; std::allocator<std::pair<unsigned int,unsigned int> >::destroy
+_TEXT	ENDS
+PUBLIC	??$_Destroy@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@@Z ; std::_Destroy<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >
+; Function compile flags: /Odtp /RTCcsu /ZI
+;	COMDAT ?destroy@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@@Z
+_TEXT	SEGMENT
+_this$ = -8						; size = 4
+__Ptr$ = 8						; size = 4
+?destroy@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@@Z PROC ; std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >::destroy, COMDAT
+; _this$ = ecx
+
+; 159  : 		{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 204				; 000000ccH
+	push	ebx
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-204]
+	mov	ecx, 51					; 00000033H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 160  : 		_Destroy(_Ptr);
+
+	mov	eax, DWORD PTR __Ptr$[ebp]
+	push	eax
+	call	??$_Destroy@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@@Z ; std::_Destroy<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >
+	add	esp, 4
+
+; 161  : 		}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 204				; 000000ccH
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	4
+?destroy@?$allocator@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@QAEXPAU?$pair@U?$pair@_K_K@std@@U12@@2@@Z ENDP ; std::allocator<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >::destroy
+; Function compile flags: /Odtp /RTCcsu /ZI
+_TEXT	ENDS
+;	COMDAT ??$_Destroy@U?$pair@II@std@@@std@@YAXPAU?$pair@II@0@@Z
+_TEXT	SEGMENT
+__Ptr$ = 8						; size = 4
+??$_Destroy@U?$pair@II@std@@@std@@YAXPAU?$pair@II@0@@Z PROC ; std::_Destroy<std::pair<unsigned int,unsigned int> >, COMDAT
+
+; 58   : 	{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 59   : 	_DESTRUCTOR(_Ty, _Ptr);
+; 60   : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy@U?$pair@II@std@@@std@@YAXPAU?$pair@II@0@@Z ENDP ; std::_Destroy<std::pair<unsigned int,unsigned int> >
+; Function compile flags: /Odtp /RTCcsu /ZI
+_TEXT	ENDS
+;	COMDAT ??$_Destroy@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@@Z
+_TEXT	SEGMENT
+__Ptr$ = 8						; size = 4
+??$_Destroy@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@@Z PROC ; std::_Destroy<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >, COMDAT
+
+; 58   : 	{	// destroy object at _Ptr
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 192				; 000000c0H
+	push	ebx
+	push	esi
+	push	edi
+	lea	edi, DWORD PTR [ebp-192]
+	mov	ecx, 48					; 00000030H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+
+; 59   : 	_DESTRUCTOR(_Ty, _Ptr);
+; 60   : 	}
+
+	pop	edi
+	pop	esi
+	pop	ebx
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+??$_Destroy@U?$pair@U?$pair@_K_K@std@@U12@@std@@@std@@YAXPAU?$pair@U?$pair@_K_K@std@@U12@@0@@Z ENDP ; std::_Destroy<std::pair<std::pair<unsigned __int64,unsigned __int64>,std::pair<unsigned __int64,unsigned __int64> > >
 _TEXT	ENDS
 END

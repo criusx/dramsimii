@@ -69,7 +69,7 @@ PUBLIC	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABV
 ; Function compile flags: /Ogtpy
 ; File c:\users\crius\documents\visual studio 2008\projects\dramsimiihg\src\event.cpp
 _TEXT	SEGMENT
-$T605300 = -8						; size = 8
+$T645572 = -8						; size = 8
 _os$ = 8						; size = 4
 ??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVEvent@0@@Z PROC ; DRAMsimII::operator<<
 ; _currentEvent$ = edi
@@ -96,24 +96,24 @@ _os$ = 8						; size = 4
 	sub	eax, DWORD PTR [edi+24]
 	push	esi
 	sbb	ecx, DWORD PTR [edi+28]
-	mov	DWORD PTR $T605300[esp+20], eax
+	mov	DWORD PTR $T645572[esp+20], eax
 	mov	eax, DWORD PTR _os$[esp+16]
 	push	OFFSET ??_C@_03EKLIEPMF@?5Q?$FL?$AA@
 	lea	esi, DWORD PTR [edi+40]
-	mov	DWORD PTR $T605300[esp+28], ecx
+	mov	DWORD PTR $T645572[esp+28], ecx
 	call	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVAddress@0@@Z ; DRAMsimII::operator<<
 	push	eax
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 	test	eax, eax
-	jne	SHORT $LN9@operator@351
+	jne	SHORT $LN9@operator@425
 	xor	ecx, ecx
-	jmp	SHORT $LN10@operator@351
-$LN9@operator@351:
+	jmp	SHORT $LN10@operator@425
+$LN9@operator@425:
 	mov	ecx, DWORD PTR [eax]
 	mov	ecx, DWORD PTR [ecx+4]
 	add	ecx, eax
-$LN10@operator@351:
+$LN10@operator@425:
 	mov	edx, DWORD PTR [ecx+16]
 	and	edx, -3073				; fffff3ffH
 	or	edx, 512				; 00000200H
@@ -129,14 +129,14 @@ $LN10@operator@351:
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 	test	eax, eax
-	jne	SHORT $LN17@operator@351
+	jne	SHORT $LN17@operator@425
 	xor	ecx, ecx
-	jmp	SHORT $LN18@operator@351
-$LN17@operator@351:
+	jmp	SHORT $LN18@operator@425
+$LN17@operator@425:
 	mov	ecx, DWORD PTR [eax]
 	mov	ecx, DWORD PTR [ecx+4]
 	add	ecx, eax
-$LN18@operator@351:
+$LN18@operator@425:
 	mov	edx, DWORD PTR [ecx+16]
 	and	edx, -3073				; fffff3ffH
 	or	edx, 512				; 00000200H
@@ -152,14 +152,14 @@ $LN18@operator@351:
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 	test	eax, eax
-	jne	SHORT $LN25@operator@351
+	jne	SHORT $LN25@operator@425
 	xor	ecx, ecx
-	jmp	SHORT $LN26@operator@351
-$LN25@operator@351:
+	jmp	SHORT $LN26@operator@425
+$LN25@operator@425:
 	mov	ecx, DWORD PTR [eax]
 	mov	ecx, DWORD PTR [ecx+4]
 	add	ecx, eax
-$LN26@operator@351:
+$LN26@operator@425:
 	mov	edx, DWORD PTR [ecx+16]
 	and	edx, -3073				; fffff3ffH
 	or	edx, 512				; 00000200H
@@ -175,20 +175,20 @@ $LN26@operator@351:
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 	test	eax, eax
-	jne	SHORT $LN33@operator@351
+	jne	SHORT $LN33@operator@425
 	xor	ecx, ecx
-	jmp	SHORT $LN34@operator@351
-$LN33@operator@351:
+	jmp	SHORT $LN34@operator@425
+$LN33@operator@425:
 	mov	ecx, DWORD PTR [eax]
 	mov	ecx, DWORD PTR [ecx+4]
 	add	ecx, eax
-$LN34@operator@351:
+$LN34@operator@425:
 	mov	edx, DWORD PTR [ecx+16]
 	and	edx, -3073				; fffff3ffH
 	or	edx, 512				; 00000200H
 	mov	DWORD PTR [ecx+16], edx
-	mov	ecx, DWORD PTR $T605300[esp+24]
-	mov	edx, DWORD PTR $T605300[esp+20]
+	mov	ecx, DWORD PTR $T645572[esp+24]
+	mov	edx, DWORD PTR $T645572[esp+20]
 	push	OFFSET ??_C@_06KLGMCFCD@?$FN?5LAT?$FL?$AA@
 	push	ecx
 	push	edx
@@ -198,14 +198,14 @@ $LN34@operator@351:
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 	test	eax, eax
-	jne	SHORT $LN41@operator@351
+	jne	SHORT $LN41@operator@425
 	xor	ecx, ecx
-	jmp	SHORT $LN42@operator@351
-$LN41@operator@351:
+	jmp	SHORT $LN42@operator@425
+$LN41@operator@425:
 	mov	ecx, DWORD PTR [eax]
 	mov	ecx, DWORD PTR [ecx+4]
 	add	ecx, eax
-$LN42@operator@351:
+$LN42@operator@425:
 	mov	edx, DWORD PTR [ecx+16]
 	push	OFFSET ??_C@_01LBDDMOBJ@?$FN?$AA@
 	push	ebp

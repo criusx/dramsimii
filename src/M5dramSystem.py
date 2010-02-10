@@ -51,6 +51,12 @@ class M5dramSystem(PhysicalMemory):
 	readWriteGrouping = Param.String("true","")
 	autoPrecharge = Param.String("true","");
 
+	# cache parameters
+	associativity = Param.String("16","");
+	cacheSize = Param.String("8192","");
+	blockSize = Param.String("64","");
+	hitLatency = Param.String("5","");
+
 	# timing parameters
 	tBufferDelay = Param.Int(1,"delay from Transaction to Commands")
 	tBurst = Param.Int(8,"burst length, DDR2=8, DDR3=16")

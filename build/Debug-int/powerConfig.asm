@@ -1598,19 +1598,22 @@ __RTC_InitBase.rtc$IMZ DD FLAT:__RTC_InitBase
 rtc$IMZ	ENDS
 ;	COMDAT ??0PowerConfig@DRAMsimII@@QAE@ABVSettings@1@@Z
 _TEXT	SEGMENT
-tv320 = -220						; size = 8
-tv329 = -212						; size = 8
-tv315 = -212						; size = 8
-tv300 = -212						; size = 8
-tv291 = -212						; size = 8
-tv282 = -212						; size = 8
-tv274 = -212						; size = 8
+tv368 = -220						; size = 8
+tv375 = -212						; size = 8
+tv363 = -212						; size = 8
+tv348 = -212						; size = 8
+tv339 = -212						; size = 8
+tv330 = -212						; size = 8
+tv322 = -212						; size = 8
+tv314 = -212						; size = 8
+tv306 = -212						; size = 8
+tv298 = -212						; size = 8
 _this$ = -8						; size = 4
 _settings$ = 8						; size = 4
 ??0PowerConfig@DRAMsimII@@QAE@ABVSettings@1@@Z PROC	; DRAMsimII::PowerConfig::PowerConfig, COMDAT
 ; _this$ = ecx
 
-; 58   : {}
+; 62   : {}
 
 	push	ebp
 	mov	ebp, esp
@@ -1655,26 +1658,30 @@ _settings$ = 8						; size = 4
 	mov	DWORD PTR [eax+24], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
-	mov	edx, DWORD PTR [ecx+488]
+	mov	edx, DWORD PTR [ecx+484]
 	mov	DWORD PTR [eax+28], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
-	mov	edx, DWORD PTR [ecx+484]
+	mov	edx, DWORD PTR [ecx+492]
 	mov	DWORD PTR [eax+32], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
-	mov	edx, DWORD PTR [ecx+492]
+	mov	edx, DWORD PTR [ecx+488]
 	mov	DWORD PTR [eax+36], edx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _settings$[ebp]
+	mov	edx, DWORD PTR [ecx+496]
+	mov	DWORD PTR [eax+40], edx
 	mov	eax, DWORD PTR _settings$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
-	mov	eax, DWORD PTR [eax+480]
+	mov	eax, DWORD PTR [eax+484]
 	imul	eax, DWORD PTR [ecx+368]
 	mov	edx, DWORD PTR _settings$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [edx+372]
 	sub	edx, DWORD PTR [ecx+368]
 	mov	ecx, DWORD PTR _settings$[ebp]
-	imul	edx, DWORD PTR [ecx+472]
+	imul	edx, DWORD PTR [ecx+476]
 	add	eax, edx
 	mov	ecx, DWORD PTR _settings$[ebp]
 	xor	edx, edx
@@ -1682,140 +1689,167 @@ _settings$ = 8						; size = 4
 	mov	edx, DWORD PTR _settings$[ebp]
 	mov	ecx, DWORD PTR [edx+464]
 	sub	ecx, eax
-	mov	DWORD PTR tv274[ebp], ecx
-	mov	DWORD PTR tv274[ebp+4], 0
-	fild	QWORD PTR tv274[ebp]
-	mov	edx, DWORD PTR _settings$[ebp]
-	fmul	DWORD PTR [edx+460]
-	mov	eax, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [eax+40]
-	mov	eax, DWORD PTR _settings$[ebp]
-	mov	ecx, DWORD PTR [eax+480]
-	mov	DWORD PTR tv282[ebp], ecx
-	mov	DWORD PTR tv282[ebp+4], 0
-	fild	QWORD PTR tv282[ebp]
+	mov	DWORD PTR tv298[ebp], ecx
+	mov	DWORD PTR tv298[ebp+4], 0
+	fild	QWORD PTR tv298[ebp]
 	mov	edx, DWORD PTR _settings$[ebp]
 	fmul	DWORD PTR [edx+460]
 	mov	eax, DWORD PTR _this$[ebp]
 	fstp	QWORD PTR [eax+48]
 	mov	eax, DWORD PTR _settings$[ebp]
+	mov	ecx, DWORD PTR [eax+484]
+	mov	DWORD PTR tv306[ebp], ecx
+	mov	DWORD PTR tv306[ebp+4], 0
+	fild	QWORD PTR tv306[ebp]
+	mov	edx, DWORD PTR _settings$[ebp]
+	fmul	DWORD PTR [edx+460]
+	mov	eax, DWORD PTR _this$[ebp]
+	fstp	QWORD PTR [eax+56]
+	mov	eax, DWORD PTR _settings$[ebp]
+	mov	ecx, DWORD PTR [eax+476]
+	mov	DWORD PTR tv314[ebp], ecx
+	mov	DWORD PTR tv314[ebp+4], 0
+	fild	QWORD PTR tv314[ebp]
+	mov	edx, DWORD PTR _settings$[ebp]
+	fmul	DWORD PTR [edx+460]
+	mov	eax, DWORD PTR _this$[ebp]
+	fstp	QWORD PTR [eax+64]
+	mov	eax, DWORD PTR _settings$[ebp]
+	mov	ecx, DWORD PTR [eax+480]
+	mov	DWORD PTR tv322[ebp], ecx
+	mov	DWORD PTR tv322[ebp+4], 0
+	fild	QWORD PTR tv322[ebp]
+	mov	edx, DWORD PTR _settings$[ebp]
+	fmul	DWORD PTR [edx+460]
+	mov	eax, DWORD PTR _this$[ebp]
+	fstp	QWORD PTR [eax+72]
+	mov	eax, DWORD PTR _settings$[ebp]
+	mov	ecx, DWORD PTR [eax+472]
+	mov	DWORD PTR tv330[ebp], ecx
+	mov	DWORD PTR tv330[ebp+4], 0
+	fild	QWORD PTR tv330[ebp]
+	mov	edx, DWORD PTR _settings$[ebp]
+	fmul	DWORD PTR [edx+460]
+	mov	eax, DWORD PTR _this$[ebp]
+	fstp	QWORD PTR [eax+80]
+	mov	eax, DWORD PTR _settings$[ebp]
+	mov	ecx, DWORD PTR _settings$[ebp]
+	mov	edx, DWORD PTR [eax+492]
+	sub	edx, DWORD PTR [ecx+484]
+	mov	DWORD PTR tv339[ebp], edx
+	mov	DWORD PTR tv339[ebp+4], 0
+	fild	QWORD PTR tv339[ebp]
+	mov	eax, DWORD PTR _settings$[ebp]
+	fmul	DWORD PTR [eax+460]
+	mov	ecx, DWORD PTR _this$[ebp]
+	fstp	QWORD PTR [ecx+88]
+	mov	eax, DWORD PTR _settings$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [eax+488]
-	sub	edx, DWORD PTR [ecx+480]
-	mov	DWORD PTR tv291[ebp], edx
-	mov	DWORD PTR tv291[ebp+4], 0
-	fild	QWORD PTR tv291[ebp]
+	sub	edx, DWORD PTR [ecx+484]
+	mov	DWORD PTR tv348[ebp], edx
+	mov	DWORD PTR tv348[ebp+4], 0
+	fild	QWORD PTR tv348[ebp]
 	mov	eax, DWORD PTR _settings$[ebp]
 	fmul	DWORD PTR [eax+460]
 	mov	ecx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [ecx+56]
-	mov	eax, DWORD PTR _settings$[ebp]
-	mov	ecx, DWORD PTR _settings$[ebp]
-	mov	edx, DWORD PTR [eax+484]
-	sub	edx, DWORD PTR [ecx+480]
-	mov	DWORD PTR tv300[ebp], edx
-	mov	DWORD PTR tv300[ebp+4], 0
-	fild	QWORD PTR tv300[ebp]
-	mov	eax, DWORD PTR _settings$[ebp]
-	fmul	DWORD PTR [eax+460]
-	mov	ecx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [ecx+64]
+	fstp	QWORD PTR [ecx+96]
 	mov	eax, DWORD PTR _settings$[ebp]
 	fld	DWORD PTR [eax+460]
 	mov	ecx, DWORD PTR _settings$[ebp]
-	fmul	DWORD PTR [ecx+460]
+	fdiv	DWORD PTR [ecx+456]
 	mov	edx, DWORD PTR _settings$[ebp]
-	fld	DWORD PTR [edx+456]
+	fld	DWORD PTR [edx+460]
 	mov	eax, DWORD PTR _settings$[ebp]
-	fmul	DWORD PTR [eax+456]
-	fdivp	ST(1), ST(0)
+	fdiv	DWORD PTR [eax+456]
+	fmulp	ST(1), ST(0)
 	mov	ecx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [ecx+72]
+	fstp	QWORD PTR [ecx+104]
 	mov	eax, DWORD PTR _settings$[ebp]
 	mov	ecx, DWORD PTR [eax+228]
-	mov	DWORD PTR tv315[ebp], ecx
-	mov	DWORD PTR tv315[ebp+4], 0
-	fild	QWORD PTR tv315[ebp]
+	mov	DWORD PTR tv363[ebp], ecx
+	mov	DWORD PTR tv363[ebp+4], 0
+	fild	QWORD PTR tv363[ebp]
 	mov	edx, DWORD PTR _settings$[ebp]
 	mov	eax, DWORD PTR [edx+452]
-	mov	DWORD PTR tv320[ebp], eax
-	mov	DWORD PTR tv320[ebp+4], 0
-	fild	QWORD PTR tv320[ebp]
+	mov	DWORD PTR tv368[ebp], eax
+	mov	DWORD PTR tv368[ebp+4], 0
+	fild	QWORD PTR tv368[ebp]
 	fdivp	ST(1), ST(0)
 	mov	ecx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [ecx+80]
+	fstp	QWORD PTR [ecx+112]
 	mov	eax, DWORD PTR _settings$[ebp]
 	mov	ecx, DWORD PTR [eax+440]
 	mov	edx, DWORD PTR _settings$[ebp]
 	add	ecx, DWORD PTR [edx+444]
 	mov	eax, DWORD PTR _settings$[ebp]
 	add	ecx, DWORD PTR [eax+448]
-	mov	DWORD PTR tv329[ebp], ecx
-	mov	DWORD PTR tv329[ebp+4], 0
-	fild	QWORD PTR tv329[ebp]
+	mov	DWORD PTR tv375[ebp], ecx
+	mov	DWORD PTR tv375[ebp+4], 0
+	fild	QWORD PTR tv375[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	fmul	DWORD PTR [ecx+428]
 	mov	edx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [edx+88]
+	fstp	QWORD PTR [edx+120]
 	mov	eax, DWORD PTR _settings$[ebp]
 	fld	DWORD PTR [eax+424]
 	mov	ecx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [ecx+96]
+	fstp	QWORD PTR [ecx+128]
 	mov	eax, DWORD PTR _settings$[ebp]
 	fld	DWORD PTR [eax+428]
 	mov	ecx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [ecx+104]
+	fstp	QWORD PTR [ecx+136]
 	mov	eax, DWORD PTR _settings$[ebp]
 	fld	DWORD PTR [eax+432]
 	mov	ecx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [ecx+112]
+	fstp	QWORD PTR [ecx+144]
 	mov	eax, DWORD PTR _settings$[ebp]
 	fld	DWORD PTR [eax+436]
 	mov	ecx, DWORD PTR _this$[ebp]
-	fstp	QWORD PTR [ecx+120]
+	fstp	QWORD PTR [ecx+152]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [ecx+440]
-	mov	DWORD PTR [eax+128], edx
+	mov	DWORD PTR [eax+160], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [ecx+444]
-	mov	DWORD PTR [eax+132], edx
+	mov	DWORD PTR [eax+164], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [ecx+448]
-	mov	DWORD PTR [eax+136], edx
+	mov	DWORD PTR [eax+168], edx
 	mov	eax, DWORD PTR _settings$[ebp]
 	mov	eax, DWORD PTR [eax+256]
 	shl	eax, 3
 	mov	ecx, DWORD PTR _this$[ebp]
 	xor	edx, edx
-	div	DWORD PTR [ecx+128]
+	div	DWORD PTR [ecx+160]
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+140], eax
+	mov	DWORD PTR [edx+172], eax
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [ecx+228]
-	mov	DWORD PTR [eax+144], edx
+	mov	DWORD PTR [eax+176], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [ecx+452]
-	mov	DWORD PTR [eax+148], edx
+	mov	DWORD PTR [eax+180], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [ecx+352]
-	mov	DWORD PTR [eax+152], edx
+	mov	DWORD PTR [eax+184], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [ecx+372]
-	mov	DWORD PTR [eax+156], edx
+	mov	DWORD PTR [eax+188], edx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _settings$[ebp]
 	mov	edx, DWORD PTR [ecx+368]
-	mov	DWORD PTR [eax+160], edx
+	mov	DWORD PTR [eax+192], edx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+168], 0
-	mov	DWORD PTR [eax+172], 0
+	mov	DWORD PTR [eax+200], 0
+	mov	DWORD PTR [eax+204], 0
 	mov	eax, DWORD PTR _this$[ebp]
 	pop	edi
 	pop	esi
@@ -1833,7 +1867,7 @@ _this$ = -8						; size = 4
 ??1PowerConfig@DRAMsimII@@QAE@XZ PROC			; DRAMsimII::PowerConfig::~PowerConfig, COMDAT
 ; _this$ = ecx
 
-; 61   : {}
+; 65   : {}
 
 	push	ebp
 	mov	ebp, esp
@@ -1874,7 +1908,7 @@ _this$ = -8						; size = 4
 ??0PowerConfig@DRAMsimII@@AAE@XZ PROC			; DRAMsimII::PowerConfig::PowerConfig, COMDAT
 ; _this$ = ecx
 
-; 96   : {}
+; 104  : {}
 
 	push	ebp
 	mov	ebp, esp
@@ -1912,8 +1946,7 @@ _this$ = -8						; size = 4
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+36], 2147483647		; 7fffffffH
 	mov	eax, DWORD PTR _this$[ebp]
-	fld	QWORD PTR __real@bff0000000000000
-	fstp	QWORD PTR [eax+40]
+	mov	DWORD PTR [eax+40], 2147483647		; 7fffffffH
 	mov	eax, DWORD PTR _this$[ebp]
 	fld	QWORD PTR __real@bff0000000000000
 	fstp	QWORD PTR [eax+48]
@@ -1945,26 +1978,38 @@ _this$ = -8						; size = 4
 	fld	QWORD PTR __real@bff0000000000000
 	fstp	QWORD PTR [eax+120]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+128], -1
+	fld	QWORD PTR __real@bff0000000000000
+	fstp	QWORD PTR [eax+128]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+132], -1
+	fld	QWORD PTR __real@bff0000000000000
+	fstp	QWORD PTR [eax+136]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+136], -1
+	fld	QWORD PTR __real@bff0000000000000
+	fstp	QWORD PTR [eax+144]
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+140], -1
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+144], -1
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+148], -1
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+152], -1
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [eax+156], -1
+	fld	QWORD PTR __real@bff0000000000000
+	fstp	QWORD PTR [eax+152]
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+160], -1
 	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+164], -1
+	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+168], -1
-	mov	DWORD PTR [eax+172], 2147483647		; 7fffffffH
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+172], -1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+176], -1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+180], -1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+184], -1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+188], -1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+192], -1
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+200], -1
+	mov	DWORD PTR [eax+204], 2147483647		; 7fffffffH
 	mov	eax, DWORD PTR _this$[ebp]
 	pop	edi
 	pop	esi
@@ -1982,19 +2027,19 @@ EXTRN	@_RTC_Check_4_to_1@4:PROC
 ; Function compile flags: /Odtp /RTCcsu /ZI
 ;	COMDAT ??8PowerConfig@DRAMsimII@@QBE_NABV01@@Z
 _TEXT	SEGMENT
-tv243 = -232						; size = 4
-tv380 = -228						; size = 4
-tv379 = -224						; size = 4
-tv295 = -220						; size = 4
-tv293 = -216						; size = 4
-tv286 = -212						; size = 4
-tv284 = -208						; size = 4
+tv267 = -232						; size = 4
+tv428 = -228						; size = 4
+tv427 = -224						; size = 4
+tv322 = -220						; size = 4
+tv320 = -216						; size = 4
+tv313 = -212						; size = 4
+tv311 = -208						; size = 4
 _this$ = -8						; size = 4
 _rhs$ = 8						; size = 4
 ??8PowerConfig@DRAMsimII@@QBE_NABV01@@Z PROC		; DRAMsimII::PowerConfig::operator==, COMDAT
 ; _this$ = ecx
 
-; 99   : {
+; 107  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -2010,22 +2055,25 @@ _rhs$ = 8						; size = 4
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 100  : 	return (AlmostEqual<float>(VDD, rhs.VDD) && AlmostEqual<float>(VDDmax, rhs.VDDmax) && IDD0 == IDD0 &&
-; 101  : 		IDD2P == rhs.IDD2P && IDD2N == rhs.IDD2N && IDD3P == rhs.IDD3P &&
-; 102  : 		IDD3N == rhs.IDD3N && IDD4R == rhs.IDD4R && IDD4W == rhs.IDD4W &&
-; 103  : 		IDD5 == rhs.IDD5 && AlmostEqual<float>(PdsACT, rhs.PdsACT) && AlmostEqual<float>(PdsACT_STBY, rhs.PdsACT_STBY) &&
-; 104  : 		AlmostEqual<double>(PdsRD, rhs.PdsRD) &&
-; 105  : 		AlmostEqual<double>(PdsWR, rhs.PdsWR) &&
-; 106  : 		AlmostEqual<double>(PdstermW, rhs.PdstermW) &&
-; 107  : 		AlmostEqual<double>(PdqRD, rhs.PdqRD) &&
-; 108  : 		AlmostEqual<double>(PdqWR, rhs.PdqWR) &&
-; 109  : 		AlmostEqual<double>(PdqRDoth, rhs.PdqRDoth) &&
-; 110  : 		AlmostEqual<double>(PdqWRoth, rhs.PdqWRoth) && DQperDRAM == rhs.DQperDRAM && DQSperDRAM == rhs.DQSperDRAM &&
-; 111  : 		DMperDRAM == rhs.DMperDRAM && DQperRank == rhs.DQperRank && frequency == rhs.frequency &&
-; 112  : 		specFrequency == rhs.specFrequency && tBurst == rhs.tBurst && tRC == rhs.tRC &&
-; 113  : 		tRAS == rhs.tRAS && lastCalculation==rhs.lastCalculation &&
-; 114  : 		AlmostEqual<double>(voltageScaleFactor, rhs.voltageScaleFactor) &&
-; 115  : 		AlmostEqual<double>(frequencyScaleFactor, rhs.frequencyScaleFactor));
+; 108  : 	return (AlmostEqual<float>(VDD, rhs.VDD) && AlmostEqual<float>(VDDmax, rhs.VDDmax) && IDD0 == rhs.IDD0 &&
+; 109  : 		IDD2P == rhs.IDD2P && IDD2N == rhs.IDD2N && IDD3P == rhs.IDD3P && IDD1 == rhs.IDD1 &&
+; 110  : 		IDD3N == rhs.IDD3N && IDD4R == rhs.IDD4R && IDD4W == rhs.IDD4W &&
+; 111  : 		IDD5 == rhs.IDD5 && AlmostEqual<float>(PdsACT, rhs.PdsACT) && AlmostEqual<float>(PdsACT_STBY, rhs.PdsACT_STBY) &&
+; 112  : 		AlmostEqual<double>(PdsRD, rhs.PdsRD) &&
+; 113  : 		AlmostEqual<double>(PdsACT_PDN, rhs.PdsACT_PDN) &&
+; 114  : 		AlmostEqual<double>(PdsPRE_STBY, rhs.PdsPRE_STBY) &&
+; 115  : 		AlmostEqual<double>(PdsPRE_PDN, rhs.PdsPRE_PDN) &&
+; 116  : 		AlmostEqual<double>(PdsWR, rhs.PdsWR) &&
+; 117  : 		AlmostEqual<double>(PdstermW, rhs.PdstermW) &&
+; 118  : 		AlmostEqual<double>(PdqRD, rhs.PdqRD) &&
+; 119  : 		AlmostEqual<double>(PdqWR, rhs.PdqWR) &&
+; 120  : 		AlmostEqual<double>(PdqRDoth, rhs.PdqRDoth) &&
+; 121  : 		AlmostEqual<double>(PdqWRoth, rhs.PdqWRoth) && DQperDRAM == rhs.DQperDRAM && DQSperDRAM == rhs.DQSperDRAM &&
+; 122  : 		DMperDRAM == rhs.DMperDRAM && DQperRank == rhs.DQperRank && frequency == rhs.frequency &&
+; 123  : 		specFrequency == rhs.specFrequency && tBurst == rhs.tBurst && tRC == rhs.tRC &&
+; 124  : 		tRAS == rhs.tRAS && lastCalculation==rhs.lastCalculation &&
+; 125  : 		AlmostEqual<double>(voltageScaleFactor, rhs.voltageScaleFactor) &&
+; 126  : 		AlmostEqual<double>(frequencyScaleFactor, rhs.frequencyScaleFactor));
 
 	mov	eax, DWORD PTR _rhs$[ebp]
 	push	ecx
@@ -2054,14 +2102,9 @@ _rhs$ = 8						; size = 4
 	test	edx, edx
 	je	$LN3@operator
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
 	mov	edx, DWORD PTR [eax+8]
 	cmp	edx, DWORD PTR [ecx+8]
-	jne	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+12]
-	cmp	edx, DWORD PTR [ecx+12]
 	jne	$LN3@operator
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _rhs$[ebp]
@@ -2080,6 +2123,11 @@ _rhs$ = 8						; size = 4
 	jne	$LN3@operator
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+12]
+	cmp	edx, DWORD PTR [ecx+12]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
 	mov	edx, DWORD PTR [eax+28]
 	cmp	edx, DWORD PTR [ecx+28]
 	jne	$LN3@operator
@@ -2093,33 +2141,38 @@ _rhs$ = 8						; size = 4
 	mov	edx, DWORD PTR [eax+36]
 	cmp	edx, DWORD PTR [ecx+36]
 	jne	$LN3@operator
-	mov	eax, DWORD PTR _rhs$[ebp]
-	fld	QWORD PTR [eax+40]
-	fstp	DWORD PTR tv284[ebp]
-	fld	DWORD PTR tv284[ebp]
-	push	ecx
-	fstp	DWORD PTR [esp]
-	mov	ecx, DWORD PTR _this$[ebp]
-	fld	QWORD PTR [ecx+40]
-	fstp	DWORD PTR tv286[ebp]
-	fld	DWORD PTR tv286[ebp]
-	push	ecx
-	fstp	DWORD PTR [esp]
-	call	??$AlmostEqual@M@DRAMsimII@@YA_NMM@Z	; DRAMsimII::AlmostEqual<float>
-	add	esp, 8
-	movzx	edx, al
-	test	edx, edx
-	je	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+40]
+	cmp	edx, DWORD PTR [ecx+40]
+	jne	$LN3@operator
 	mov	eax, DWORD PTR _rhs$[ebp]
 	fld	QWORD PTR [eax+48]
-	fstp	DWORD PTR tv293[ebp]
-	fld	DWORD PTR tv293[ebp]
+	fstp	DWORD PTR tv311[ebp]
+	fld	DWORD PTR tv311[ebp]
 	push	ecx
 	fstp	DWORD PTR [esp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	fld	QWORD PTR [ecx+48]
-	fstp	DWORD PTR tv295[ebp]
-	fld	DWORD PTR tv295[ebp]
+	fstp	DWORD PTR tv313[ebp]
+	fld	DWORD PTR tv313[ebp]
+	push	ecx
+	fstp	DWORD PTR [esp]
+	call	??$AlmostEqual@M@DRAMsimII@@YA_NMM@Z	; DRAMsimII::AlmostEqual<float>
+	add	esp, 8
+	movzx	edx, al
+	test	edx, edx
+	je	$LN3@operator
+	mov	eax, DWORD PTR _rhs$[ebp]
+	fld	QWORD PTR [eax+56]
+	fstp	DWORD PTR tv320[ebp]
+	fld	DWORD PTR tv320[ebp]
+	push	ecx
+	fstp	DWORD PTR [esp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	fld	QWORD PTR [ecx+56]
+	fstp	DWORD PTR tv322[ebp]
+	fld	DWORD PTR tv322[ebp]
 	push	ecx
 	fstp	DWORD PTR [esp]
 	call	??$AlmostEqual@M@DRAMsimII@@YA_NMM@Z	; DRAMsimII::AlmostEqual<float>
@@ -2129,11 +2182,24 @@ _rhs$ = 8						; size = 4
 	je	$LN3@operator
 	mov	eax, DWORD PTR _rhs$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [eax+56]
+	fld	QWORD PTR [eax+88]
 	fstp	QWORD PTR [esp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [ecx+56]
+	fld	QWORD PTR [ecx+88]
+	fstp	QWORD PTR [esp]
+	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
+	add	esp, 16					; 00000010H
+	movzx	edx, al
+	test	edx, edx
+	je	$LN3@operator
+	mov	eax, DWORD PTR _rhs$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [eax+72]
+	fstp	QWORD PTR [esp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [ecx+72]
 	fstp	QWORD PTR [esp]
 	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
 	add	esp, 16					; 00000010H
@@ -2155,11 +2221,11 @@ _rhs$ = 8						; size = 4
 	je	$LN3@operator
 	mov	eax, DWORD PTR _rhs$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [eax+88]
+	fld	QWORD PTR [eax+80]
 	fstp	QWORD PTR [esp]
 	mov	ecx, DWORD PTR _this$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [ecx+88]
+	fld	QWORD PTR [ecx+80]
 	fstp	QWORD PTR [esp]
 	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
 	add	esp, 16					; 00000010H
@@ -2181,32 +2247,6 @@ _rhs$ = 8						; size = 4
 	je	$LN3@operator
 	mov	eax, DWORD PTR _rhs$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [eax+104]
-	fstp	QWORD PTR [esp]
-	mov	ecx, DWORD PTR _this$[ebp]
-	sub	esp, 8
-	fld	QWORD PTR [ecx+104]
-	fstp	QWORD PTR [esp]
-	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
-	add	esp, 16					; 00000010H
-	movzx	edx, al
-	test	edx, edx
-	je	$LN3@operator
-	mov	eax, DWORD PTR _rhs$[ebp]
-	sub	esp, 8
-	fld	QWORD PTR [eax+112]
-	fstp	QWORD PTR [esp]
-	mov	ecx, DWORD PTR _this$[ebp]
-	sub	esp, 8
-	fld	QWORD PTR [ecx+112]
-	fstp	QWORD PTR [esp]
-	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
-	add	esp, 16					; 00000010H
-	movzx	edx, al
-	test	edx, edx
-	je	$LN3@operator
-	mov	eax, DWORD PTR _rhs$[ebp]
-	sub	esp, 8
 	fld	QWORD PTR [eax+120]
 	fstp	QWORD PTR [esp]
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -2218,46 +2258,58 @@ _rhs$ = 8						; size = 4
 	movzx	edx, al
 	test	edx, edx
 	je	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+128]
-	cmp	edx, DWORD PTR [ecx+128]
-	jne	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+132]
-	cmp	edx, DWORD PTR [ecx+132]
-	jne	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+136]
-	cmp	edx, DWORD PTR [ecx+136]
-	jne	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+140]
-	cmp	edx, DWORD PTR [ecx+140]
-	jne	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+144]
-	cmp	edx, DWORD PTR [ecx+144]
-	jne	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+148]
-	cmp	edx, DWORD PTR [ecx+148]
-	jne	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+152]
-	cmp	edx, DWORD PTR [ecx+152]
-	jne	$LN3@operator
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	edx, DWORD PTR [eax+156]
-	cmp	edx, DWORD PTR [ecx+156]
-	jne	$LN3@operator
+	mov	eax, DWORD PTR _rhs$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [eax+128]
+	fstp	QWORD PTR [esp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [ecx+128]
+	fstp	QWORD PTR [esp]
+	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
+	add	esp, 16					; 00000010H
+	movzx	edx, al
+	test	edx, edx
+	je	$LN3@operator
+	mov	eax, DWORD PTR _rhs$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [eax+136]
+	fstp	QWORD PTR [esp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [ecx+136]
+	fstp	QWORD PTR [esp]
+	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
+	add	esp, 16					; 00000010H
+	movzx	edx, al
+	test	edx, edx
+	je	$LN3@operator
+	mov	eax, DWORD PTR _rhs$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [eax+144]
+	fstp	QWORD PTR [esp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [ecx+144]
+	fstp	QWORD PTR [esp]
+	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
+	add	esp, 16					; 00000010H
+	movzx	edx, al
+	test	edx, edx
+	je	$LN3@operator
+	mov	eax, DWORD PTR _rhs$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [eax+152]
+	fstp	QWORD PTR [esp]
+	mov	ecx, DWORD PTR _this$[ebp]
+	sub	esp, 8
+	fld	QWORD PTR [ecx+152]
+	fstp	QWORD PTR [esp]
+	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
+	add	esp, 16					; 00000010H
+	movzx	edx, al
+	test	edx, edx
+	je	$LN3@operator
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _rhs$[ebp]
 	mov	edx, DWORD PTR [eax+160]
@@ -2265,25 +2317,65 @@ _rhs$ = 8						; size = 4
 	jne	$LN3@operator
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _rhs$[ebp]
-	mov	DWORD PTR tv379[ebp], eax
-	mov	DWORD PTR tv380[ebp], ecx
-	mov	edx, DWORD PTR tv379[ebp]
-	mov	eax, DWORD PTR tv380[ebp]
-	mov	ecx, DWORD PTR [edx+168]
-	cmp	ecx, DWORD PTR [eax+168]
+	mov	edx, DWORD PTR [eax+164]
+	cmp	edx, DWORD PTR [ecx+164]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+168]
+	cmp	edx, DWORD PTR [ecx+168]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+172]
+	cmp	edx, DWORD PTR [ecx+172]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+176]
+	cmp	edx, DWORD PTR [ecx+176]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+180]
+	cmp	edx, DWORD PTR [ecx+180]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+184]
+	cmp	edx, DWORD PTR [ecx+184]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+188]
+	cmp	edx, DWORD PTR [ecx+188]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	edx, DWORD PTR [eax+192]
+	cmp	edx, DWORD PTR [ecx+192]
+	jne	$LN3@operator
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR _rhs$[ebp]
+	mov	DWORD PTR tv427[ebp], eax
+	mov	DWORD PTR tv428[ebp], ecx
+	mov	edx, DWORD PTR tv427[ebp]
+	mov	eax, DWORD PTR tv428[ebp]
+	mov	ecx, DWORD PTR [edx+200]
+	cmp	ecx, DWORD PTR [eax+200]
 	jne	SHORT $LN3@operator
-	mov	edx, DWORD PTR tv379[ebp]
-	mov	eax, DWORD PTR tv380[ebp]
-	mov	ecx, DWORD PTR [edx+172]
-	cmp	ecx, DWORD PTR [eax+172]
+	mov	edx, DWORD PTR tv427[ebp]
+	mov	eax, DWORD PTR tv428[ebp]
+	mov	ecx, DWORD PTR [edx+204]
+	cmp	ecx, DWORD PTR [eax+204]
 	jne	SHORT $LN3@operator
 	mov	edx, DWORD PTR _rhs$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [edx+72]
+	fld	QWORD PTR [edx+104]
 	fstp	QWORD PTR [esp]
 	mov	eax, DWORD PTR _this$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [eax+72]
+	fld	QWORD PTR [eax+104]
 	fstp	QWORD PTR [esp]
 	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
 	add	esp, 16					; 00000010H
@@ -2292,26 +2384,26 @@ _rhs$ = 8						; size = 4
 	je	SHORT $LN3@operator
 	mov	edx, DWORD PTR _rhs$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [edx+80]
+	fld	QWORD PTR [edx+112]
 	fstp	QWORD PTR [esp]
 	mov	eax, DWORD PTR _this$[ebp]
 	sub	esp, 8
-	fld	QWORD PTR [eax+80]
+	fld	QWORD PTR [eax+112]
 	fstp	QWORD PTR [esp]
 	call	??$AlmostEqual@N@DRAMsimII@@YA_NNN@Z	; DRAMsimII::AlmostEqual<double>
 	add	esp, 16					; 00000010H
 	movzx	ecx, al
 	test	ecx, ecx
 	je	SHORT $LN3@operator
-	mov	DWORD PTR tv243[ebp], 1
+	mov	DWORD PTR tv267[ebp], 1
 	jmp	SHORT $LN4@operator
 $LN3@operator:
-	mov	DWORD PTR tv243[ebp], 0
+	mov	DWORD PTR tv267[ebp], 0
 $LN4@operator:
-	mov	ecx, DWORD PTR tv243[ebp]
+	mov	ecx, DWORD PTR tv267[ebp]
 	call	@_RTC_Check_4_to_1@4
 
-; 116  : }
+; 127  : }
 
 	pop	edi
 	pop	esi
@@ -2362,7 +2454,7 @@ _in$ = 8						; size = 4
 _pc$ = 12						; size = 4
 ??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVPowerConfig@0@@Z PROC ; DRAMsimII::operator<<, COMDAT
 
-; 119  : {
+; 130  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -2375,9 +2467,9 @@ _pc$ = 12						; size = 4
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
 
-; 120  : 	using std::endl;
-; 121  : 
-; 122  : 	in << "PowerConfig" << endl;
+; 131  : 	using std::endl;
+; 132  : 
+; 133  : 	in << "PowerConfig" << endl;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
@@ -2392,7 +2484,7 @@ _pc$ = 12						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 123  : 	in << "VDD" << pc.VDD << endl;
+; 134  : 	in << "VDD" << pc.VDD << endl;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
@@ -2416,7 +2508,7 @@ _pc$ = 12						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 124  : 	in << "VDDmax" << pc.VDDmax << endl;
+; 135  : 	in << "VDDmax" << pc.VDDmax << endl;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
@@ -2440,7 +2532,7 @@ _pc$ = 12						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 125  : 	in << "IDD0" << pc.IDD0 << endl;
+; 136  : 	in << "IDD0" << pc.IDD0 << endl;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
@@ -2463,14 +2555,14 @@ _pc$ = 12						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 126  : 	in << "IDD2p" << pc.IDD2P << endl;
+; 137  : 	in << "IDD2p" << pc.IDD2P << endl;
 
 	mov	esi, esp
 	mov	eax, DWORD PTR __imp_?endl@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@1@AAV21@@Z
 	push	eax
 	mov	edi, esp
 	mov	ecx, DWORD PTR _pc$[ebp]
-	mov	edx, DWORD PTR [ecx+12]
+	mov	edx, DWORD PTR [ecx+16]
 	push	edx
 	push	OFFSET ??_C@_05NHLPHMBD@IDD2p?$AA@
 	mov	eax, DWORD PTR _in$[ebp]
@@ -2486,11 +2578,11 @@ _pc$ = 12						; size = 4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 127  : 	return in;
+; 138  : 	return in;
 
 	mov	eax, DWORD PTR _in$[ebp]
 
-; 128  : }
+; 139  : }
 
 	pop	edi
 	pop	esi
@@ -2565,11 +2657,11 @@ tv136 = -324						; size = 4
 tv134 = -324						; size = 4
 tv289 = -321						; size = 1
 tv282 = -321						; size = 1
-$T138391 = -316						; size = 4
-$T138392 = -304						; size = 4
-$T138393 = -292						; size = 4
-$T138394 = -280						; size = 4
-$T138395 = -268						; size = 4
+$T138451 = -316						; size = 4
+$T138452 = -304						; size = 4
+$T138453 = -292						; size = 4
+$T138454 = -280						; size = 4
+$T138455 = -268						; size = 4
 __Ok$ = -64						; size = 8
 __Pad$ = -48						; size = 4
 __Count$ = -36						; size = 4
@@ -2756,18 +2848,18 @@ $LN10@operator@2:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv284[ebp], eax
 	mov	ecx, DWORD PTR tv284[ebp]
-	mov	DWORD PTR $T138391[ebp], ecx
+	mov	DWORD PTR $T138451[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv285[ebp], eax
 	mov	edx, DWORD PTR tv285[ebp]
-	mov	DWORD PTR $T138392[ebp], edx
+	mov	DWORD PTR $T138452[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T138391[ebp]
+	lea	eax, DWORD PTR $T138451[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T138392[ebp]
+	lea	ecx, DWORD PTR $T138452[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -2881,18 +2973,18 @@ $LN4@operator@2:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv291[ebp], eax
 	mov	ecx, DWORD PTR tv291[ebp]
-	mov	DWORD PTR $T138393[ebp], ecx
+	mov	DWORD PTR $T138453[ebp], ecx
 	mov	esi, esp
 	call	DWORD PTR __imp_?eof@?$char_traits@D@std@@SAHXZ
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 	mov	DWORD PTR tv292[ebp], eax
 	mov	edx, DWORD PTR tv292[ebp]
-	mov	DWORD PTR $T138394[ebp], edx
+	mov	DWORD PTR $T138454[ebp], edx
 	mov	esi, esp
-	lea	eax, DWORD PTR $T138393[ebp]
+	lea	eax, DWORD PTR $T138453[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T138394[ebp]
+	lea	ecx, DWORD PTR $T138454[ebp]
 	push	ecx
 	call	DWORD PTR __imp_?eq_int_type@?$char_traits@D@std@@SA_NABH0@Z
 	add	esp, 8
@@ -2974,11 +3066,11 @@ $LN13@operator@2:
 ; 781  : 	return (_Ostr);
 
 	mov	eax, DWORD PTR __Ostr$[ebp]
-	mov	DWORD PTR $T138395[ebp], eax
+	mov	DWORD PTR $T138455[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 	lea	ecx, DWORD PTR __Ok$[ebp]
 	call	??1sentry@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAE@XZ ; std::basic_ostream<char,std::char_traits<char> >::sentry::~sentry
-	mov	eax, DWORD PTR $T138395[ebp]
+	mov	eax, DWORD PTR $T138455[ebp]
 
 ; 782  : 	}
 

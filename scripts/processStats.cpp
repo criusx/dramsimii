@@ -69,6 +69,7 @@ using boost::cmatch;
 using boost::tuple;
 using boost::this_thread::sleep;
 using boost::mutex;
+using boost::filesystem::path;
 using std::max;
 using std::min;
 using std::numeric_limits;
@@ -94,6 +95,12 @@ using std::tr1::unordered_map;
 #define MAXIMUM_VECTOR_SIZE 2 * 1024
 
 #define WINDOW 5
+
+enum ProcessingType 
+{
+	NONE, TRANSACTION_LATENCY,WORKING_SET_SIZE, BANDWIDTH, PC_VS_LATENCY, IPC, HIT_MISS_ROWS, CHANNEL_DISTRIBUTION, RANK_DISTRIBUTION, 
+	BANK_DISTRIBUTION, PER_BANK_DISTRIBUTION, PER_BANK_LATENCY, CACHE_HIT_MISS
+};
 
 void prepareOutputDir(const bf::path &outputDir, const string &filename, const string &commandLine, unsigned channelCount);
 
@@ -502,6 +509,9 @@ void processPower(const string &filename)
 
 	vector<vector<float> > values;
 	vector<float> valueBuffer;
+	vector<pair<float,float> > energyValues;
+	pair<float,float> energyValueBuffer;
+
 	unsigned scaleFactor = 1;
 	unsigned scaleIndex = 0;
 
@@ -537,6 +547,7 @@ void processPower(const string &filename)
 		{
 			if (newLine[1] == 'P')
 			{
+				string backup(newLine);
 				char *position = strchr(newLine,'{');
 				char *position2 = strchr(newLine,'}');
 				if (position == NULL || position2 == NULL)
@@ -546,6 +557,33 @@ void processPower(const string &filename)
 
 				float thisPower = atof(position);
 				valueBuffer[writing] += (thisPower);
+				
+				if (writing == 0)
+				{
+					char *position3 = strchr(++position2,'{');
+					if (position3 == NULL)
+					{
+						cerr << backup<<endl;
+						break;
+					}
+					position3++;
+					char *position4 = strchr(position2,'/');
+					if (position4 == NULL)
+					{
+						cerr << backup<<endl;
+						break;
+					}
+					*position4 = 0;
+					char *position5 = strchr(++position4,'}');
+					if (position5 == NULL)
+					{
+						cerr << backup<<endl;
+						break;
+					}
+					*position5 = 0;
+					energyValueBuffer.first = atof(position3);
+					energyValueBuffer.second = atof(position4);
+				}
 
 				writing = (writing + 1) % values.size();
 
@@ -563,6 +601,8 @@ void processPower(const string &filename)
 							values[i].push_back(valueBuffer[i] / scaleFactor);
 							valueBuffer[i] = 0;
 						}
+
+						energyValues.push_back(pair<float,float>(energyValueBuffer.first / scaleFactor, energyValueBuffer.second / scaleFactor));
 					}
 
 					// try to compress the array by half and double the scaleFactor
@@ -579,6 +619,18 @@ void processPower(const string &filename)
 
 							assert(i->size() == MAXIMUM_VECTOR_SIZE / 2);
 						}
+
+						// scale the alternate array back by half
+						for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; j++)
+						{
+							energyValues[j] = pair<float,float>(
+								(energyValues[2 * j].first + energyValues[2 * j + 1].first) / 2.0F,
+								(energyValues[2 * j].second + energyValues[2 * j + 1].second) / 2.0F);
+						}
+
+						energyValues.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+						assert(energyValues.size() == MAXIMUM_VECTOR_SIZE / 2);
 
 						// double scaleFactor since each entry now represents twice what it did before
 						scaleFactor *= 2;
@@ -662,10 +714,11 @@ void processPower(const string &filename)
 					p3 << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
 					values.reserve(channelCount * 5);
+					energyValues.reserve(channelCount * 5);
 
 					// setup the buffer to be the same size as the value array
 					valueBuffer.resize(channelCount * 5);
-
+					
 					for (int i  = channelCount * 5; i > 0; --i)
 					{
 						values.push_back(vector<float>());
@@ -687,6 +740,7 @@ void processPower(const string &filename)
 	{
 		for (vector<float>::const_iterator j = i->begin(); j != i->end(); j++)
 		{
+			//cerr << *j << " ";
 			p << *j << endl;
 			p3 << *j << endl;
 		}
@@ -723,7 +777,7 @@ void processPower(const string &filename)
 	}
 	p << "e" << endl;
 	p3 << "e" << endl;
-	p3 << "0 0" << endl << 3.31 << " 1e-5" << endl << "e" << endl;
+	p3 << "0 0" << endl << 3.31 << " 1e-5" << endl << "e" << endl << "unset output" << endl;
 
 
 	PriorMovingAverage powerMovingAverage(WINDOW);
@@ -788,9 +842,61 @@ void processPower(const string &filename)
 	}
 	p2 << "e" << endl << "unset multiplot" << endl << "unset output" << endl << "exit" << endl;
 
-	p.close();
-	p2.close();
+	//////////////////////////////////////////////////////////////////////////
+	path outFilename = outputDir / ("cumulativeEnergy." + extension);
+	
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p4 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	p4 << "set title \"" << "Cumulative Energy\\n" << commandLine << "\"" << endl << cumulPowerScript;
+	//cerr << "set title \"" << "Cumulative Power\\n" << commandLine << "\"" << endl << cumulPowerScript;
 
+	float time = 0.0F;
+	float totalPower = 0.0F;
+	//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); i++)
+	for (vector<pair<float,float> >::const_iterator i = energyValues.begin(); i != energyValues.end(); i++)
+	{
+		//for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+		//	totalPower += values[j][i];
+		totalPower += i->first;
+
+		p4 << time << " " << totalPower << endl;
+		//cerr<< time << " " << totalPower << endl;
+
+		//cerr << time << " " << i->first + i->second << endl;
+		time += epochTime;
+	}
+
+	p4 << "e" << endl;
+	//cerr << "e" << endl;
+
+	time = 0.0F;
+	totalPower = 0.0F;
+	for (vector<pair<float,float> >::const_iterator i = energyValues.begin(); i != energyValues.end(); i++)
+	//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); i++)
+	{
+		//for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); j++)
+		//	totalPower += alternateValues[j][i];
+		totalPower += i->first - i->second;
+
+		p4 << time << " " << totalPower << endl;
+		//cerr << time << " " << totalPower << endl;
+
+		//cerr << time << " " << i->first + i->second << endl;
+		time += epochTime;
+	}
+	
+	p4 << "e" << endl << "unset output" << endl;
+	//cerr << "e" << endl << "unset output" << endl;
+	//////////////////////////////////////////////////////////////////////////
+
+	p.close();
+	cerr << "p close" << endl;
+	p2.close();
+cerr << "p2 close" << endl;
+	//p3.close();
+//cerr << "p3 close" << endl;
+	p4.close();
+cerr << "p4 close" << endl;
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
 		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); i++)
@@ -801,6 +907,10 @@ void processPower(const string &filename)
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, channelCount);
 }
 
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief setup the output directory
+//////////////////////////////////////////////////////////////////////////
 void prepareOutputDir(const bf::path &outputDir, const string &filename, const string &commandLine, unsigned channelCount)
 {
 	bf::path openfile = executableDirectory / "template.html";
@@ -865,7 +975,9 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 	// 		cerr << "skipping creation of htaccess file(" << htaccessOut.string() << "), exists" << endl;
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// @brief process the stats file
+//////////////////////////////////////////////////////////////////////////
 void processStats(const string &filename)
 {
 	// create the output dir
@@ -979,6 +1091,10 @@ void processStats(const string &filename)
 	bandwidthValues.reserve(MAXIMUM_VECTOR_SIZE);
 	pair<uint64_t,uint64_t> bandwidthValuesBuffer;
 
+	vector<pair<unsigned,unsigned> > cacheHitMiss;
+	cacheHitMiss.reserve(MAXIMUM_VECTOR_SIZE);
+	pair<unsigned,unsigned> cacheHitMissBuffer;
+
 	vector<float> ipcValues;
 	ipcValues.reserve(MAXIMUM_VECTOR_SIZE);
 	double ipcValueBuffer;
@@ -992,10 +1108,13 @@ void processStats(const string &filename)
 	float epochTime = 0.0F;
 	float period = 0.0F;
 
+	unsigned tRC = 0;
+	unsigned tRAS = 0;
+
 	unsigned channelCount = 0;
 	unsigned rankCount = 0;
 	unsigned bankCount = 0;
-	unsigned writing = 0;
+	ProcessingType writing = NONE;
 	string commandLine;
 
 	filtering_istream inputStream;
@@ -1014,7 +1133,7 @@ void processStats(const string &filename)
 	{
 		if (newLine[0] == '-')
 		{
-			writing = 0;
+			writing = NONE;
 
 			if (!started)
 			{
@@ -1028,9 +1147,9 @@ void processStats(const string &filename)
 					trim(commandLine);
 					cerr << commandLine << endl;
 
-
 					started = true;
 
+					// get the number of channels
 					regex channelSearch("ch\\[([0-9]+)\\]");
 					cmatch what;
 
@@ -1042,6 +1161,7 @@ void processStats(const string &filename)
 					else
 						exit(-1);
 
+					// get the number of ranks
 					regex rankSearch("rk\\[([0-9]+)\\]");
 					if (regex_search(newLine,what,rankSearch))
 					{
@@ -1051,11 +1171,34 @@ void processStats(const string &filename)
 					else
 						exit(-1);
 
+					// get the number of banks
 					regex bankSearch("bk\\[([0-9]+)\\]");
 					if (regex_search(newLine,what,bankSearch))
 					{
 						string value(what[1].first,what[1].second);
 						bankCount = lexical_cast<unsigned>(value);
+					}
+					else
+						exit(-1);
+
+					// get the value of tRC
+					regex trcSearch("t_\\{RC\\}\\[([0-9]+)\\]");
+					if (regex_search(newLine,what,trcSearch))
+					{
+						string value(what[1].first,what[1].second);
+						tRC = lexical_cast<unsigned>(value);
+						cerr << "got tRC as " << tRC << endl;
+					}
+					else
+						exit(-1);
+
+					// get the value of tRC
+					regex trasSearch("t_\\{RAS\\}\\[([0-9]+)\\]");
+					if (regex_search(newLine,what,trasSearch))
+					{
+						string value(what[1].first,what[1].second);
+						tRAS = lexical_cast<unsigned>(value);
+						cerr << "got tRAS as " << tRAS << endl;
 					}
 					else
 						exit(-1);
@@ -1157,7 +1300,6 @@ void processStats(const string &filename)
 			{
 				if (starts_with(newLine,"----Transaction Latency"))
 				{
-
 					// only if this is at least the second time around
 					if (throughOnce)
 					{
@@ -1231,8 +1373,10 @@ void processStats(const string &filename)
 							l2MshrMissLatencyBuffer = 0;
 
 							bandwidthValues.push_back(pair<uint64_t,uint64_t>(bandwidthValuesBuffer.first / scaleFactor, bandwidthValuesBuffer.second / scaleFactor));
-							bandwidthValuesBuffer.first = 0;
-							bandwidthValuesBuffer.second = 0;
+							bandwidthValuesBuffer.first = bandwidthValuesBuffer.second = 0;
+
+							cacheHitMiss.push_back(pair<unsigned,unsigned>(cacheHitMissBuffer.first, cacheHitMissBuffer.second));
+							cacheHitMissBuffer.first = cacheHitMissBuffer.second = 0;
 
 							ipcValues.push_back(ipcValueBuffer / scaleFactor);
 							ipcValueBuffer = 0;
@@ -1303,6 +1447,9 @@ void processStats(const string &filename)
 									bandwidthValues[epoch].first = (bandwidthValues[2 * epoch].first + bandwidthValues[2 * epoch + 1].first) / 2;
 									bandwidthValues[epoch].second = (bandwidthValues[2 * epoch].second + bandwidthValues[2 * epoch + 1].second) / 2;
 
+									cacheHitMiss[epoch].first = (cacheHitMiss[2 * epoch].first + cacheHitMiss[2 * epoch + 1].first) / 2;
+									cacheHitMiss[epoch].second = (cacheHitMiss[2 * epoch].second + cacheHitMiss[2 * epoch + 1].second) / 2;
+
 									ipcValues[epoch] = (ipcValues[2 * epoch] + ipcValues[2 * epoch + 1]) / 2;
 
 									workingSetSize[epoch] = (workingSetSize[2 * epoch] + workingSetSize[2 * epoch + 1]) / 2;
@@ -1353,6 +1500,8 @@ void processStats(const string &filename)
 
 								bandwidthValues.resize(MAXIMUM_VECTOR_SIZE / 2);
 
+								cacheHitMiss.resize(MAXIMUM_VECTOR_SIZE / 2);
+
 								ipcValues.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 								workingSetSize.resize(MAXIMUM_VECTOR_SIZE / 2);
@@ -1363,52 +1512,56 @@ void processStats(const string &filename)
 						throughOnce = true;
 
 					averageTransactionLatency.clear();
-					writing = 1;
+					writing = TRANSACTION_LATENCY;
 				}
 				else if (newLine[4] == 'W')
-					writing = 2;
+					writing = WORKING_SET_SIZE;
 				else if (newLine[4] == 'D')
-					writing = 3;
+					writing = NONE;
 				else if (newLine[4] == 'C' && newLine[5] == 'M')
-					writing = 4;
+					writing = NONE;
 				else if (newLine[4] == 'C' && newLine[5] == 'o')
-					writing = 6;
+					writing = NONE;
 				else if (starts_with(newLine,"----Band"))
-					writing = 7;
+					writing = BANDWIDTH;
 				else if (newLine[4] == 'A')
-					writing = 8;
+					writing = PC_VS_LATENCY;
 				else if (newLine[4] == 'I')
 				{
 					ipcLinesWritten = 0;
-					writing = 9;
+					writing = IPC;
 				}
 				else if (starts_with(newLine,"----Row"))
 				{
-					writing = 10;
+					writing = HIT_MISS_ROWS;
 				}
 				else if (starts_with(newLine,"----Channel"))
 				{
-					writing = 11;
+					writing = CHANNEL_DISTRIBUTION;
 				}
 				else if (starts_with(newLine,"----Rank"))
 				{
-					writing = 12;
+					writing = RANK_DISTRIBUTION;
 				}
 				else if (starts_with(newLine,"----Bank"))
 				{
-					writing = 13;
+					writing = BANK_DISTRIBUTION;
 				}
 				else if (starts_with(newLine,"----Utilization"))
 				{
-					writing = 14; 
+					writing = PER_BANK_DISTRIBUTION; 
 				}
 				else if (starts_with(newLine,"----Latency Breakdown"))
 				{
-					writing = 15;
+					writing = PER_BANK_LATENCY;
+				}
+				else if (starts_with(newLine,"----Cache"))
+				{
+					writing = CACHE_HIT_MISS;
 				}
 				else
 				{
-					writing = 0;
+					writing = NONE;
 				}
 			}
 
@@ -1416,74 +1569,77 @@ void processStats(const string &filename)
 		// data in this section
 		else
 		{
-			// transaction latency
-			if (writing == 1)
+			switch (writing)
 			{
-				char *position = strchr(newLine,' ');
-				if (position == NULL)
-					break;
-				*position++ = 0;
-				unsigned latency = atoi(newLine);
-				unsigned count = atoi(position);
-				averageTransactionLatency.add(latency,count);
-				transactionCountBuffer += count;
-				distTransactionLatency[latency] += count;
-			}
-			// working set size
-			else if (writing == 2)
-			{
-				workingSetSizeBuffer = atoi(newLine);
-			}
-			// bandwidth
-			else if (writing == 7)
-			{
-				char *position = strchr(newLine,' ');
-				if (position == NULL)
-					break;
-				*position++ = 0;
-
-				uint64_t readValue = atol(newLine);
-				uint64_t writeValue = atol(position);
-				bandwidthValuesBuffer.first += readValue;
-				bandwidthValuesBuffer.second += writeValue;
-			}
-			// PC vs latency
-			else if (writing == 8)
-			{
-				char *position = strchr(newLine, ' ') ;
-				if (position == NULL)
-					break;
-				*position++ = 0;
-				// ignore stack addresses for now
-				if ((position - newLine) < 12)
+				// transaction latency
+			case TRANSACTION_LATENCY:
 				{
-					char *position2 = strchr(position,' ');
-					if (position2 == NULL)
+					char *position = strchr(newLine,' ');
+					if (position == NULL)
 						break;
+					*position++ = 0;
+					unsigned latency = atoi(newLine);
+					unsigned count = atoi(position);
+					averageTransactionLatency.add(latency,count);
+					transactionCountBuffer += count;
+					distTransactionLatency[latency] += count;
+				}
+				break;
+				// working set size
+			case WORKING_SET_SIZE:
+				workingSetSizeBuffer = atoi(newLine);
+				break;
+				// bandwidth
+			case BANDWIDTH:
+				{
+					char *position = strchr(newLine,' ');
+					if (position == NULL)
+						break;
+					*position++ = 0;
 
-					*position2++ = 0;
-
-					uint64_t PC = strtol(newLine,0,16);
-
-					float averageAccessTime = atof(position);
-
-					unsigned numberAccesses = atoi(position2);
-
-					if (PC < 0x100000000)
+					uint64_t readValue = atol(newLine);
+					uint64_t writeValue = atol(position);
+					bandwidthValuesBuffer.first += readValue;
+					bandwidthValuesBuffer.second += writeValue;
+				}
+				break;
+				// PC vs latency
+			case PC_VS_LATENCY:
+				{
+					char *position = strchr(newLine, ' ') ;
+					if (position == NULL)
+						break;
+					*position++ = 0;
+					// ignore stack addresses for now
+					if ((position - newLine) < 12)
 					{
-						latencyVsPcLow[PC].first += numeric_cast<uint64_t>(averageAccessTime * (float)numberAccesses);
-						latencyVsPcLow[PC].second += numberAccesses;
-					}
-					else
-					{
-						latencyVsPcHigh[PC].first += numeric_cast<uint64_t>(averageAccessTime * (float)numberAccesses);
-						latencyVsPcHigh[PC].second += numberAccesses;
+						char *position2 = strchr(position,' ');
+						if (position2 == NULL)
+							break;
+
+						*position2++ = 0;
+
+						uint64_t PC = strtol(newLine,0,16);
+
+						float averageAccessTime = atof(position);
+
+						unsigned numberAccesses = atoi(position2);
+
+						if (PC < 0x100000000)
+						{
+							latencyVsPcLow[PC].first += numeric_cast<uint64_t>(averageAccessTime * (float)numberAccesses);
+							latencyVsPcLow[PC].second += numberAccesses;
+						}
+						else
+						{
+							latencyVsPcHigh[PC].first += numeric_cast<uint64_t>(averageAccessTime * (float)numberAccesses);
+							latencyVsPcHigh[PC].second += numberAccesses;
+						}
 					}
 				}
-			}
-			// IPC
-			else if (writing == 9)
-			{
+				break;
+				// IPC
+			case IPC:
 				if (ipcLinesWritten < 1)
 				{
 					float currentValue = starts_with(newLine,"nan") ? 0.0F : atof(newLine);
@@ -1493,80 +1649,82 @@ void processStats(const string &filename)
 					ipcValueBuffer += currentValue;
 				}
 				ipcLinesWritten++;
-			}
-			// hit and miss values
-			else if (writing == 10)
-			{
-				char *position = strchr(newLine, ' ');
-				*position++ = 0;
-				unsigned hitCount = max(atoi(newLine),1);
-				unsigned missCount = max(atoi(position),1);
-				hitMissValueBuffer += hitCount / ((double)missCount + hitCount);
-				hitMissTotalBuffer += (hitCount + missCount);
-			}
-			// channel breakdown
-			else if (writing == 11)
-			{
-			}
-			// rank breakdown
-			else if (writing == 12)
-			{
-			}
-			// bank breakdown
-			else if (writing == 13)
-			{
-			}
-			// new-style per bank breakdown
-			else if (writing == 14)
-			{
-				char *splitLine1 = strchr(newLine,'(') + 1;
-				char *splitLine2 = strchr(splitLine1,',');
-				if (splitLine2 == NULL || splitLine1 == NULL)
-					break;
-				*splitLine2++ = 0;
-				char *splitLine3 = strchr(splitLine2,',');
-				if (splitLine3 == NULL)
-					break;
-				*splitLine3++ = 0;
-				char *splitLine5 = strchr(splitLine3,')');
-				if (splitLine5 == NULL)
-					break;
-				*splitLine5 = 0;
-				splitLine5 += 2;
-				unsigned channel = atoi(splitLine1);
-				unsigned rank = atoi(splitLine2);
-				unsigned bank = atoi(splitLine3);
-				unsigned value = atoi(splitLine5);
+				break;
+				// hit and miss values
+			case HIT_MISS_ROWS:
+				{
+					char *position = strchr(newLine, ' ');
+					*position++ = 0;
+					unsigned hitCount = max(atoi(newLine),1);
+					unsigned missCount = max(atoi(position),1);
+					hitMissValueBuffer += hitCount / ((double)missCount + hitCount);
+					hitMissTotalBuffer += (hitCount + missCount);
+				}
+				break;
+				// new-style per bank breakdown
+			case PER_BANK_DISTRIBUTION:
+				{
+					char *splitLine1 = strchr(newLine,'(') + 1;
+					char *splitLine2 = strchr(splitLine1,',');
+					if (splitLine2 == NULL || splitLine1 == NULL)
+						break;
+					*splitLine2++ = 0;
+					char *splitLine3 = strchr(splitLine2,',');
+					if (splitLine3 == NULL)
+						break;
+					*splitLine3++ = 0;
+					char *splitLine5 = strchr(splitLine3,')');
+					if (splitLine5 == NULL)
+						break;
+					*splitLine5 = 0;
+					splitLine5 += 2;
+					unsigned channel = atoi(splitLine1);
+					unsigned rank = atoi(splitLine2);
+					unsigned bank = atoi(splitLine3);
+					unsigned value = atoi(splitLine5);
 
-				channelDistributionBuffer[channel][rank][bank] += value;
-				channelDistributionBuffer[channel][rank].back() += value;
-			}
-			// latency distribution graphs
-			else if (writing == 15)
-			{
-				char *splitLine1 = strchr(newLine,'(') + 1;
-				if (splitLine1 == NULL)
-					break;
-				char *splitLine2 = strchr(splitLine1,',');
-				if (splitLine2 == NULL)
-					break;
-				*splitLine2++ = 0;
-				char *splitLine3 = strchr(splitLine2,',');
-				if (splitLine3 == NULL)
-					break;
-				*splitLine3++ = 0;
-				char *splitLine5 = strchr(splitLine3,')');
-				if (splitLine5 == NULL)
-					break;
-				*splitLine5 = 0;
-				splitLine5 += 2;
-				unsigned channel = atoi(splitLine1);
-				unsigned rank = atoi(splitLine2);
-				unsigned bank = atoi(splitLine3);
-				unsigned value = atoi(splitLine5);
+					channelDistributionBuffer[channel][rank][bank] += value;
+					channelDistributionBuffer[channel][rank].back() += value;
+				}
+				break;
+				// latency distribution graphs
+			case PER_BANK_LATENCY:
+				{
+					char *splitLine1 = strchr(newLine,'(') + 1;
+					if (splitLine1 == NULL)
+						break;
+					char *splitLine2 = strchr(splitLine1,',');
+					if (splitLine2 == NULL)
+						break;
+					*splitLine2++ = 0;
+					char *splitLine3 = strchr(splitLine2,',');
+					if (splitLine3 == NULL)
+						break;
+					*splitLine3++ = 0;
+					char *splitLine5 = strchr(splitLine3,')');
+					if (splitLine5 == NULL)
+						break;
+					*splitLine5 = 0;
+					splitLine5 += 2;
+					unsigned channel = atoi(splitLine1);
+					unsigned rank = atoi(splitLine2);
+					unsigned bank = atoi(splitLine3);
+					unsigned value = atoi(splitLine5);
 
-				channelLatencyDistributionBuffer[channel][rank][bank] += value;
-				channelLatencyDistributionBuffer[channel][rank].back() += value;
+					channelLatencyDistributionBuffer[channel][rank][bank] += value;
+					channelLatencyDistributionBuffer[channel][rank].back() += value;
+				}
+				break;
+			case CACHE_HIT_MISS:
+				{
+					char *position = strchr(newLine, ' ');
+					*position++ = 0;
+					cacheHitMissBuffer.first = atoi(newLine);
+					cacheHitMissBuffer.second = atoi(position);
+				}
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -2039,6 +2197,119 @@ void processStats(const string &filename)
 	}
 	p0 << "e" << endl << "0 0" << endl << "3.31 1E-5" << endl << "e" << endl << "unset output" << endl;
 
+	//////////////////////////////////////////////////////////////////////////
+	// make the cache hit-miss graph
+	outFilename = outputDir / ("cacheHitRate." + extension);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	p1 << "set title \"" << "Per-DIMM Cache Hit Rate\\n" << commandLine << "\"" << endl << hitMissScript << endl;
+
+	time = 0.0F;
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); i++)
+	{
+		p1 << time << " " << i->first + i->second << endl;
+		//cerr << time << " " << i->first + i->second << endl;
+		time += epochTime;
+	}
+
+	p1 << "e" << endl;
+
+	time = 0.0F;
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); i++)
+	{
+		p1 << time << " " << (double)i->first / (i->first + i->second) << endl;
+		//cerr << time << " " << (double)i->first / (i->first + i->second) << endl;
+		time += epochTime;
+	}
+
+	p1 << "e" << endl << "unset output" << endl;
+
+	cerr << "period determined to be " << period << endl;
+	cerr << "tRC determined to be " << tRC * period << "ns" << endl;
+	cerr << "epochTime is " << epochTime;
+
+	//////////////////////////////////////////////////////////////////////////
+#if 0
+	//////////////////////////////////////////////////////////////////////////
+	// make the cache hit-miss graph
+	outFilename = outputDir / ("cachePower." + extension);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	p2 << "set title \"" << "Power Usage of SRAM vs. DRAM\\n" << commandLine << "\"" << endl << hitMissPowerScript << endl;
+
+	time = 0.0F;
+	float voltageScaleFactor = 1.8F / 1.9F;
+	float frequencyScaleFactor = 800000000 / 800000000;
+	float devicesPerRank = 8;
+	float IDD0 = 90.0F;
+	float IDD3N = 60.0F;
+	float IDD2N = 60.0F;
+	float vddMax = 1.9F;
+	float vdd = 1.8F;
+	float IDD2P = 7.0F;
+	float IDD3P = 50.0F;
+	double CKE_LO_PRE = 0.95F;
+	double CKE_LO_ACT = 0.01F;
+	float PdsACT = IDD0 - ((IDD3N * tRAS + IDD2N * (tRC - tRAS)/tRC)) * vdd;
+
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); i++)
+	{
+		double percentActive = ((i->first + i->second) * tRC * period) / epochTime;
+		cerr << percentActive << endl;
+
+		
+		// calculate PsysACT-STBY
+		float PsysACT_STBY = devicesPerRank * voltageScaleFactor * frequencyScaleFactor *
+			IDD3N * vddMax * percentActive * (1.0F - CKE_LO_ACT);
+		
+		// calculate PsysPRE-STBY
+		float PsysPRE_STBY = devicesPerRank * voltageScaleFactor * frequencyScaleFactor *
+			IDD2N * vddMax * (1 - percentActive) * (1 - CKE_LO_PRE);
+
+		// calculate PsysPRE-PDN
+		float PsysPRE_PDN = voltageScaleFactor * IDD2P * vddMax * (1 - percentActive) * CKE_LO_PRE;
+
+		// calculate PsysACT-PDN
+		/// @todo: account for CKE
+		float PsysACT_PDN = voltageScaleFactor * IDD3P * vddMax * percentActive * (1 - CKE_LO_ACT);
+
+		// calculate PsysACT
+		double tRRDsch = (double)(epochTime) / (i->first + i->second);
+		
+		double PsysACT = devicesPerRank * ((double)tRC / (double)tRRDsch) * voltageScaleFactor * PdsACT;
+
+		double PsysACTTotal = ((double)tRC / (double)tRRDsch) * voltageScaleFactor * PdsACT;
+
+		// calculate PdsRD
+		double RDschPct =  / (double)(epochTime);
+
+		PsysRD += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsRD() * RDschPct;
+
+		// calculate PdsWR
+		double WRschPct = k->getWriteCycles() / (double)(time - powerModel.getLastCalculation());
+
+		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
+
+
+		p2 << time << " " << i->first + i->second << endl;
+		//cerr << time << " " << i->first + i->second << endl;
+		time += epochTime;
+	}
+
+	p2 << "e" << endl;
+
+	time = 0.0F;
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); i++)
+	{
+		p2 << time << " " << (double)i->first / (i->first + i->second) << endl;
+		//cerr << time << " " << (double)i->first / (i->first + i->second) << endl;
+		time += epochTime;
+	}
+
+	p2 << "e" << endl << "unset output" << endl;
+
+	//////////////////////////////////////////////////////////////////////////
+#endif
 
 	p0 << endl << "exit" << endl;
 	p1 << endl << "exit" << endl;

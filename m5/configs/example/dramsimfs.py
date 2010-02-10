@@ -225,7 +225,7 @@ if options.l2cache:
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
-        test_sys.l2 = L2Cache(size = '512kB', assoc=16, latency="6ns", mshrs = 22, tgts_per_mshr = 12)
+        test_sys.l2 = L2Cache(size = '8MB', assoc=16, latency="6ns", mshrs = 22, tgts_per_mshr = 12)
 
     test_sys.tol2bus = Bus()
     test_sys.l2.cpu_side = test_sys.tol2bus.port

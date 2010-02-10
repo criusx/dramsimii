@@ -26,6 +26,7 @@
 #include "TimingSpecification.h"
 #include "SystemConfiguration.h"
 #include "queue.h"
+#include "Statistics.h"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/access.hpp>
@@ -40,6 +41,7 @@ namespace DRAMsimII
 	private:
 		const TimingSpecification &timing;		///< a reference to the timing specification
 		const SystemConfiguration &systemConfig;///< reference to the system config to obtain specs
+		Statistics &statistics;					///< backward pointer to the stats engine
 	protected:	
 
 		// members
@@ -66,6 +68,7 @@ namespace DRAMsimII
 		unsigned totalCASCount;			///< the number of CAS commands
 		unsigned CASWCount;				///< the total number of CAS+W commands in this epoch
 		unsigned totalCASWCount;		///< the number of CASW commands
+		bool allHits;					///< whether every CAS was a read and hit in the cache, the RAS can be eliminated
 
 	public:
 		// functions
@@ -90,6 +93,7 @@ namespace DRAMsimII
 
 		unsigned getOpenRowID() const { return openRowID; }
 		bool isActivated() const { return activated; }
+		bool isAllHits() const { return allHits; }
 
 		unsigned getRASCount() const { return RASCount; }
 		unsigned getCASCount() const { return CASCount; }
@@ -118,9 +122,12 @@ namespace DRAMsimII
 		bool isHighUtilization() const { return perBankQueue.size() > (perBankQueue.depth() / 2);}
 		void collapse();
 
+		// mutators
+		void setAllHits(const bool value) { allHits = value; }
+
 		// constructors
-		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
-		Bank(const Bank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
+		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics& stats);
+		Bank(const Bank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics& stats);
 		Bank(const Bank&);
 
 		// overloads
@@ -134,7 +141,7 @@ namespace DRAMsimII
 		// friends
 		friend class boost::serialization::access;
 
-		explicit Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal);
+		explicit Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics &stats);
 
 		// serialization
 		template<class Archive>
@@ -155,7 +162,9 @@ namespace DRAMsimII
 				const DRAMsimII::TimingSpecification* const timing = &(t->timing);
 				ar << timing;
 				const DRAMsimII::SystemConfiguration* const systemConfig = &(t->systemConfig);
-				ar << systemConfig;			
+				ar << systemConfig;		
+				const DRAMsimII::Statistics* const stats = &(t->statistics);
+				ar << stats;
 			}
 		}
 
@@ -168,8 +177,10 @@ namespace DRAMsimII
 				ar >> timing;
 				DRAMsimII::SystemConfiguration* systemConfig;	
 				ar >> systemConfig;
+				DRAMsimII::Statistics* stats;
+				ar >> stats;
 
-				::new(t)DRAMsimII::Bank(*timing,*systemConfig);
+				::new(t)DRAMsimII::Bank(*timing,*systemConfig,*stats);
 			}
 		}
 	};

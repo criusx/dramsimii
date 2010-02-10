@@ -26,9 +26,10 @@ using namespace DRAMsimII;
 //////////////////////////////////////////////////////////////////////////
 /// @brief constructor with timing spec and system config values
 //////////////////////////////////////////////////////////////////////////
-Bank::Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
+Bank::Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics &stats):
 timing(timingVal),
 systemConfig(systemConfigVal),
+statistics(stats),
 perBankQueue(settings.perBankQueueDepth),
 lastRASTime(-100),
 lastCASTime(-100),
@@ -47,15 +48,17 @@ totalRASCount(0),
 CASCount(0),
 totalCASCount(0),
 CASWCount(0),
-totalCASWCount(0)
+totalCASWCount(0),
+allHits(false)
 {}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor with timing spec and sysconfig information
 //////////////////////////////////////////////////////////////////////////
-Bank::Bank(const Bank &rhs, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
+Bank::Bank(const Bank &rhs, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics &stats):
 timing(timingVal),
 systemConfig(systemConfigVal),
+statistics(stats),
 perBankQueue(rhs.perBankQueue),
 lastRASTime(rhs.lastRASTime),
 lastCASTime(rhs.lastCASTime),
@@ -74,7 +77,8 @@ totalRASCount(rhs.totalRASCount),
 CASCount(rhs.CASCount),
 totalCASCount(rhs.totalCASCount),
 CASWCount(rhs.CASWCount),
-totalCASWCount(rhs.totalCASWCount)
+totalCASWCount(rhs.totalCASWCount),
+allHits(rhs.allHits)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,6 +87,7 @@ totalCASWCount(rhs.totalCASWCount)
 Bank::Bank(const Bank &rhs):
 timing(rhs.timing),
 systemConfig(rhs.systemConfig),
+statistics(rhs.statistics),
 perBankQueue(rhs.perBankQueue),
 lastRASTime(rhs.lastRASTime),
 lastCASTime(rhs.lastCASTime),
@@ -101,15 +106,17 @@ totalRASCount(rhs.totalRASCount),
 CASCount(rhs.CASCount),
 totalCASCount(rhs.totalCASCount),
 CASWCount(rhs.CASWCount),
-totalCASWCount(rhs.totalCASWCount)
+totalCASWCount(rhs.totalCASWCount),
+allHits(rhs.allHits)
 {}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief deserialization constructor
 //////////////////////////////////////////////////////////////////////////
-Bank::Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal):
+Bank::Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics &stats):
 timing(timingVal),
 systemConfig(systemConfigVal),
+statistics(stats),
 perBankQueue(0),
 lastRASTime(0),
 lastCASTime(0),
@@ -128,7 +135,8 @@ totalRASCount(0),
 CASCount(0),
 totalCASCount(0),
 CASWCount(0),
-totalCASWCount(0)
+totalCASWCount(0),
+allHits(false)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -225,6 +233,9 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 
 	// calculate when the next few commands can happen
 	nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR());
+
+	// if there is a write, because it is write-through then the activate needed to happen
+	allHits = false;
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -24,8 +24,9 @@ using std::endl;
 using std::cerr;
 using namespace DRAMsimII;
 
-Rank::Rank(const Settings& settings, const TimingSpecification &timing, const SystemConfiguration &systemConfig):
+Rank::Rank(const Settings& settings, const TimingSpecification &timing, const SystemConfiguration &systemConfig, Statistics& stats):
 timing(timing),
+statistics(stats),
 lastRefreshTime(-1ll * settings.tRFC),
 lastPrechargeAnyBankTime(-100),
 lastCASTime(-100),
@@ -48,13 +49,14 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
 banksPrecharged(/*settings.rowBufferManagementPolicy == OPEN_PAGE ? 0 : settings.bankCount */ 0),
-tags(1024,64,8,5),
+tags(settings),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
-bank(systemConfig.getBankCount(),Bank(settings, timing, systemConfig))
+bank(systemConfig.getBankCount(),Bank(settings, timing, systemConfig, stats))
 {}
 
 Rank::Rank(const Rank &rhs):
 timing(rhs.timing),
+statistics(rhs.statistics),
 lastRefreshTime(rhs.lastRefreshTime),
 lastPrechargeAnyBankTime(rhs.lastPrechargeAnyBankTime),
 lastCASTime(rhs.lastCASTime),
@@ -82,8 +84,9 @@ lastActivateTimes(rhs.lastActivateTimes),
 bank(rhs.bank)
 {}
 
-Rank::Rank(const Rank &rhs, const TimingSpecification &timing, const SystemConfiguration &systemConfig):
+Rank::Rank(const Rank &rhs, const TimingSpecification &timing, const SystemConfiguration &systemConfig, Statistics& stats):
 timing(timing),
+statistics(rhs.statistics),
 lastRefreshTime(rhs.lastRefreshTime),
 lastPrechargeAnyBankTime(rhs.lastPrechargeAnyBankTime),
 lastCASTime(rhs.lastCASTime),
@@ -108,7 +111,7 @@ lastBankID(rhs.lastBankID),
 banksPrecharged(rhs.banksPrecharged),
 tags(rhs.tags),
 lastActivateTimes(rhs.lastActivateTimes),
-bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConfig))
+bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConfig, stats))
 {
 	// TODO: copy over values in banks now that reference members are init	
 	//for (unsigned i = 0; i < systemConfig.getBankCount(); i++)
@@ -118,8 +121,9 @@ bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConf
 	bank = rhs.bank;
 }
 
-Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank> & newBank):
+Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank>& newBank, Statistics& stats):
 timing(timingSpec),
+statistics(stats),
 lastRefreshTime(-1ll * timingSpec.tRFC()),
 lastPrechargeAnyBankTime(-100),
 lastCASTime(-100),
@@ -142,7 +146,7 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(0),
 banksPrecharged(0),
-tags(1024,64,8,5),
+tags(128,64,4,5),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(newBank)
 {}
@@ -152,6 +156,10 @@ bank(newBank)
 //////////////////////////////////////////////////////////////////////////
 void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 {
+	//////////////////////////////////////////////////////////////////////////
+	bank[currentCommand->getAddress().getBank()].setAllHits(true);
+	//////////////////////////////////////////////////////////////////////////
+
 	// RAS time history queue, per rank
 	const tick thisRASTime = currentTime;
 	// record these for tFAW calculations
@@ -181,6 +189,13 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 {
+	//////////////////////////////////////////////////////////////////////////
+	if (bank[currentCommand->getAddress().getBank()].isAllHits() && currentCommand->isBasicPrecharge())
+	{
+		statistics.reportRasReduction(currentCommand);
+	}
+	//////////////////////////////////////////////////////////////////////////
+
 	// update the bank to reflect this change also
 	Bank &currentBank = bank[currentCommand->getAddress().getBank()];
 	currentBank.issuePRE(currentTime, currentCommand);
@@ -213,15 +228,19 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 // @brief issue a CAS command to this rank
 //////////////////////////////////////////////////////////////////////////
-void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
+bool Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
-	if (currentCommand->isRead())
+	//////////////////////////////////////////////////////////////////////////
+	bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
+	if (!satisfied)
+		bank[currentCommand->getAddress().getBank()].setAllHits(false);
+	if (bank[currentCommand->getAddress().getBank()].isAllHits() && currentCommand->isPrecharge())
 	{
-		int latency;
-		LRUBlk *block = tags.accessBlock(currentCommand->getAddress().getPhysicalAddress(), latency, 0, (LRU::tick)time);
-		if (block)
-			cerr << "hit" << endl;
+		statistics.reportRasReduction(currentCommand);
 	}
+	//std::cout << (satisfied ? "|" : ".");
+	//////////////////////////////////////////////////////////////////////////
+
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
 
@@ -232,17 +251,25 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 	CASLength += currentCommand->getLength();
 
 	assert(currentCommand->getAddress().getBank() == lastBankID);
-	
+
 	// calculate when the next few commands can happen
 	nextReadTime = max(nextReadTime, currentTime + timing.tBurst());
 	nextWriteTime = max(nextWriteTime, currentTime + timing.tCAS() + timing.tBurst() + timing.tRTRS() - timing.tCWD());
+
+	return satisfied;
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief issue a CASW command to this rank
 //////////////////////////////////////////////////////////////////////////
-void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
+bool Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
+	//////////////////////////////////////////////////////////////////////////
+	bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
+	bank[currentCommand->getAddress().getBank()].setAllHits(false);
+	//std::cout << (satisfied ? "|" : ".");
+	//////////////////////////////////////////////////////////////////////////
+
 	// update the bank to reflect this change also
 	bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);
 
@@ -259,6 +286,8 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 	nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tWTR());
 
 	nextWriteTime = max(nextWriteTime, currentTime + timing.tBurst());
+
+	return satisfied;
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -114,7 +114,7 @@ namespace DRAMsimII
 		float getShortBurstRatio() const { return shortBurstRatio; }
 		float getArrivalThreshhold() const { return arrivalThreshold; }
 		DistributionType getInterarrivalDistributionModel() const { return interarrivalDistributionModel; }
-		float getAverageInterarrivalCycleCount() const { return averageInterarrivalCycleCount; }
+		unsigned getAverageInterarrivalCycleCount() const { return averageInterarrivalCycleCount; }
 		tick getTime() const { return time; }
 
 		// mutators

@@ -35,6 +35,9 @@ using std::tr1::unordered_map;
 using std::setprecision;
 using std::setiosflags;
 using std::string;
+using std::pair;
+using boost::uint64_t;
+using std::vector;
 
 using namespace DRAMsimII;
 
@@ -56,8 +59,8 @@ writeCount(0),
 readBytesTransferred(0),
 writeBytesTransferred(0),
 timePerEpoch((float)settings.epoch / settings.dataRate),
-rowHits(0),
-rowMisses(0),
+rowBufferAccesses(settings.channelCount, vector<pair<unsigned,unsigned> >(settings.rankCount)),
+rasReduction(settings.channelCount, vector<unsigned>(settings.rankCount)),
 issuedAtTFAW(0),
 commandDelay(),
 commandExecution(),
@@ -67,7 +70,8 @@ transactionExecution(),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
-bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.bankCount)
+bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
+hitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount))
 {
 	bankLatencyUtilization.reserve(settings.channelCount * settings.rankCount * settings.bankCount);
 	aggregateBankUtilization.reserve(settings.channelCount * settings.rankCount * settings.bankCount);
@@ -91,8 +95,8 @@ writeCount(0),
 readBytesTransferred(0),
 writeBytesTransferred(0),
 timePerEpoch(0),
-rowHits(0),
-rowMisses(0),
+rowBufferAccesses(0, vector<pair<unsigned,unsigned> >(0)),
+rasReduction(0, vector<unsigned>(0)),
 issuedAtTFAW(0),
 commandDelay(),
 commandExecution(),
@@ -102,7 +106,8 @@ transactionExecution(),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(0),
-bankLatencyUtilization(0)
+bankLatencyUtilization(0),
+hitRate()
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -159,6 +164,28 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 	}
 }
 
+void Statistics::reportRasReduction(const Command *currentCommand)
+{
+	rasReduction[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()]++;
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief tells of a row buffer hit when setting up commands
+//////////////////////////////////////////////////////////////////////////
+void Statistics::reportRowBufferAccess(const Transaction *currentTransaction, bool isHit)
+{
+	if (isHit)
+	{
+		rowBufferAccesses[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first++;
+	}
+	else
+	{
+		rowBufferAccesses[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second++;
+	}
+	//#pragma omp atomic
+	//rowHits++;
+}
+
 //////////////////////////////////////////////////////////////////////////
 /// @brief collects commands stats once a command has executed
 //////////////////////////////////////////////////////////////////////////
@@ -166,6 +193,21 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 {
 	//#pragma omp critical
 	{
+		if (currentCommand->isHit())
+		{
+			if (currentCommand->isRead())
+				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].first.first++;
+			else if (currentCommand->isWrite())
+				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.first++;
+		}
+		else
+		{
+			if (currentCommand->isRead())
+				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].first.second++;
+			else if (currentCommand->isWrite())
+				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.second++;
+		}
+
 		if (!currentCommand->isRefresh())
 		{
 			commandDelay[currentCommand->getDelayTime()]++;
@@ -225,7 +267,28 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		os << std::hex << (*currentValue).first << " " << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << " " << std::dec << (*currentValue).second.getCount() << endl;
 	}
 
-	os << "----Row Hit/Miss Counts----" << endl << statsLog.getHitCount() << " " << statsLog.getMissCount() << endl;
+	unsigned hitCount = 0, missCount = 0;
+	for (vector<vector<pair<unsigned,unsigned> > >::const_iterator h = statsLog.getRowBufferAccesses().begin(); h != statsLog.rowBufferAccesses.end(); h++)
+	{
+		for (vector<pair<unsigned,unsigned> >::const_iterator i = h->begin(); i != h->end(); i++)
+		{
+			hitCount += i->first;
+			missCount += i->second;
+		}
+	}
+	os << "----Row Hit/Miss Counts----" << endl << hitCount << " " << missCount << endl;
+
+
+	uint64_t hits = 0, misses = 0;
+	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::const_iterator h = statsLog.hitRate.begin(); h != statsLog.hitRate.end(); h++)
+	{
+		for (vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > >::const_iterator i = h->begin(); i != h->end(); i++)
+		{
+			hits += i->first.first + i->second.first;
+			misses += i->first.second + i->second.second;
+		}
+	}
+	os << "----Cache Hit/Miss Counts----" << endl << hits << " " << misses << endl;
 
 	os << "----Utilization----" << endl;
 	for (unsigned i = 0; i < statsLog.channels; i++)
@@ -319,12 +382,32 @@ void Statistics::clear()
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
-	issuedAtTFAW = rowHits = rowMisses = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
+	issuedAtTFAW = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
+	for (vector<vector<pair<unsigned,unsigned> > >::iterator h = rowBufferAccesses.begin(); h != rowBufferAccesses.end(); h++)
+	{
+		for (vector<pair<unsigned,unsigned> >::iterator i = h->begin(); i != h->end(); i++)
+		{
+			i->first = i->second = 0;
+		}
+	}
+
 	for (vector<unsigned>::size_type i = 0; i < aggregateBankUtilization.size(); i++)
 		aggregateBankUtilization[i] = 0;
 	for (vector<unsigned>::size_type i = 0; i < bankLatencyUtilization.size(); i++)
 		bankLatencyUtilization[i] = 0;
 	pcOccurrence.clear();
+
+	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::iterator h = hitRate.begin(); h != hitRate.end(); h++)
+	{
+		for (vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > >::iterator i = h->begin(); i != h->end(); i++)
+			i->first.first = i->first.second = i->second.first = i->second.second = 0;
+	}
+
+	for (vector<vector<unsigned> >::iterator h = rasReduction.begin(); h != rasReduction.end(); h++)
+	{
+		for (vector<unsigned>::iterator i = h->begin(); i != h->end(); i++)
+			*i = 0;
+	}
 #ifdef M5
 	//async_statdump =
 	async_event = async_statreset = true;	

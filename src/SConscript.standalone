@@ -6,13 +6,13 @@ conf = Configure(env)
 
 platform = ARGUMENTS.get("build",Platform())
 
-if not conf.CheckLib('boost_serialization'):
-	print 'Boost serialization library not found, please install this.'
-	print 'e.g. sudo apt-get install "libboost-serialization*"'
-	Exit(1)
 if not conf.CheckLib('boost_iostreams'):
 	print 'Boost iostreams library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-iostreams*"'
+	Exit(1)
+if not conf.CheckLib('boost_serialization'):
+	print 'Boost serialization library not found, please install this.'
+	print 'e.g. sudo apt-get install "libboost-serialization*"'
 	Exit(1)
 if not conf.CheckCXXHeader('boost/circular_buffer.hpp'):
 	print 'Need Boost 1.35 or newer with the circular buffer library.'
@@ -45,10 +45,10 @@ if not conf.CheckLib('xml2'):
 	print "Need libxml2 to compile this."
 	print "e.g. sudo apt-get install \".*libxml2.*\""
 	Exit(1)
-if platform.startswith('script') and not conf.CheckLib('gomp'):
-	print 'need a compiler that supports OpenMP.'
-	print 'such as gcc 4.2+, icc 11+, Visual Studio 2005+, etc.'
-	Exit(1)
+#if platform.startswith('script') and not conf.CheckLib('gomp'):
+#	print 'need a compiler that supports OpenMP.'
+#	print 'such as gcc 4.2+, icc 11+, Visual Studio 2005+, etc.'
+#	Exit(1)
 if not conf.CheckLib('boost_regex'):
 	print 'Boost regex library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-regex*"'
@@ -58,6 +58,7 @@ sourceBase = """
 			reporting/soapC.cpp
 			reporting/soapClient.cpp
 			reporting/stdsoap2.cpp
+			cache/lru.cc
 			Address.cpp
 			Bank.cpp
 			command.cpp
@@ -73,7 +74,6 @@ sourceBase = """
 			fbdChannel.cpp
 			fbdFrame.cpp
 			fbdSystem.cpp
-			globals.cpp
 			InputStream.cpp
 			powerConfig.cpp
 			Rank.cpp
@@ -111,13 +111,13 @@ def make_objs(sourceFiles, env):
 
 if platform == 'script':
 	envScript = env.Clone(OBJSUFFIX='.os', CPPPATH = '/usr/include/ImageMagick')
-	envScript.Append(CCFLAGS = '-O3 -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -Wconversion -Wuninitialized')
+	envScript.Append(CCFLAGS = '-O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -Wconversion -Wuninitialized')
 	script = envScript.Program('processStats',"../scripts/processStats.cpp")
 	envScript.Install(os.path.abspath('../scripts'),script)
 
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd', CPPPATH = '/usr/include/ImageMagick')
-	envScriptD.Append(CCFLAGS = '-ggdb3 -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
+	envScriptD.Append(CCFLAGS = '-ggdb3 -std=c++0x -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
 	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cpp")
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
@@ -189,6 +189,6 @@ elif platform == 'all':
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)
 else:
 	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
-	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -v -Wextra -Wunused -pedantic -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
+	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -std=c++0x -Wall -Wextra -Wunused -pedantic -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
 	opt = envOpt.Program('dramSimII.opt',sourceFile)
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)

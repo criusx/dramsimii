@@ -163,34 +163,34 @@ _TEXT	SEGMENT
 ; _this$ = eax
 ; _rhs$ = ecx
 
-; 236  : 	if (this == &rhs)
+; 239  : 	if (this == &rhs)
 
 	cmp	eax, ecx
 
-; 237  : 	{
-; 238  : 		return *this;
+; 240  : 	{
+; 241  : 		return *this;
 
-	je	SHORT $LN2@operator@16
+	je	SHORT $LN2@operator@24
 
-; 239  : 	}
-; 240  : 	length = rhs.length;
+; 242  : 	}
+; 243  : 	length = rhs.length;
 
 	mov	edx, DWORD PTR [ecx+88]
 	mov	DWORD PTR [eax+88], edx
 
-; 241  : 	hostTransaction = rhs.hostTransaction;
+; 244  : 	hostTransaction = rhs.hostTransaction;
 
 	mov	edx, DWORD PTR [ecx+84]
 	mov	DWORD PTR [eax+84], edx
 
-; 242  : 	commandType = rhs.commandType;
+; 245  : 	commandType = rhs.commandType;
 
 	mov	ecx, DWORD PTR [ecx+80]
 	mov	DWORD PTR [eax+80], ecx
-$LN2@operator@16:
+$LN2@operator@24:
 
-; 243  : 	return *this;
-; 244  : }
+; 246  : 	return *this;
+; 247  : }
 
 	ret	0
 ??4Command@DRAMsimII@@IAEAAV01@ABV01@@Z ENDP		; DRAMsimII::Command::operator=
@@ -202,7 +202,7 @@ _autoPrecharge$ = 8					; size = 1
 ?setAutoPrecharge@Command@DRAMsimII@@QBEX_N@Z PROC	; DRAMsimII::Command::setAutoPrecharge
 ; _this$ = edx
 
-; 161  : 	switch (commandType)
+; 164  : 	switch (commandType)
 
 	mov	eax, DWORD PTR [edx+80]
 	lea	ecx, DWORD PTR [eax-1]
@@ -213,15 +213,15 @@ _autoPrecharge$ = 8					; size = 1
 	jmp	DWORD PTR $LN11@setAutoPre[ecx*4]
 $LN5@setAutoPre:
 
-; 162  : 	{
-; 163  : 	case READ_AND_PRECHARGE:
-; 164  : 	case WRITE_AND_PRECHARGE:
-; 165  : 		if (!autoPrecharge)
+; 165  : 	{
+; 166  : 	case READ_AND_PRECHARGE:
+; 167  : 	case WRITE_AND_PRECHARGE:
+; 168  : 		if (!autoPrecharge)
 
 	test	bl, bl
 	jne	SHORT $LN2@setAutoPre
 
-; 166  : 			commandType = (commandType == WRITE_AND_PRECHARGE) ? WRITE : READ;
+; 169  : 			commandType = (commandType == WRITE_AND_PRECHARGE) ? WRITE : READ;
 
 	xor	ecx, ecx
 	cmp	eax, 4
@@ -229,33 +229,33 @@ $LN5@setAutoPre:
 	pop	ebx
 	lea	ecx, DWORD PTR [ecx+ecx+1]
 
-; 171  : 			commandType = (commandType == WRITE) ? WRITE_AND_PRECHARGE : READ_AND_PRECHARGE;
+; 174  : 			commandType = (commandType == WRITE) ? WRITE_AND_PRECHARGE : READ_AND_PRECHARGE;
 
 	mov	DWORD PTR [edx+80], ecx
 
-; 172  : 		break;
-; 173  : 	default:
-; 174  : 		break;
-; 175  : 	}
-; 176  : 
-; 177  : 	assert(isReadOrWrite() && hostTransaction);
-; 178  : 
-; 179  : 	assert((isWrite() && hostTransaction->isWrite()) ||
-; 180  : 		(isRead() && hostTransaction->isRead()));
-; 181  : }
+; 175  : 		break;
+; 176  : 	default:
+; 177  : 		break;
+; 178  : 	}
+; 179  : 
+; 180  : 	assert(isReadOrWrite() && hostTransaction);
+; 181  : 
+; 182  : 	assert((isWrite() && hostTransaction->isWrite()) ||
+; 183  : 		(isRead() && hostTransaction->isRead()));
+; 184  : }
 
 	ret	4
 $LN3@setAutoPre:
 
-; 167  : 		break;
-; 168  : 	case READ:
-; 169  : 	case WRITE:
-; 170  : 		if (autoPrecharge)
+; 170  : 		break;
+; 171  : 	case READ:
+; 172  : 	case WRITE:
+; 173  : 		if (autoPrecharge)
 
 	test	bl, bl
 	je	SHORT $LN2@setAutoPre
 
-; 171  : 			commandType = (commandType == WRITE) ? WRITE_AND_PRECHARGE : READ_AND_PRECHARGE;
+; 174  : 			commandType = (commandType == WRITE) ? WRITE_AND_PRECHARGE : READ_AND_PRECHARGE;
 
 	xor	ecx, ecx
 	cmp	eax, 3
@@ -265,16 +265,16 @@ $LN3@setAutoPre:
 $LN2@setAutoPre:
 	pop	ebx
 
-; 172  : 		break;
-; 173  : 	default:
-; 174  : 		break;
-; 175  : 	}
-; 176  : 
-; 177  : 	assert(isReadOrWrite() && hostTransaction);
-; 178  : 
-; 179  : 	assert((isWrite() && hostTransaction->isWrite()) ||
-; 180  : 		(isRead() && hostTransaction->isRead()));
-; 181  : }
+; 175  : 		break;
+; 176  : 	default:
+; 177  : 		break;
+; 178  : 	}
+; 179  : 
+; 180  : 	assert(isReadOrWrite() && hostTransaction);
+; 181  : 
+; 182  : 	assert((isWrite() && hostTransaction->isWrite()) ||
+; 183  : 		(isRead() && hostTransaction->isRead()));
+; 184  : }
 
 	ret	4
 	npad	3
@@ -392,7 +392,7 @@ __$EHRec$ = -12						; size = 12
 _this$ = 8						; size = 4
 ??1Command@DRAMsimII@@UAE@XZ PROC			; DRAMsimII::Command::~Command
 
-; 146  : {
+; 149  : {
 
 	push	-1
 	push	__ehhandler$??1Command@DRAMsimII@@UAE@XZ
@@ -408,28 +408,28 @@ _this$ = 8						; size = 4
 	mov	DWORD PTR [esi], OFFSET ??_7Command@DRAMsimII@@6B@
 	mov	DWORD PTR __$EHRec$[esp+28], 0
 
-; 147  : 	if (hostTransaction)
+; 150  : 	if (hostTransaction)
 
 	mov	ecx, DWORD PTR [esi+84]
 	test	ecx, ecx
 	je	SHORT $LN9@Command
 
-; 148  : 	{
-; 149  : 		delete hostTransaction;
+; 151  : 	{
+; 152  : 		delete hostTransaction;
 
 	mov	eax, DWORD PTR [ecx]
 	mov	edx, DWORD PTR [eax]
 	push	1
 	call	edx
 
-; 150  : 		// don't want to checkpoint this
-; 151  : 		hostTransaction = NULL;
+; 153  : 		// don't want to checkpoint this
+; 154  : 		hostTransaction = NULL;
 
 	mov	DWORD PTR [esi+84], 0
 $LN9@Command:
 
-; 152  : 	}
-; 153  : }
+; 155  : 	}
+; 156  : }
 
 	mov	DWORD PTR [esi], OFFSET ??_7Event@DRAMsimII@@6B@
 	mov	ecx, DWORD PTR __$EHRec$[esp+20]
@@ -462,39 +462,39 @@ _TEXT	SEGMENT
 
 	mov	edx, DWORD PTR [ecx+8]
 	cmp	edx, DWORD PTR [eax+8]
-	jne	SHORT $LN3@operator@91
+	jne	SHORT $LN3@operator@118
 	mov	edx, DWORD PTR [ecx+12]
 	cmp	edx, DWORD PTR [eax+12]
-	jne	SHORT $LN3@operator@91
+	jne	SHORT $LN3@operator@118
 	mov	edx, DWORD PTR [ecx+16]
 	cmp	edx, DWORD PTR [eax+16]
-	jne	SHORT $LN3@operator@91
+	jne	SHORT $LN3@operator@118
 	mov	edx, DWORD PTR [ecx+20]
 	cmp	edx, DWORD PTR [eax+20]
-	jne	SHORT $LN3@operator@91
+	jne	SHORT $LN3@operator@118
 	mov	edx, DWORD PTR [ecx+24]
 	cmp	edx, DWORD PTR [eax+24]
-	jne	SHORT $LN3@operator@91
+	jne	SHORT $LN3@operator@118
 	mov	edx, DWORD PTR [ecx+28]
 	cmp	edx, DWORD PTR [eax+28]
-	jne	SHORT $LN3@operator@91
+	jne	SHORT $LN3@operator@118
 	mov	edx, DWORD PTR [ecx+32]
 	cmp	edx, DWORD PTR [eax+32]
-	jne	SHORT $LN3@operator@91
+	jne	SHORT $LN3@operator@118
 	mov	edx, DWORD PTR [ecx+36]
 	cmp	edx, DWORD PTR [eax+36]
-	jne	SHORT $LN3@operator@91
+	jne	SHORT $LN3@operator@118
 	add	eax, 40					; 00000028H
 	add	ecx, 40					; 00000028H
 	call	??8Address@DRAMsimII@@QBE_NABV01@@Z	; DRAMsimII::Address::operator==
 	test	al, al
-	je	SHORT $LN3@operator@91
+	je	SHORT $LN3@operator@118
 	mov	eax, 1
 
 ; 109  : 		}
 
 	ret	0
-$LN3@operator@91:
+$LN3@operator@118:
 
 ; 108  : 			return (arrivalTime == right.arrivalTime && enqueueTime == right.enqueueTime && startTime == right.startTime && completionTime == right.completionTime && address == right.getAddress());
 
@@ -512,84 +512,84 @@ _TEXT	SEGMENT
 ; _this$ = ecx
 ; _right$ = eax
 
-; 207  : {
+; 210  : {
 
 	push	esi
 	push	edi
 	mov	esi, eax
 	mov	edi, ecx
 
-; 208  : 	if (commandType == right.commandType && startTime == right.startTime &&
-; 209  : 		enqueueTime == right.enqueueTime && completionTime == right.completionTime &&
-; 210  : 		length == right.length && this->Event::operator==(right))
+; 211  : 	if (commandType == right.commandType && startTime == right.startTime &&
+; 212  : 		enqueueTime == right.enqueueTime && completionTime == right.completionTime &&
+; 213  : 		length == right.length && this->Event::operator==(right))
 
 	mov	eax, DWORD PTR [edi+80]
 	cmp	eax, DWORD PTR [esi+80]
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 	mov	ecx, DWORD PTR [edi+24]
 	cmp	ecx, DWORD PTR [esi+24]
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 	mov	edx, DWORD PTR [edi+28]
 	cmp	edx, DWORD PTR [esi+28]
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 	mov	eax, DWORD PTR [edi+16]
 	cmp	eax, DWORD PTR [esi+16]
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 	mov	ecx, DWORD PTR [edi+20]
 	cmp	ecx, DWORD PTR [esi+20]
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 	mov	edx, DWORD PTR [edi+32]
 	cmp	edx, DWORD PTR [esi+32]
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 	mov	eax, DWORD PTR [edi+36]
 	cmp	eax, DWORD PTR [esi+36]
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 	mov	ecx, DWORD PTR [edi+88]
 	cmp	ecx, DWORD PTR [esi+88]
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 	mov	eax, esi
 	mov	ecx, edi
 	call	??8Event@DRAMsimII@@QBE_NABV01@@Z	; DRAMsimII::Event::operator==
 	test	al, al
-	je	SHORT $LN10@operator@191
+	je	SHORT $LN10@operator@248
 
-; 211  : 	{
-; 212  : 		if ((hostTransaction && !right.hostTransaction) || 
-; 213  : 			(!hostTransaction && right.hostTransaction))
+; 214  : 	{
+; 215  : 		if ((hostTransaction && !right.hostTransaction) || 
+; 216  : 			(!hostTransaction && right.hostTransaction))
 
 	mov	edi, DWORD PTR [edi+84]
 	test	edi, edi
-	je	SHORT $LN14@operator@191
+	je	SHORT $LN14@operator@248
 	cmp	DWORD PTR [esi+84], 0
-	je	SHORT $LN10@operator@191
+	je	SHORT $LN10@operator@248
 	test	edi, edi
-	jne	SHORT $LN5@operator@191
-$LN14@operator@191:
+	jne	SHORT $LN5@operator@248
+$LN14@operator@248:
 	cmp	DWORD PTR [esi+84], 0
 
-; 214  : 			return false;
+; 217  : 			return false;
 
-	jne	SHORT $LN10@operator@191
+	jne	SHORT $LN10@operator@248
 
-; 215  : 		else if (!hostTransaction && !right.hostTransaction)
+; 218  : 		else if (!hostTransaction && !right.hostTransaction)
 
 	test	edi, edi
-	jne	SHORT $LN5@operator@191
+	jne	SHORT $LN5@operator@248
 	cmp	DWORD PTR [esi+84], edi
-	jne	SHORT $LN5@operator@191
+	jne	SHORT $LN5@operator@248
 	pop	edi
 
-; 216  : 			return true;
+; 219  : 			return true;
 
 	mov	al, 1
 	pop	esi
 
-; 224  : }
+; 227  : }
 
 	ret	0
-$LN5@operator@191:
+$LN5@operator@248:
 
-; 217  : 		else if (*hostTransaction == *right.hostTransaction)
+; 220  : 		else if (*hostTransaction == *right.hostTransaction)
 
 	mov	esi, DWORD PTR [esi+84]
 	call	??8Transaction@DRAMsimII@@QBE_NABV01@@Z	; DRAMsimII::Transaction::operator==
@@ -598,23 +598,23 @@ $LN5@operator@191:
 	setne	al
 	pop	esi
 
-; 224  : }
+; 227  : }
 
 	ret	0
-$LN10@operator@191:
+$LN10@operator@248:
 	pop	edi
 
-; 218  : 			return true;
-; 219  : 		else 
-; 220  : 			return false;
-; 221  : 	}
-; 222  : 	else
-; 223  : 		return false;
+; 221  : 			return true;
+; 222  : 		else 
+; 223  : 			return false;
+; 224  : 	}
+; 225  : 	else
+; 226  : 		return false;
 
 	xor	al, al
 	pop	esi
 
-; 224  : }
+; 227  : }
 
 	ret	0
 ??8Command@DRAMsimII@@QBE_NABV01@@Z ENDP		; DRAMsimII::Command::operator==
@@ -625,7 +625,7 @@ _TEXT	SEGMENT
 ; _this$ = ecx
 ; _right$ = eax
 
-; 231  : 	return !(*this == right);
+; 234  : 	return !(*this == right);
 
 	call	??8Command@DRAMsimII@@QBE_NABV01@@Z	; DRAMsimII::Command::operator==
 	xor	ecx, ecx
@@ -633,7 +633,7 @@ _TEXT	SEGMENT
 	sete	cl
 	mov	al, cl
 
-; 232  : }
+; 235  : }
 
 	ret	0
 ??9Command@DRAMsimII@@QBE_NABV01@@Z ENDP		; DRAMsimII::Command::operator!=
@@ -644,475 +644,475 @@ _TEXT	SEGMENT
 ; _os$ = esi
 ; _command$ = eax
 
-; 251  : 	switch(command)
+; 254  : 	switch(command)
 
 	mov	eax, DWORD PTR [eax]
 	cmp	eax, 16					; 00000010H
-	ja	$LN1@operator@352
-	jmp	DWORD PTR $LN24@operator@352[eax*4]
-$LN18@operator@352:
+	ja	$LN1@operator@426
+	jmp	DWORD PTR $LN24@operator@426[eax*4]
+$LN18@operator@426:
 
-; 252  : 	{
-; 253  : 	case Command::ACTIVATE:
-; 254  : 		os << "RAS ";
+; 255  : 	{
+; 256  : 	case Command::ACTIVATE:
+; 257  : 		os << "RAS ";
 
 	push	OFFSET ??_C@_04KDNIBPFK@RAS?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN17@operator@352:
+$LN17@operator@426:
 
-; 255  : 		break;
-; 256  : 	case Command::READ:
-; 257  : 		os << "CAS ";
+; 258  : 		break;
+; 259  : 	case Command::READ:
+; 260  : 		os << "CAS ";
 
 	push	OFFSET ??_C@_04POFIKBGI@CAS?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN16@operator@352:
+$LN16@operator@426:
 
-; 258  : 		break;
-; 259  : 	case Command::READ_AND_PRECHARGE:
-; 260  : 		os << "CAS+P ";
+; 261  : 		break;
+; 262  : 	case Command::READ_AND_PRECHARGE:
+; 263  : 		os << "CAS+P ";
 
 	push	OFFSET ??_C@_06CCMMABJK@CAS?$CLP?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN15@operator@352:
+$LN15@operator@426:
 
-; 261  : 		break;
-; 262  : 	case Command::WRITE:
-; 263  : 		os << "CASW ";
+; 264  : 		break;
+; 265  : 	case Command::WRITE:
+; 266  : 		os << "CASW ";
 
 	push	OFFSET ??_C@_05IHKNOLLM@CASW?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN14@operator@352:
+$LN14@operator@426:
 
-; 264  : 		break;
-; 265  : 	case Command::WRITE_AND_PRECHARGE:
-; 266  : 		os << "CASW+P ";
+; 267  : 		break;
+; 268  : 	case Command::WRITE_AND_PRECHARGE:
+; 269  : 		os << "CASW+P ";
 
 	push	OFFSET ??_C@_07FBJBNAPK@CASW?$CLP?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN13@operator@352:
+$LN13@operator@426:
 
-; 267  : 		break;
-; 268  : 	case Command::RETIRE_COMMAND:
-; 269  : 		os << "RETIRE ";
+; 270  : 		break;
+; 271  : 	case Command::RETIRE_COMMAND:
+; 272  : 		os << "RETIRE ";
 
 	push	OFFSET ??_C@_07NLMAFCIK@RETIRE?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN12@operator@352:
+$LN12@operator@426:
 
-; 270  : 		break;
-; 271  : 	case Command::PRECHARGE:
-; 272  : 		os << "PREC ";
+; 273  : 		break;
+; 274  : 	case Command::PRECHARGE:
+; 275  : 		os << "PREC ";
 
 	push	OFFSET ??_C@_05ELPCHFDE@PREC?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN11@operator@352:
+$LN11@operator@426:
 
-; 273  : 		break;
-; 274  : 	case Command::PRECHARGE_ALL:
-; 275  : 		os << "PREC_A ";
+; 276  : 		break;
+; 277  : 	case Command::PRECHARGE_ALL:
+; 278  : 		os << "PREC_A ";
 
 	push	OFFSET ??_C@_07EMMFEOCJ@PREC_A?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN10@operator@352:
+$LN10@operator@426:
 
-; 276  : 		break;
-; 277  : 	case Command::ACTIVATE_ALL:
-; 278  : 		os << "RAS_A ";
+; 279  : 		break;
+; 280  : 	case Command::ACTIVATE_ALL:
+; 281  : 		os << "RAS_A ";
 
 	push	OFFSET ??_C@_06BKNMGIGM@RAS_A?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN9@operator@352:
+$LN9@operator@426:
 
-; 279  : 		break;
-; 280  : 	case Command::DRIVE_COMMAND:
-; 281  : 		os << "DRIVE ";
+; 282  : 		break;
+; 283  : 	case Command::DRIVE_COMMAND:
+; 284  : 		os << "DRIVE ";
 
 	push	OFFSET ??_C@_06MLMBNJNI@DRIVE?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN8@operator@352:
+$LN8@operator@426:
 
-; 282  : 		break;
-; 283  : 	case Command::DATA_COMMAND:
-; 284  : 		os << "DATA ";
+; 285  : 		break;
+; 286  : 	case Command::DATA_COMMAND:
+; 287  : 		os << "DATA ";
 
 	push	OFFSET ??_C@_05BPNEDMHP@DATA?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN7@operator@352:
+$LN7@operator@426:
 
-; 285  : 		break;
-; 286  : 	case Command::CAS_WITH_DRIVE_COMMAND:
-; 287  : 		os << "CAS+D ";
+; 288  : 		break;
+; 289  : 	case Command::CAS_WITH_DRIVE_COMMAND:
+; 290  : 		os << "CAS+D ";
 
 	push	OFFSET ??_C@_06DJODAKDG@CAS?$CLD?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN6@operator@352:
+$LN6@operator@426:
 
-; 288  : 		break;
-; 289  : 	case Command::REFRESH_ALL:
-; 290  : 		os << "REF   ";
+; 291  : 		break;
+; 292  : 	case Command::REFRESH_ALL:
+; 293  : 		os << "REF   ";
 
 	push	OFFSET ??_C@_06FDAECDFF@REF?5?5?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN5@operator@352:
+$LN5@operator@426:
 
-; 291  : 		break;
-; 292  : 	case Command::SELF_REFRESH:
-; 293  : 		os << "SELREF";
+; 294  : 		break;
+; 295  : 	case Command::SELF_REFRESH:
+; 296  : 		os << "SELREF";
 
 	push	OFFSET ??_C@_06DEOJNLN@SELREF?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN4@operator@352:
+$LN4@operator@426:
 
-; 294  : 		break;
-; 295  : 	case Command::DESELECT:
-; 296  : 		os << "DESLCT";
+; 297  : 		break;
+; 298  : 	case Command::DESELECT:
+; 299  : 		os << "DESLCT";
 
 	push	OFFSET ??_C@_06IPDIBDGD@DESLCT?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN3@operator@352:
+$LN3@operator@426:
 
-; 297  : 		break;
-; 298  : 	case Command::NOOP:
-; 299  : 		os << "NOOP  ";
+; 300  : 		break;
+; 301  : 	case Command::NOOP:
+; 302  : 		os << "NOOP  ";
 
 	push	OFFSET ??_C@_06DEMODEGE@NOOP?5?5?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN2@operator@352:
+$LN2@operator@426:
 
-; 300  : 		break;
-; 301  : 	case Command::INVALID_COMMAND:
-; 302  : 		os << "INVALD";
+; 303  : 		break;
+; 304  : 	case Command::INVALID_COMMAND:
+; 305  : 		os << "INVALD";
 
 	push	OFFSET ??_C@_06PPDMIAKB@INVALD?$AA@
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN1@operator@352:
+$LN1@operator@426:
 
-; 303  : 		break;
-; 304  : 	default:
-; 305  : 		os << "UNKWN";
+; 306  : 		break;
+; 307  : 	default:
+; 308  : 		os << "UNKWN";
 
 	push	OFFSET ??_C@_05LOKBKELC@UNKWN?$AA@
 	push	esi
 	call	??$?6U?$char_traits@D@std@@@std@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@0@AAV10@PBD@Z ; std::operator<<<std::char_traits<char> >
 	add	esp, 8
 
-; 306  : 		break;
-; 307  : 	}
-; 308  : 	return os;
+; 309  : 		break;
+; 310  : 	}
+; 311  : 	return os;
 
 	mov	eax, esi
 
-; 309  : }
+; 312  : }
 
 	ret	0
-$LN24@operator@352:
-	DD	$LN18@operator@352
-	DD	$LN17@operator@352
-	DD	$LN16@operator@352
-	DD	$LN15@operator@352
-	DD	$LN14@operator@352
-	DD	$LN13@operator@352
-	DD	$LN12@operator@352
-	DD	$LN11@operator@352
-	DD	$LN10@operator@352
-	DD	$LN9@operator@352
-	DD	$LN8@operator@352
-	DD	$LN7@operator@352
-	DD	$LN6@operator@352
-	DD	$LN5@operator@352
-	DD	$LN4@operator@352
-	DD	$LN3@operator@352
-	DD	$LN2@operator@352
+$LN24@operator@426:
+	DD	$LN18@operator@426
+	DD	$LN17@operator@426
+	DD	$LN16@operator@426
+	DD	$LN15@operator@426
+	DD	$LN14@operator@426
+	DD	$LN13@operator@426
+	DD	$LN12@operator@426
+	DD	$LN11@operator@426
+	DD	$LN10@operator@426
+	DD	$LN9@operator@426
+	DD	$LN8@operator@426
+	DD	$LN7@operator@426
+	DD	$LN6@operator@426
+	DD	$LN5@operator@426
+	DD	$LN4@operator@426
+	DD	$LN3@operator@426
+	DD	$LN2@operator@426
 ??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABW4CommandType@Command@0@@Z ENDP ; DRAMsimII::operator<<
 _TEXT	ENDS
 PUBLIC	??0Command@DRAMsimII@@QAE@PAVTransaction@1@_J_NIW4CommandType@01@@Z ; DRAMsimII::Command::Command
@@ -1136,7 +1136,7 @@ _commandLength$ = 24					; size = 4
 ; _hostTransaction$ = ecx
 ; _type$ = edx
 
-; 105  : {
+; 108  : {
 
 	push	-1
 	push	__ehhandler$??0Command@DRAMsimII@@QAE@PAVTransaction@1@_J_NIW4CommandType@01@@Z
@@ -1181,20 +1181,21 @@ _commandLength$ = 24					; size = 4
 	neg	edi
 	sbb	edi, edi
 	not	edi
-	and	edi, esi
 	mov	DWORD PTR __$EHRec$[esp+40], ecx
+	and	edi, esi
 	mov	DWORD PTR [eax+84], edi
 	mov	edi, DWORD PTR _commandLength$[esp+28]
 	mov	DWORD PTR [eax], OFFSET ??_7Command@DRAMsimII@@6B@
 	mov	DWORD PTR [eax+88], edi
+	mov	BYTE PTR [eax+92], cl
 
-; 106  : 	if (type == READ)
+; 109  : 	if (type == READ)
 
 	cmp	edx, 1
 	jne	SHORT $LN8@Command@2
 
-; 107  : 	{
-; 108  : 		switch (hostTransaction->getType())
+; 110  : 	{
+; 111  : 		switch (hostTransaction->getType())
 
 	mov	esi, DWORD PTR [esi+80]
 	cmp	esi, 4
@@ -1202,22 +1203,22 @@ _commandLength$ = 24					; size = 4
 	jmp	DWORD PTR $LN24@Command@2[esi*4]
 $LN5@Command@2:
 
-; 109  : 		{
-; 110  : 		case Transaction::AUTO_REFRESH_TRANSACTION:
-; 111  : 			commandType = REFRESH_ALL;
+; 112  : 		{
+; 113  : 		case Transaction::AUTO_REFRESH_TRANSACTION:
+; 114  : 			commandType = REFRESH_ALL;
 
 	mov	DWORD PTR [eax+80], 12			; 0000000cH
 
-; 130  : 	}
-; 131  : 
-; 132  : 	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
-; 133  : 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
-; 134  : 		(commandType == READ && hostTransaction->isRead()) ||
-; 135  : 		(commandType == WRITE && hostTransaction->isWrite()) ||
-; 136  : 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
-; 137  : 		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
-; 138  : 		);
-; 139  : }
+; 133  : 	}
+; 134  : 
+; 135  : 	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
+; 136  : 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
+; 137  : 		(commandType == READ && hostTransaction->isRead()) ||
+; 138  : 		(commandType == WRITE && hostTransaction->isWrite()) ||
+; 139  : 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
+; 140  : 		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
+; 141  : 		);
+; 142  : }
 
 	mov	ecx, DWORD PTR __$EHRec$[esp+32]
 	mov	DWORD PTR fs:0, ecx
@@ -1229,9 +1230,9 @@ $LN5@Command@2:
 	ret	20					; 00000014H
 $LN4@Command@2:
 
-; 112  : 			break;
-; 113  : 		case Transaction::WRITE_TRANSACTION:
-; 114  : 			commandType = autoPrecharge ? WRITE_AND_PRECHARGE : WRITE;
+; 115  : 			break;
+; 116  : 		case Transaction::WRITE_TRANSACTION:
+; 117  : 			commandType = autoPrecharge ? WRITE_AND_PRECHARGE : WRITE;
 
 	xor	edx, edx
 	cmp	bl, cl
@@ -1239,22 +1240,22 @@ $LN4@Command@2:
 	add	edx, 3
 $LN8@Command@2:
 
-; 127  : 	{
-; 128  : 		assert(type == PRECHARGE || type == ACTIVATE);
-; 129  : 		commandType = type;
+; 130  : 	{
+; 131  : 		assert(type == PRECHARGE || type == ACTIVATE);
+; 132  : 		commandType = type;
 
 	mov	DWORD PTR [eax+80], edx
 
-; 130  : 	}
-; 131  : 
-; 132  : 	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
-; 133  : 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
-; 134  : 		(commandType == READ && hostTransaction->isRead()) ||
-; 135  : 		(commandType == WRITE && hostTransaction->isWrite()) ||
-; 136  : 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
-; 137  : 		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
-; 138  : 		);
-; 139  : }
+; 133  : 	}
+; 134  : 
+; 135  : 	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
+; 136  : 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
+; 137  : 		(commandType == READ && hostTransaction->isRead()) ||
+; 138  : 		(commandType == WRITE && hostTransaction->isWrite()) ||
+; 139  : 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
+; 140  : 		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
+; 141  : 		);
+; 142  : }
 
 	mov	ecx, DWORD PTR __$EHRec$[esp+32]
 	mov	DWORD PTR fs:0, ecx
@@ -1266,27 +1267,27 @@ $LN8@Command@2:
 	ret	20					; 00000014H
 $LN3@Command@2:
 
-; 115  : 			break;
-; 116  : 		case Transaction::READ_TRANSACTION:
-; 117  : 		case Transaction::IFETCH_TRANSACTION:
-; 118  : 			commandType = autoPrecharge ? READ_AND_PRECHARGE : READ;
+; 118  : 			break;
+; 119  : 		case Transaction::READ_TRANSACTION:
+; 120  : 		case Transaction::IFETCH_TRANSACTION:
+; 121  : 			commandType = autoPrecharge ? READ_AND_PRECHARGE : READ;
 
 	xor	edx, edx
 	cmp	bl, cl
 	setne	dl
 	inc	edx
 
-; 123  : 			break;
-; 124  : 		}
-; 125  : 	}
-; 126  : 	else
+; 126  : 			break;
+; 127  : 		}
+; 128  : 	}
+; 129  : 	else
 
 	jmp	SHORT $LN8@Command@2
 $LN2@Command@2:
 
-; 119  : 			break;
-; 120  : 		default:
-; 121  : 			cerr << "Unknown transaction type, quitting." << endl;
+; 122  : 			break;
+; 123  : 		default:
+; 124  : 			cerr << "Unknown transaction type, quitting." << endl;
 
 	push	OFFSET ??_C@_0CE@DNBMIKHG@Unknown?5transaction?5type?0?5quitti@
 	push	OFFSET ?cerr@std@@3V?$basic_ostream@DU?$char_traits@D@std@@@1@A ; std::cerr
@@ -1299,25 +1300,25 @@ $LN2@Command@2:
 	mov	ecx, esi
 	call	?flush@?$basic_ostream@DU?$char_traits@D@std@@@std@@QAEAAV12@XZ ; std::basic_ostream<char,std::char_traits<char> >::flush
 
-; 122  : 			exit(-21);
+; 125  : 			exit(-21);
 
 	push	-21					; ffffffebH
 	call	_exit
 $LN25@Command@2:
 $LN23@Command@2:
-	npad	2
+	npad	3
 $LN24@Command@2:
 
-; 130  : 	}
-; 131  : 
-; 132  : 	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
-; 133  : 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
-; 134  : 		(commandType == READ && hostTransaction->isRead()) ||
-; 135  : 		(commandType == WRITE && hostTransaction->isWrite()) ||
-; 136  : 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
-; 137  : 		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
-; 138  : 		);
-; 139  : }
+; 133  : 	}
+; 134  : 
+; 135  : 	assert((commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
+; 136  : 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
+; 137  : 		(commandType == READ && hostTransaction->isRead()) ||
+; 138  : 		(commandType == WRITE && hostTransaction->isWrite()) ||
+; 139  : 		(commandType == ACTIVATE) || (commandType == PRECHARGE) ||
+; 140  : 		(commandType == REFRESH_ALL && hostTransaction->isRefresh())
+; 141  : 		);
+; 142  : }
 
 	DD	$LN3@Command@2
 	DD	$LN4@Command@2
@@ -1355,7 +1356,7 @@ _commandLength$ = 20					; size = 4
 ??0Command@DRAMsimII@@QAE@PAVTransaction@1@ABVAddress@1@_J_NIW4CommandType@01@@Z PROC ; DRAMsimII::Command::Command
 ; _addr$ = ecx
 
-; 64   : {
+; 66   : {
 
 	push	-1
 	push	__ehhandler$??0Command@DRAMsimII@@QAE@PAVTransaction@1@ABVAddress@1@_J_NIW4CommandType@01@@Z
@@ -1394,42 +1395,43 @@ _commandLength$ = 20					; size = 4
 	mov	DWORD PTR [eax], OFFSET ??_7Command@DRAMsimII@@6B@
 	mov	DWORD PTR [eax+84], edx
 	mov	DWORD PTR [eax+88], ecx
+	mov	BYTE PTR [eax+92], dl
 
-; 65   : 	if (type == READ)
-; 66   : 	{
-; 67   : 		switch (hostTransaction->getType())
-; 68   : 		{
-; 69   : 		case Transaction::AUTO_REFRESH_TRANSACTION:
-; 70   : 			commandType = REFRESH_ALL;
-; 71   : 			break;
-; 72   : 		case Transaction::WRITE_TRANSACTION:
-; 73   : 			commandType = autoPrecharge ? WRITE_AND_PRECHARGE : WRITE;
-; 74   : 			break;
-; 75   : 		case Transaction::READ_TRANSACTION:
-; 76   : 		case Transaction::IFETCH_TRANSACTION:
-; 77   : 			commandType = autoPrecharge ? READ_AND_PRECHARGE : READ;
-; 78   : 			break;
-; 79   : 		default:
-; 80   : 			cerr << "Unknown transaction type, quitting." << endl;
-; 81   : 			exit(-21);
-; 82   : 			break;
-; 83   : 		}
-; 84   : 	}
-; 85   : 	else
-; 86   : 	{
-; 87   : 		assert(type == PRECHARGE || type == ACTIVATE);
-; 88   : 		commandType = type;
+; 67   : 	if (type == READ)
+; 68   : 	{
+; 69   : 		switch (hostTransaction->getType())
+; 70   : 		{
+; 71   : 		case Transaction::AUTO_REFRESH_TRANSACTION:
+; 72   : 			commandType = REFRESH_ALL;
+; 73   : 			break;
+; 74   : 		case Transaction::WRITE_TRANSACTION:
+; 75   : 			commandType = autoPrecharge ? WRITE_AND_PRECHARGE : WRITE;
+; 76   : 			break;
+; 77   : 		case Transaction::READ_TRANSACTION:
+; 78   : 		case Transaction::IFETCH_TRANSACTION:
+; 79   : 			commandType = autoPrecharge ? READ_AND_PRECHARGE : READ;
+; 80   : 			break;
+; 81   : 		default:
+; 82   : 			cerr << "Unknown transaction type, quitting." << endl;
+; 83   : 			exit(-21);
+; 84   : 			break;
+; 85   : 		}
+; 86   : 	}
+; 87   : 	else
+; 88   : 	{
+; 89   : 		assert(type == PRECHARGE || type == ACTIVATE);
+; 90   : 		commandType = type;
 
 	mov	DWORD PTR [eax+80], 6
 
-; 89   : 	}
-; 90   : 
-; 91   : 	assert((isWrite() && hostTransaction->isWrite()) ||
-; 92   : 		(isRead() && hostTransaction->isRead()) ||
-; 93   : 		(isActivate()) || (isPrecharge()) ||
-; 94   : 		(isRefresh() && hostTransaction->isRefresh())
-; 95   : 		);
-; 96   : }
+; 91   : 	}
+; 92   : 
+; 93   : 	assert((isWrite() && hostTransaction->isWrite()) ||
+; 94   : 		(isRead() && hostTransaction->isRead()) ||
+; 95   : 		(isActivate()) || (isPrecharge()) ||
+; 96   : 		(isRefresh() && hostTransaction->isRefresh())
+; 97   : 		);
+; 98   : }
 
 	mov	ecx, DWORD PTR __$EHRec$[esp+20]
 	mov	DWORD PTR fs:0, ecx
@@ -1623,12 +1625,12 @@ _TEXT	SEGMENT
 ; _os$ = esi
 ; _currentCommand$ = eax
 
-; 315  : {
+; 318  : {
 
 	push	edi
 	mov	edi, eax
 
-; 316  : 	return os << currentCommand.commandType << (const Event&)(currentCommand);	
+; 319  : 	return os << currentCommand.commandType << (const Event&)(currentCommand);	
 
 	lea	eax, DWORD PTR [edi+80]
 	call	??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABW4CommandType@Command@0@@Z ; DRAMsimII::operator<<
@@ -1637,7 +1639,7 @@ _TEXT	SEGMENT
 	add	esp, 4
 	pop	edi
 
-; 317  : }
+; 320  : }
 
 	ret	0
 ??6DRAMsimII@@YAAAV?$basic_ostream@DU?$char_traits@D@std@@@std@@AAV12@ABVCommand@0@@Z ENDP ; DRAMsimII::operator<<
@@ -1648,9 +1650,9 @@ _TEXT	SEGMENT
 ??3Command@DRAMsimII@@SAXPAX@Z PROC			; DRAMsimII::Command::operator delete
 ; _mem$ = esi
 
-; 197  : 	Command *cmd = static_cast<Command*>(mem);
-; 198  : 	assert(!cmd->getHost());
-; 199  : 	cmd->~Command();
+; 200  : 	Command *cmd = static_cast<Command*>(mem);
+; 201  : 	assert(!cmd->getHost());
+; 202  : 	cmd->~Command();
 
 	mov	eax, DWORD PTR [esi]
 	mov	edx, DWORD PTR [eax]
@@ -1658,12 +1660,12 @@ _TEXT	SEGMENT
 	mov	ecx, esi
 	call	edx
 
-; 200  : 	freeCommandPool.releaseItem(cmd);
+; 203  : 	freeCommandPool.releaseItem(cmd);
 
 	push	esi
 	call	?releaseItem@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEXPAVCommand@2@@Z ; DRAMsimII::Queue<DRAMsimII::Command>::releaseItem
 
-; 201  : }
+; 204  : }
 
 	ret	0
 ??3Command@DRAMsimII@@SAXPAX@Z ENDP			; DRAMsimII::Command::operator delete
@@ -1679,7 +1681,7 @@ ___flags$ = 8						; size = 4
 	push	esi
 	call	??1Command@DRAMsimII@@UAE@XZ		; DRAMsimII::Command::~Command
 	test	BYTE PTR ___flags$[esp], 1
-	je	SHORT $LN6@scalar@99
+	je	SHORT $LN6@scalar@105
 	mov	eax, DWORD PTR [esi]
 	mov	edx, DWORD PTR [eax]
 	push	0
@@ -1687,7 +1689,7 @@ ___flags$ = 8						; size = 4
 	call	edx
 	push	esi
 	call	?releaseItem@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEXPAVCommand@2@@Z ; DRAMsimII::Queue<DRAMsimII::Command>::releaseItem
-$LN6@scalar@99:
+$LN6@scalar@105:
 	mov	eax, esi
 	pop	esi
 	ret	4
@@ -1730,7 +1732,7 @@ __ehfuncinfo$?acquireItem@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEPAVCommand@
 xdata$x	ENDS
 ;	COMDAT ?acquireItem@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEPAVCommand@2@XZ
 _TEXT	SEGMENT
-$T638052 = -16						; size = 4
+$T679322 = -16						; size = 4
 __$EHRec$ = -12						; size = 12
 ?acquireItem@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEPAVCommand@2@XZ PROC ; DRAMsimII::Queue<DRAMsimII::Command>::acquireItem, COMDAT
 
@@ -1764,7 +1766,7 @@ __$EHRec$ = -12						; size = 12
 	call	??2@YAPAXI@Z				; operator new
 	mov	esi, eax
 	add	esp, 4
-	mov	DWORD PTR $T638052[esp+28], esi
+	mov	DWORD PTR $T679322[esp+28], esi
 	mov	DWORD PTR __$EHRec$[esp+36], 0
 	test	esi, esi
 	je	SHORT $LN5@acquireIte@3
@@ -1826,7 +1828,7 @@ _TEXT	ENDS
 ;	COMDAT text$x
 text$x	SEGMENT
 __unwindfunclet$?acquireItem@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEPAVCommand@2@XZ$0:
-	mov	eax, DWORD PTR $T638052[ebp]
+	mov	eax, DWORD PTR $T679322[ebp]
 	push	eax
 	call	??3@YAXPAX@Z				; operator delete
 	pop	ecx
@@ -1847,17 +1849,17 @@ PUBLIC	??2Command@DRAMsimII@@SAPAXI@Z			; DRAMsimII::Command::operator new
 _TEXT	SEGMENT
 ??2Command@DRAMsimII@@SAPAXI@Z PROC			; DRAMsimII::Command::operator new
 
-; 187  : {
+; 190  : {
 
 	push	ecx
 
-; 188  : 	assert(size == sizeof(Command));
-; 189  : 	return freeCommandPool.acquireItem();
+; 191  : 	assert(size == sizeof(Command));
+; 192  : 	return freeCommandPool.acquireItem();
 
 	call	?acquireItem@?$Queue@VCommand@DRAMsimII@@@DRAMsimII@@QAEPAVCommand@2@XZ ; DRAMsimII::Queue<DRAMsimII::Command>::acquireItem
 	pop	ecx
 
-; 190  : }
+; 193  : }
 
 	ret	0
 ??2Command@DRAMsimII@@SAPAXI@Z ENDP			; DRAMsimII::Command::operator new
@@ -1879,7 +1881,7 @@ _this$ = 8						; size = 4
 _rhs$ = 12						; size = 4
 ??0Command@DRAMsimII@@QAE@ABV01@@Z PROC			; DRAMsimII::Command::Command
 
-; 46   : {
+; 47   : {
 
 	push	-1
 	push	__ehhandler$??0Command@DRAMsimII@@QAE@ABV01@@Z
@@ -1919,16 +1921,18 @@ $LN6@Command@3:
 	mov	DWORD PTR [ebx+84], eax
 	mov	ecx, DWORD PTR [ebp+88]
 	mov	DWORD PTR [ebx+88], ecx
+	mov	dl, BYTE PTR [ebp+92]
+	mov	BYTE PTR [ebx+92], dl
 
-; 47   : 	assert(!hostTransaction ||
-; 48   : 		(commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
-; 49   : 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
-; 50   : 		(commandType == READ && hostTransaction->isRead()) ||
-; 51   : 		(commandType == WRITE && hostTransaction->isWrite()) ||		 
-; 52   : 		(commandType == REFRESH_ALL && hostTransaction->isRefresh()) ||
-; 53   : 		(commandType == ACTIVATE) || (commandType == PRECHARGE)
-; 54   : 		);
-; 55   : }
+; 48   : 	assert(!hostTransaction ||
+; 49   : 		(commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
+; 50   : 		(commandType == READ_AND_PRECHARGE && hostTransaction->isRead()) ||
+; 51   : 		(commandType == READ && hostTransaction->isRead()) ||
+; 52   : 		(commandType == WRITE && hostTransaction->isWrite()) ||		 
+; 53   : 		(commandType == REFRESH_ALL && hostTransaction->isRefresh()) ||
+; 54   : 		(commandType == ACTIVATE) || (commandType == PRECHARGE)
+; 55   : 		);
+; 56   : }
 
 	mov	eax, ebx
 	mov	ecx, DWORD PTR __$EHRec$[esp+36]

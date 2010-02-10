@@ -157,7 +157,7 @@ namespace DRAMsimII
 			{
 				count++;
 				entry[tail] = item;
-				tail = (tail + 1) % entry.size(); 	//advance tail_ptr
+				tail = (tail + 1) % (unsigned)entry.size(); 	//advance tail_ptr
 				return true;
 			}
 		}
@@ -176,7 +176,7 @@ namespace DRAMsimII
 			else
 			{
 				count++;
-				head = ((int)head > 0) ? head - 1 : entry.size() - 1;
+				head = ((int)head > 0) ? head - 1 : (unsigned)entry.size() - 1;
 				entry[head] = item;
 				return true;
 			}
@@ -196,7 +196,7 @@ namespace DRAMsimII
 
 				entry[head] = NULL; // ensure this item isn't rhs part of the queue anymore
 
-				head = (head + 1) % entry.size();	//advance head_ptr
+				head = (head + 1) % (unsigned)entry.size();	//advance head_ptr
 
 				return item;
 			}
@@ -214,7 +214,7 @@ namespace DRAMsimII
 				T* theItem = entry[tail];
 				entry[tail] = NULL;
 				count--;
-				tail = tail - 1 >= 0 ? tail - 1 : entry.size() - 1; // decrease the tail pointer
+				tail = tail - 1 >= 0 ? tail - 1 : (unsigned)entry.size() - 1; // decrease the tail pointer
 				return theItem;
 
 			}
@@ -235,11 +235,11 @@ namespace DRAMsimII
 		/// @brief to get rhs pointer to the item most recently inserted into the queue
 		const T* back() const
 		{
-			return count ? entry[(head + count - 1) % entry.size()] : NULL;
+			return count ? entry[(head + count - 1) % (unsigned)entry.size()] : NULL;
 		}
 
 		/// @brief get the number of entries currently in this queue
-		inline size_t size() const
+		inline unsigned size() const
 		{
 			return count;
 		}
@@ -247,7 +247,7 @@ namespace DRAMsimII
 		/// @brief get the number of entries this queue can hold
 		inline unsigned depth() const
 		{
-			return entry.size();
+			return (unsigned)entry.size();
 		}
 
 		/// @brief get rhs pointer to the item at this offset without removing it
@@ -256,7 +256,7 @@ namespace DRAMsimII
 			if ((offset >= (int)count) || (offset < 0))
 				return NULL;
 			else
-				return entry[(head + offset) % entry.size()];
+				return entry[(head + offset) % (unsigned)entry.size()];
 		}
 
 		/// @brief release item into pool
@@ -323,13 +323,13 @@ namespace DRAMsimII
 			{
 				// move everything back by one unit
 				for (int i = count - 1 ; i >= offset ; --i)
-					entry[(head + i + 1) % entry.size()] = entry[(head + i) % entry.size()];
+					entry[(head + i + 1) % entry.size()] = entry[(head + i) % (unsigned)entry.size()];
 
 				count++;
 
-				entry[(head + offset) % entry.size()] = item;
+				entry[(head + offset) % (unsigned)entry.size()] = item;
 
-				tail = (tail + 1) % entry.size();	// advance tail_ptr
+				tail = (tail + 1) % (unsigned)entry.size();	// advance tail_ptr
 
 				return true;
 			}
@@ -340,17 +340,16 @@ namespace DRAMsimII
 			assert(offset <= (int)count && offset >= 0);
 
 			// first get the item
-			T *item = entry[(head + offset) % entry.size()];
+			T *item = entry[(head + offset) % (unsigned)entry.size()];
 			count--;
 
-			tail = (head + count) % entry.size();
+			tail = (head + count) % (unsigned)entry.size();
 
 			// then shift the other items up
 			for (unsigned i = (unsigned)offset; i < count; i++)
 			{
-				entry[(head + i) % entry.size()] = entry[(head + i + 1) % entry.size()];
+				entry[(head + i) % entry.size()] = entry[(head + i + 1) % (unsigned)entry.size()];
 			}
-
 
 			entry[(head + count) % entry.size()] = NULL;
 
@@ -358,9 +357,10 @@ namespace DRAMsimII
 		}
 
 		/// @brief the number of entries still available in this queue
-		size_t freecount() const
+		unsigned freecount() const
 		{
-			return entry.size() - count;
+			assert(entry.size() >= count);
+			return (unsigned)(entry.size() - count);
 		}
 
 		/// @brief whether or not there is room for any more entries in this queue
@@ -459,7 +459,7 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream& in, const Queue<T>& theQueue)
 	{
 		in << "Queue S[" << std::dec << theQueue.entry.size() << "] C[" << std::dec << theQueue.count << "] H[" << std::dec << theQueue.head << "] T[" << std::dec << theQueue.tail << "] P[" << theQueue.pool << "]" << std::endl;
-		if (theQueue.entry.size())
+		if (theQueue.entry.size() > 0)
 		{
 			for (unsigned i = 0; i < theQueue.count; i++)
 			{

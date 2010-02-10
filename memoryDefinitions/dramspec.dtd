@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!ELEMENT IDD0 (#PCDATA)>
+<!ELEMENT IDD1 (#PCDATA)>
 <!ELEMENT IDD2N (#PCDATA)>
 <!ELEMENT IDD2P (#PCDATA)>
 <!ELEMENT IDD3N (#PCDATA)>
@@ -9,8 +10,11 @@
 <!ELEMENT IDD5A (#PCDATA)>
 <!ELEMENT autoPrecharge (#PCDATA)>
 <!ELEMENT autoRefreshPolicy (#PCDATA)>
+<!ELEMENT associativity (#PCDATA)>
 <!ELEMENT averageInterarrivalCycleCount (#PCDATA)>
 <!ELEMENT banks (#PCDATA)>
+<!ELEMENT blockSize (#PCDATA)>
+<!ELEMENT cache (associativity, cacheSize, blockSize, hitLatency) >
 <!ELEMENT cacheLineSize (#PCDATA)>
 <!ELEMENT channelWidth (#PCDATA)>
 <!ELEMENT channels (#PCDATA)>
@@ -34,9 +38,11 @@ xsi:noNamespaceSchemaLocation CDATA #IMPLIED
 <!ELEMENT eventQueueDepth (#PCDATA)>
 <!ELEMENT epoch (#PCDATA)>
 <!ELEMENT historyQueueDepth (#PCDATA)>
+<!ELEMENT hitLatency (#PCDATA)>
 <!ELEMENT inputFile (#PCDATA)>
 <!ATTLIST inputFile type CDATA #REQUIRED>
 <!ELEMENT maxVCC (#PCDATA)>
+<!ELEMENT cacheSize (#PCDATA)>
 <!ELEMENT frequencySpec (#PCDATA)>
 <!ELEMENT outFile (#PCDATA)>
 <!ELEMENT outFileDirectory (#PCDATA)>
@@ -50,7 +56,7 @@ xsi:noNamespaceSchemaLocation CDATA #IMPLIED
 <!ELEMENT physicalAddressMappingPolicy (#PCDATA)>
 <!ELEMENT postedCAS (#PCDATA)>
 <!ELEMENT power (PdqRD, PdqWR, PdqRDoth, PdqWRoth, DQperDRAM, DQSperDRAM, DMperDRAM,
-frequencySpec, maxVCC, systemVDD, IDD0, IDD2P, IDD2N, IDD3P, IDD3N, IDD4R, IDD4W, IDD5A)>
+frequencySpec, maxVCC, systemVDD, IDD0,IDD1, IDD2P, IDD2N, IDD3P, IDD3N, IDD4R, IDD4W, IDD5A)>
 <!ELEMENT ranks (#PCDATA)>
 <!ELEMENT readPercentage (#PCDATA)>
 <!ELEMENT readWriteGrouping (#PCDATA)>
@@ -92,6 +98,6 @@ channelWidth, physicalAddressMappingPolicy, rowBufferPolicy, rowSize, columnSize
 postedCAS,autoRefreshPolicy,commandOrderingAlgorithm,
 transactionOrderingAlgorithm, perBankQueueDepth, systemConfigurationType,
 cacheLineSize, historyQueueDepth, completionQueueDepth, transactionQueueDepth,
-decodeWindow, eventQueueDepth, refreshQueueDepth, readWriteGrouping, autoPrecharge)>
+decodeWindow, eventQueueDepth, refreshQueueDepth, readWriteGrouping, autoPrecharge, cache)>
 <!ELEMENT transactionOrderingAlgorithm (#PCDATA)>
 <!ELEMENT transactionQueueDepth (#PCDATA)>
