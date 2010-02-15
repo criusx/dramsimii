@@ -2344,6 +2344,7 @@ void Channel::executeCommand(Command *thisCommand)
 			{
 				const bool hit = i->issueCAS(time, thisCommand);
 				thisCommand->setHit(hit);
+				thisCommand->getHost()->setHit(hit);
 			}
 		}
 		break;
@@ -2378,6 +2379,7 @@ void Channel::executeCommand(Command *thisCommand)
 			{
 				const bool hit = i->issueCASW(time,thisCommand);
 				thisCommand->setHit(hit);
+				thisCommand->getHost()->setHit(hit);
 			}
 		}
 		break;

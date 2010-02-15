@@ -25,7 +25,7 @@ using std::setw;
 using namespace DRAMsimII;
 
 // initialize the static members
-Queue<Transaction> Transaction::freeTransactionPool(12*POOL_SIZE,true);
+Queue<Transaction> Transaction::freeTransactionPool(4*POOL_SIZE,true);
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief constructor to make a transaction with no values set
@@ -37,7 +37,8 @@ length(0),
 decodeTime(0),
 PC(0),
 threadNum(0),
-originalTransaction(UINT_MAX)
+originalTransaction(UINT_MAX),
+hit(false)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,7 +51,8 @@ length(burstLength),
 decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
-originalTransaction(originalTrans)
+originalTransaction(originalTrans),
+hit(false)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -63,7 +65,8 @@ length(burstLength),
 decodeTime(0),
 PC(0),
 threadNum(0),
-originalTransaction(originalTrans)
+originalTransaction(originalTrans),
+hit(false)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,7 +79,8 @@ length(rhs.length),
 decodeTime(rhs.decodeTime),
 PC(rhs.PC),
 threadNum(rhs.threadNum),
-originalTransaction(rhs.originalTransaction)
+originalTransaction(rhs.originalTransaction),
+hit(rhs.hit)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -89,7 +93,8 @@ length(burstLength),
 decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
-originalTransaction(originalTrans)
+originalTransaction(originalTrans),
+hit(false)
 {}
 
 //////////////////////////////////////////////////////////////////////////

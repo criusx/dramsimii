@@ -171,7 +171,7 @@ benchmarks = ['bzip2', 'GemsFDTD']
 
 # per-DIMM cache parameters
 associativity = [8, 16, 32]
-numberSets = [512, 1024, 2048]
+cacheSizes = [2048, 4096, 8192, 16384]
 blockSize = [64, 128, 256]
 hitLatency = [5]
 
@@ -214,21 +214,22 @@ def main():
                 for blkSz in blockSize:
                     for hitLat in hitLatency:
                         for assoc in associativity:
-                            for numSets in numberSets:
+                            for size in cacheSizes:
                                 currentTrace = os.path.join(tracesDir, t)
                                 currentCommandLine = commandLine % (ds2executable, memorySettings, channels[0], ranks[0], banks[0], addressMappingPolicy[0],
-                                                                     commandOrderingAlgorithm[0], 0, perBankQueueDepth[0], 135000000000000, tFAW[0], rowBufferManagementPolicy[0], outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
+                                                                     commandOrderingAlgorithm[0], 0, perBankQueueDepth[0], 135000000000000, tFAW[0], rowBufferManagementPolicy[0], outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s cacheSize %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, size, hitLat, assoc))
                                 #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
                                 submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
                                 print currentCommandLine
                                 #sys.exit(0)
                                 #if not counting:
                                 #os.system(submitCommand)
-                                os.system(currentCommandLine)
+                                #os.system(currentCommandLine)
                                 #else:
                                 count += 1
+            sys.exit(0)
         print count
-    #sys.exit(0)
+
 
     for i in benchmarks:
         for a in channels:

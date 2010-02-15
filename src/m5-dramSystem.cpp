@@ -433,6 +433,9 @@ void M5dramSystem::regStats()
 M5dramSystem::~M5dramSystem()
 {	
 	M5_TIMING("M5dramSystem destructor");
+#ifdef TRACE_GENERATE
+	traceOutStream.close();
+#endif
 	cerr.flush();
 	delete ds;
 }
@@ -745,8 +748,7 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		if (packet->needsResponse())
 		{
 			packet->makeAtomicResponse();
-			schedSendTiming(packet,curTick + 1);			
-
+			schedSendTiming(packet,curTick + 1);	
 		}
 	}
 	else

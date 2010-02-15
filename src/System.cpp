@@ -97,7 +97,10 @@ nextStats(settings.epoch)
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
+		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
+		"cache[" << settings.cacheSize / 1024.0F << "kB] " <<
+		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize / settings.blockSize / settings.associativity << "]"
+		<< endl;
 
 #ifndef NDEBUG 
 	systemConfig.timingOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
@@ -106,7 +109,10 @@ nextStats(settings.epoch)
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "]" << endl;
+		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
+		"cache[" << settings.cacheSize / 1024.0F << "kB] " <<
+		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize / settings.blockSize / settings.associativity << "]"
+		<< endl;
 #endif
 
 
@@ -395,7 +401,7 @@ void System::runSimulations(const unsigned requestCount)
 
 		resetToTime(newTime);
 
-		for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); i > 0;)
+		for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); (i > 0) && (inputTransaction != NULL);)
 		{				
 			moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
 

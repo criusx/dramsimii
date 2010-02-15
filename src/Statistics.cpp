@@ -48,6 +48,7 @@ Statistics::Statistics(const Settings& settings):
 channels(settings.channelCount),
 ranks(settings.rankCount),
 banks(settings.bankCount),
+cacheHitLatency(settings.hitLatency),
 validTransactionCount(0),
 startNumber(0),
 endNumber(0),
@@ -56,8 +57,8 @@ burstOf4Count(0),
 columnDepth(log2(settings.columnSize)),
 readCount(0),
 writeCount(0),
-readBytesTransferred(0),
-writeBytesTransferred(0),
+dimmCacheBandwidthData(settings.channelCount),
+bandwidthData(settings.channelCount),
 timePerEpoch((float)settings.epoch / settings.dataRate),
 rowBufferAccesses(settings.channelCount, vector<pair<unsigned,unsigned> >(settings.rankCount)),
 rasReduction(settings.channelCount, vector<unsigned>(settings.rankCount)),
@@ -67,6 +68,8 @@ commandExecution(),
 commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
+adjustedTransactionExecution(),
+cacheLatency(0),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
@@ -84,6 +87,7 @@ Statistics::Statistics():
 channels(0),
 ranks(0),
 banks(0),
+cacheHitLatency(0),
 validTransactionCount(UINT_MAX),
 startNumber(UINT_MAX),
 endNumber(UINT_MAX),
@@ -92,8 +96,8 @@ burstOf4Count(UINT_MAX),
 columnDepth(UINT_MAX),
 readCount(0),
 writeCount(0),
-readBytesTransferred(0),
-writeBytesTransferred(0),
+dimmCacheBandwidthData(0),
+bandwidthData(0),
 timePerEpoch(0),
 rowBufferAccesses(0, vector<pair<unsigned,unsigned> >(0)),
 rasReduction(0, vector<unsigned>(0)),
@@ -103,6 +107,8 @@ commandExecution(),
 commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
+adjustedTransactionExecution(),
+cacheLatency(0),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(0),
@@ -132,6 +138,12 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				//if (currentTransaction->getLatency() > 1024)
 				//	std::cerr << currentTransaction->getLatency() << std::endl;
 				transactionExecution[currentTransaction->getLatency()]++;
+
+				if (!currentTransaction->isHit())
+					adjustedTransactionExecution[currentTransaction->getLatency()]++;
+				else
+					cacheLatency += cacheHitLatency;
+
 				assert(currentTransaction->getLatency() > 4);
 				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) +
 					currentTransaction->getAddress().getRank() * banks +
@@ -139,13 +151,15 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				bankLatencyUtilization[index] += currentTransaction->getLatency();
 				aggregateBankUtilization[index]++;
 				readCount++;
-				readBytesTransferred += currentTransaction->getLength() * 8;
+				//readBytesTransferred += currentTransaction->getLength() * 8;
+				//bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
 			}
 			else
 			{
 				// 64bit bus for most DDRx architectures
 				/// @todo use #DQ * length to calculate bytes Tx, Rx
-				writeBytesTransferred += currentTransaction->getLength() * 8;
+				//writeBytesTransferred += currentTransaction->getLength() * 8;
+				//bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
 				writeCount++;
 			}
 
@@ -196,16 +210,28 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 		if (currentCommand->isHit())
 		{
 			if (currentCommand->isRead())
+			{
 				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].first.first++;
+				dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].first += currentCommand->getLength() * 8;
+			}
 			else if (currentCommand->isWrite())
+			{
 				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.first++;
+				dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
+			}
 		}
 		else
 		{
 			if (currentCommand->isRead())
+			{
 				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].first.second++;
+				bandwidthData[currentCommand->getAddress().getChannel()].first += currentCommand->getLength() * 8;
+			}
 			else if (currentCommand->isWrite())
+			{
 				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.second++;
+				bandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
+			}
 		}
 
 		if (!currentCommand->isRefresh())
@@ -257,9 +283,34 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		os << (*currentValue).first << " " << (*currentValue).second << endl;
 	}
 
+	os << "----Adjusted Transaction Latency " << statsLog.transactionExecution.size() << "----" << endl;
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.adjustedTransactionExecution.begin(); currentValue != statsLog.adjustedTransactionExecution.end(); currentValue++)
+	{
+		os << (*currentValue).first << " " << (*currentValue).second << endl;
+	}
+	os << "----DIMM Cache Latency " << statsLog.cacheLatency << endl;
+
 	os << "----Working Set----" << endl << statsLog.workingSet.size() << endl;
 
-	os << "----Bandwidth----" << endl << setprecision(10) << (float)statsLog.readBytesTransferred / statsLog.timePerEpoch << " " << (float)statsLog.writeBytesTransferred / statsLog.timePerEpoch << endl;
+	os << "----Bandwidth----" << endl << setprecision(10) << (float)statsLog.getReadBytesTransferred() / statsLog.timePerEpoch << " " << (float)statsLog.getWriteBytesTransferred() / statsLog.timePerEpoch << endl;
+
+	os << "----Per Channel Bandwidth ";
+
+	unsigned currentChannel = 0;
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = statsLog.getBandwidthData().begin(); i != statsLog.getBandwidthData().end(); i++)
+	{
+		os << "ch[" << currentChannel++ << "] R{" << i->first << "} W{" << i->second << "} ";
+	}
+	os << endl;
+
+	currentChannel = 0;
+	os << "----Per Channel DIMM Cache Bandwidth ";
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = statsLog.getDimmCacheBandwidthData().begin(); i != statsLog.getDimmCacheBandwidthData().end(); i++)
+	{
+		os << "ch[" << currentChannel++ << "] R{" << i->first << "} W{" << i->second << "} ";
+	}
+	os << endl;
+
 
 	os << "----Average Transaction Latency Per PC Value " << statsLog.pcOccurrence.size() << "----" << endl;
 	for (std::map<PhysicalAddress, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
@@ -277,6 +328,21 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		}
 	}
 	os << "----Row Hit/Miss Counts----" << endl << hitCount << " " << missCount << endl;
+
+	os << "----DIMM Cache Per-Rank Hit/Miss Counts ";
+	currentChannel = 0;
+	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::const_iterator h = statsLog.hitRate.begin(); h != statsLog.hitRate.end(); h++)
+	{
+		unsigned currentRank = 0;
+		for (vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > >::const_iterator i = h->begin(); i != h->end(); i++)
+		{
+			os << "ch[" << currentChannel << "] rk[" << currentRank++ <<
+				"] RHit{" << i->first.first << "} RMiss{" << i->first.second <<
+				"} WHit{" << i->second.first << "} WMiss{" << i->second.second << "} ";
+		}
+		currentChannel++;
+	}
+	os << endl;
 
 
 	uint64_t hits = 0, misses = 0;
@@ -382,7 +448,13 @@ void Statistics::clear()
 	transactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
-	issuedAtTFAW = readBytesTransferred = writeBytesTransferred = readCount = writeCount = 0;
+	issuedAtTFAW = /*readBytesTransferred = writeBytesTransferred =*/ readCount = writeCount = 0;
+
+	for (vector<pair<unsigned, unsigned> >::iterator i = bandwidthData.begin(); i != bandwidthData.end(); i++)
+	{
+		i->first = i->second = 0;
+	}
+
 	for (vector<vector<pair<unsigned,unsigned> > >::iterator h = rowBufferAccesses.begin(); h != rowBufferAccesses.end(); h++)
 	{
 		for (vector<pair<unsigned,unsigned> >::iterator i = h->begin(); i != h->end(); i++)
@@ -426,6 +498,7 @@ bool Statistics::operator==(const Statistics& rhs) const
 		transactionDecodeDelay == rhs.transactionDecodeDelay && transactionExecution == rhs.transactionExecution &&
 		channels == rhs.channels && ranks == rhs.ranks && banks == rhs.banks && aggregateBankUtilization == rhs.aggregateBankUtilization &&
 		pcOccurrence == rhs.pcOccurrence && workingSet == rhs.workingSet && readCount == rhs.readCount && writeCount == rhs.writeCount &&
-		readBytesTransferred == rhs.readBytesTransferred && writeBytesTransferred == rhs.writeBytesTransferred && issuedAtTFAW == rhs.issuedAtTFAW);
+		bandwidthData == rhs.bandwidthData && dimmCacheBandwidthData == rhs.dimmCacheBandwidthData &&
+		/*readBytesTransferred == rhs.readBytesTransferred && writeBytesTransferred == rhs.writeBytesTransferred &&*/ issuedAtTFAW == rhs.issuedAtTFAW);
 }
 

@@ -114,6 +114,7 @@ namespace DRAMsimII
 		const unsigned channels;
 		const unsigned ranks;
 		const unsigned banks;
+		const unsigned cacheHitLatency;								///< the latency caused when a transaction hits in the cache
 		unsigned validTransactionCount;
 		unsigned startNumber;
 		unsigned endNumber;
@@ -122,18 +123,19 @@ namespace DRAMsimII
 		unsigned columnDepth;
 		unsigned readCount;
 		unsigned writeCount;
-		unsigned readBytesTransferred;									///< the number of bytes read from DRAMs this epoch
-		unsigned writeBytesTransferred;									///< the number of bytes written to DRAMs this epoch
+		std::vector<std::pair<unsigned,unsigned> > dimmCacheBandwidthData;		///< per channel count of bytes read and written
+		std::vector<std::pair<unsigned,unsigned> > bandwidthData;		///< per channel count of bytes read and written
 		float timePerEpoch;												///< the number of seconds that have elapsed per epoch
 		std::vector<std::vector<std::pair<unsigned,unsigned> > > rowBufferAccesses;												///< the number of row hits this epoch
 		std::vector<std::vector<unsigned> > rasReduction;				///< the number of unnecessary RAS commands
-		//std::vector<unsigned> rowMisses;												///< the number of row misses this epoch
 		unsigned issuedAtTFAW;											///< the number of commands executed at exactly tFAW
 		std::tr1::unordered_map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
 		std::tr1::unordered_map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
 		std::tr1::unordered_map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
 		std::tr1::unordered_map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
 		std::tr1::unordered_map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
+		std::tr1::unordered_map<unsigned,unsigned> adjustedTransactionExecution;	///< the adjusted times, excluding transactions that hit in the cache
+		tick cacheLatency;													///< the latency due to transactions that were serviced by the cache
 		// still some bugs supporting 64-bit numbers
 		std::map<PhysicalAddress, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
 		std::map<PhysicalAddress, unsigned> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
@@ -147,7 +149,7 @@ namespace DRAMsimII
 		explicit Statistics(const Settings& settings);
 
 		// functions
-		std::pair<unsigned,unsigned> getReadWriteBytes() const { return std::pair<unsigned,unsigned>(readBytesTransferred,writeBytesTransferred); }
+		std::pair<unsigned,unsigned> getReadWriteBytes() const { return std::pair<unsigned,unsigned>(getReadBytesTransferred(),getWriteBytesTransferred()); }
 		void clear();
 		void collectTransactionStats(const Transaction*);	
 		void collectCommandStats(const Command*);
@@ -159,15 +161,33 @@ namespace DRAMsimII
 		// accessors
 		const std::vector<std::vector<std::pair<unsigned,unsigned> > > &getRowBufferAccesses() const { return rowBufferAccesses; }
 		const std::vector<std::vector<unsigned> >& getRowReduction() const { return rasReduction;}
-		//unsigned getHitCount() const { return rowHits;}
+		const std::vector<std::pair<unsigned,unsigned> >& getBandwidthData() const { return bandwidthData;}
+		const std::vector<std::pair<unsigned,unsigned> >& getDimmCacheBandwidthData() const { return dimmCacheBandwidthData;}
+		unsigned getReadBytesTransferred() const
+		{
+			unsigned value = 0;
+
+			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = bandwidthData.begin(); i != bandwidthData.end(); i++)
+			{
+				value += i->first;
+			}
+
+			return value;
+		}
+
+		unsigned getWriteBytesTransferred() const
+		{
+			unsigned value = 0;
+
+			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = bandwidthData.begin(); i != bandwidthData.end(); i++)
+			{
+				value += i->second;
+			}
+
+			return value;
+		}
 
 		const std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > &getHitRate() const { return hitRate; }
-// 		void reportMiss()
-// 		{
-			//#pragma omp atomic
-// 			rowMisses++;
-// 		}
-		//unsigned getMissCount() const { return rowMisses; }
 		friend std::ostream &operator<<(std::ostream &, const Statistics &);
 
 		// overloads
@@ -184,9 +204,9 @@ namespace DRAMsimII
 			if (version == 0)
 			{
 				ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
-					writeCount & readBytesTransferred & writeBytesTransferred & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) &
-					const_cast<unsigned&>(banks) & timePerEpoch & aggregateBankUtilization & workingSet &
-					bankLatencyUtilization & pcOccurrence & issuedAtTFAW & hitRate & rowBufferAccesses;
+					writeCount & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) & const_cast<unsigned&>(cacheHitLatency) &
+					const_cast<unsigned&>(banks) & timePerEpoch & aggregateBankUtilization & workingSet & cacheLatency &
+					bankLatencyUtilization & pcOccurrence & issuedAtTFAW & hitRate & rowBufferAccesses & dimmCacheBandwidthData;
 			}
 
 		}

@@ -23,7 +23,7 @@ using std::ostream;
 using namespace DRAMsimII;
 
 // initialize the static member
-Queue<Command> Command::freeCommandPool(16*POOL_SIZE,true);
+Queue<Command> Command::freeCommandPool(8*POOL_SIZE,true);
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief blank constructor for NULL commands

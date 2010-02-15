@@ -85,14 +85,15 @@ namespace DRAMsimII
 		std::vector<LRUBlk *> blks;
 
 		CacheSet(unsigned associativity):
+		assoc(associativity),
 		blks(associativity)
 		{
-			assoc = associativity;
+			//assoc = associativity;
 
-			for (unsigned j = 0; j < associativity; ++j)
-			{
-
-			}
+// 			for (unsigned j = 0; j < associativity; ++j)
+// 			{
+// 
+// 			}
 		}
 
 		/**
