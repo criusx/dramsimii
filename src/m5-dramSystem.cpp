@@ -434,7 +434,8 @@ M5dramSystem::~M5dramSystem()
 {	
 	M5_TIMING("M5dramSystem destructor");
 #ifdef TRACE_GENERATE
-	traceOutStream.close();
+	traceOutStream.flush();
+	//traceOutStream.close();
 #endif
 	cerr.flush();
 	delete ds;
@@ -573,7 +574,6 @@ void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
 bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 { 		
 #ifdef TRACE_GENERATE
-	bool needsResponse = packet->needsResponse();
 	if (packet->memInhibitAsserted())
 	{
 		// snooper will supply based on copy of packet
@@ -581,25 +581,54 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		//cerr << "deleted memInhibitAsserted" << endl;
 		delete packet;
 		return true;
-	}
-	memory->doAtomicAccess(packet);
-
-	if (packet->isRead() || packet->isWrite())
-		memory->traceOutStream << std::hex << packet->getAddr() << " " << (packet->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 1E9 / Clock::Frequency << " " << std::hex << (packet->req->hasPC() ? packet->req->getPC() : 0) <<  endl;
-
-	if (needsResponse)
+	}	
+	else if (packet->isRead() || packet->isWrite())
 	{
-		//timingOutStream << "sending packet back at " << dec << static_cast<Tick>(curTick + 95996) << endl;
-		memory->ports[memory->lastPortIndex]->doSendTiming(packet, static_cast<Tick>(curTick + 1));
-		//memory->ports[memory->lastPortIndex]->doSendTiming(packet,curTick + 18750 + rand()%400);
-		//schedSendTiming(packet,curTick + 20000 + rand()%20000);
-		//schedSendTiming(packet,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));
+		memory->traceOutStream << std::hex << packet->getAddr() << " " << (packet->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 1E9 / Clock::Frequency << " " << std::hex << (packet->req->hasPC() ? packet->req->getPC() : 0) <<  endl;
+		bool needsResponse = packet->needsResponse();
+
+		memory->doAtomicAccess(packet);
+
+		if (needsResponse)
+		{
+			//timingOutStream << "sending packet back at " << dec << static_cast<Tick>(curTick + 95996) << endl;
+			memory->ports[memory->lastPortIndex]->doSendTiming(packet, static_cast<Tick>(curTick + 1));
+			//memory->ports[memory->lastPortIndex]->doSendTiming(packet,curTick + 18750 + rand()%400);
+			//schedSendTiming(packet,curTick + 20000 + rand()%20000);
+			//schedSendTiming(packet,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));
+		}
+		else
+		{
+			//delete packet->req;
+			delete packet;
+		}
+	}
+	else if (packet->isInvalidate())
+	{
+		assert(packet->cmd != MemCmd::SwapReq);
+		assert(!packet->isRead() && packet->needsResponse());
+		if (packet->needsResponse())
+		{
+			packet->makeAtomicResponse();
+			schedSendTiming(packet,curTick + 1);	
+		}
 	}
 	else
 	{
-		//delete packet->req;
-		delete packet;
+		assert(!packet->needsResponse());
+		
+		if (packet->cmd != MemCmd::UpgradeReq)
+		{
+			cerr << "warn: deleted packet, not upgradereq, not write, needs no resp" << endl;
+			delete packet->req;
+			delete packet;
+		}
+		else
+		{
+			cerr << "warn: not upgrade request" << endl;
+		}		
 	}
+	
 	return true;
 #endif
 

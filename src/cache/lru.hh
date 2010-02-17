@@ -140,14 +140,11 @@ namespace DRAMsimII
 		const unsigned hitLatency;
 
 		/** The cache sets. */
-		//CacheSet *sets;
 		std::vector<CacheSet> sets;
 
 		/** The cache blocks. */
-		//LRUBlk *blks;
 		std::vector<LRUBlk> blks;
 		/** The data blocks, 1 per cache block. */
-		//uint8_t *dataBlks;
 		std::vector<uint8_t> dataBlks;
 
 		/** The amount to shift the address to get the set. */

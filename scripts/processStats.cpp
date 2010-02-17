@@ -94,6 +94,8 @@ using std::tr1::unordered_map;
 // the number of points to use as a maximum in the graph
 #define MAXIMUM_VECTOR_SIZE 2 * 1024
 
+#define NEWLINE_LENGTH 1024*1024
+
 #define WINDOW 5
 
 enum ProcessingType 
@@ -522,13 +524,13 @@ void processPower(const string &filename)
 	inputStream.push(file_source(filename));
 
 
-	char newLine[256];
+	char newLine[NEWLINE_LENGTH];
 	boost::regex powerRegex("\\{([0-9.e\\-\\+]+)\\}");
 
 	if (!inputStream.is_complete())
 		return;
 
-	inputStream.getline(newLine,256); 
+	inputStream.getline(newLine,NEWLINE_LENGTH); 
 
 	// get a couple copies of gnuplot running
 	opstream p("gnuplot");
@@ -727,7 +729,7 @@ void processPower(const string &filename)
 				}
 			}
 		}
-		inputStream.getline(newLine,256);
+		inputStream.getline(newLine,NEWLINE_LENGTH);
 	}
 
 	userStop = false;
@@ -1125,9 +1127,9 @@ void processStats(const string &filename)
 
 	inputStream.push(file_source(filename));
 
-	char newLine[256];
+	char newLine[1024*1024];
 
-	inputStream.getline(newLine,256);
+	inputStream.getline(newLine,NEWLINE_LENGTH);
 
 	while ((newLine[0] != 0) && (!userStop))
 	{
@@ -1509,10 +1511,35 @@ void processStats(const string &filename)
 						}
 					}
 					else
+					{
 						throughOnce = true;
+					}
 
 					averageTransactionLatency.clear();
-					writing = TRANSACTION_LATENCY;
+					//writing = TRANSACTION_LATENCY;
+					char *position = newLine;
+					while (position != NULL)
+					{
+						char *firstBracket = strchr(newLine,'{');
+						if (firstBracket == NULL)
+							break;
+
+						char *secondBracket = strchr(newLine,'}');
+						if (secondBracket == NULL)
+							break;
+
+						char *comma = strchr(newLine,',');
+						if (comma == NULL)
+							break;
+						*comma = NULL;
+						*secondBracket = NULL;
+						unsigned latency = atoi(firstBracket + 1);
+						unsigned count = atoi(comma + 1);
+						position = secondBracket + 1;
+						averageTransactionLatency.add(latency,count);
+						transactionCountBuffer += count;
+						distTransactionLatency[latency] += count;
+					}
 				}
 				else if (newLine[4] == 'W')
 					writing = WORKING_SET_SIZE;
@@ -1572,19 +1599,19 @@ void processStats(const string &filename)
 			switch (writing)
 			{
 				// transaction latency
-			case TRANSACTION_LATENCY:
-				{
-					char *position = strchr(newLine,' ');
-					if (position == NULL)
-						break;
-					*position++ = 0;
-					unsigned latency = atoi(newLine);
-					unsigned count = atoi(position);
-					averageTransactionLatency.add(latency,count);
-					transactionCountBuffer += count;
-					distTransactionLatency[latency] += count;
-				}
-				break;
+// 			case TRANSACTION_LATENCY:
+// 				{
+// 					char *position = strchr(newLine,' ');
+// 					if (position == NULL)
+// 						break;
+// 					*position++ = 0;
+// 					unsigned latency = atoi(newLine);
+// 					unsigned count = atoi(position);
+// 					averageTransactionLatency.add(latency,count);
+// 					transactionCountBuffer += count;
+// 					distTransactionLatency[latency] += count;
+// 				}
+// 				break;
 				// working set size
 			case WORKING_SET_SIZE:
 				workingSetSizeBuffer = atoi(newLine);
@@ -1728,7 +1755,7 @@ void processStats(const string &filename)
 			}
 		}
 
-		inputStream.getline(newLine,256);
+		inputStream.getline(newLine,NEWLINE_LENGTH);
 	} // end going through lines
 
 	userStop = false;
@@ -2337,9 +2364,9 @@ double calcRunTime(filtering_istream& input)
 	int searchForEpoch = 30;
 	double epoch = 0.0;
 
-	char newLine[256];
+	char newLine[NEWLINE_LENGTH];
 	int epochCounter = 0;
-	input.getline(newLine,256);
+	input.getline(newLine,NEWLINE_LENGTH);
 
 	while ((newLine[0] != 0) && (!userStop))
 	{
@@ -2360,7 +2387,7 @@ double calcRunTime(filtering_istream& input)
 			if (searchForEpoch == 0)
 				return 0.0;
 		}
-		input.getline(newLine,256);
+		input.getline(newLine,NEWLINE_LENGTH);
 	}
 
 	return (double)epochCounter * epoch;
@@ -2434,12 +2461,12 @@ int main(int argc, char** argv)
 			inputStream.push(boost::iostreams::gzip_decompressor());
 			inputStream.push(file_source(argv[i]));
 
-			char newLine[256];
+			char newLine[NEWLINE_LENGTH];
 
 			if (!inputStream.is_complete())
 				continue;
 
-			inputStream.getline(newLine,256); 
+			inputStream.getline(newLine,NEWLINE_LENGTH); 
 			unsigned lineCounter = 0;
 
 			while ((newLine[0] != 0) && (!userStop))
@@ -2494,7 +2521,7 @@ int main(int argc, char** argv)
 				}
 				if (++lineCounter > 30)
 					break;
-				inputStream.getline(newLine,256);
+				inputStream.getline(newLine,NEWLINE_LENGTH);
 			}
 			boost::iostreams::close(inputStream);
 		}

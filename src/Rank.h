@@ -41,7 +41,9 @@ namespace DRAMsimII
 	private:
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
+		const SystemConfiguration& systemConfig; ///< reference to system configuration information
 		Statistics& statistics;				///< reference for collecting statistics
+
 
 	protected:
 
@@ -119,7 +121,7 @@ namespace DRAMsimII
 
 
 		// mutators
-		void setRankID(const unsigned value) { rankID = value; }
+		void setRankID(const unsigned channelID, const unsigned rankID);
 		void setLastBankID(const unsigned value) { lastBankID = value; }
 		void resetPrechargeTime(const tick time); 
 		void resetCycleCounts() { CASLength = CASWLength = 0; }
@@ -131,7 +133,7 @@ namespace DRAMsimII
 
 	private:
 		//serialization
-		explicit Rank(const TimingSpecification &timing, const std::vector<Bank> & newBank, Statistics &stats);
+		explicit Rank(const TimingSpecification &timing, const std::vector<Bank> &newBank, Statistics &stats, SystemConfiguration &sysConfig);
 		explicit Rank();
 
 		friend class boost::serialization::access;
@@ -156,6 +158,8 @@ namespace DRAMsimII
 			{
 				const DRAMsimII::TimingSpecification* const timing = &(t->timing);
 				ar << timing;
+				const DRAMsimII::SystemConfiguration* const sysConfig = &(t->systemConfig);
+				ar << sysConfig;
 				const std::vector<DRAMsimII::Bank>* const bank = &(t->bank);
 				ar << bank;	
 				const Statistics* const stats = &(t->statistics);
@@ -171,12 +175,14 @@ namespace DRAMsimII
 			{
 				DRAMsimII::TimingSpecification* timing;
 				ar >> timing;
+				DRAMsimII::SystemConfiguration* sysConfig;
+				ar >> sysConfig;
 				std::vector<DRAMsimII::Bank>* newBank;
 				ar >> newBank;
 				DRAMsimII::Statistics* stats;
 				ar >> stats;
 
-				::new(t)DRAMsimII::Rank(*timing, *newBank, *stats);
+				::new(t)DRAMsimII::Rank(*timing, *newBank, *stats, *sysConfig);
 			}
 
 		}		

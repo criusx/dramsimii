@@ -24,8 +24,9 @@ using std::endl;
 using std::cerr;
 using namespace DRAMsimII;
 
-Rank::Rank(const Settings& settings, const TimingSpecification &timing, const SystemConfiguration &systemConfig, Statistics& stats):
+Rank::Rank(const Settings& settings, const TimingSpecification &timing, const SystemConfiguration &sysConfig, Statistics& stats):
 timing(timing),
+systemConfig(sysConfig),
 statistics(stats),
 lastRefreshTime(-1ll * settings.tRFC),
 lastPrechargeAnyBankTime(-100),
@@ -51,11 +52,12 @@ lastBankID(settings.bankCount - 1),
 banksPrecharged(/*settings.rowBufferManagementPolicy == OPEN_PAGE ? 0 : settings.bankCount */ 0),
 tags(settings),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
-bank(systemConfig.getBankCount(),Bank(settings, timing, systemConfig, stats))
+bank(sysConfig.getBankCount(),Bank(settings, timing, sysConfig, stats))
 {}
 
 Rank::Rank(const Rank &rhs):
 timing(rhs.timing),
+systemConfig(rhs.systemConfig),
 statistics(rhs.statistics),
 lastRefreshTime(rhs.lastRefreshTime),
 lastPrechargeAnyBankTime(rhs.lastPrechargeAnyBankTime),
@@ -84,8 +86,9 @@ lastActivateTimes(rhs.lastActivateTimes),
 bank(rhs.bank)
 {}
 
-Rank::Rank(const Rank &rhs, const TimingSpecification &timing, const SystemConfiguration &systemConfig, Statistics& stats):
+Rank::Rank(const Rank &rhs, const TimingSpecification &timing, const SystemConfiguration &sysConfig, Statistics& stats):
 timing(timing),
+systemConfig(sysConfig),
 statistics(rhs.statistics),
 lastRefreshTime(rhs.lastRefreshTime),
 lastPrechargeAnyBankTime(rhs.lastPrechargeAnyBankTime),
@@ -111,7 +114,7 @@ lastBankID(rhs.lastBankID),
 banksPrecharged(rhs.banksPrecharged),
 tags(rhs.tags),
 lastActivateTimes(rhs.lastActivateTimes),
-bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConfig, stats))
+bank((unsigned)sysConfig.getBankCount(), Bank(rhs.bank[0], timing, sysConfig, stats))
 {
 	// TODO: copy over values in banks now that reference members are init	
 	//for (unsigned i = 0; i < systemConfig.getBankCount(); i++)
@@ -121,8 +124,9 @@ bank((unsigned)systemConfig.getBankCount(), Bank(rhs.bank[0], timing, systemConf
 	bank = rhs.bank;
 }
 
-Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank>& newBank, Statistics& stats):
+Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank>& newBank, Statistics& stats, SystemConfiguration& sysConfig):
 timing(timingSpec),
+systemConfig(sysConfig),
 statistics(stats),
 lastRefreshTime(-1ll * timingSpec.tRFC()),
 lastPrechargeAnyBankTime(-100),
@@ -344,6 +348,21 @@ void Rank::resetPrechargeTime(const tick time)
 	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC());
 }
 
+void Rank::setRankID(const unsigned channelID, const unsigned rankID)
+{
+	this->rankID = rankID;
+
+	if (systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE || systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE_AGGRESSIVE)
+	{		
+		unsigned bankID = 0;
+		for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); i++)
+		{
+			Transaction t(Transaction::AUTO_PRECHARGE_TRANSACTION,0,timing.tBurst(), Address(channelID,rankID,bankID++, 0,0));
+			i->push(new Command(&t, 0, false, timing.tBurst(), Command::PRECHARGE));
+		}
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief returns the next time this command type may be issued
@@ -524,7 +543,7 @@ bool Rank::operator==(const Rank& right) const
 		lastCASLength == right.lastCASLength && lastCASWLength == right.lastCASWLength && rankID == right.rankID && lastBankID == right.lastBankID &&
 		banksPrecharged == right.banksPrecharged && lastActivateTimes == right.lastActivateTimes && bank == right.bank && CASLength == right.CASLength &&
 		CASWLength == right.CASWLength && otherLastCASTime == right.otherLastCASTime && otherLastCASWTime == right.otherLastCASWTime &&
-		otherLastCASLength == right.otherLastCASLength && otherLastCASWLength == right.otherLastCASWLength);
+		otherLastCASLength == right.otherLastCASLength && otherLastCASWLength == right.otherLastCASWLength && systemConfig == right.systemConfig);
 }
 
 std::ostream& DRAMsimII::operator<<(std::ostream &os, const Rank &r)

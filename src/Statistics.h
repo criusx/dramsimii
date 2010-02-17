@@ -63,6 +63,35 @@ namespace DRAMsimII
 	{
 
 	public:
+
+		template <typename T>
+		class WeightedAverage
+		{
+			unsigned count;
+			T total;
+
+		public:
+			WeightedAverage():count(0), total(0)
+			{}
+
+			void add(T value, unsigned count)
+			{
+				this->total += value * (T)count;
+				this->count += count;
+			}
+
+			void clear()
+			{
+				total = 0;
+				count = 0;
+			}
+
+			T average() const
+			{
+				return total / ((count > 0) ? (T)count : (T)1);
+			}
+		};
+
 		class DelayCounter
 		{
 		private:
@@ -135,6 +164,7 @@ namespace DRAMsimII
 		std::tr1::unordered_map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
 		std::tr1::unordered_map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
 		std::tr1::unordered_map<unsigned,unsigned> adjustedTransactionExecution;	///< the adjusted times, excluding transactions that hit in the cache
+		WeightedAverage<uint64_t> cumulativeTransactionExecution;						///< the transaction execution time of all transactions to the present
 		tick cacheLatency;													///< the latency due to transactions that were serviced by the cache
 		// still some bugs supporting 64-bit numbers
 		std::map<PhysicalAddress, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
@@ -142,6 +172,7 @@ namespace DRAMsimII
 		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
 		std::vector<tick> bankLatencyUtilization;	///< the latency due to each bank per unit time
 		std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > hitRate; ///< the hit rate of the commands in the per-DIMM cache
+		std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > cumulativeHitRate; ///< the hit rate of the commands in the per-DIMM cache for the entire run
 
 	public:
 

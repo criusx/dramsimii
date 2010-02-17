@@ -124,7 +124,7 @@ namespace DRAMsimII
 
 		// mutators
 		void setTime(tick value) { time = value; }						///< update the time for this channel
-		void setChannelID(const unsigned value) { channelID = value; }	///< set the channel ordinal
+		void setChannelID(const unsigned value);
 		Transaction::TransactionType setReadWriteType(const int) const;	
 
 		// overloads

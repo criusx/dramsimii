@@ -65,10 +65,10 @@ rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig, st
 finishedTransactions()
 {
 	// assign an id to each channel (normally done with commands)
-	for (unsigned i = 0; i < settings.rankCount; i++)
-	{
-		rank[i].setRankID(i);
-	}
+// 	for (unsigned i = 0; i < settings.rankCount; i++)
+// 	{
+// 		rank[i].setRankID(i);
+// 	}
 
 	// initialize the refresh counters per rank
 	if (settings.refreshPolicy != NO_REFRESH)
@@ -173,6 +173,16 @@ Channel::~Channel()
 		delete lastCommand;
 		lastCommand = NULL;
 	}
+}
+
+void Channel::setChannelID(const unsigned value)
+{
+	 channelID = value;
+	 unsigned rankID = 0;
+	 for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
+	 {
+		 i->setRankID(value, rankID++);
+	 }
 }
 
 //////////////////////////////////////////////////////////////////////////
