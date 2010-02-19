@@ -139,23 +139,25 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 			{
 				++burstOf4Count;
 			}
+
+			transactionExecution[currentTransaction->getLatency()]++;
+			cumulativeTransactionExecution[currentTransaction->getLatency()]++;
+
 			if (currentTransaction->isRead())
 			{
 				//if (currentTransaction->getLatency() > 1024)
 				//	std::cerr << currentTransaction->getLatency() << std::endl;
-				transactionExecution[currentTransaction->getLatency()]++;
-				cumulativeTransactionExecution[currentTransaction->getLatency()]++;
-
+				
 				if (!currentTransaction->isHit())
 				{
 					cumulativeAdjustedTransactionExecution[cacheHitLatency]++;
 					adjustedTransactionExecution[cacheHitLatency]++;
+					cacheLatency += cacheHitLatency;
 				}
 				else
 				{
 					cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
-					adjustedTransactionExecution[currentTransaction->getLatency()]++;
-					cacheLatency += cacheHitLatency;
+					adjustedTransactionExecution[currentTransaction->getLatency()]++;					
 				}
 
 				assert(currentTransaction->getLatency() > 4);
@@ -170,6 +172,9 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 			}
 			else
 			{
+				cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
+				adjustedTransactionExecution[currentTransaction->getLatency()]++;
+
 				// 64bit bus for most DDRx architectures
 				/// @todo use #DQ * length to calculate bytes Tx, Rx
 				//writeBytesTransferred += currentTransaction->getLength() * 8;
@@ -307,6 +312,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		averageLatency.add(currentValue->first,currentValue->second);
 		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
+	os << endl;
 	
 	os << "----Average Cumulative Transaction Latency {" << averageLatency.average() << "}" << endl;
 
@@ -317,6 +323,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		averageLatency.add(currentValue->first,currentValue->second);
 		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
+	os << endl;
 
 	os << "----Average Cumulative Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
 

@@ -98,12 +98,6 @@ using std::tr1::unordered_map;
 
 #define WINDOW 5
 
-// enum ProcessingType 
-// {
-// 	NONE, TRANSACTION_LATENCY,WORKING_SET_SIZE, BANDWIDTH, PC_VS_LATENCY, IPC, HIT_MISS_ROWS, CHANNEL_DISTRIBUTION, RANK_DISTRIBUTION, 
-// 	BANK_DISTRIBUTION, PER_BANK_DISTRIBUTION, PER_BANK_LATENCY, CACHE_HIT_MISS
-// };
-
 void prepareOutputDir(const bf::path &outputDir, const string &filename, const string &commandLine, unsigned channelCount);
 
 // globals
@@ -127,6 +121,64 @@ unordered_map<string,string> decoder = setupDecoder();
 
 #include "processStats.hh"
 
+ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
+
+
+#if 0
+template <typename T1, typename T2>
+pair<T1,T2> operator/(const pair<T1,T2> &lhs, const float& right)
+{
+	return pair<T1,T2>(lhs.first / right, lhs.second / right );
+}
+
+template <typename T1,typename T2>
+pair<T1,T2> operator+(pair<T1,T2> &left, const pair<T1,T2>& right)
+{
+	return pair<T1,T2>(left.first + right.first, left.second + right.second);
+}
+
+template <typename T>
+class BufferAccumulator
+{
+
+protected:
+	vector<T> values;
+	T buffer;
+	unsigned scaleFactor;
+	unsigned count;
+
+public:
+	BufferAccumulator():
+	  values(),
+		  buffer(),
+		  scaleFactor(1),
+		  count(0)
+	  {}
+
+	void push_back(const T& value)
+	{
+		buffer = value / (float)scaleFactor;
+		count++;
+		if (count == scaleFactor)
+		{
+			values.push_back(value);
+
+			if (values.size() > MAXIMUM_VECTOR_SIZE)
+			{
+				for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; j++)
+				{
+					//values[j] = T((values[2 * j] + values[2 * j + 1]) / 2.0F);
+					values[j] = T((values[2 * j] + values[2 * j + 1]) );
+				}
+
+				values.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+				scaleFactor *= 2;
+			}
+		}		
+	}
+};
+#endif
 template <typename T>
 class WeightedAverage
 {
@@ -519,6 +571,8 @@ void processPower(const string &filename)
 	vector<pair<float,float> > energyValues;
 	pair<float,float> energyValueBuffer;
 
+	BufferAccumulator<pair<float,float> > energy;
+
 	unsigned scaleFactor = 1;
 	unsigned scaleIndex = 0;
 
@@ -565,31 +619,26 @@ void processPower(const string &filename)
 				float thisPower = atof(position);
 				valueBuffer[writing] += (thisPower);
 
+				// Psys(ACT_STBY)
 				if (writing == 0)
 				{
-					char *position3 = strchr(++position2,'{');
-					if (position3 == NULL)
-					{
-						cerr << backup<<endl;
-						break;
-					}
-					position3++;
-					char *position4 = strchr(position2,'/');
-					if (position4 == NULL)
-					{
-						cerr << backup<<endl;
-						break;
-					}
-					*position4 = 0;
-					char *position5 = strchr(++position4,'}');
-					if (position5 == NULL)
-					{
-						cerr << backup<<endl;
-						break;
-					}
-					*position5 = 0;
-					energyValueBuffer.first = atof(position3);
-					energyValueBuffer.second = atof(position4);
+					char *firstBrace = strchr(position2 + 1,'{');
+					if (firstBrace == NULL) break;
+
+					char *slash = strchr(firstBrace,'/');
+					if (slash == NULL) break;
+
+					char *secondBrace = strchr(firstBrace,'}');
+					if (secondBrace == NULL) break;
+
+					*slash = *secondBrace = NULL;
+
+					energyValueBuffer.first = atof(firstBrace + 1);
+					energyValueBuffer.second = atof(slash + 1);
+
+					energy.push_back(pair<float,float>(atof(firstBrace + 1),atof(slash + 1)));
+
+					//cerr << energyValueBuffer.first << " " << energyValueBuffer.second << endl;
 				}
 
 				writing = (writing + 1) % values.size();
@@ -850,31 +899,24 @@ void processPower(const string &filename)
 	p2 << "e" << endl << "unset multiplot" << endl << "unset output" << endl << "exit" << endl;
 
 	//////////////////////////////////////////////////////////////////////////
+	// the cumulative energy graph
 	path outFilename = outputDir / ("cumulativeEnergy." + extension);
-
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p4 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p4 << "set title \"" << "Cumulative Energy\\n" << commandLine << "\"" << endl << cumulPowerScript;
-	//cerr << "set title \"" << "Cumulative Power\\n" << commandLine << "\"" << endl << cumulPowerScript;
-
+	
 	float time = 0.0F;
 	float totalPower = 0.0F;
-	//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); i++)
 	for (vector<pair<float,float> >::const_iterator i = energyValues.begin(); i != energyValues.end(); i++)
 	{
-		//for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
-		//	totalPower += values[j][i];
 		totalPower += i->first;
 
 		p4 << time << " " << totalPower << endl;
-		//cerr<< time << " " << totalPower << endl;
-
-		//cerr << time << " " << i->first + i->second << endl;
+	
 		time += epochTime;
 	}
 
 	p4 << "e" << endl;
-	//cerr << "e" << endl;
 
 	time = 0.0F;
 	totalPower = 0.0F;

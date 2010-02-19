@@ -17,7 +17,7 @@ from array import array
 import shutil
 
 # the directory where the traces are
-tracesDir = '/home/crius/benchmarks/dsTraces'
+tracesDir = '/home/crius/benchmarks/dsTraces/8MB/16WAY'
 
 # the format of the traces
 traceType = 'dramsim'
@@ -119,7 +119,7 @@ m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/Cypress'
+outputDir = '/home/crius/results/Cypress/3'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/dramsimii/memoryDefinitions/DDR2-800-sg125E.xml'
@@ -175,7 +175,8 @@ cacheSizes = [2048, 4096, 8192, 16384]
 blockSize = [64, 128, 256]
 hitLatency = [5]
 
-traces = ['bzip2003-trace.gz', 'lbm000-trace.gz', 'mcf000-trace.gz']
+#traces = ['bzip2-trace.gz', 'lbm-trace.gz', 'mcf-trace.gz']
+traces = ['lbm-trace.gz']
 
 def main():
     try:
@@ -223,7 +224,7 @@ def main():
                                 print currentCommandLine
                                 #sys.exit(0)
                                 #if not counting:
-                                #os.system(submitCommand)
+                                os.system(submitCommand)
                                 #os.system(currentCommandLine)
                                 #else:
                                 count += 1

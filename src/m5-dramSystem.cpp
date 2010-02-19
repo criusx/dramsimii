@@ -431,8 +431,10 @@ void M5dramSystem::regStats()
 M5dramSystem::~M5dramSystem()
 {	
 	M5_TIMING("M5dramSystem destructor");
+	
 #ifdef TRACE_GENERATE
 	traceOutStream.flush();
+	boost::iostreams::close(traceOutStream);	
 	//traceOutStream.close();
 #endif
 	cerr.flush();
