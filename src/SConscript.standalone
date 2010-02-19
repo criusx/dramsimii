@@ -4,7 +4,10 @@ Import('env')
 
 conf = Configure(env)
 
-platform = ARGUMENTS.get("build",Platform())
+try:
+	platform = ARGUMENTS.get("build",Platform())
+except AttributeError:
+	platform = 'opt'
 
 if not conf.CheckLib('boost_iostreams'):
 	print 'Boost iostreams library not found, please install this.'
