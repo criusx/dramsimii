@@ -131,8 +131,7 @@ std::string bigEnergyScript = "set key outside center bottom horizontal Left rev
 							  set y2label \"Cumulative Energy (mJ)\"\n\
 							  set xlabel \"Time (s)\"\n";
 
-std::string powerTypes[] = 
-{"ACT-STBY","ACT","PRE-STBY","RD","WR"};
+std::string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR"};
 
 std::string subAddrDistroA = "unset y2tics\n\
 							 unset logscale y\n\
@@ -203,7 +202,12 @@ std::string bandwidthGraph = "set yrange [0 : *] noreverse nowriteback\n\
 							 set style data histograms\n\
 							 set style histogram rowstacked title offset 0,0,0\n\
 							 set ylabel 'Bandwidth (bytes per second)'\n\
-							 plot '-' using 1 axes x2y1 title 'Read Bytes', '-' using 1 axes x2y1 title 'Write Bytes', '-' using 1:2 axes x1y1 title 'Average Bandwidth' with lines\n";
+							 plot \
+							 '-' using 1 axes x2y1 title 'Read Bytes', \
+							 '-' using 1 axes x2y1 title 'Write Bytes', \
+							 '-' using 1 axes x2y1 title 'Cache Read Bytes', \
+							 '-' using 1 axes x2y1 title 'Cache Write Bytes', \
+							 '-' using 1:2 axes x1y1 title 'Average Bandwidth' with lines\n";
 
 std::string pcVsLatencyGraph = "set logscale y \n\
 							   set yrange [1 : *] noreverse nowriteback\n\
@@ -270,8 +274,6 @@ std::string otherIPCGraph = "set yrange [0 : *] noreverse nowriteback\n\
 							set xrange [0 : *]\n\
 							plot '-' using 1:2 title 'IPC' with impulses,\
 							'-' using 1:2 title 'Moving Average IPC' with lines\n";
-
-//'-' using 1:2 sm csp title 'Cumulative Average IPC' with lines,\
 
 std::string averageTransactionLatencyScript = "set yrange [1 : *] noreverse nowriteback\n\
 											  set xlabel 'Time (s)' offset character .05, 0,0 font ' textcolor lt -1 rotate by 90\n\

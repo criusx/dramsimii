@@ -69,12 +69,15 @@ commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
 adjustedTransactionExecution(),
+cumulativeTransactionExecution(),
+cumulativeAdjustedTransactionExecution(),
 cacheLatency(0),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
 bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
-hitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount))
+hitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount)),
+cumulativeHitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount))
 {
 	bankLatencyUtilization.reserve(settings.channelCount * settings.rankCount * settings.bankCount);
 	aggregateBankUtilization.reserve(settings.channelCount * settings.rankCount * settings.bankCount);
@@ -108,12 +111,15 @@ commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
 adjustedTransactionExecution(),
+cumulativeTransactionExecution(),
+cumulativeAdjustedTransactionExecution(),
 cacheLatency(0),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(0),
 bankLatencyUtilization(0),
-hitRate()
+hitRate(),
+cumulativeHitRate()
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -138,12 +144,19 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				//if (currentTransaction->getLatency() > 1024)
 				//	std::cerr << currentTransaction->getLatency() << std::endl;
 				transactionExecution[currentTransaction->getLatency()]++;
-				cumulativeTransactionExecution.add(currentTransaction->getLatency(), 1);
+				cumulativeTransactionExecution[currentTransaction->getLatency()]++;
 
 				if (!currentTransaction->isHit())
-					adjustedTransactionExecution[currentTransaction->getLatency()]++;
+				{
+					cumulativeAdjustedTransactionExecution[cacheHitLatency]++;
+					adjustedTransactionExecution[cacheHitLatency]++;
+				}
 				else
+				{
+					cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
+					adjustedTransactionExecution[currentTransaction->getLatency()]++;
 					cacheLatency += cacheHitLatency;
+				}
 
 				assert(currentTransaction->getLatency() > 4);
 				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) +
@@ -220,7 +233,7 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 			{
 				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.first++;
 				cumulativeHitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.first++;
-				dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
+				//dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
 				bandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
 			}
 		}
@@ -263,53 +276,87 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----R W Total----" << endl;
 	os << statsLog.readCount << " " << statsLog.writeCount << " " << statsLog.readCount + statsLog.writeCount << endl;
 #endif
-	os << "----Transaction Delay";
-	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); currentValue++)
-	{
-		os << " {" << (*currentValue).first << "," << (*currentValue).second << "}" << endl;
-	}
-	os << "----Command Turnaround " << statsLog.commandTurnaround.size() << "----" << endl;
-	for (unordered_map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); currentValue++)
-	{
-		os << (*currentValue).first << " " << (*currentValue).second << endl;
-	}
-	os << "----Command Delay " << statsLog.commandDelay.size() << "----" << endl;
-	for (unordered_map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandDelay.begin(); currentValue != statsLog.commandDelay.end(); currentValue++)
-	{
-		os << (*currentValue).first << " " << (*currentValue).second << endl;
-	}
-	os << "----CMD Execution Time " << statsLog.commandExecution.size() << "----" << endl;
-	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.commandExecution.begin(); currentValue != statsLog.commandExecution.end(); currentValue++)
-	{
-		os << (*currentValue).first << " " << (*currentValue).second << endl;
-	}
+
 	Statistics::WeightedAverage<unsigned> averageLatency;
-	os << "----Transaction Latency " << statsLog.transactionExecution.size() << "----" << endl;
+	os << "----Transaction Latency";
 	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); currentValue++)
 	{
 		averageLatency.add(currentValue->first,currentValue->second);
-		os << (*currentValue).first << " " << (*currentValue).second << endl;
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
+	os << endl;
 
 	os << "----Average Transaction Latency " << averageLatency.average() << endl;
 
-	os << "----Cumulative Average Transaction Latency " << statsLog.cumulativeTransactionExecution.average() << endl;
-
 	averageLatency.clear();
-	os << "----Adjusted Transaction Latency " << statsLog.adjustedTransactionExecution.size() << "----" << endl;
+
+	os << "----Adjusted Transaction Latency";
 	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.adjustedTransactionExecution.begin(); currentValue != statsLog.adjustedTransactionExecution.end(); currentValue++)
 	{
 		averageLatency.add(currentValue->first,currentValue->second);
-		os << (*currentValue).first << " " << (*currentValue).second << endl;
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	}
+	os << endl;
+
+	os << "----Average Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
+
+	averageLatency.clear();
+
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeTransactionExecution.begin(); currentValue != statsLog.cumulativeTransactionExecution.end(); currentValue++)
+	{
+		averageLatency.add(currentValue->first,currentValue->second);
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	}
+	
+	os << "----Average Cumulative Transaction Latency {" << averageLatency.average() << "}" << endl;
+
+	averageLatency.clear();
+
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeAdjustedTransactionExecution.begin(); currentValue != statsLog.cumulativeAdjustedTransactionExecution.end(); currentValue++)
+	{
+		averageLatency.add(currentValue->first,currentValue->second);
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
 
-	os << "----Adjusted Average Transaction Latency " << averageLatency.average() << endl;
+	os << "----Average Cumulative Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
 
-	os << "----DIMM Cache Latency " << statsLog.cacheLatency << endl;
+	// transaction delay
+	os << "----Transaction Delay";
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); currentValue++)
+	{
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	}
+	os << endl; 
 
-	os << "----Working Set----" << endl << statsLog.workingSet.size() << endl;
+	// command time
+	os << "----Command Turnaround";
+	for (unordered_map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); currentValue++)
+	{
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	}
+	os << endl;
 
-	os << "----Bandwidth----" << endl << setprecision(10) << (float)statsLog.getReadBytesTransferred() / statsLog.timePerEpoch << " " << (float)statsLog.getWriteBytesTransferred() / statsLog.timePerEpoch << endl;
+	os << "----Command Delay";
+	for (unordered_map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandDelay.begin(); currentValue != statsLog.commandDelay.end(); currentValue++)
+	{
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	}
+	os << endl;
+
+	os << "----CMD Execution Time";
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.commandExecution.begin(); currentValue != statsLog.commandExecution.end(); currentValue++)
+	{
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	}
+	os << endl;
+	
+	os << "----DIMM Cache Latency {" << statsLog.cacheLatency << "}" << endl;
+
+	os << "----Working Set {" << statsLog.workingSet.size() << "}" << endl;
+
+	os << "----Bandwidth {" << setprecision(10) << (float)statsLog.getReadBytesTransferred() / statsLog.timePerEpoch << "} {" << (float)statsLog.getWriteBytesTransferred() / statsLog.timePerEpoch << "}" << endl;
+
+	os << "----DIMM Cache Bandwidth {" << setprecision(10) << (float)statsLog.getDIMMReadBytesTransferred() / statsLog.timePerEpoch << "} {" << (float)statsLog.getDIMMWriteBytesTransferred() / statsLog.timePerEpoch << "}" << endl;
 
 	os << "----Per Channel Bandwidth ";
 
@@ -328,12 +375,12 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	os << endl;
 
-
-	os << "----Average Transaction Latency Per PC Value " << statsLog.pcOccurrence.size() << "----" << endl;
+	os << "----Average Transaction Latency Per PC Value";
 	for (std::map<PhysicalAddress, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); currentValue++)
 	{
-		os << std::hex << (*currentValue).first << " " << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << " " << std::dec << (*currentValue).second.getCount() << endl;
+		os << " {" << std::hex << currentValue->first << "," << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << "," << std::dec << (*currentValue).second.getCount() << "}";
 	}
+	os << endl;
 
 	unsigned hitCount = 0, missCount = 0;
 	for (vector<vector<pair<unsigned,unsigned> > >::const_iterator h = statsLog.getRowBufferAccesses().begin(); h != statsLog.rowBufferAccesses.end(); h++)
@@ -344,7 +391,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			missCount += i->second;
 		}
 	}
-	os << "----Row Hit/Miss Counts----" << endl << hitCount << " " << missCount << endl;
+	os << "----Row Hit/Miss Counts {" << hitCount << "} {" << missCount << "}" << endl;
 
 	os << "----DIMM Cache Per-Rank Hit/Miss Counts ";
 	currentChannel = 0;
@@ -371,7 +418,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			misses += i->first.second + i->second.second;
 		}
 	}
-	os << "----Cache Hit/Miss Counts----" << endl << hits << " " << misses << endl;
+	os << "----Cache Hit/Miss Counts {" << hits << "} {" << misses << "}" << endl;
 
 	hits = 0, misses = 0;
 	uint64_t readHits = 0, readMisses = 0;
@@ -386,35 +433,37 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		}
 	}
 
-	os << "----Cumulative DIMM Cache Read Hits/Misses " << readHits << " " << readMisses << endl;
+	os << "----Cumulative DIMM Cache Read Hits/Misses {" << readHits << "} {" << readMisses << "}" << endl;
 
-	os << "----Cumulative DIMM Cache Hits/Misses " << hits << " " << misses << endl;
+	os << "----Cumulative DIMM Cache Hits/Misses {" << hits << "} {" << misses << "}" << endl;
 
-	os << "----Utilization----" << endl;
+	os << "----Utilization";
 	for (unsigned i = 0; i < statsLog.channels; i++)
 	{
 		for (unsigned j = 0; j < statsLog.ranks; j++)
 		{
 			for (unsigned k = 0; k < statsLog.banks; k++)
 			{
-				os << "(" << i << "," << j << "," << k << ") " << statsLog.aggregateBankUtilization[i * statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << endl;
+				os << " (" << i << "," << j << "," << k << ") {" << statsLog.aggregateBankUtilization[i * statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << "}";
 			}
 		}
 	}
+	os << endl;
 
-	os << "----Latency Breakdown----" << endl;
+	os << "----Latency Breakdown";
 	for (unsigned i = 0; i < statsLog.channels; i++)
 	{
 		for (unsigned j = 0; j < statsLog.ranks; j++)
 		{
 			for (unsigned k = 0; k < statsLog.banks; k++)
 			{
-				os << "(" << i << "," << j << "," << k << ") " << statsLog.bankLatencyUtilization[i * statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << endl;
+				os << " (" << i << "," << j << "," << k << ") {" << statsLog.bankLatencyUtilization[i * statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << "}";
 			}
 		}
 	}
+	os << endl;
 
-	os << "----tFAW Limited Commands----" << endl << statsLog.issuedAtTFAW << endl;
+	os << "----tFAW Limited Commands {" <<  statsLog.issuedAtTFAW << "}" << endl;
 #ifdef M5
 
 	using Stats::Info;
@@ -426,16 +475,17 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		Info *info = *i;
 		if (info->name.find("ipc_total") != string::npos)
 		{
-			os << "----IPC----" << endl;
+			os << "----IPC";
 			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().begin();
 			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().end();
 			while (start != end)
 			{
-				os << *start << endl;
+				os << " {" << *start << "}";
 				start++;
 				// only considering single-threaded for now
 				//break;
 			}
+			os << endl;
 		}
 		if ((info->name.find("dcache.overall_hits") != string::npos) ||
 			(info->name.find("dcache.overall_misses") != string::npos) ||
@@ -451,13 +501,13 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			(info->name.find("l2.overall_miss_latency") != string::npos))
 		{
 			{
-				os << "----M5 Stat: " << info->name << " ";
+				os << "----M5 Stat: {" << info->name << "}";
 
 				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().begin();
 				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().end();
 				while (start != end)
 				{
-					os << *start << " ";
+					os << " {" << *start << "}";
 					start++;
 				}
 				os << endl;
@@ -480,11 +530,17 @@ void Statistics::clear()
 	commandDelay.clear();	
 	commandExecution.clear();
 	transactionExecution.clear();
+	adjustedTransactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
 	issuedAtTFAW = /*readBytesTransferred = writeBytesTransferred =*/ readCount = writeCount = 0;
 
 	for (vector<pair<unsigned, unsigned> >::iterator i = bandwidthData.begin(); i != bandwidthData.end(); i++)
+	{
+		i->first = i->second = 0;
+	}
+
+	for (vector<pair<unsigned, unsigned> >::iterator i = dimmCacheBandwidthData.begin(); i != dimmCacheBandwidthData.end(); i++)
 	{
 		i->first = i->second = 0;
 	}
@@ -503,7 +559,7 @@ void Statistics::clear()
 		bankLatencyUtilization[i] = 0;
 	pcOccurrence.clear();
 
-	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::iterator h = hitRate.begin(); h != hitRate.end(); h++)
+	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::iterator h = hitRate.begin(), end = hitRate.end(); h != end; h++)
 	{
 		for (vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > >::iterator i = h->begin(); i != h->end(); i++)
 			i->first.first = i->first.second = i->second.first = i->second.second = 0;

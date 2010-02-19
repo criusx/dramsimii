@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <boost/functional.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "System.h"
 
@@ -42,6 +43,7 @@ using std::vector;
 using std::endl;
 using std::ostream;
 using std::min;
+using boost::lexical_cast;
 using namespace DRAMsimII;
 
 //////////////////////////////////////////////////////////////////////
@@ -80,6 +82,8 @@ nextStats(settings.epoch)
 	assert(systemConfig.statsOutStream.is_complete());
 
 	// else printing to these streams goes nowhere
+	string cacheSize = (settings.cacheSize >= 1024) ? lexical_cast<string>(settings.cacheSize / 1024) + "MB" : lexical_cast<string>(settings.cacheSize) + "kB";
+
 	systemConfig.statsOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
@@ -87,8 +91,8 @@ nextStats(settings.epoch)
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
-		"cache[" << settings.cacheSize / 1024.0F << "kB] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize / settings.blockSize / settings.associativity << "]"
+		"cache[" << cacheSize << "] " <<
+		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]"
 		<< endl;
 
 	systemConfig.powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
@@ -98,8 +102,8 @@ nextStats(settings.epoch)
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
-		"cache[" << settings.cacheSize / 1024.0F << "kB] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize / settings.blockSize / settings.associativity << "]"
+		"cache[" << cacheSize << "] " <<
+		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]"
 		<< endl;
 
 #ifndef NDEBUG 
@@ -110,8 +114,8 @@ nextStats(settings.epoch)
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
-		"cache[" << settings.cacheSize / 1024.0F << "kB] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize / settings.blockSize / settings.associativity << "]"
+		"cache[" << cacheSize << "] " <<
+		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]"
 		<< endl;
 #endif
 

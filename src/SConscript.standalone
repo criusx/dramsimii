@@ -117,7 +117,7 @@ if platform == 'script':
 
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd', CPPPATH = '/usr/include/ImageMagick')
-	envScriptD.Append(CCFLAGS = '-ggdb3 -std=c++0x -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
+	envScriptD.Append(CCFLAGS = '-ggdb3 -std=c++0x -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wno-conversion -Wuninitialized')
 	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cpp")
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':

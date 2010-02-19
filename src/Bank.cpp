@@ -19,7 +19,6 @@
 using std::max;
 using std::cerr;
 using std::endl;
-using std::endl;
 
 using namespace DRAMsimII;
 
