@@ -526,15 +526,6 @@ Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 //////////////////////////////////////////////////////////////////////
 void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 {	
-	// the counts for the total number of operations
-	//unsigned entireRAS = 1;
-	//unsigned entireCAS = 1;
-	//unsigned entireCASW = 1;
-
-	// the counts for the operations this epoch
-	//unsigned totalRAS = 1;
-
-	//double PsysACTTotal = 0.0;
 	double PsysRD = 0.0;
 	double PsysRdAdjusted = 0.0;
 	double PsysWR = 0.0;
@@ -546,44 +537,39 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 	double PsysACT = 0.0;
 	double PsysACTAdjusted = 0.0;
 
-	//float tRRDsch = 0.0F;
 	float tRRDschAdjusted = 0.0F;
 
 	vector<int> rankArray;
 	vector<double> PsysACTSTBYArray, PsysACTArray;
 	unsigned totalReadHits = 0;
+
+	os << "+ch[" << channelID << "]";
 	
 	for (vector<Rank>::iterator k = rank.begin(); k != rank.end(); k++)
 	{
-		unsigned allBankRASCount = 1;
-		//unsigned perRankAdjustedRASCount = 1;
-		//unsigned thisRankRasCount;
-		//unsigned totalCAS = 1;
-		//unsigned totalCASW = 1; // ensure no div/0
-
+		unsigned thisRankRasCount = 1;
+		
 		rankArray.push_back(k->getRankID());
 
 		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
 		{
-			//totalRAS += l->getRASCount();			
-			allBankRASCount += l->getRASCount();
-			//totalCAS += l->getCASCount();
-			//totalCASW += l->getCASWCount();
+			thisRankRasCount += l->getRASCount();
 			l->accumulateAndResetCounts();
 		}
 
 		// what if the RAS could be reduced by specific caching
-		unsigned perRankAdjustedRASCount = allBankRASCount - statistics.getRowReduction()[getChannelID()][k->getRankID()]; 
-		if (allBankRASCount < statistics.getRowReduction()[getChannelID()][k->getRankID()])
-			cerr << allBankRASCount << " " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << endl;
+		unsigned thisRankAdjustedRasCount = thisRankRasCount - statistics.getRowReduction()[getChannelID()][k->getRankID()]; 
+
+		if (thisRankRasCount < statistics.getRowReduction()[getChannelID()][k->getRankID()])
+			cerr << thisRankRasCount << " " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << endl;
 #if 0
 		cerr << "!!! rasCount " << allBankRASCount << " reduxBy " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << 
 			" reducedTo " << allBankRASCount - statistics.getRowReduction()[getChannelID()][k->getRankID()] << " totalReadHits " <<
 			statistics.getHitRate()[getChannelID()][k->getRankID()].first.first << endl;
 #endif
 		totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankID()].first.first;
-		BOOST_ASSERT(perRankAdjustedRASCount >= 0);
-		BOOST_ASSERT(perRankAdjustedRASCount <= allBankRASCount);
+		BOOST_ASSERT(thisRankAdjustedRasCount >= 0);
+		BOOST_ASSERT(thisRankAdjustedRasCount <= thisRankRasCount);
 
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
 		double percentActive = 1.0F - (k->getPrechargeTime(time) / max((double)(time - powerModel.getLastCalculation()), 0.00000001));
@@ -619,13 +605,13 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 			powerModel.getVoltageScaleFactor() * PschACT_PDN;
 
 		// calculate PsysACT
-		double tRRDsch = ((double)(time - powerModel.getLastCalculation())) / (allBankRASCount > 0 ? allBankRASCount : 0.00000001);
+		double tRRDsch = ((double)(time - powerModel.getLastCalculation())) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
 	
 		cerr << "rrd " << tRRDsch << " " << powerModel.gettRC() << endl;
 		double PschACT = powerModel.getPdsACT() * powerModel.gettRC() / tRRDsch;
 
 
-		tRRDschAdjusted = ((float)(time - powerModel.getLastCalculation()) / perRankAdjustedRASCount);
+		tRRDschAdjusted = ((float)(time - powerModel.getLastCalculation()) / thisRankAdjustedRasCount);
 #if 0
 		if (tRRDsch > 200.0F)
 			cerr << "t=" << time << ", last t=" << powerModel.getLastCalculation() << ", #RAS=" << perRankRASCount << endl;
@@ -636,9 +622,6 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 
 		PsysACTArray.push_back(PsysACT);
 
-		//PsysACTTotal += ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
-
-		// calculate PdsRD
 		double RDschPct = k->getReadCycles() / (double)(time - powerModel.getLastCalculation());
 
 		double RDschPctAdjusted = (k->getReadCycles() - timingSpecification.tBurst() * statistics.getHitRate()[getChannelID()][k->getRankID()].first.first) / (double)(time - powerModel.getLastCalculation());
@@ -647,18 +630,23 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 
 		PsysRD += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsRD() * RDschPct;
 
-		PsysRdAdjusted += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsRD() * RDschPctAdjusted;
+		PsysRdAdjusted += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() *
+			powerModel.getPdsRD() * RDschPctAdjusted;
 
-		// calculate PdsWR
 		double WRschPct = k->getWriteCycles() / (double)(time - powerModel.getLastCalculation());
 
 		// using a write-through cache, no help for writes
 
 		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
 
+		os << " rk[" << k->getRankID() << "] rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
+			"} duration{" << time - powerModel.getLastCalculation() << "} read{" << k->getReadCycles() << "} readHits{" <<
+			statistics.getHitRate()[getChannelID()][k->getRankID()].first.first << "} write{" << k->getWriteCycles() << "}";
+
 		k->resetPrechargeTime(time);
 		k->resetCycleCounts();
 	}
+	os << endl;
 
 	os << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysACT_STBY << "} mW EsysAdjusted {" << setprecision(5) <<
 		(PsysRD + PsysWR + PsysACT + PsysACT_STBY + PsysACT_PDN + PsysPRE_STBY + PsysPRE_PDN) * systemConfig.getEpoch() / systemConfig.getDatarate() << "/" <<
