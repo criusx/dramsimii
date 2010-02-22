@@ -572,71 +572,7 @@ void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
 /// @return true if the packet is accepted, false otherwise
 //////////////////////////////////////////////////////////////////////
 bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
-{ 		
-#ifdef TRACE_GENERATE
-	if (packet->memInhibitAsserted())
-	{
-		// snooper will supply based on copy of packet
-		// still target's responsibility to delete packet
-		//cerr << "deleted memInhibitAsserted" << endl;
-		delete packet;
-		return true;
-	}	
-	else if (packet->isRead() || packet->isWrite())
-	{
-		memory->traceOutStream << std::hex << packet->getAddr() << " " << (packet->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 1E9 / Clock::Frequency << " " << std::hex << (packet->req->hasPC() ? packet->req->getPC() : 0) <<  endl;
-		bool needsResponse = packet->needsResponse();
-
-		memory->doAtomicAccess(packet);
-
-		if (needsResponse)
-		{
-			//timingOutStream << "sending packet back at " << dec << static_cast<Tick>(curTick + 95996) << endl;
-			memory->ports[memory->lastPortIndex]->doSendTiming(packet, static_cast<Tick>(curTick + 1));
-			//memory->ports[memory->lastPortIndex]->doSendTiming(packet,curTick + 18750 + rand()%400);
-			//schedSendTiming(packet,curTick + 20000 + rand()%20000);
-			//schedSendTiming(packet,curTick + 200000 + randomGen.random((Tick)0, (Tick)200000));
-		}
-		else
-		{
-			//delete packet->req;
-			delete packet;
-		}
-	}
-	else if (packet->isInvalidate())
-	{
-		assert(packet->cmd != MemCmd::SwapReq);
-		assert(!packet->isRead() && packet->needsResponse());
-		if (packet->needsResponse())
-		{
-			packet->makeAtomicResponse();
-			schedSendTiming(packet,curTick + 1);	
-		}
-	}
-	else
-	{
-		assert(!packet->needsResponse());
-		
-		if (packet->cmd != MemCmd::UpgradeReq)
-		{
-			cerr << "warn: deleted packet, not upgradereq, not write, needs no resp" << endl;
-			delete packet->req;
-			delete packet;
-		}
-		else
-		{
-			cerr << "warn: not upgrade request" << endl;
-		}		
-	}
-	
-	return true;
-#endif
-
-	
-	
-	// everything that reaches the memory system should be a request of some sort
-	assert(packet->isRequest());
-
+{ 	
 #if defined(M5DEBUG) && defined(DEBUG) && !defined(NDEBUG)
 	using std::setw;
 	M5_TIMING3("+recvTiming [" << std::dec << curTick << "] ")
@@ -652,9 +588,47 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		M5_TIMING3(setw(2) << (packet->needsExclusive() ? "Ex" : ""))
 		M5_TIMING3(setw(2) << (packet->needsResponse() ? "NR" : ""))
 		M5_TIMING3(setw(2) << (packet->isLLSC() ? "LL" : ""))
-		M5_TIMING3(" 0x" << hex << packet->getAddr())
+		M5_TIMING3(" 0x" << hex << packet->getAddr() << endl)
 		M5_TIMING2(" s[0x" << hex << packet->getSize() << "]");
 #endif
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+#ifdef TRACE_GENERATE
+	{
+		if (packet->memInhibitAsserted()) 
+		{
+			delete packet;
+			return true;
+		}
+		if (packet->isRead() || packet->isWrite())
+		{
+			memory->traceOutStream << std::hex << packet->getAddr() << " " << (packet->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 1E9 / Clock::Frequency << " " << std::hex << (packet->req->hasPC() ? packet->req->getPC() : 0) <<  endl;
+		}
+
+		bool needsResponse = packet->needsResponse();
+		recvAtomic(packet);
+		// turn packet around to go back to requester if response expected
+		if (needsResponse) 
+		{
+			assert(packet->isResponse());
+			schedSendTiming(packet, curTick + 1);
+		}
+		else 
+		{
+			delete packet;
+		}
+
+		return true;
+	}	
+#endif
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+	
+	
+	// everything that reaches the memory system should be a request of some sort
+	assert(packet->isRequest());
+
+
 	if (packet->memInhibitAsserted())
 	{
 		// snooper will supply based on copy of packet
@@ -662,8 +636,11 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		delete packet;
 		return true;
 	}	
+
+	bool needsResponse = packet->needsResponse();
+	
 	// must look at packets that need to affect the memory system
-	else if (packet->isRead() || packet->isWrite())
+	if (packet->isRead() || packet->isWrite())
 	{	
 		assert((packet->isRead() && packet->needsResponse()) ||
 			(!packet->isRead() && !packet->needsResponse()));
@@ -765,11 +742,24 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 			memory->tickEvent.schedule(next * memory->getCPURatio());
 
 			M5_TIMING2("-recvTiming sch[" << next << "]");
-
+		}
+	}
+	else
+	{
+		recvAtomic(packet);
+		if (needsResponse)
+		{
+			assert(packet->isResponse());
+			schedSendTiming(packet,curTick + 1);
+		}
+		else
+		{
+			delete packet;
 		}
 	}
 	//upgrade or invalidate	
 	//else if (!packet->isRead() && packet->needsResponse())
+#if 0
 	else if (packet->isInvalidate())
 	{
 		assert(packet->cmd != MemCmd::SwapReq);
@@ -796,12 +786,10 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 			cerr << "warn: not upgrade request" << endl;
 		}		
 	}
+#endif
 
 	return true;
 }
-
-
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief builds a memory port to interact with other components

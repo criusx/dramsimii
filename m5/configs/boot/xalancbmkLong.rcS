@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd /benchmarks/483.xalancbmk/data/ref/input
+echo "Xalan Ref"
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/483.xalancbmk/exe/Xalan_base.alpha-gcc410-glibc236 -v t5 xalanc.xsl
+echo "Xalcn Ref done"
+/sbin/m5 exit

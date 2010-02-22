@@ -176,7 +176,7 @@ blockSize = [64, 128, 256]
 hitLatency = [5]
 
 #traces = ['bzip2-trace.gz', 'lbm-trace.gz', 'mcf-trace.gz']
-traces = ['lbm-trace.gz']
+traces = ['mcf001-trace.gz','namd002-trace.gz','omnetpp002-trace.gz']
 
 def main():
     try:

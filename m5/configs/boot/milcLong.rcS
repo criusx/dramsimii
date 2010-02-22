@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd /benchmarks/433.milc/data/ref/input
+echo "MILC Ref"
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/433.milc/exe/milc_base.alpha-gcc410-glibc236 < su3imp.in
+echo "MILC Ref done"
+/sbin/m5 exit
