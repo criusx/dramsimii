@@ -57,34 +57,33 @@ if not conf.CheckLib('boost_regex'):
 	print 'e.g. sudo apt-get install "libboost-regex*"'
 	Exit(1)
 
-sourceBase = """
-			reporting/soapC.cpp
-			reporting/soapClient.cpp
-			reporting/stdsoap2.cpp
-			cache/lru.cc
-			Address.cpp
-			Bank.cpp
-			command.cpp
-			Channel.cpp
-			Statistics.cpp
-			System.cpp
-			Settings.cpp
-			SettingsXML.cpp
-			SystemConfiguration.cpp
-			TimingSpecification.cpp
-			event.cpp
-			fbdAMB.cpp
-			fbdChannel.cpp
-			fbdFrame.cpp
-			fbdSystem.cpp
-			InputStream.cpp
-			powerConfig.cpp
-			Rank.cpp
-			simulationParameters.cpp
-			transaction.cpp"""
+sourceBase = ['reporting/soapC.cpp',
+			'reporting/soapClient.cpp',
+			'reporting/stdsoap2.cpp',
+			'cache/lru.cc',
+			'Address.cpp',
+			'Bank.cpp',
+			'command.cpp',
+			'Channel.cpp',
+			'Statistics.cpp',
+			'System.cpp',
+			'Settings.cpp',
+			'SettingsXML.cpp',
+			'SystemConfiguration.cpp',
+			'TimingSpecification.cpp',
+			'event.cpp',
+			'fbdAMB.cpp',
+			'fbdChannel.cpp',
+			'fbdFrame.cpp',
+			'fbdSystem.cpp',
+			'InputStream.cpp',
+			'powerConfig.cpp',
+			'Rank.cpp',
+			'simulationParameters.cpp',
+			'transaction.cpp']
 
-sourceFile = Split(sourceBase + "\nmain.cpp")
-sourcesTest = Split(sourceBase + "\nunitTest.cpp")
+sourceFile = sourceBase + ['main.cpp']
+sourcesTest = sourceBase + ['unitTest.cpp']
 
 
 if platform == 'script' or platform == 'scriptDebug':
@@ -97,24 +96,9 @@ env = conf.Finish()
 ROOT = Dir('.').abspath
 SRCDIR = os.path.join(ROOT,'src')
 
-
-# This function adds the specified sources to the given build
-# environment, and returns a list of all the corresponding SCons
-# Object nodes (including an extra one for date.cc).  We explicitly
-# add the Object nodes so we can set up special dependencies for
-# date.cc.
-def make_objs(sourceFiles, env):
-    objs = [env.Object(s) for s in sourceFiles]
-    # make date.cc depend on all other objects so it always gets
-    # recompiled whenever anything else does
-    #date_obj = env.Object('base/date.cc')
-    #env.Depends(date_obj, objs)
-    #objs.append(date_obj)
-    return objs
-
 if platform == 'script':
 	envScript = env.Clone(OBJSUFFIX='.os', CPPPATH = '/usr/include/ImageMagick')
-	envScript.Append(CCFLAGS = '-O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -Wconversion -Wuninitialized')
+	envScript.Append(CCFLAGS = '-O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -Wconversion -Wuninitialized -DNDEBUG')
 	script = envScript.Program('processStats',"../scripts/processStats.cpp")
 	envScript.Install(os.path.abspath('../scripts'),script)
 
@@ -192,6 +176,7 @@ elif platform == 'all':
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)
 else:
 	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
-	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -std=c++0x -Wall -Wextra -Wunused -pedantic -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
-	opt = envOpt.Program('dramSimII.opt',sourceFile)
+	#envOpt.Append(CCFLAGS = '-O3 -funroll-all-loops -ffast-math -fprefetch-loop-arrays -combine -fwhole-program -std=c++0x -Wall -Wextra -Wunused -pedantic -Weffc++  -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
+	envOpt.Append(CCFLAGS = '-O3 -funroll-all-loops -ffast-math -fprefetch-loop-arrays -std=c++0x -Wall -Wextra -Wunused -pedantic -Weffc++  -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
+	opt = envOpt.Program(target = 'dramSimII.opt',source = sourceFile)
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)

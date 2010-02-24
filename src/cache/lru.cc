@@ -176,6 +176,7 @@ blkMask(rhs.blkMask)
 			blk->set = i;
 		}
 	}
+	
 }
 
 LRU::LRU(const DRAMsimII::Settings &settings):
@@ -228,9 +229,13 @@ writeAllocate(false)
 
 LRU::~LRU()
 {
-	//delete [] dataBlks;
-	//delete [] blks;
-	//delete [] sets;
+	for (unsigned i = 0; i < numSets; ++i) 
+	{ 
+		for (unsigned j = 0; j < assoc; ++j) 
+		{	
+			sets[i].blks[j] = NULL;
+		}
+	}
 }
 
 

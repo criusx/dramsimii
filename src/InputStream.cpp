@@ -37,6 +37,7 @@
 using std::vector;
 using std::dec;
 using std::hex;
+using std::max;
 using std::cerr;
 using std::endl;
 using std::string;
@@ -681,7 +682,7 @@ Transaction *InputStream::getNextRandomRequest(const unsigned transactionID)
 				}
 			}
 #endif
-			nextTime = (int)std::max(0.0,arrivalGenerator());
+			nextTime = (int)max(0.0,arrivalGenerator());
 			break;
 		case POISSON_DISTRIBUTION:
 			while (true)

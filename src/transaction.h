@@ -23,6 +23,7 @@
 #include "queue.h"
 #include "event.h"
 
+#include <boost/pool/pool.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
 
@@ -45,7 +46,8 @@ namespace DRAMsimII
 		};
 
 	protected:
-		static Queue<Transaction> freeTransactionPool;	///< transactions are stored here to avoid allocating memory after initialization
+		//static Queue<Transaction> freeTransactionPool;	///< transactions are stored here to avoid allocating memory after initialization
+		static boost::pool<> freeTransactionPool;
 
 		const TransactionType type;				///< transaction type
 		const unsigned length;					///< the number of words requested
@@ -72,6 +74,8 @@ namespace DRAMsimII
 		// mutators
 		void setDecodeTime(const tick value) { decodeTime = value; }
 		void setHit(const bool value) { hit = value; }
+
+		static void release(const Transaction *trans) { freeTransactionPool.free((void * const)trans);}
 
 		// constructors
 		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, PhysicalAddress PC, int threadNumber, const unsigned originalTrans = UINT_MAX);		

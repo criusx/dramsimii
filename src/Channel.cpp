@@ -71,14 +71,28 @@ finishedTransactions()
 // 	}
 
 	// initialize the refresh counters per rank
+	
 	if (settings.refreshPolicy != NO_REFRESH)
 	{
 		// stagger the times that each rank will be refreshed so they don't all arrive incomingTransaction a burst
 		unsigned step = settings.tREFI / settings.rankCount;
-
+		Address addr(0,0,0,0,0);
+		
 		for (unsigned j = 0; j < refreshCounter.size(); ++j)
 		{
-			refreshCounter[j] = j * (step + 1);
+			addr.setRank(j);
+
+			refreshCounter[j] = new Transaction(Transaction::AUTO_REFRESH_TRANSACTION,
+				j * step + 1,
+				8,
+				addr,
+				0,
+				0);
+
+			assert(refreshCounter[j]->isRefresh());
+
+			//refreshCounter[j] = j * (step + 1);
+
 		}
 	}
 }
@@ -94,7 +108,7 @@ lastCommandIssueTime(rhs.lastCommandIssueTime),
 lastCommand(rhs.lastCommand ? new Command(*rhs.lastCommand) : NULL),
 timingSpecification(rhs.timingSpecification),
 transactionQueue(rhs.transactionQueue),
-refreshCounter(rhs.refreshCounter),
+refreshCounter(rhs.refreshCounter.size()),
 systemConfig(systemConfig),
 statistics(stats),
 powerModel(rhs.powerModel),
@@ -106,6 +120,11 @@ finishedTransactions()
 {
 	// to fill incomingTransaction the values
 	rank = rhs.rank;
+	
+	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); i++)
+	{
+		refreshCounter[i] = new Transaction(*rhs.refreshCounter[i]);
+	}	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -139,7 +158,7 @@ lastCommandIssueTime(rhs.lastCommandIssueTime),
 lastCommand(rhs.lastCommand),
 timingSpecification(rhs.timingSpecification),
 transactionQueue(rhs.transactionQueue),
-refreshCounter(rhs.refreshCounter),
+refreshCounter(rhs.refreshCounter.size()),
 systemConfig(rhs.systemConfig),
 statistics(rhs.statistics),
 powerModel(rhs.powerModel),
@@ -151,6 +170,11 @@ finishedTransactions()
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
 	rank = rhs.rank;
+
+	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); i++)
+	{
+		refreshCounter[i] = new Transaction(*rhs.refreshCounter[i]);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -161,18 +185,36 @@ finishedTransactions()
 //////////////////////////////////////////////////////////////////////////
 Channel::~Channel()
 {
+#if 1
 	// must remove commands this way to prevent queues from being automatically deleted, thus creating double frees on refresh commands
 	while (Command *cmd = getNextCommand())
 	{
+		Transaction *hostTransaction = cmd->removeHost();
+		if (hostTransaction != NULL)
+			Transaction::release(hostTransaction);
+
 		delete lastCommand;
 
 		lastCommand = cmd;
 	}
+#endif
 	if (lastCommand)
 	{
 		delete lastCommand;
 		lastCommand = NULL;
 	}
+#if 1
+	for (vector<Transaction *>::iterator i = refreshCounter.begin(), end = refreshCounter.end(); i != end; i++)
+	{
+		Transaction::release(*i);
+		*i = NULL;
+	}
+
+	while (Transaction *trans = transactionQueue.pop())
+	{
+		Transaction::release(trans);
+	}
+#endif
 }
 
 void Channel::setChannelID(const unsigned value)
@@ -182,6 +224,10 @@ void Channel::setChannelID(const unsigned value)
 	 for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
 	 {
 		 i->setRankID(value, rankID++);
+	 }
+	 for (vector<Transaction *>::iterator i = refreshCounter.begin(), end = refreshCounter.end(); i != end; i++)
+	 {
+		 //(*i)->getAddress().setChannel(value);
 	 }
 }
 
@@ -360,7 +406,10 @@ tick Channel::nextRefreshTime() const
 	assert(rank.size() >= 1);
 
 	if (systemConfig.getRefreshPolicy() != NO_REFRESH)
-		return *(std::min_element(refreshCounter.begin(), refreshCounter.end()));
+	{		
+		return readNextRefresh()->getArrivalTime();
+		//return *(std::min_element(refreshCounter.begin(), refreshCounter.end()));
+	}
 	else
 		return TICK_MAX;
 }
@@ -820,15 +869,18 @@ unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 
 	for (unsigned i = 0; i < limit; i++)
 	{
+		const Transaction *currentTrans = transactionQueue[i];
+		tick enqueueTime = currentTrans->getEnqueueTime();
+		
 		// if it's ready to decode
-		if ((transactionQueue[i]->getEnqueueTime() + delay <= time) &&
-			checkForAvailableCommandSlots(transactionQueue[i]))
+		if ((enqueueTime + delay <= time) &&
+			checkForAvailableCommandSlots(currentTrans))
 		{
 			bool conflict = false;
 			// make sure not to create a RAW, WAR, WAW problem
 			for (unsigned j = 0; j < i; j++)
 			{
-				if (transactionQueue[i]->getAddress() == transactionQueue[j]->getAddress())
+				if (currentTrans->getAddress() == transactionQueue[j]->getAddress())
 				{
 					conflict = true;
 					break;
@@ -837,7 +889,7 @@ unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 			if (!conflict)
 				return i;
 		}
-		else if (time - transactionQueue[i]->getEnqueueTime() > systemConfig.getSeniorityAgeLimit())
+		else if (time - enqueueTime > systemConfig.getSeniorityAgeLimit())
 			break;
 	}
 	return UINT_MAX;
@@ -912,11 +964,28 @@ Transaction *Channel::getTransaction()
 //////////////////////////////////////////////////////////////////////////
 Transaction *Channel::createNextRefresh()
 {
-	Transaction *newRefreshTransaction = new Transaction(*readNextRefresh());
+	Transaction *newRefreshTransaction = refreshCounter[readNextRefresh()->getAddress().getRank()];
+	assert(refreshCounter[newRefreshTransaction->getAddress().getRank()] == newRefreshTransaction);
 
 	unsigned rank = newRefreshTransaction->getAddress().getRank();
 
-	refreshCounter[rank] = refreshCounter[rank] + timingSpecification.tREFI();
+	refreshCounter[rank] = new Transaction(Transaction::AUTO_REFRESH_TRANSACTION,
+		newRefreshTransaction->getArrivalTime() + timingSpecification.tREFI(),
+		8,
+		newRefreshTransaction->getAddress(),
+		0,
+		0);
+
+	//refreshCounter[rank] = refreshCounter[rank] + timingSpecification.tREFI();
+
+	//static Address address;
+
+	//address.setAddress(channelID,earliestRank,0,0,0);
+
+	//::new(&newRefreshTransaction)Transaction(Transaction::AUTO_REFRESH_TRANSACTION, earliestTime, 8, address, 0, 0, UINT_MAX);
+
+	assert(refreshCounter[rank]->isRefresh());
+	assert(newRefreshTransaction->isRefresh());
 
 	return newRefreshTransaction;
 }
@@ -930,29 +999,22 @@ Transaction *Channel::createNextRefresh()
 const Transaction *Channel::readNextRefresh() const
 {
 	assert(rank.size() >= 1);
+	
+	vector<Transaction *>::const_iterator i = refreshCounter.begin();
+	Transaction *earliestRefresh = *i;
+	i++;
 
-	unsigned currentRank = 0;
-	unsigned earliestRank = 0;
-	tick earliestTime = refreshCounter[0];
-
-	for (vector<tick>::const_iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++, currentRank++)
+	for (vector<Transaction *>::const_iterator end = refreshCounter.end(); i != end; i++)
 	{
-		if (*i < earliestTime)
+		if ((*i)->getArrivalTime() < earliestRefresh->getArrivalTime())
 		{
-			earliestRank = currentRank;
-			earliestTime = *i;
+			earliestRefresh = *i;
 		}
 	}
 
-	static Address address;
+	assert(earliestRefresh->isRefresh());
 
-	address.setAddress(channelID,earliestRank,0,0,0);
-
-	static Transaction newRefreshTransaction;
-	::new(&newRefreshTransaction)Transaction(Transaction::AUTO_REFRESH_TRANSACTION, earliestTime, 8, address, 0, 0, UINT_MAX);
-
-	return &newRefreshTransaction;
-
+	return earliestRefresh;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -966,9 +1028,10 @@ void Channel::resetToTime(const tick time)
 	this->time = time;
 	powerModel.resetToTime(time);
 	// adjust the start time of the refreshes to match the new time
-	for (vector<tick>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
+	for (vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
 	{
-		*i = *i + time;
+		(*i)->setArrivalTime((*i)->getArrivalTime() + time);
+		//*i = *i + time;
 	}
 	for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
 	{
@@ -1120,7 +1183,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		return false;
 	}
 	// ensure that this transaction belongs on this channel
-	assert(incomingTransaction->getAddress().getChannel() == channelID);
+	assert(incomingTransaction->getAddress().getChannel() == channelID || incomingTransaction->isRefresh());
 	assert(incomingTransaction->getAddress().getChannel() < systemConfig.getChannelCount());
 	assert(incomingTransaction->getAddress().getRank() < systemConfig.getRankCount());
 

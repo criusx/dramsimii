@@ -103,8 +103,11 @@ nextStats(settings.epoch)
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
 		"cache[" << cacheSize << "] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]"
-		<< endl;
+		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "] " <<
+		"IDD0[" << settings.IDD0 << "] IDD1[" << settings.IDD1 << "] IDD2N[" << settings.IDD2N << "] IDD2P[" << settings.IDD2P << "] IDD3N[" << settings.IDD3N <<
+		"] IDD3P[" << settings.IDD3P << "] IDD4R[" << settings.IDD4R << "] IDD4W[" << settings.IDD4W << "] VDD[" << settings.VDD << "] VDDmax[" << settings.maxVCC <<
+		"] spedFreq[" << settings.frequencySpec << "]" <<
+		endl;
 
 #ifndef NDEBUG 
 	systemConfig.timingOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
@@ -405,7 +408,7 @@ void System::runSimulations(const unsigned requestCount)
 
 		resetToTime(newTime);
 
-		for (tick i = requestCount > 0 ? requestCount : simParameters.getRequestCount(); (i > 0) && (inputTransaction != NULL);)
+		for (tick i = (requestCount > 0) ? requestCount : simParameters.getRequestCount(); (i > 0) && (inputTransaction != NULL);)
 		{				
 			moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
 

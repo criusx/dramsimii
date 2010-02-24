@@ -121,8 +121,6 @@ unordered_map<string,string> decoder = setupDecoder();
 
 #include "processStats.hh"
 
-ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
-
 
 #if 0
 template <typename T1, typename T2>
@@ -337,16 +335,16 @@ public:
 				  wa.add(i->first, i->second);
 			  }	
 
-			  unsigned mean = wa.average();
+			  double mean = wa.average();
 
 			  uint64_t sum = 0;
 
 			  for (typename map<T,unsigned>::const_iterator i = values.begin(); i != end; ++i)
 			  {
-				  sum += i->second * (i->first - mean) * (i->first - mean);
+				  sum += (uint64_t)((double)i->second * ((double)i->first - mean) * ((double)i->first - mean));
 			  }	
 
-			  double stdDev = sqrt(sum / totalCount);
+			  double stdDev = sqrt((double)sum / (double)totalCount);
 
 			  return tuple<T, T, T, T>(values.begin()->first, mean, stdDev, values.rbegin()->first);
 		  }
@@ -571,7 +569,7 @@ void processPower(const string &filename)
 	vector<pair<float,float> > energyValues;
 	pair<float,float> energyValueBuffer;
 
-	BufferAccumulator<pair<float,float> > energy;
+	//BufferAccumulator<pair<float,float> > energy;
 
 	unsigned scaleFactor = 1;
 	unsigned scaleIndex = 0;
@@ -636,7 +634,7 @@ void processPower(const string &filename)
 					energyValueBuffer.first = atof(firstBrace + 1);
 					energyValueBuffer.second = atof(slash + 1);
 
-					energy.push_back(pair<float,float>(atof(firstBrace + 1),atof(slash + 1)));
+					//energy.push_back(pair<float,float>(atof(firstBrace + 1),atof(slash + 1)));
 
 					//cerr << energyValueBuffer.first << " " << energyValueBuffer.second << endl;
 				}
@@ -1071,86 +1069,92 @@ void processStats(const string &filename)
 	std::tr1::unordered_map<boost::uint64_t, pair<uint64_t,uint64_t> > latencyVsPcHigh;
 
 	vector<tuple<unsigned, unsigned, double, unsigned> > transactionLatency;
-	//WeightedAverage<double> averageTransactionLatency;
 	StdDev<float> averageTransactionLatency;
-
+	StdDev<float> averageAdjustedTransactionLatency;
+	
 	vector<unsigned> transactionCount;
 	transactionCount.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t transactionCountBuffer;
+	uint64_t transactionCountBuffer = 0ULL;
 
-	std::tr1::unordered_map<unsigned,unsigned> distTransactionLatency;
+	vector<unsigned> adjustedTransactionCount;
+	adjustedTransactionCount.reserve(MAXIMUM_VECTOR_SIZE);
+	uint64_t adjustedTransactionCountBuffer = 0ULL;
+
+	unordered_map<unsigned,unsigned> distTransactionLatency;
+
+	unordered_map<unsigned,unsigned> distAdjustedTransactionLatency;
 
 	vector<float> hitMissValues;
 	hitMissValues.reserve(MAXIMUM_VECTOR_SIZE);
-	double hitMissValueBuffer;
+	double hitMissValueBuffer  = 0.0;
 
 	vector<unsigned> hitMissTotals;
 	hitMissTotals.reserve(MAXIMUM_VECTOR_SIZE);
-	unsigned hitMissTotalBuffer;
+	unsigned hitMissTotalBuffer = 0U;
 
 	vector<unsigned> iCacheHits;
 	iCacheHits.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t iCacheHitBuffer;
+	uint64_t iCacheHitBuffer = 0ULL;
 
 	vector<unsigned> iCacheMisses;
 	iCacheMisses.reserve(MAXIMUM_VECTOR_SIZE);
-	unsigned iCacheMissBuffer;
+	unsigned iCacheMissBuffer = 0U;
 
 	vector<long> iCacheMissLatency;
 	iCacheMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t iCacheMissLatencyBuffer;
+	uint64_t iCacheMissLatencyBuffer = 0ULL;
 
 	vector<unsigned> dCacheHits;
 	dCacheHits.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t dCacheHitBuffer;
+	uint64_t dCacheHitBuffer = 0ULL;
 
 	vector<unsigned> dCacheMisses;
 	dCacheMisses.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t dCacheMissBuffer;
+	uint64_t dCacheMissBuffer = 0ULL;
 
 	vector<long> dCacheMissLatency;
 	dCacheMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t dCacheMissLatencyBuffer;
+	uint64_t dCacheMissLatencyBuffer = 0ULL;
 
 	vector<unsigned> l2CacheHits;
 	l2CacheHits.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t l2CacheHitBuffer;
+	uint64_t l2CacheHitBuffer = 0ULL;
 
 	vector<unsigned> l2CacheMisses;
 	l2CacheMisses.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t l2CacheMissBuffer;
+	uint64_t l2CacheMissBuffer = 0ULL;
 
 	vector<long> l2CacheMissLatency;
 	l2CacheMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t l2CacheMissLatencyBuffer;
+	uint64_t l2CacheMissLatencyBuffer = 0ULL;
 
 	vector<unsigned> l2MshrHits;
 	l2MshrHits.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t l2MshrHitBuffer;
+	uint64_t l2MshrHitBuffer = 0ULL;
 
 	vector<unsigned> l2MshrMisses;
 	l2MshrMisses.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t l2MshrMissBuffer;
+	uint64_t l2MshrMissBuffer = 0ULL;
 
 	vector<long> l2MshrMissLatency;
 	l2MshrMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t l2MshrMissLatencyBuffer;
+	uint64_t l2MshrMissLatencyBuffer = 0ULL;
 
 	vector<pair<uint64_t,uint64_t> > bandwidthValues;
 	bandwidthValues.reserve(MAXIMUM_VECTOR_SIZE);
-	pair<uint64_t,uint64_t> bandwidthValuesBuffer;
+	pair<uint64_t,uint64_t> bandwidthValuesBuffer(0ULL,0ULL);
 
 	vector<pair<uint64_t,uint64_t> > cacheBandwidthValues;
 	cacheBandwidthValues.reserve(MAXIMUM_VECTOR_SIZE);
-	pair<uint64_t,uint64_t> cacheBandwidthValuesBuffer;
+	pair<uint64_t,uint64_t> cacheBandwidthValuesBuffer(0ULL,0ULL);
 
 	vector<pair<unsigned,unsigned> > cacheHitMiss;
 	cacheHitMiss.reserve(MAXIMUM_VECTOR_SIZE);
-	pair<unsigned,unsigned> cacheHitMissBuffer;
+	pair<unsigned,unsigned> cacheHitMissBuffer(0,0);
 
 	vector<float> ipcValues;
 	ipcValues.reserve(MAXIMUM_VECTOR_SIZE);
-	double ipcValueBuffer;
+	double ipcValueBuffer = 0.0;
 
 	vector<unsigned> workingSetSize;
 	workingSetSize.reserve(MAXIMUM_VECTOR_SIZE);
@@ -1379,6 +1383,9 @@ void processStats(const string &filename)
 						transactionCount.push_back(transactionCountBuffer / scaleFactor);
 						transactionCountBuffer = 0;
 
+						adjustedTransactionCount.push_back(adjustedTransactionCountBuffer / scaleFactor);
+						adjustedTransactionCountBuffer = 0;
+
 						hitMissValues.push_back(hitMissValueBuffer / scaleFactor);
 						hitMissValueBuffer = 0;
 
@@ -1470,6 +1477,8 @@ void processStats(const string &filename)
 
 								transactionCount[epoch] = (transactionCount[2 * epoch] + transactionCount[2 * epoch + 1]) / 2;
 
+								adjustedTransactionCount[epoch] = (adjustedTransactionCount[2 * epoch] + adjustedTransactionCount[2 * epoch + 1]) / 2;
+
 								hitMissValues[epoch] = (hitMissValues[2 * epoch] + hitMissValues[2 * epoch + 1]) / 2;
 
 								iCacheHits[epoch] = (iCacheHits[2 * epoch] + iCacheHits[2 * epoch + 1]) / 2;
@@ -1526,6 +1535,8 @@ void processStats(const string &filename)
 							transactionLatency.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 							transactionCount.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+							adjustedTransactionCount.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 							hitMissValues.resize(MAXIMUM_VECTOR_SIZE / 2);
 
@@ -1595,6 +1606,34 @@ void processStats(const string &filename)
 					position = secondBracket + 1;
 				}
 			}
+			else if (starts_with(newLine,"----Adjusted Transaction Latency"))
+			{
+				averageAdjustedTransactionLatency.clear();
+
+				char *position = newLine;
+				while (position != NULL)
+				{
+					char *firstBracket = strchr(position,'{');
+					if (firstBracket == NULL) break;
+
+					char *secondBracket = strchr(position,'}');
+					if (secondBracket == NULL) break;
+
+					char *comma = strchr(position,',');
+					if (comma == NULL) break;
+
+					*comma = *secondBracket = NULL;
+
+					unsigned latency = atoi(firstBracket + 1);
+					unsigned count = atoi(comma + 1);
+
+					averageAdjustedTransactionLatency.add(latency,count);
+					//transactionCountBuffer += count;
+					distAdjustedTransactionLatency[latency] += count;
+
+					position = secondBracket + 1;
+				}
+			}
 			else if (starts_with(newLine,"----Working Set"))
 			{
 				char *firstBracket = strchr(newLine,'{');
@@ -1633,9 +1672,6 @@ void processStats(const string &filename)
 				// write bandwidth
 				bandwidthValuesBuffer.second = atol(firstBracket + 1);
 			}
-// 			else if (starts_with(newLine,"----"))
-// 			{
-// 			}
 			else if (starts_with(newLine,"----Average Transaction Latency Per PC Value"))
 			{
 				char *position = newLine;
@@ -1828,8 +1864,6 @@ void processStats(const string &filename)
 
 				cacheHitMissBuffer.second = atol(firstBracket + 1);
 
-// 				cerr << cacheHitMissBuffer.first << " " << cacheHitMissBuffer.second << " " <<
-// 					(firstBracket + 1) << endl;
 			}
 			else
 			{
@@ -2011,6 +2045,7 @@ void processStats(const string &filename)
 	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl;
 	p0 << "unset multiplot" << endl << "unset output" << endl;
 
+	//////////////////////////////////////////////////////////////////////////
 	// make the PC vs latency graph
 	outFilename = outputDir / ("latencyVsPc." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
@@ -2033,6 +2068,7 @@ void processStats(const string &filename)
 		p1 << "4294967296 1.01" << endl;
 	p1 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 
+	//////////////////////////////////////////////////////////////////////////
 	// make the PC vs average latency graph
 	outFilename = outputDir / ("avgLatencyVsPc." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
@@ -2056,15 +2092,64 @@ void processStats(const string &filename)
 		p1 << "4294967296 1.01" << endl;
 	p1 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 
+	//////////////////////////////////////////////////////////////////////////
 	// make the transaction latency distribution graph
 	outFilename = outputDir / ("transactionLatencyDistribution." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""<< endl << transactionGraph << endl;
+	StdDev<float> latencyDeviation;
 	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(); i != distTransactionLatency.end(); i++)
+	{
+		latencyDeviation.add(i->first * period, i->second);
 		p2 << i->first * period << " " << i->second << endl;
+	}
 	p2 << "e" << endl << "unset output" << endl;
 
+	//////////////////////////////////////////////////////////////////////////
+	// make the zoomed transaction latency distribution graph
+	outFilename = outputDir / ("zoomedTransactionLatencyDistribution." + extension);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""<< endl << 
+		"set xrange [0:" << latencyDeviation.getStdDev().get<1>() + 8 * latencyDeviation.getStdDev().get<2>() << "]" << endl << transactionGraph << endl;
+	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(); i != distTransactionLatency.end(); i++)
+	{
+		p2 << i->first * period << " " << i->second << endl;
+	}
+	p2 << "e" << endl << "unset output" << endl;
+
+	//////////////////////////////////////////////////////////////////////////
+	// make the adjusted transaction latency distribution graph
+	outFilename = outputDir / ("adjustedTransactionLatencyDistribution." + extension);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	p2 << "set title \"" << commandLine << "\\nAdjusted Read Transaction Latency\""<< endl << transactionGraph << endl;
+	latencyDeviation.clear();
+	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distAdjustedTransactionLatency.begin(), end = distAdjustedTransactionLatency.end();
+		i != end; i++)
+	{
+		latencyDeviation.add(i->first * period, i->second);
+		p2 << i->first * period << " " << i->second << endl;
+	}
+	p2 << "e" << endl << "unset output" << endl;
+
+	//////////////////////////////////////////////////////////////////////////
+	// make the zoomed adjusted transaction latency distribution graph
+	outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution." + extension);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	p2 << "set title \"" << commandLine << "\\nZoomed Adjusted Read Transaction Latency\""<< endl << 
+		"set xrange [0:" << latencyDeviation.getStdDev().get<1>() + 8 * latencyDeviation.getStdDev().get<2>() << "]" << endl << transactionGraph << endl;
+	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distAdjustedTransactionLatency.begin(), end = distAdjustedTransactionLatency.end();
+		i != end; i++)
+	{
+		p2 << i->first * period << " " << i->second << endl;
+	}
+	cerr << "range is " << latencyDeviation.getStdDev().get<1>() + 3 * latencyDeviation.getStdDev().get<2>() << endl;
+	p2 << "e" << endl << "unset output" << endl;
+
+	//////////////////////////////////////////////////////////////////////////
 	// make the bandwidth graph
 	outFilename = outputDir / ("bandwidth." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
@@ -2093,13 +2178,13 @@ void processStats(const string &filename)
 	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(), j = cacheBandwidthValues.begin();
 		i != bandwidthValues.end() && j != cacheBandwidthValues.end(); i++, j++)
 	{
-		bandwidthTotal.append(1.0 * i->first + i->second + j->first + j->second);
-		//cerr << time << " " << bandwidthTotal.getAverage() << endl;
+		bandwidthTotal.append(1.0F * (float)(i->first + i->second + j->first + j->second));
 		p3 << time << " " << bandwidthTotal.getAverage() << endl;
 		time += epochTime;
 	}
 	p3 << "e" << endl;
 
+	//////////////////////////////////////////////////////////////////////////
 	// make the small IPC graph
 	p3 << smallIPCGraph << endl;
 
@@ -2139,27 +2224,27 @@ void processStats(const string &filename)
 	p2 << "set multiplot layout 3, 1 title \"" << commandLine << "\"" << endl;
 	p2 << cacheGraph1 << endl;
 
-	for (unsigned i = 0; i < iCacheMisses.size(); i++)
-		p2 << i * epochTime << " " << iCacheMisses[i] + iCacheHits[i] << endl;
+	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); i++)
+		p2 << (float)i * epochTime << " " << iCacheMisses[i] + iCacheHits[i] << endl;
 	p2 << "e" << endl;
-	for (unsigned i = 0; i < iCacheMisses.size(); i++)
-		p2 << i * epochTime << " " << iCacheMisses[i] / ((float)max(iCacheMisses[i] + iCacheHits[i],1U)) << endl;
+	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); i++)
+		p2 << (float)i * epochTime << " " << iCacheMisses[i] / ((float)max(iCacheMisses[i] + iCacheHits[i],1U)) << endl;
 	p2 << "e" << endl;
 
 	p2 << cacheGraph2 << endl;
-	for (unsigned i = 0; i < dCacheMisses.size(); i++)
-		p2 << i * epochTime << " " << dCacheMisses[i] + dCacheHits[i] << endl;
+	for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); i++)
+		p2 << (float)i * epochTime << " " << dCacheMisses[i] + dCacheHits[i] << endl;
 	p2 << "e" << endl;
-	for (unsigned i = 0; i < dCacheMisses.size(); i++)
-		p2 << i * epochTime << " " << dCacheMisses[i] / ((float)max(dCacheMisses[i] + dCacheHits[i],1U)) << endl;
+	for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); i++)
+		p2 << (float)i * epochTime << " " << dCacheMisses[i] / ((float)max(dCacheMisses[i] + dCacheHits[i],1U)) << endl;
 	p2 << "e" << endl;
 
 	p2 << cacheGraph3 << endl;
-	for (unsigned i = 0; i < l2CacheMisses.size(); i++)
-		p2 << i * epochTime << " " << l2CacheMisses[i] + l2CacheHits[i] << endl;
+	for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); i++)
+		p2 << (float)i * epochTime << " " << l2CacheMisses[i] + l2CacheHits[i] << endl;
 	p2 << "e" << endl;
-	for (unsigned i = 0; i < l2CacheMisses.size(); i++)
-		p2 << i * epochTime << " " << l2CacheMisses[i] / ((float)max(l2CacheMisses[i] + l2CacheHits[i],1U)) << endl;
+	for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); i++)
+		p2 << (float)i * epochTime << " " << l2CacheMisses[i] / ((float)max(l2CacheMisses[i] + l2CacheHits[i],1U)) << endl;
 	p2 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 
 	// make the other IPC graph
@@ -2342,9 +2427,11 @@ void processStats(const string &filename)
 
 	p1 << "e" << endl << "unset output" << endl;
 
-	cerr << "period determined to be " << period << endl;
-	cerr << "tRC determined to be " << tRC * period << "ns" << endl;
-	cerr << "epochTime is " << epochTime;
+#ifndef NDEBUG
+	cerr << "Period: " << period << endl;
+	cerr << "tRC: " << tRC * period << "ns" << endl;
+	cerr << "Epoch Time: " << epochTime;
+#endif
 
 	//////////////////////////////////////////////////////////////////////////
 #if 0
@@ -2585,7 +2672,7 @@ int main(int argc, char** argv)
 
 					char *secondBracket = strchr(newLine,'}');
 					if (secondBracket == NULL) break;
-					*secondBracket = NULL;
+					*secondBracket = (char)NULL;
 					readHitsMisses.first = max(atoi(firstBracket + 1),1);
 
 					firstBracket = strchr(secondBracket + 1,'{');
@@ -2593,7 +2680,7 @@ int main(int argc, char** argv)
 
 					secondBracket = strchr(secondBracket + 1,'}');
 					if (secondBracket == NULL) break;
-					*secondBracket = NULL;
+					*secondBracket = (char)NULL;
 					readHitsMisses.second = max(atoi(firstBracket + 1),1);
 				}
 				else if (starts_with(newLine, "----Cumulative DIMM Cache Hits/Misses"))
@@ -2603,7 +2690,7 @@ int main(int argc, char** argv)
 
 					char *secondBracket = strchr(newLine,'}');
 					if (secondBracket == NULL) break;
-					*secondBracket = NULL;
+					*secondBracket = (char)NULL;
 					hitsMisses.first = max(atoi(firstBracket + 1),1);
 
 					firstBracket = strchr(secondBracket + 1,'{');
@@ -2611,7 +2698,7 @@ int main(int argc, char** argv)
 
 					secondBracket = strchr(secondBracket + 1,'}');
 					if (secondBracket == NULL) break;
-					*secondBracket = NULL;
+					*secondBracket = (char)NULL;
 					hitsMisses.second = max(atoi(firstBracket + 1),1);
 				}
 				else if (starts_with(newLine, "----Average Cumulative Transaction Latency"))
@@ -2621,7 +2708,7 @@ int main(int argc, char** argv)
 
 					char *secondBracket = strchr(newLine,'}');
 					if (secondBracket == NULL) break;
-					*secondBracket = NULL;
+					*secondBracket = (char)NULL;
 					averageLatency = atof(firstBracket + 1);
 				}
 				else if (starts_with(newLine, "----Average Cumulative Adjusted Transaction Latency"))
@@ -2631,7 +2718,7 @@ int main(int argc, char** argv)
 
 					char *secondBracket = strchr(newLine,'}');
 					if (secondBracket == NULL) break;
-					*secondBracket = NULL;
+					*secondBracket = (char)NULL;
 					averageAdjustedLatency = atof(firstBracket + 1);
 				}				
 				else if (!foundEpoch && starts_with(newLine, "----Epoch"))
@@ -2698,7 +2785,7 @@ int main(int argc, char** argv)
 				{
 					char *position = strchr(newLine,'\n');
 					if (position != NULL)
-						*position = NULL;
+						*position = (char)NULL;
 					newLine[50] = NULL;
 					cerr << "\r" << std::setw(9) << lineCounter << " " << newLine;
 				}
@@ -2708,7 +2795,6 @@ int main(int argc, char** argv)
 			boost::iostreams::close(inputStream);
 			stringstream current;
 			current << std::dec << std::fixed << std::setprecision(6) << ((double)epochCounter * epoch);
-			//cerr << "epoch " << epoch << " epochcounter " << epochCounter << endl;
 			outline +=  "<td>" + current.str() + "</td>";
 			current.str("");
 			current << std::dec << std::fixed << std::setprecision(6) << ((float)readHitsMisses.first / ((float)readHitsMisses.first + readHitsMisses.second));

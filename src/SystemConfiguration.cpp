@@ -138,7 +138,7 @@ outType(settings.outFileType)
 		}
 
 		bf::path outDir = settings.outFileDir.length() > 0 ? bf::path(settings.outFileDir.c_str()) : bf::current_path();
-		
+
 		if (!bf::exists(outDir))
 		{
 			if (!bf::create_directory(outDir))
@@ -168,12 +168,24 @@ outType(settings.outFileType)
 				baseFilename = baseFilename.substr(0,baseFilename.find(".bz2"));
 
 			std::locale loc;
+			char *jobID = getenv("PBS_JOBID");
+
+			if (jobID != NULL)
+			{
+				char *dot = strchr(jobID,'.');
+				if (dot != NULL)
+					*dot = (char)NULL;
+				string JobID(jobID);
+				baseFilename += jobID;
+			}
 			bool endsWithNumber = std::isdigit(*(baseFilename.end() - 1), loc);
-			int fileCounter = 0;
+
+			unsigned fileCounter = 0;
+
 			string counter = endsWithNumber ? "" : boost::lexical_cast<string>(fileCounter);
 
 			stringstream settingsFilename;
-			
+
 			do
 			{
 				stringstream timingFilename;
@@ -205,7 +217,7 @@ outType(settings.outFileType)
 					endsWithNumber = false;
 				}
 				counter = boost::lexical_cast<string>(fileCounter);
-				
+
 
 			} while (!createNewFile(timingFile) || !createNewFile(powerFile) || !createNewFile(statsFile) || !createNewFile(settingsFilename.str()) || !createNewFile(verilogFile));
 
@@ -389,33 +401,21 @@ bool SystemConfiguration::setupStreams() const
 		{	
 		case COUT:
 			timingOutStream.push(cout);
-			powerOutStream.push(cout);
-			statsOutStream.push(cout);
-			verilogOutStream.push(cout);
 			return true;
 			break;
 		case NONE:
 			timingOutStream.push(null_sink());
-			powerOutStream.push(null_sink());
-			statsOutStream.push(null_sink());
-			verilogOutStream.push(null_sink());
 			return true;
 			break;
 		case BZ:
 #ifndef WIN32
 			timingOutStream.push(bzip2_compressor());
-			powerOutStream.push(bzip2_compressor());
-			statsOutStream.push(bzip2_compressor());
-			verilogOutStream.push(bzip2_compressor());
 			suffix = ".bz2";
 			break;
 #endif
 		case GZ:
 #ifndef WIN32
 			timingOutStream.push(gzip_compressor(gzip_params(9)));
-			powerOutStream.push(gzip_compressor(gzip_params(9)));
-			statsOutStream.push(gzip_compressor(gzip_params(9)));
-			verilogOutStream.push(gzip_compressor(gzip_params(9)));
 			suffix = ".gz";
 			break;
 #endif
@@ -424,31 +424,129 @@ bool SystemConfiguration::setupStreams() const
 		}
 
 		timingOutStream.push(file_sink(timingFile.c_str()));
-		powerOutStream.push(file_sink(powerFile.c_str()));
-		statsOutStream.push(file_sink(statsFile.c_str()));
-		verilogOutStream.push(file_sink(verilogFile.c_str()));
 
 		if (!timingOutStream.good() || !timingOutStream.is_complete())
 		{
 			cerr << "Error opening file \"" << timingFile << "\" for writing" << endl;
 			exit(-12);
 		}
-		else if (!powerOutStream.good() || !powerOutStream.is_complete())
+
+		
+	}
+
+	if (!powerOutStream.is_complete())
+	{
+		string suffix;
+		switch (outType)
+		{	
+		case COUT:
+			powerOutStream.push(cout);
+			return true;
+			break;
+		case NONE:
+			powerOutStream.push(null_sink());
+			return true;
+			break;
+		case BZ:
+#ifndef WIN32
+			powerOutStream.push(bzip2_compressor());
+			suffix = ".bz2";
+			break;
+#endif
+		case GZ:
+#ifndef WIN32
+			powerOutStream.push(gzip_compressor(gzip_params(9)));
+			suffix = ".gz";
+			break;
+#endif
+		default:
+			break;
+		}
+
+		powerOutStream.push(file_sink(powerFile.c_str()));
+
+		if (!powerOutStream.good() || !powerOutStream.is_complete())
 		{
 			cerr << "Error opening file \"" << powerFile << "\" for writing" << endl;
 			exit(-12);
 		}
-		else if (!statsOutStream.good() || !statsOutStream.is_complete())
+
+	}
+
+	if (!statsOutStream.is_complete())
+	{
+		string suffix;
+		switch (outType)
+		{	
+		case COUT:
+			statsOutStream.push(cout);
+			return true;
+			break;
+		case NONE:
+			statsOutStream.push(null_sink());
+			return true;
+			break;
+		case BZ:
+#ifndef WIN32
+			statsOutStream.push(bzip2_compressor());
+			suffix = ".bz2";
+			break;
+#endif
+		case GZ:
+#ifndef WIN32
+			statsOutStream.push(gzip_compressor(gzip_params(9)));
+			suffix = ".gz";
+			break;
+#endif
+		default:
+			break;
+		}
+
+		statsOutStream.push(file_sink(statsFile.c_str()));
+
+		if (!statsOutStream.good() || !statsOutStream.is_complete())
 		{
 			cerr << "Error opening file \"" << statsFile << "\" for writing" << endl;
 			exit(-12);
 		}
-		else if (!verilogOutStream.good() || !verilogOutStream.is_complete())
+	}
+
+	if (!verilogOutStream.is_complete())
+	{
+		string suffix;
+		switch (outType)
+		{	
+		case COUT:
+			verilogOutStream.push(cout);
+			return true;
+			break;
+		case NONE:
+			verilogOutStream.push(null_sink());
+			return true;
+			break;
+		case BZ:
+#ifndef WIN32
+			verilogOutStream.push(bzip2_compressor());
+			suffix = ".bz2";
+			break;
+#endif
+		case GZ:
+#ifndef WIN32
+			verilogOutStream.push(gzip_compressor(gzip_params(9)));
+			suffix = ".gz";
+			break;
+#endif
+		default:
+			break;
+		}
+
+		verilogOutStream.push(file_sink(verilogFile.c_str()));
+
+		if (!verilogOutStream.good() || !verilogOutStream.is_complete())
 		{
 			cerr << "Error opening file \"" << verilogFile << "\" for writing" << endl;
 			exit(-12);
 		}
-		return true;
 	}
-	return false;
+	return true;
 }

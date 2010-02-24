@@ -282,7 +282,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << statsLog.readCount << " " << statsLog.writeCount << " " << statsLog.readCount + statsLog.writeCount << endl;
 #endif
 
-	Statistics::WeightedAverage<unsigned> averageLatency;
+	Statistics::WeightedAverage<double> averageLatency;
 	os << "----Transaction Latency";
 	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); currentValue++)
 	{

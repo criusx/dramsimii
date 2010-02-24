@@ -147,11 +147,12 @@ hit(false)
 //////////////////////////////////////////////////////////////////////////
 Command::~Command()
 {
+	//assert(!hostTransaction);
 	if (hostTransaction)
 	{
-		delete hostTransaction;
+		delete (Transaction*)hostTransaction;
 		// don't want to checkpoint this
-		hostTransaction = NULL;
+		//hostTransaction = NULL;
 	}
 }
 

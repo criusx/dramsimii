@@ -48,6 +48,16 @@ int main(int argc,char **argv, char *envp[])
 		ds.runSimulations();
 	}
 
+// 	{
+// 		System ds(settings);
+// 		ds.runSimulations();
+// 	}
+// 	{
+// 		System ds(settings);
+// 		ds.runSimulations();
+// 	}
+
+
 
 	//cerr << ds.timing_specification;
 	//cerr << (dram_statistics) ds;

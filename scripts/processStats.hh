@@ -184,11 +184,10 @@ std::string addressDistroB ="set title 'Rank Distribution Rate' offset character
 
 std::string addressDistroC = "set title 'Bank Distribution Rate' offset character 0, -1, 0 font '' norotate\n";
 
-std::string transactionGraph = "set xrange [1 : *] noreverse nowriteback\n\
-							   set logscale y\n\
+std::string transactionGraph = "set logscale y\n\
 							   set format x\n\
 							   set style fill solid 1.00 noborder\n\
-							   #set boxwidth 0.95 relative\n\
+							   #set autoscale xfixmax\n\
 							   set xlabel 'Execution Time (ns)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 							   set ylabel 'Number of Transactions with this Execution Time'\n\
 							   plot '-' using 1:2 t 'Total Latency' with boxes\n";

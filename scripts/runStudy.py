@@ -119,7 +119,7 @@ m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/Cypress/3'
+outputDir = '/home/crius/results/Cypress/4'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/dramsimii/memoryDefinitions/DDR2-800-sg125E.xml'
@@ -176,7 +176,8 @@ blockSize = [64, 128, 256]
 hitLatency = [5]
 
 #traces = ['bzip2-trace.gz', 'lbm-trace.gz', 'mcf-trace.gz']
-traces = ['mcf001-trace.gz','namd002-trace.gz','omnetpp002-trace.gz']
+#traces = ['mcf001-trace.gz','namd002-trace.gz','omnetpp002-trace.gz']
+traces = ['milcLong001-trace.gz', 'lbmLong-trace.gz', 'mcfLong000-trace.gz', 'xalancbmkLong005-trace.gz', 'bzip2-trace.gz']
 
 def main():
     try:
