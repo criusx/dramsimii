@@ -318,6 +318,8 @@ namespace DRAMsimII
 		* Called at end of simulation to complete average block reference stats.
 		*/
 		virtual void cleanupRefs();
+
+		LRU &operator=(const LRU& rhs);
 	};
 
 }

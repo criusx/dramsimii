@@ -128,7 +128,7 @@ writeAllocate(false)
 			sets[i].blks[j]=blk;
 			blk->set = i;
 		}
-	}
+	}	
 }
 
 LRU::LRU(const LRU&rhs):
@@ -142,7 +142,8 @@ dataBlks(rhs.dataBlks),
 setShift(rhs.setShift),
 tagShift(rhs.tagShift),
 setMask(rhs.setMask),
-blkMask(rhs.blkMask)
+blkMask(rhs.blkMask),
+writeAllocate(rhs.writeAllocate)
 {
 	unsigned blkIndex = 0;       // index into blks array
 	for (unsigned i = 0; i < numSets; ++i) 
@@ -689,4 +690,41 @@ LRU::cleanupRefs()
 			++sampledRefs;
 		}
 	}
+}
+
+LRU &LRU::operator =(const LRU& rhs)
+{
+	const_cast<unsigned&>(numSets) = rhs.numSets;
+	const_cast<unsigned&>(blkSize) = rhs.blkSize;
+	const_cast<unsigned&>(assoc) = rhs.assoc;
+	const_cast<unsigned&>(hitLatency) = rhs.hitLatency;
+
+	sets = rhs.sets;
+	blks = rhs.blks;
+	dataBlks = rhs.dataBlks;
+
+	setShift = rhs.setShift;
+	tagShift = rhs.tagShift;
+	setMask = rhs.setMask;
+	blkMask = rhs.blkMask;
+	writeAllocate = rhs.writeAllocate;
+
+	unsigned blkIndex = 0;       // index into blks array
+	for (unsigned i = 0; i < numSets; ++i) 
+	{ 
+		// link in the data blocks
+		for (unsigned j = 0; j < assoc; ++j) 
+		{
+			// locate next cache block
+			LRUBlk *blk = &blks[blkIndex];
+			blk->data = &dataBlks[blkSize*blkIndex];
+			++blkIndex;
+
+			blk->size = blkSize;
+			sets[i].blks[j]=blk;
+			blk->set = i;
+		}
+	}
+
+	return *this;
 }

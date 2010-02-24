@@ -32,7 +32,8 @@ Command::Command():
 Event(),
 commandType(RETIRE_COMMAND),
 hostTransaction(NULL),
-length(0)
+length(0),
+hit(false)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -148,9 +149,9 @@ hit(false)
 Command::~Command()
 {
 	//assert(!hostTransaction);
-	if (hostTransaction)
+	//if (hostTransaction)
 	{
-		delete (Transaction*)hostTransaction;
+		delete hostTransaction;
 		// don't want to checkpoint this
 		//hostTransaction = NULL;
 	}
@@ -244,6 +245,7 @@ Command &Command::operator =(const Command &rhs)
 	length = rhs.length;
 	hostTransaction = rhs.hostTransaction;
 	commandType = rhs.commandType;
+	hit = rhs.hit;
 	return *this;
 }
 

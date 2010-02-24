@@ -67,17 +67,19 @@ namespace DRAMsimII
 		template <typename T>
 		class WeightedAverage
 		{
-			unsigned count;
+			typedef boost::uint64_t uint64_t;
+
+			uint64_t count;
 			T total;
 
 		public:
 			WeightedAverage():count(0), total(0)
 			{}
 
-			void add(T value, unsigned count)
+			void add(T _value, uint64_t _count)
 			{
-				this->total += value * (T)count;
-				this->count += count;
+				total += _value * (T)_count;
+				count += _count;
 			}
 
 			void clear()
@@ -199,7 +201,8 @@ namespace DRAMsimII
 		{
 			unsigned value = 0;
 
-			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = dimmCacheBandwidthData.begin(); i != dimmCacheBandwidthData.end(); i++)
+			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = dimmCacheBandwidthData.begin(), end = dimmCacheBandwidthData.end();
+				i != end; ++i)
 			{
 				value += i->first;
 			}
@@ -211,7 +214,8 @@ namespace DRAMsimII
 		{
 			unsigned value = 0;
 
-			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = bandwidthData.begin(); i != bandwidthData.end(); i++)
+			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = bandwidthData.begin(), end = bandwidthData.end();
+				i != end; ++i)
 			{
 				value += i->first;
 			}
@@ -223,7 +227,8 @@ namespace DRAMsimII
 		{
 			unsigned value = 0;
 
-			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = dimmCacheBandwidthData.begin(); i != dimmCacheBandwidthData.end(); i++)
+			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = dimmCacheBandwidthData.begin(), end = dimmCacheBandwidthData.end();
+				i != end; ++i)
 			{
 				value += i->second;
 			}
@@ -235,7 +240,8 @@ namespace DRAMsimII
 		{
 			unsigned value = 0;
 
-			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = dimmCacheBandwidthData.begin(); i != dimmCacheBandwidthData.end(); i++)
+			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = bandwidthData.begin(), end = bandwidthData.end();
+				i != end; ++i)
 			{
 				value += i->second;
 			}

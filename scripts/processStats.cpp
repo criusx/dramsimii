@@ -163,7 +163,7 @@ public:
 
 			if (values.size() > MAXIMUM_VECTOR_SIZE)
 			{
-				for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; j++)
+				for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
 				{
 					//values[j] = T((values[2 * j] + values[2 * j + 1]) / 2.0F);
 					values[j] = T((values[2 * j] + values[2 * j + 1]) );
@@ -270,7 +270,7 @@ public:
 					  if (totalCount % 2 == 1 && (cumulativeSum + i->second == median))
 					  {
 						  typename map<T,unsigned>::const_iterator j(i);
-						  j++;
+						  ++j;
 						  if (j == end)
 							  medianValue = i->first;
 						  else
@@ -415,7 +415,7 @@ public:
 		boost::circular_buffer<float>::size_type size = data.size();
 		data.clear();
 		data.resize(size, 0.0F);
-		//for (boost::circular_buffer<float>::iterator i = data.begin(); i != data.end(); i++)
+		//for (boost::circular_buffer<float>::iterator i = data.begin(); i != data.end(); ++i)
 		//	*i = 0;
 	}
 };
@@ -650,7 +650,7 @@ void processPower(const string &filename)
 					if (scaleIndex == 0)
 					{
 						vector<float>::size_type limit = valueBuffer.size();
-						for (vector<float>::size_type i = 0; i < limit; i++)
+						for (vector<float>::size_type i = 0; i < limit; ++i)
 						{
 							values[i].push_back(valueBuffer[i] / scaleFactor);
 							valueBuffer[i] = 0;
@@ -663,9 +663,9 @@ void processPower(const string &filename)
 					if (values.front().size() >= MAXIMUM_VECTOR_SIZE)
 					{
 						// scale the array back by half
-						for (vector<vector<float> >::iterator i = values.begin(); i != values.end(); i++)
+						for (vector<vector<float> >::iterator i = values.begin(); i != values.end(); ++i)
 						{
-							for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; j++)
+							for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
 							{
 								(*i)[j] = ((*i)[2 * j] + (*i)[2 * j + 1]) / 2;
 							}
@@ -675,7 +675,7 @@ void processPower(const string &filename)
 						}
 
 						// scale the alternate array back by half
-						for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; j++)
+						for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
 						{
 							energyValues[j] = pair<float,float>(
 								(energyValues[2 * j].first + energyValues[2 * j + 1].first) / 2.0F,
@@ -790,9 +790,9 @@ void processPower(const string &filename)
 		return;
 
 	// make the main power graph and big power graph
-	for (vector<vector<float> >::const_iterator i = values.begin(); i != values.end(); i++)
+	for (vector<vector<float> >::const_iterator i = values.begin(); i != values.end(); ++i)
 	{
-		for (vector<float>::const_iterator j = i->begin(); j != i->end(); j++)
+		for (vector<float>::const_iterator j = i->begin(); j != i->end(); ++j)
 		{
 			//cerr << *j << " ";
 			p << *j << endl;
@@ -801,16 +801,16 @@ void processPower(const string &filename)
 		p << "e" << endl;
 		p3 << "e" << endl;
 	}
-	p << "0 0" << endl << (values.size() > 0 ? values.back().size() : 0.0) * epochTime << " 0.2" << endl << "e" << endl;
+	p << "0 0" << endl << (!values.empty() ? values.back().size() : 0.0) * epochTime << " 0.2" << endl << "e" << endl;
 	p3 << "0 0" << endl << 3.31 / epochTime << " 1e-5" << endl << "e" << endl;
 
 	p << powerScripts[1];
 
 	// make the total power bar graphs
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
 		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 		p << i * epochTime << " " << totalPowerPerEpoch << endl;
 	}
@@ -819,11 +819,11 @@ void processPower(const string &filename)
 	// make the average power line
 	CumulativePriorMovingAverage cumulativePower;
 
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
 		float total = 0;
 
-		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			total += values[j][i];
 		cumulativePower.add(1.0,total);
 		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
@@ -837,11 +837,11 @@ void processPower(const string &filename)
 	PriorMovingAverage powerMovingAverage(WINDOW);
 
 	// moving window average
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
 		float total = 0;
 
-		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			total += values[j][i];
 		powerMovingAverage.append(total);
 		p << i * epochTime << " " << powerMovingAverage.getAverage() << endl;
@@ -849,10 +849,10 @@ void processPower(const string &filename)
 	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl << "exit" << endl;
 
 	// various energy graphs
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
 		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * epochTime << endl;
@@ -862,10 +862,10 @@ void processPower(const string &filename)
 	p4 << "e" << endl;
 
 	double cumulativeEnergy = 0.0F;
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
 		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch * epochTime * epochTime << endl;
@@ -876,20 +876,20 @@ void processPower(const string &filename)
 	p2 << "e" << endl << powerScripts[3] << endl;
 	p4 << "e" << endl << "0 0" << endl << "3.31 1e-5" << endl << "e" << "unset output" << endl;
 
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
 		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * epochTime * epochTime << endl;
 	}
 	p2 << "e" << endl;
 
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
 		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); j++)
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch * epochTime * epochTime * epochTime << endl;
@@ -905,7 +905,7 @@ void processPower(const string &filename)
 	
 	float time = 0.0F;
 	float totalPower = 0.0F;
-	for (vector<pair<float,float> >::const_iterator i = energyValues.begin(); i != energyValues.end(); i++)
+	for (vector<pair<float,float> >::const_iterator i = energyValues.begin(); i != energyValues.end(); ++i)
 	{
 		totalPower += i->first;
 
@@ -918,10 +918,10 @@ void processPower(const string &filename)
 
 	time = 0.0F;
 	totalPower = 0.0F;
-	for (vector<pair<float,float> >::const_iterator i = energyValues.begin(); i != energyValues.end(); i++)
-		//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); i++)
+	for (vector<pair<float,float> >::const_iterator i = energyValues.begin(); i != energyValues.end(); ++i)
+		//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); ++i)
 	{
-		//for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); j++)
+		//for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
 		//	totalPower += alternateValues[j][i];
 		totalPower += i->first - i->second;
 
@@ -946,7 +946,7 @@ void processPower(const string &filename)
 	cerr << "p4 close" << endl;
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
-		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); i++)
+		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); ++i)
 			fileList.push_back(*i);
 	}
 
@@ -996,9 +996,9 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		templateFile = templateFile.replace(templateFile.find(find),find.length(),commandLine);
 		delete[] entireFile;
 		string distroStrings;
-		for (unsigned i = 0; i < channelCount; i++)
+		for (unsigned i = 0; i < channelCount; ++i)
 			distroStrings += "<h2>Address Distribution, Channel "+ lexical_cast<string>(i) + "</h2><a rel=\"lightbox\" href=\"addressDistribution" + lexical_cast<string>(i) + ".svgz\"><img class=\"fancyzoom\" src=\"addressDistribution"+ lexical_cast<string>(i) + "-thumb.png\" alt=\"\" /></a>";
-		for (unsigned i = 0; i < channelCount; i++)
+		for (unsigned i = 0; i < channelCount; ++i)
 			distroStrings += "<h2>Address Latency Distribution, Channel "+ lexical_cast<string>(i) + "</h2><a rel=\"lightbox\" href=\"addressLatencyDistribution"+ lexical_cast<string>(i) + ".svgz\"><img class=\"fancyzoom\" src=\"addressLatencyDistribution"+ lexical_cast<string>(i) + "-thumb.png\" alt=\"\" /></a>";
 		cerr << endl << printFile.native_directory_string() << endl;
 		std::ofstream out(printFile.native_directory_string().c_str());
@@ -1363,9 +1363,9 @@ void processStats(const string &filename)
 					if (scaleIndex == 0)
 					{
 						// dump all the buffers into arrays, scaled correctly
-						for (unsigned i = 0; i < channelCount; i++)
+						for (unsigned i = 0; i < channelCount; ++i)
 						{
-							for (unsigned j = 0; j < rankCount; j++)
+							for (unsigned j = 0; j < rankCount; ++j)
 							{
 								for (unsigned k = 0; k < bankCount + 1; k++)
 								{
@@ -1455,9 +1455,9 @@ void processStats(const string &filename)
 							// scale all the arrays by half
 							for (unsigned epoch = 0; epoch < MAXIMUM_VECTOR_SIZE / 2; epoch++)
 							{
-								for (unsigned i = 0; i < channelCount; i++)
+								for (unsigned i = 0; i < channelCount; ++i)
 								{
-									for (unsigned j = 0; j < rankCount; j++)
+									for (unsigned j = 0; j < rankCount; ++j)
 									{
 										for (unsigned k = 0; k < bankCount + 1; k++)
 										{
@@ -1520,9 +1520,9 @@ void processStats(const string &filename)
 							}
 
 							// resize all the vectors
-							for (unsigned i = 0; i < channelCount; i++)
+							for (unsigned i = 0; i < channelCount; ++i)
 							{
-								for (unsigned j = 0; j < rankCount; j++)
+								for (unsigned j = 0; j < rankCount; ++j)
 								{
 									for (unsigned k = 0; k < bankCount + 1; k++)
 									{
@@ -1967,7 +1967,7 @@ void processStats(const string &filename)
 	p0 << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p0 << "set title \"" << commandLine << "\\nChannel Distribution Rate\"" << endl << addressDistroA;
 	p0 << "plot ";
-	for (unsigned i = 0; i < channelCount; i++)
+	for (unsigned i = 0; i < channelCount; ++i)
 		p0 << "'-' using 1 axes x2y1 t 'ch[" << i << "]',";
 	p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
@@ -1994,7 +1994,7 @@ void processStats(const string &filename)
 	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl;
 	p0 << addressDistroB << endl << "plot ";
 
-	for (unsigned i = 0; i < rankCount; i++)
+	for (unsigned i = 0; i < rankCount; ++i)
 		p0 << "'-' using 1 axes x2y1 t 'rk[" << i << "]',";
 	p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
@@ -2019,7 +2019,7 @@ void processStats(const string &filename)
 	}
 	p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2" << endl << "e" << endl;
 	p0 << addressDistroC << endl << "plot ";
-	for (unsigned i = 0; i < bankCount; i++)
+	for (unsigned i = 0; i < bankCount; ++i)
 		p0 << "'-' using 1 axes x2y1 t 'bk[" << i << "]',";
 	p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
@@ -2055,14 +2055,14 @@ void processStats(const string &filename)
 	p1 << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
-		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); i++)
+		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); ++i)
 			p1 << i->first << " " << period * i->second.first << endl;
 	else
 		p1 << "4294967296 1.01" << endl;
 
 	p1 << endl << "e" << endl << "set format x '0x1%x'" << endl << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
 	if (latencyVsPcHigh.size() > 0)
-		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); i++)
+		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); ++i)
 			p1 << (i->first - 0x100000000) << " " << period * i->second.first << endl;
 	else
 		p1 << "4294967296 1.01" << endl;
@@ -2078,7 +2078,7 @@ void processStats(const string &filename)
 	p1 << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
-		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); i++)
+		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); ++i)
 			p1 << i->first << " " << period * (i->second.first / i->second.second) << endl;
 	else
 		p1 << "4294967296 1.01" << endl;
@@ -2086,7 +2086,7 @@ void processStats(const string &filename)
 	p1 << endl << "e" << endl;
 	p1 << "set format x '0x1%x'" << endl << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
 	if (latencyVsPcHigh.size() > 0)
-		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); i++)
+		for (std::tr1::unordered_map<uint64_t,pair<uint64_t,uint64_t> >::const_iterator i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); ++i)
 			p1 << (i->first - 0x100000000) << " " << period * (i->second.first / i->second.second) << endl;
 	else
 		p1 << "4294967296 1.01" << endl;
@@ -2099,7 +2099,7 @@ void processStats(const string &filename)
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""<< endl << transactionGraph << endl;
 	StdDev<float> latencyDeviation;
-	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(); i != distTransactionLatency.end(); i++)
+	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
 	{
 		latencyDeviation.add(i->first * period, i->second);
 		p2 << i->first * period << " " << i->second << endl;
@@ -2113,7 +2113,7 @@ void processStats(const string &filename)
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""<< endl << 
 		"set xrange [0:" << latencyDeviation.getStdDev().get<1>() + 8 * latencyDeviation.getStdDev().get<2>() << "]" << endl << transactionGraph << endl;
-	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(); i != distTransactionLatency.end(); i++)
+	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
 	{
 		p2 << i->first * period << " " << i->second << endl;
 	}
@@ -2127,7 +2127,7 @@ void processStats(const string &filename)
 	p2 << "set title \"" << commandLine << "\\nAdjusted Read Transaction Latency\""<< endl << transactionGraph << endl;
 	latencyDeviation.clear();
 	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distAdjustedTransactionLatency.begin(), end = distAdjustedTransactionLatency.end();
-		i != end; i++)
+		i != end; ++i)
 	{
 		latencyDeviation.add(i->first * period, i->second);
 		p2 << i->first * period << " " << i->second << endl;
@@ -2142,7 +2142,7 @@ void processStats(const string &filename)
 	p2 << "set title \"" << commandLine << "\\nZoomed Adjusted Read Transaction Latency\""<< endl << 
 		"set xrange [0:" << latencyDeviation.getStdDev().get<1>() + 8 * latencyDeviation.getStdDev().get<2>() << "]" << endl << transactionGraph << endl;
 	for (std::tr1::unordered_map<unsigned,unsigned>::const_iterator i = distAdjustedTransactionLatency.begin(), end = distAdjustedTransactionLatency.end();
-		i != end; i++)
+		i != end; ++i)
 	{
 		p2 << i->first * period << " " << i->second << endl;
 	}
@@ -2157,26 +2157,26 @@ void processStats(const string &filename)
 	p3 << "set multiplot title \"" << commandLine << "\""<< endl;
 	p3 << bandwidthGraph << endl;
 
-	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
+	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); ++i)
 		p3 << 1.0 * i->first << endl;
 	p3 << "e" << endl;
 
-	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); i++)
+	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(); i != bandwidthValues.end(); ++i)
 		p3 << 1.0 * i->second << endl;
 	p3 << "e" << endl;
 
-	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); i++)
+	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); ++i)
 		p3 << 1.0 * i->first << endl;
 	p3 << "e" << endl;
 
-	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); i++)
+	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); ++i)
 		p3 << 1.0 * i->second << endl;
 	p3 << "e" << endl;
 
 	float time = 0.0F;
 	PriorMovingAverage bandwidthTotal(WINDOW);
 	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(), j = cacheBandwidthValues.begin();
-		i != bandwidthValues.end() && j != cacheBandwidthValues.end(); i++, j++)
+		i != bandwidthValues.end() && j != cacheBandwidthValues.end(); ++i, ++j)
 	{
 		bandwidthTotal.append(1.0F * (float)(i->first + i->second + j->first + j->second));
 		p3 << time << " " << bandwidthTotal.getAverage() << endl;
@@ -2189,7 +2189,7 @@ void processStats(const string &filename)
 	p3 << smallIPCGraph << endl;
 
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
 	{
 		p3 << time << " " << *i << endl;
 		time += epochTime;
@@ -2198,7 +2198,7 @@ void processStats(const string &filename)
 
 	time = 0.0F;
 	CumulativePriorMovingAverage ipcTotal;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
 	{
 		ipcTotal.add(1,*i);
 		p3 << time << " " << ipcTotal.getAverage() << endl;
@@ -2208,7 +2208,7 @@ void processStats(const string &filename)
 
 	time = 0.0F;
 	PriorMovingAverage ipcBuffer(WINDOW);
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
 	{
 		ipcBuffer.append(*i);
 		p3 << time << " " << ipcBuffer.getAverage() << endl;
@@ -2224,26 +2224,26 @@ void processStats(const string &filename)
 	p2 << "set multiplot layout 3, 1 title \"" << commandLine << "\"" << endl;
 	p2 << cacheGraph1 << endl;
 
-	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); ++i)
 		p2 << (float)i * epochTime << " " << iCacheMisses[i] + iCacheHits[i] << endl;
 	p2 << "e" << endl;
-	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); ++i)
 		p2 << (float)i * epochTime << " " << iCacheMisses[i] / ((float)max(iCacheMisses[i] + iCacheHits[i],1U)) << endl;
 	p2 << "e" << endl;
 
 	p2 << cacheGraph2 << endl;
-	for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); ++i)
 		p2 << (float)i * epochTime << " " << dCacheMisses[i] + dCacheHits[i] << endl;
 	p2 << "e" << endl;
-	for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); ++i)
 		p2 << (float)i * epochTime << " " << dCacheMisses[i] / ((float)max(dCacheMisses[i] + dCacheHits[i],1U)) << endl;
 	p2 << "e" << endl;
 
 	p2 << cacheGraph3 << endl;
-	for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); ++i)
 		p2 << (float)i * epochTime << " " << l2CacheMisses[i] + l2CacheHits[i] << endl;
 	p2 << "e" << endl;
-	for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); i++)
+	for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); ++i)
 		p2 << (float)i * epochTime << " " << l2CacheMisses[i] / ((float)max(l2CacheMisses[i] + l2CacheHits[i],1U)) << endl;
 	p2 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 
@@ -2258,7 +2258,7 @@ void processStats(const string &filename)
 
 	time = 0.0F;
 	// access count
-	for (vector<unsigned>::const_iterator i = transactionCount.begin(); i != transactionCount.end(); i++)
+	for (vector<unsigned>::const_iterator i = transactionCount.begin(); i != transactionCount.end(); ++i)
 	{
 		p1 << time << " " << *i << endl;
 		time += epochTime;
@@ -2267,7 +2267,7 @@ void processStats(const string &filename)
 
 	time = 0.0F;
 	// minimum
-	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
 	{
 		p1 << time << " " << period * i->get<0>() << endl;
 		time += epochTime;
@@ -2276,7 +2276,7 @@ void processStats(const string &filename)
 
 	// mean
 	time = 0.0F;
-	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
 	{
 		p1 << time << " " << period * i->get<1>() << endl;
 		time += epochTime;
@@ -2285,7 +2285,7 @@ void processStats(const string &filename)
 
 	time = 0.0F;
 	// mean + 1 std dev
-	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); i++)
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
 	{
 		p1 << time << " " << period * (i->get<1>() + 2 * i->get<2>()) << endl;
 		time += epochTime;
@@ -2296,7 +2296,7 @@ void processStats(const string &filename)
 	p1 << "set title 'Average IPC vs. Time'" << endl << otherIPCGraph << endl;
 
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
 	{
 		p1 << time << " " << *i << endl;
 		time += epochTime;
@@ -2306,7 +2306,7 @@ void processStats(const string &filename)
 #if 0
 	ipcTotal.clear();
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
 	{
 		ipcTotal.add(1, *i);
 		p1 << time << " " << ipcTotal.getAverage() << endl;
@@ -2317,7 +2317,7 @@ void processStats(const string &filename)
 
 	ipcBuffer.clear();
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
 	{
 		ipcBuffer.append(*i);
 		p1 << time << " " << ipcBuffer.getAverage() << endl;
@@ -2335,7 +2335,7 @@ void processStats(const string &filename)
 	p2 << "set title \"" << "Reuse Rate of Open Rows vs. Time\\n" << commandLine << "\"" << endl << rowHitMissGraph << endl;
 
 	time = 0.0F;
-	for (vector<float>::const_iterator i = hitMissValues.begin(); i != hitMissValues.end(); i++)
+	for (vector<float>::const_iterator i = hitMissValues.begin(); i != hitMissValues.end(); ++i)
 	{
 		p2 << time << " " << *i << endl;
 		time += epochTime;
@@ -2344,7 +2344,7 @@ void processStats(const string &filename)
 
 	CumulativePriorMovingAverage hitMissTotal;
 	time = 0.0F;
-	for (vector<float>::const_iterator i = hitMissValues.begin(); i != hitMissValues.end(); i++)
+	for (vector<float>::const_iterator i = hitMissValues.begin(); i != hitMissValues.end(); ++i)
 	{
 		hitMissTotal.add(1.0,*i);
 		p2 << time << " " << hitMissTotal.getAverage() << endl;
@@ -2353,7 +2353,7 @@ void processStats(const string &filename)
 	p2 << "e" << endl;
 
 	time = 0.0F;
-	for (vector<unsigned>::const_iterator i = hitMissTotals.begin(); i != hitMissTotals.end(); i++)
+	for (vector<unsigned>::const_iterator i = hitMissTotals.begin(); i != hitMissTotals.end(); ++i)
 	{
 		p2 << time << " " << max(*i, 1U) << endl;
 		time += epochTime;
@@ -2369,7 +2369,7 @@ void processStats(const string &filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p3 << workingSetSetup << endl;
 	time = 0.0F;
-	for (vector<unsigned>::const_iterator i = workingSetSize.begin(); i != workingSetSize.end(); i++)
+	for (vector<unsigned>::const_iterator i = workingSetSize.begin(); i != workingSetSize.end(); ++i)
 	{
 		p3 << time << " " << *i << endl;
 		time += epochTime;
@@ -2383,7 +2383,7 @@ void processStats(const string &filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p0 << bigIPCGraph << endl;
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
 	{
 		p0 << time << " " << *i << endl;
 		time += epochTime;
@@ -2392,7 +2392,7 @@ void processStats(const string &filename)
 
 	time = 0.0F;
 	ipcTotal.clear();
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); i++)
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
 	{
 		ipcTotal.add(1,*i);
 		p0 << time << " " << ipcTotal.getAverage() << endl;
@@ -2408,7 +2408,7 @@ void processStats(const string &filename)
 	p1 << "set title \"" << "Per-DIMM Cache Hit Rate\\n" << commandLine << "\"" << endl << hitMissScript << endl;
 
 	time = 0.0F;
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); i++)
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
 	{
 		p1 << time << " " << i->first + i->second << endl;
 		//cerr << time << " " << i->first + i->second << endl;
@@ -2418,7 +2418,7 @@ void processStats(const string &filename)
 	p1 << "e" << endl;
 
 	time = 0.0F;
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); i++)
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
 	{
 		p1 << time << " " << (double)i->first / (i->first + i->second) << endl;
 		//cerr << time << " " << i->first << " " <<  i->second << endl;
@@ -2457,7 +2457,7 @@ void processStats(const string &filename)
 	double CKE_LO_ACT = 0.01F;
 	float PdsACT = IDD0 - ((IDD3N * tRAS + IDD2N * (tRC - tRAS)/tRC)) * vdd;
 
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); i++)
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
 	{
 		double percentActive = ((i->first + i->second) * tRC * period) / epochTime;
 		cerr << percentActive << endl;
@@ -2504,7 +2504,7 @@ void processStats(const string &filename)
 	p2 << "e" << endl;
 
 	time = 0.0F;
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); i++)
+	for (vector<pair<unsigned,unsigned> >::const_iterator i = cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
 	{
 		p2 << time << " " << (double)i->first / (i->first + i->second) << endl;
 		//cerr << time << " " << (double)i->first / (i->first + i->second) << endl;
@@ -2528,7 +2528,7 @@ void processStats(const string &filename)
 
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
-		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); i++)
+		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); ++i)
 			fileList.push_back(*i);
 	}
 
@@ -2607,7 +2607,7 @@ int main(int argc, char** argv)
 
 	opt::notify(vm);
 
-	// 	for (opt::variables_map::iterator i = vm.begin(); i != vm.end(); i++)
+	// 	for (opt::variables_map::iterator i = vm.begin(); i != vm.end(); ++i)
 	// 		cerr << i->first << endl;
 	// 	
 	if (vm.count("help"))
@@ -2630,7 +2630,7 @@ int main(int argc, char** argv)
 
 	map<string,string> files;
 
-	for (int i = 0; i < argc; i++)
+	for (int i = 0; i < argc; ++i)
 	{
 		if (ends_with(argv[i],"power.gz") || ends_with(argv[i],"power.bz2") || 
 			ends_with(argv[i],"stats.gz") || ends_with(argv[i],"stats.bz2"))
@@ -2746,7 +2746,7 @@ int main(int argc, char** argv)
 					split(splitLine, modUrlString, is_any_of(" "), token_compress_on);
 
 
-					for (vector<string>::const_iterator x = splitLine.begin(); x != splitLine.end(); x++)
+					for (vector<string>::const_iterator x = splitLine.begin(); x != splitLine.end(); ++x)
 					{
 						string::size_type start = x->find("[");
 						string::size_type end = x->find("]");
@@ -2827,7 +2827,7 @@ int main(int argc, char** argv)
 	entirefile << instream.rdbuf();
 
 	string fileList;
-	for (map<string,string>::const_iterator x = files.begin(); x != files.end(); x++)
+	for (map<string,string>::const_iterator x = files.begin(); x != files.end(); ++x)
 	{
 		fileList += "<tr>";
 		fileList += x->second;
@@ -2868,7 +2868,7 @@ int main(int argc, char** argv)
 	{
 		boost::thread threadA(thumbNailWorker);
 
-		for (list<string>::const_iterator i = toBeProcessed.begin(); i != toBeProcessed.end(); i++)
+		for (list<string>::const_iterator i = toBeProcessed.begin(); i != toBeProcessed.end(); ++i)
 		{
 			if (ends_with(*i,"power.gz")|| ends_with(*i,"power.bz2"))
 			{

@@ -734,7 +734,7 @@ ostream& DRAMsimII::operator<<(ostream& os, const InputStream& is)
 {
 	os << "type[" << is.type << "]" << endl;
 	os << is.systemConfig << endl;
-	for (vector<Channel>::const_iterator i = is.channel.begin(); i != is.channel.end(); i++)
+	for (vector<Channel>::const_iterator i = is.channel.begin(); i != is.channel.end(); ++i)
 	{
 		os << *i << endl;
 	}

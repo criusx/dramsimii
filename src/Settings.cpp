@@ -128,7 +128,11 @@ IDD3P(UINT_MAX),
 IDD3N(UINT_MAX),
 IDD4W(UINT_MAX),
 IDD4R(UINT_MAX),
-IDD5(UINT_MAX)
+IDD5(UINT_MAX),
+associativity(0),
+cacheSize(0),
+blockSize(0),
+hitLatency(0)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -156,9 +160,28 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			break;
 		case cache_associativity_token:
 			associativity = lexical_cast<unsigned>(nodeValue);
+			if (associativity == 2)
+				hitLatency = 2;
+			else if (associativity == 4)
+				hitLatency = 3;
+			else if (associativity == 8)
+				hitLatency = 4;
+			else if (associativity == 16)
+				hitLatency = 5;
+			else if (associativity == 24)
+				hitLatency = 6;
+			else if (associativity == 32)
+				hitLatency = 7;
+			else
+			{
+				cerr << "error: unknown associativity, cannot set hit latency accordingly" << endl;
+				exit(-1);
+			}
+
 			break;
-		case cache_hitlatency_token:
-			hitLatency = lexical_cast<unsigned>(nodeValue);
+		case cache_hitlatency_token:			
+			if (associativity == 0)
+				hitLatency = lexical_cast<unsigned>(nodeValue);
 			break;
 		case cache_size_token:
 			cacheSize = lexical_cast<unsigned>(nodeValue);

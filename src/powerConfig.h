@@ -127,6 +127,7 @@ namespace DRAMsimII
 
 		// overloads
 		bool operator==(const PowerConfig& right) const;
+		PowerConfig &operator=(const PowerConfig& right);
 		friend std::ostream& operator<<(std::ostream& in, const PowerConfig& pc);
 
 	private:

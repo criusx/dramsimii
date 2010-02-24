@@ -108,7 +108,7 @@ namespace DRAMsimII
 				else
 					delete value;			
 			}
-			for (typename std::vector<T*>::iterator i = entry.begin(); i != entry.end(); i++)
+			for (typename std::vector<T*>::iterator i = entry.begin(); i != entry.end(); ++i)
 				assert(*i == NULL);
 		}	
 
@@ -270,7 +270,7 @@ namespace DRAMsimII
 
 #if 1
 				// look around to see if this was already in there, slows things down a lot, so use only when this might be a problem
-				for (typename std::vector<T *>::iterator i = entry.begin(); i != entry.end(); i++)
+				for (typename std::vector<T *>::iterator i = entry.begin(); i != entry.end(); ++i)
 				{
 					assert(item != *i);
 				}

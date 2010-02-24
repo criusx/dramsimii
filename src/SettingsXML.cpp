@@ -323,7 +323,7 @@ bool Settings::loadSettingsFromFile(int argc, char **argv)
 			entireXmlFile,entireXmlFileLength,
 			NULL,NULL,
 			XML_PARSE_RECOVER | XML_PARSE_DTDATTR | XML_PARSE_NOENT | XML_PARSE_DTDVALID);	
-		delete entireXmlFile;
+		delete[] entireXmlFile;
 #else
 		reader = xmlReaderForFile(
 			settingsFile.c_str(),
@@ -464,7 +464,7 @@ bool Settings::loadSettingsFromFile(int argc, char **argv)
 		boost::algorithm::trim(extraSettings);
 		split(params, extraSettings, is_any_of(" "), token_compress_on);
 
-		if (params.size() > 0)
+		if (!params.empty())
 		{
 			if (params.size() % 2 != 0)
 			{

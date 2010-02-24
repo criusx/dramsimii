@@ -176,7 +176,7 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 	{
 		prechargeTime += max(currentTime - max(lastCalculationTime, lastPrechargeAnyBankTime),(tick)0);
 		totalPrechargeTime += max(currentTime - max(lastCalculationTime, lastPrechargeAnyBankTime), (tick)0);
-		for (vector<Bank>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); curBnk++)
+		for (vector<Bank>::const_iterator curBnk = bank.begin(); curBnk != bank.end(); ++curBnk)
 			assert(!curBnk->isActivated());
 	}	
 	banksPrecharged--;
@@ -355,7 +355,7 @@ void Rank::setRankID(const unsigned channelID, const unsigned rankID)
 	if (systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE || systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE_AGGRESSIVE)
 	{		
 		unsigned bankID = 0;
-		for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); i++)
+		for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); ++i)
 		{
 			Transaction t(Transaction::AUTO_PRECHARGE_TRANSACTION,0,timing.tBurst(), Address(channelID,rankID,bankID++, 0,0));
 			i->push(new Command(&t, 0, false, timing.tBurst(), Command::PRECHARGE));
@@ -411,7 +411,7 @@ Command *Rank::getCommand(const unsigned thisBank)
 		{
 			Command *tempCommand = NULL;
 
-			for (vector<Bank>::iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
+			for (vector<Bank>::iterator currentBank = bank.begin(); currentBank != bank.end(); ++currentBank)
 			{
 				delete tempCommand;
 
@@ -450,9 +450,9 @@ void Rank::resetToTime(const tick time)
 
 	nextActivateTime = time;
 	nextRefreshTime = time + timing.tRP();
-	for (boost::circular_buffer<tick>::iterator i = lastActivateTimes.begin(); i != lastActivateTimes.end(); i++)
+	for (boost::circular_buffer<tick>::iterator i = lastActivateTimes.begin(); i != lastActivateTimes.end(); ++i)
 		*i = time - timing.tFAW();
-	for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); i++)
+	for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); ++i)
 		i->resetToTime(time);
 
 }
@@ -489,7 +489,7 @@ tick Rank::getPrechargeTime(const tick currentTime) const
 //////////////////////////////////////////////////////////////////////
 bool Rank::refreshAllReady() const
 {
-	for (vector<Bank>::const_iterator currentBank = bank.begin(); currentBank != bank.end(); currentBank++)
+	for (vector<Bank>::const_iterator currentBank = bank.begin(); currentBank != bank.end(); ++currentBank)
 	{
 		// if any queue is empty or the head of any queue isn't a refresh command, then the rank isn't ready for a refresh all command
 		if (!currentBank->front() || !currentBank->front()->isRefresh())
@@ -502,7 +502,7 @@ bool Rank::refreshAllReady() const
 
 bool Rank::isEmpty() const
 {
-	for (vector<Bank>::const_iterator i = bank.begin(); i != bank.end(); i++)
+	for (vector<Bank>::const_iterator i = bank.begin(); i != bank.end(); ++i)
 	{
 		if (!i->hasNoReadWrite())
 			return false;
@@ -532,6 +532,12 @@ Rank& Rank::operator =(const Rank& rhs)
 	otherLastCASWTime = rhs.otherLastCASWTime;
 	otherLastCASLength = rhs.otherLastCASLength;
 	otherLastCASWLength = rhs.otherLastCASWLength;
+	tags = rhs.tags;
+	lastCalculationTime = rhs.lastCalculationTime;
+	nextRefreshTime = rhs.nextRefreshTime;
+	nextWriteTime = rhs.nextWriteTime;
+	nextReadTime = rhs.nextReadTime;
+	nextActivateTime = rhs.nextActivateTime;
 
 	return *this;
 }

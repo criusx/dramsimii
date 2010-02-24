@@ -347,6 +347,7 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	shortBurstRatio = rhs.shortBurstRatio;
 	readPercentage = rhs.readPercentage;
 	sessionID = rhs.sessionID;
+	verilogFile = rhs.verilogFile;
 
 	return *this;
 }

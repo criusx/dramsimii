@@ -29,8 +29,22 @@ using std::endl;
 using namespace DRAMsimII;
 
 int main(int argc,char **argv, char *envp[])
-{	
+{		
+	cerr << "Command line:";
+	for (int i = 0; i < argc; ++i)
+	{
+		cerr << ' ';
+		char *hasSpace = strchr(argv[i],' ');
+		if (hasSpace != NULL)
+			cerr << '"';
+		cerr << argv[i];
+		if (hasSpace != NULL)
+			cerr << '"';		
+	}
+	cerr << endl;
+
 	const Settings settings(argc, argv);	
+
 
 #ifdef DEBUG
 	//cerr << TICK_MAX << endl;

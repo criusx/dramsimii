@@ -28,7 +28,8 @@ SW2(cfgstr, d),
 randomNumberGenerator(std::time(0)),
 rngDistributionModel(0,1),
 rngGenerator(randomNumberGenerator, rngDistributionModel),
-cpuRatio(0)
+cpuRatio(0),
+currentTransactionID(0)
 {
 	const char *settingsMap[2] = {"--settings", "/home/crius/m5-stable/src/mem/DRAMsimII/memoryDefinitions/DDR2-800-4-4-4-25E.xml"};
 

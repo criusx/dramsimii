@@ -126,6 +126,48 @@ bool PowerConfig::operator==(const PowerConfig& rhs) const
 		AlmostEqual<double>(frequencyScaleFactor, rhs.frequencyScaleFactor));
 }
 
+PowerConfig& PowerConfig::operator =(const PowerConfig &rhs)
+{
+	const_cast<float&>(VDD) = rhs.VDD;
+	const_cast<float&>(VDDmax) = rhs.VDDmax;
+	const_cast<int&>(IDD0) = rhs.IDD0;
+	const_cast<int&>(IDD1) = rhs.IDD1;
+	const_cast<int&>(IDD2P) = rhs.IDD2P;
+	const_cast<int&>(IDD2N) = rhs.IDD2N;
+	const_cast<int&>(IDD3P) = rhs.IDD3P;
+	const_cast<int&>(IDD3N) = rhs.IDD3N;
+	const_cast<int&>(IDD4R) = rhs.IDD4R;
+	const_cast<int&>(IDD4W) = rhs.IDD4W;
+	const_cast<int&>(IDD5) = rhs.IDD5;
+	const_cast<double&>(PdsACT) = rhs.PdsACT;
+	const_cast<double&>(PdsACT_STBY) = rhs.PdsACT_STBY;
+	const_cast<double&>(PdsPRE_STBY) = rhs.PdsPRE_STBY;
+	const_cast<double&>(PdsACT_PDN) = rhs.PdsACT_PDN;
+	const_cast<double&>(PdsPRE_PDN) = rhs.PdsPRE_PDN;
+	const_cast<double&>(PdsRD) = rhs.PdsRD;
+	const_cast<double&>(PdsWR) = rhs.PdsWR;
+	const_cast<double&>(voltageScaleFactor) = rhs.voltageScaleFactor;
+	const_cast<double&>(frequencyScaleFactor) = rhs.frequencyScaleFactor;
+	const_cast<double&>(PdstermW) = rhs.PdstermW;
+	const_cast<double&>(PdqRD) = rhs.PdqRD;
+	const_cast<double&>(PdqWR) = rhs.PdqWR;
+	const_cast<double&>(PdqRDoth) = rhs.PdqRDoth;
+	const_cast<double&>(PdqWRoth) = rhs.PdqWRoth;
+
+	const_cast<unsigned&>(DQperDRAM) = rhs.DQperDRAM;
+	const_cast<unsigned&>(DQSperDRAM) = rhs.DQSperDRAM;
+	const_cast<unsigned&>(DMperDRAM) = rhs.DMperDRAM;
+	const_cast<unsigned&>(DQperRank) = rhs.DQperRank;
+	const_cast<unsigned&>(frequency) = rhs.frequency;
+	const_cast<unsigned&>(specFrequency) = rhs.specFrequency;
+	const_cast<unsigned&>(tBurst) = rhs.tBurst;
+	const_cast<unsigned&>(tRC) = rhs.tRC;
+	const_cast<unsigned&>(tRAS) = rhs.tRAS;
+	lastCalculation = rhs.lastCalculation;
+
+	return *this;
+}
+
 std::ostream& DRAMsimII::operator<<(std::ostream& in, const PowerConfig& pc)
 {
 	using std::endl;

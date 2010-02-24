@@ -177,7 +177,8 @@ hitLatency = [5]
 
 #traces = ['bzip2-trace.gz', 'lbm-trace.gz', 'mcf-trace.gz']
 #traces = ['mcf001-trace.gz','namd002-trace.gz','omnetpp002-trace.gz']
-traces = ['milcLong001-trace.gz', 'lbmLong-trace.gz', 'mcfLong000-trace.gz', 'xalancbmkLong005-trace.gz', 'bzip2-trace.gz']
+#traces = ['milcLong001-trace.gz', 'lbmLong-trace.gz', 'mcfLong000-trace.gz', 'xalancbmkLong005-trace.gz', 'bzip2-trace.gz']
+traces = ['lbmLong-trace.gz']
 
 def main():
     try:
@@ -222,7 +223,7 @@ def main():
                                                                      commandOrderingAlgorithm[0], 0, perBankQueueDepth[0], 135000000000000, tFAW[0], rowBufferManagementPolicy[0], outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s cacheSize %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, size, hitLat, assoc))
                                 #submitCommandLine = '''echo 'time %s' | qsub -q default -o %s -e %s -N "studyMap"''' % (currentCommandLine, outputDir, outputDir)
                                 submitCommand = submitString % (currentCommandLine, outputDir, outputDir, t)
-                                print currentCommandLine
+                                #print currentCommandLine
                                 #sys.exit(0)
                                 #if not counting:
                                 os.system(submitCommand)

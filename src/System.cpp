@@ -192,7 +192,7 @@ tick System::nextTick() const
 	tick nextEvent = nextStats;
 
 	// find the next time to wake from among all the channels
-	for (vector<Channel>::const_iterator currentChan = channel.begin(); currentChan != channel.end(); currentChan++)
+	for (vector<Channel>::const_iterator currentChan = channel.begin(), end = channel.end(); currentChan != end; ++currentChan)
 	{
 		tick channelNextWake = currentChan->nextTick();
 		assert(channelNextWake > currentChan->getTime());
@@ -236,7 +236,7 @@ void System::updateSystemTime()
 	time = currentChan->getTime();
 	currentChan++;
 
-	for (;currentChan != channel.end(); currentChan++)
+	for (;currentChan != channel.end(); ++currentChan)
 	{
 		if (currentChan->getTime() < time)
 			time = currentChan->getTime();
@@ -271,7 +271,7 @@ void System::resetToTime(const tick time)
 {
 	nextStats = time + systemConfig.getEpoch();
 
-	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); ++i)
 	{
 		i->resetToTime(time);
 	}
@@ -319,7 +319,7 @@ unsigned System::findOldestChannel() const
 	vector<Channel>::const_iterator currentChan = channel.begin();
 	tick oldestTime = currentChan->getTime();
 	unsigned oldestChanID = currentChan->getChannelID();
-	for (; currentChan != channel.end(); currentChan++)
+	for (; currentChan != channel.end(); ++currentChan)
 	{
 		if (currentChan->getTime() < oldestTime)
 		{
@@ -354,7 +354,7 @@ void System::doPowerCalculation()
 
 	//for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time, systemConfig.powerOutStream));
 
-	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i != end; ++i)
 	{
 		i->doPowerCalculation(time, systemConfig.powerOutStream);
 	}
@@ -367,7 +367,7 @@ void System::doPowerCalculation()
 unsigned System::pendingTransactionCount() const
 {
 	unsigned count = 0;
-	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+	for (vector<Channel>::const_iterator i = channel.begin(), end = channel.end(); i != end; ++i)
 		count += i->pendingTransactionCount();
 	return count;
 }
@@ -377,7 +377,7 @@ unsigned System::pendingTransactionCount() const
 //////////////////////////////////////////////////////////////////////////
 void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outputQueue)
 {
-	for (vector<Channel>::iterator i = channel.begin(); i != channel.end(); i++)
+	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i != end; ++i)
 		i->getPendingTransactions(outputQueue);
 }
 
@@ -453,7 +453,7 @@ void System::runSimulations(const unsigned requestCount)
 
 					if (outstandingTransacitonCounter % 5000 == 0)
 					{
-						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(); j != outstandingTransactions.end(); j++)
+						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(), end = outstandingTransactions.end(); j != end; ++j)
 						{
 							unsigned diff = time - j->second.first->getEnqueueTime();
 							if (diff > 10000)
@@ -479,7 +479,9 @@ void System::runSimulations(const unsigned requestCount)
 		delete inputTransaction;
 
 	}
-	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(); i != outstandingTransactions.end(); i++)
+	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(),
+		end = outstandingTransactions.end();
+		i != end; ++i)
 	{
 		delete i->second.first;
 		delete i->second.second;
@@ -494,7 +496,7 @@ void System::runSimulations(const unsigned requestCount)
 //////////////////////////////////////////////////////////////////////////
 bool System::isEmpty() const
 {
-	for (vector<Channel>::const_iterator i = channel.begin(); i != channel.end(); i++)
+	for (vector<Channel>::const_iterator i = channel.begin(), end = channel.end(); i != end; ++i)
 	{
 		if (!i->isEmpty())
 			return false;

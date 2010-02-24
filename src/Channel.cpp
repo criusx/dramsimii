@@ -65,7 +65,7 @@ rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig, st
 finishedTransactions()
 {
 	// assign an id to each channel (normally done with commands)
-// 	for (unsigned i = 0; i < settings.rankCount; i++)
+// 	for (unsigned i = 0; i < settings.rankCount; ++i)
 // 	{
 // 		rank[i].setRankID(i);
 // 	}
@@ -121,7 +121,7 @@ finishedTransactions()
 	// to fill incomingTransaction the values
 	rank = rhs.rank;
 	
-	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); i++)
+	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); ++i)
 	{
 		refreshCounter[i] = new Transaction(*rhs.refreshCounter[i]);
 	}	
@@ -171,7 +171,7 @@ finishedTransactions()
 	// assign an id to each channel (normally done with commands)
 	rank = rhs.rank;
 
-	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); i++)
+	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); ++i)
 	{
 		refreshCounter[i] = new Transaction(*rhs.refreshCounter[i]);
 	}
@@ -204,7 +204,7 @@ Channel::~Channel()
 		lastCommand = NULL;
 	}
 #if 1
-	for (vector<Transaction *>::iterator i = refreshCounter.begin(), end = refreshCounter.end(); i != end; i++)
+	for (vector<Transaction *>::iterator i = refreshCounter.begin(), end = refreshCounter.end(); i != end; ++i)
 	{
 		Transaction::release(*i);
 		*i = NULL;
@@ -221,11 +221,11 @@ void Channel::setChannelID(const unsigned value)
 {
 	 channelID = value;
 	 unsigned rankID = 0;
-	 for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
+	 for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
 	 {
 		 i->setRankID(value, rankID++);
 	 }
-	 for (vector<Transaction *>::iterator i = refreshCounter.begin(), end = refreshCounter.end(); i != end; i++)
+	 for (vector<Transaction *>::iterator i = refreshCounter.begin(), end = refreshCounter.end(); i != end; ++i)
 	 {
 		 //(*i)->getAddress().setChannel(value);
 	 }
@@ -238,7 +238,7 @@ void Channel::setChannelID(const unsigned value)
 //////////////////////////////////////////////////////////////////////////
 void Channel::moveToTime(const tick currentTime)
 {	
-	assert(finishedTransactions.size() == 0);
+	assert(finishedTransactions.empty());
 
 	/// @todo continue until no events are processed, no commands issued, no transactions decoded
 	while (time < currentTime)
@@ -362,7 +362,7 @@ tick Channel::nextTransactionDecodeTime() const
 //////////////////////////////////////////////////////////////////////////
 void Channel::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outputQueue)
 {
-	while (finishedTransactions.size() > 0)
+	while (!finishedTransactions.empty())
 	{
 		outputQueue.push(finishedTransactions.front());
 		finishedTransactions.pop();
@@ -534,7 +534,7 @@ Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 	vector<Bank>::const_iterator currentBank = rank[rankID].bank.begin();
 	vector<Bank>::const_iterator bankEnd = rank[rankID].bank.end();
 
-	for(; currentBank != bankEnd; currentBank++)
+	for(; currentBank != bankEnd; ++currentBank)
 	{
 		if (const Command *currentCommand = currentBank->front())
 		{
@@ -594,13 +594,13 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 
 	os << "+ch[" << channelID << "]";
 	
-	for (vector<Rank>::iterator k = rank.begin(); k != rank.end(); k++)
+	for (vector<Rank>::iterator k = rank.begin(); k != rank.end(); ++k)
 	{
 		unsigned thisRankRasCount = 1;
 		
 		rankArray.push_back(k->getRankID());
 
-		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); l++)
+		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); ++l)
 		{
 			thisRankRasCount += l->getRASCount();
 			l->accumulateAndResetCounts();
@@ -867,7 +867,7 @@ unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 
 	unsigned limit = min(systemConfig.getDecodeWindow(), transactionQueue.size());
 
-	for (unsigned i = 0; i < limit; i++)
+	for (unsigned i = 0; i < limit; ++i)
 	{
 		const Transaction *currentTrans = transactionQueue[i];
 		tick enqueueTime = currentTrans->getEnqueueTime();
@@ -878,7 +878,7 @@ unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 		{
 			bool conflict = false;
 			// make sure not to create a RAW, WAR, WAW problem
-			for (unsigned j = 0; j < i; j++)
+			for (unsigned j = 0; j < i; ++j)
 			{
 				if (currentTrans->getAddress() == transactionQueue[j]->getAddress())
 				{
@@ -1002,9 +1002,9 @@ const Transaction *Channel::readNextRefresh() const
 	
 	vector<Transaction *>::const_iterator i = refreshCounter.begin();
 	Transaction *earliestRefresh = *i;
-	i++;
+	++i;
 
-	for (vector<Transaction *>::const_iterator end = refreshCounter.end(); i != end; i++)
+	for (vector<Transaction *>::const_iterator end = refreshCounter.end(); i != end; ++i)
 	{
 		if ((*i)->getArrivalTime() < earliestRefresh->getArrivalTime())
 		{
@@ -1028,12 +1028,12 @@ void Channel::resetToTime(const tick time)
 	this->time = time;
 	powerModel.resetToTime(time);
 	// adjust the start time of the refreshes to match the new time
-	for (vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); i++)
+	for (vector<Transaction *>::iterator i = refreshCounter.begin(); i != refreshCounter.end(); ++i)
 	{
 		(*i)->setArrivalTime((*i)->getArrivalTime() + time);
 		//*i = *i + time;
 	}
-	for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
+	for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
 	{
 		i->resetToTime(time);
 	}
@@ -1076,7 +1076,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<Bank>::const_iterator currentBank = destinationRank.bank.begin(); currentBank != destinationRank.bank.end(); currentBank++)
+			for (vector<Bank>::const_iterator currentBank = destinationRank.bank.begin(); currentBank != destinationRank.bank.end(); ++currentBank)
 			{
 				if (currentBank->isFull())
 					return false;
@@ -1116,7 +1116,7 @@ bool Channel::checkForAvailableCommandSlots(const Transaction *incomingTransacti
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+			for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); ++i)
 			{					
 				if (i->freeCommandSlots() < 2)
 					return false;
@@ -1212,7 +1212,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// refresh commands refresh a row, but kill everything currently in the sense amps
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
-			for (vector<Bank>::const_iterator currentBank = destinationRank->bank.begin(); currentBank != destinationRank->bank.end(); currentBank++)
+			for (vector<Bank>::const_iterator currentBank = destinationRank->bank.begin(); currentBank != destinationRank->bank.end(); ++currentBank)
 			{
 				if (currentBank->isFull())
 					return false;
@@ -1220,7 +1220,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// then add the command to all queues
 			Command *refreshCommand = new Command(incomingTransaction, time,  systemConfig.isAutoPrecharge(), timingSpecification.tBurst());
 
-			for (vector<Bank>::iterator currentBank = destinationRank->bank.begin(); currentBank != destinationRank->bank.end(); currentBank++)
+			for (vector<Bank>::iterator currentBank = destinationRank->bank.begin(); currentBank != destinationRank->bank.end(); ++currentBank)
 			{
 #ifndef NDEBUG
 				bool result =
@@ -1294,7 +1294,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 		{
 			vector<Bank>::iterator bankEnd = destinationRank->bank.end();
 			// evaluate every per bank queue in this rank and collapse
-			for (vector<Bank>::iterator i = destinationRank->bank.begin(); i != bankEnd; i++)
+			for (vector<Bank>::iterator i = destinationRank->bank.begin(); i != bankEnd; ++i)
 			{
 				if (i->isHighUtilization())
 				{
@@ -1321,7 +1321,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			// therefore, we need to make sure that the refresh commands happen when all banks
 			// are available
 			vector<Bank>::const_iterator bankEnd = destinationRank->bank.end();
-			for (vector<Bank>::const_iterator i = destinationRank->bank.begin(); i != bankEnd; i++)
+			for (vector<Bank>::const_iterator i = destinationRank->bank.begin(); i != bankEnd; ++i)
 			{
 				if (i->back())
 					assert(i->back()->isRefresh() || i->back()->isReadOrWrite());
@@ -1337,7 +1337,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			Address tempAddr(incomingTransaction->getAddress());
 			unsigned bankNumber = 0;
 
-			for (vector<Bank>::iterator i = destinationRank->bank.begin(); i != bankEnd; i++)
+			for (vector<Bank>::iterator i = destinationRank->bank.begin(); i != bankEnd; ++i)
 			{
 				// can only refresh banks that are in the precharged state
 				if (i->back() && i->back()->isReadOrWrite())
@@ -1375,7 +1375,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 			}
 
 			for (vector<Bank>::const_iterator i = rank[incomingTransaction->getAddress().getRank()].bank.begin(); 
-				i != rank[incomingTransaction->getAddress().getRank()].bank.end(); i++)
+				i != rank[incomingTransaction->getAddress().getRank()].bank.end(); ++i)
 			{
 				assert(i->back() == refreshCommand);
 			}
@@ -1509,7 +1509,7 @@ Command *Channel::getNextCommand(const Command *useThisCommand)
 
 			//Command *tempCommand = const_cast<Command*>(currentBank->front());
 
-			for (;currentBank != bankEnd;currentBank++)
+			for (;currentBank != bankEnd; ++currentBank)
 			{				
 				assert(currentBank->front() != NULL);
 				if (!currentBank->front()->isRefresh())
@@ -1574,13 +1574,13 @@ const Command *Channel::readNextCommand() const
 
 			vector<Rank>::const_iterator rankEnd = rank.end();
 
-			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; currentRank++)
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; ++currentRank)
 			{
 				bool isRefreshCommand = true;
 
 				vector<Bank>::const_iterator bankEnd = currentRank->bank.end();
 
-				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; currentBank++)
+				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; ++currentBank)
 				{	
 					if (!currentBank->isEmpty())
 					{
@@ -1667,13 +1667,13 @@ const Command *Channel::readNextCommand() const
 
 			vector<Rank>::const_iterator rankEnd = rank.end();
 
-			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; currentRank++)
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; ++currentRank)
 			{
 				bool isRefreshCommand = true;
 
 				vector<Bank>::const_iterator bankEnd = currentRank->bank.end();
 
-				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; currentBank++)
+				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; ++currentBank)
 				{	
 					if (!currentBank->isEmpty())
 					{
@@ -1754,13 +1754,13 @@ const Command *Channel::readNextCommand() const
 
 			vector<Rank>::const_iterator rankEnd = rank.end();
 
-			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; currentRank++)
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; ++currentRank)
 			{
 				bool isRefreshCommand = true;
 
 				vector<Bank>::const_iterator bankEnd = currentRank->bank.end();
 
-				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; currentBank++)
+				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; ++currentBank)
 				{	
 					if (!currentBank->isEmpty())
 					{
@@ -1840,13 +1840,13 @@ const Command *Channel::readNextCommand() const
 
 			vector<Rank>::const_iterator rankEnd = rank.end();
 
-			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; currentRank++)
+			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rankEnd; ++currentRank)
 			{
 				bool notAllRefresh = false;
 
 				vector<Bank>::const_iterator bankEnd = currentRank->bank.end();
 
-				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; currentBank++)
+				for (vector<Bank>::const_iterator currentBank = currentRank->bank.begin(); currentBank != bankEnd; ++currentBank)
 				{
 					if (const Command *challengerCommand = currentBank->front())
 					{
@@ -2043,9 +2043,9 @@ const Command *Channel::readNextCommand() const
 						if (readSweep == originalReadSweep)
 						{
 #ifndef NDEBUG
-							for (vector<Rank>::const_iterator i = rank.begin(); i != rankEnd; i++)
+							for (vector<Rank>::const_iterator i = rank.begin(); i != rankEnd; ++i)
 							{
-								for (vector<Bank>::const_iterator j = i->bank.begin(); j != i->bank.end(); j++)
+								for (vector<Bank>::const_iterator j = i->bank.begin(); j != i->bank.end(); ++j)
 								{
 									assert(j->isEmpty());
 								}
@@ -2207,9 +2207,9 @@ const Command *Channel::readNextCommand() const
 						if (readSweep == originalReadSweep)
 						{
 #ifndef NDEBUG
-							for (vector<Rank>::const_iterator i = rank.begin(); i != rankEnd; i++)
+							for (vector<Rank>::const_iterator i = rank.begin(); i != rankEnd; ++i)
 							{
-								for (vector<Bank>::const_iterator j = i->bank.begin(); j != i->bank.end(); j++)
+								for (vector<Bank>::const_iterator j = i->bank.begin(); j != i->bank.end(); ++j)
 								{
 									assert(j->isEmpty());
 								}
@@ -2394,7 +2394,7 @@ void Channel::executeCommand(Command *thisCommand)
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
 		/// @todo let each rank figure out if the command is to it or not by combining issueCAS and issueCASother
-		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
+		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
 		{
 			if (&currentRank != &*i)
 			{
@@ -2429,7 +2429,7 @@ void Channel::executeCommand(Command *thisCommand)
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
 		/// @todo let each rank figure out if the command is to it or not by combining issueCAS and issueCASother
-		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); i++)
+		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
 		{
 			if (&currentRank != &*i)
 			{
@@ -2458,7 +2458,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::REFRESH_ALL:
 
-		for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); i++)
+		for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); ++i)
 			if (i->isActivated())
 				assert(!i->isActivated());
 
@@ -2567,7 +2567,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			int otherRankLastCASWLength = timingSpecification.tBurst();
 
 			// find the most recent cas(w) time and length
-			for (vector<Rank>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); thisRank++)
+			for (vector<Rank>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); ++thisRank)
 			{
 				if (thisRank->getRankID() != currentRank.getRankID())
 				{
@@ -2628,7 +2628,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 
 			// find the most recent CAS/CASW time and length
 			// FIXME: change to use iterators
-			for (unsigned rank_id = 0; rank_id < rank.size() ; rank_id++)
+			for (unsigned rank_id = 0; rank_id < rank.size() ; ++rank_id)
 			{
 				if (rank_id != currentRankID)
 				{
@@ -2892,7 +2892,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 
 bool Channel::isEmpty() const
 {
-	for (vector<Rank>::const_iterator i = rank.begin(); i != rank.end(); i++)
+	for (vector<Rank>::const_iterator i = rank.begin(); i != rank.end(); ++i)
 	{
 		if (!i->isEmpty())
 			return false;
@@ -3155,6 +3155,9 @@ Channel& Channel::operator =(const Channel &rhs)
 	refreshCounter = rhs.refreshCounter;
 	channelID = rhs.channelID;
 	rank = rhs.rank;
+	dbReporting = rhs.dbReporting;
+	powerModel = rhs.powerModel;
+	timingSpecification = rhs.timingSpecification;
 
 	return *this;
 }

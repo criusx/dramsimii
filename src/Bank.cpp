@@ -552,6 +552,11 @@ Bank& Bank::operator =(const Bank& rhs)
 	totalCASCount = rhs.totalCASCount;		
 	CASWCount = rhs.CASWCount;			
 	totalCASWCount = rhs.totalCASWCount;	
+	allHits = rhs.allHits;
+	nextPrechargeTime = rhs.nextPrechargeTime;
+	nextWriteTime = rhs.nextWriteTime;
+	nextReadTime = rhs.nextReadTime;
+	nextActivateTime = rhs.nextActivateTime;
 
 	return *this;
 }
