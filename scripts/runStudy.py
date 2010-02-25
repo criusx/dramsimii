@@ -177,8 +177,12 @@ hitLatency = [5]
 
 #traces = ['bzip2-trace.gz', 'lbm-trace.gz', 'mcf-trace.gz']
 #traces = ['mcf001-trace.gz','namd002-trace.gz','omnetpp002-trace.gz']
-#traces = ['milcLong001-trace.gz', 'lbmLong-trace.gz', 'mcfLong000-trace.gz', 'xalancbmkLong005-trace.gz', 'bzip2-trace.gz']
-traces = ['lbmLong-trace.gz']
+traces = []
+traces += ['milcLong001-trace.gz']
+#traces += ['lbmLong-trace.gz']
+traces += ['mcfLong000-trace.gz']
+traces += ['xalancbmkLong005-trace.gz']
+traces += ['bzip2-trace.gz']
 
 def main():
     try:

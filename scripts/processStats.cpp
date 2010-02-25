@@ -506,7 +506,7 @@ void thumbNailWorker()
 			string commandLine0 = string(CONVERT_COMMAND) + " " + filename + " -resize " + thumbnailResolution + " " + baseFilename + "-thumb.png";
 			string commandLine2 = "gzip -c -9 -f " + filename + " > " + filename + "z";
 
-			cerr << commandLine0 << endl;
+			//cerr << commandLine0 << endl;
 			if (system(commandLine0.c_str()) != 0)
 				cerr << "Failed to create thumbnail for " << filename << endl;
 			if (system(commandLine2.c_str()) != 0)
@@ -937,13 +937,13 @@ void processPower(const string &filename)
 	//////////////////////////////////////////////////////////////////////////
 
 	p.close();
-	cerr << "p close" << endl;
+	//cerr << "p close" << endl;
 	p2.close();
-	cerr << "p2 close" << endl;
-	//p3.close();
+	//cerr << "p2 close" << endl;
+	p3.close();
 	//cerr << "p3 close" << endl;
 	p4.close();
-	cerr << "p4 close" << endl;
+	//cerr << "p4 close" << endl;
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
 		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); ++i)
@@ -1240,7 +1240,9 @@ void processStats(const string &filename)
 				{
 					string value(what[1].first,what[1].second);
 					tRC = lexical_cast<unsigned>(value);
+#ifndef NDEBUG
 					cerr << "got tRC as " << tRC << endl;
+#endif
 				}
 				else
 					exit(-1);
@@ -1251,7 +1253,9 @@ void processStats(const string &filename)
 				{
 					string value(what[1].first,what[1].second);
 					tRAS = lexical_cast<unsigned>(value);
+#ifndef NDEBUG
 					cerr << "got tRAS as " << tRAS << endl;
+#endif
 				}
 				else
 					exit(-1);
@@ -2628,189 +2632,198 @@ int main(int argc, char** argv)
 
 	list<string> toBeProcessed;
 
-	map<string,string> files;
+	map<string,vector<string> > results;
+
+	vector<string> files;
 
 	for (int i = 0; i < argc; ++i)
 	{
 		if (ends_with(argv[i],"power.gz") || ends_with(argv[i],"power.bz2") || 
 			ends_with(argv[i],"stats.gz") || ends_with(argv[i],"stats.bz2"))
 		{
-			filtering_istream inputStream;
-			inputStream.push(boost::iostreams::gzip_decompressor());
-			inputStream.push(file_source(argv[i]));
-
-			char newLine[NEWLINE_LENGTH];
-
-			if (!inputStream.is_complete())
-				continue;
-
-			pair<unsigned,unsigned> readHitsMisses;
-			pair<unsigned,unsigned> hitsMisses;
-			unsigned epochCounter = 0;
-			double epoch = 0.0;
-			float averageLatency;
-			float averageAdjustedLatency;
-			string outline;
-			string basefilename;
-			bool foundCommandline = false;
-			bool foundEpoch = false;
-
-			inputStream.getline(newLine,NEWLINE_LENGTH); 
-
-			unsigned lineCounter = 0;
-
-			while ((newLine[0] != NULL) && (!userStop))
-			{
-				const string filename(argv[i]);
-				
-				if (starts_with(newLine, "----Cumulative DIMM Cache Read Hits/Misses"))
-				{
-					epochCounter++;
-
-					char *firstBracket = strchr(newLine,'{');
-					if (firstBracket == NULL) break;
-
-					char *secondBracket = strchr(newLine,'}');
-					if (secondBracket == NULL) break;
-					*secondBracket = (char)NULL;
-					readHitsMisses.first = max(atoi(firstBracket + 1),1);
-
-					firstBracket = strchr(secondBracket + 1,'{');
-					if (firstBracket == NULL) break;
-
-					secondBracket = strchr(secondBracket + 1,'}');
-					if (secondBracket == NULL) break;
-					*secondBracket = (char)NULL;
-					readHitsMisses.second = max(atoi(firstBracket + 1),1);
-				}
-				else if (starts_with(newLine, "----Cumulative DIMM Cache Hits/Misses"))
-				{
-					char *firstBracket = strchr(newLine,'{');
-					if (firstBracket == NULL) break;
-
-					char *secondBracket = strchr(newLine,'}');
-					if (secondBracket == NULL) break;
-					*secondBracket = (char)NULL;
-					hitsMisses.first = max(atoi(firstBracket + 1),1);
-
-					firstBracket = strchr(secondBracket + 1,'{');
-					if (firstBracket == NULL) break;
-
-					secondBracket = strchr(secondBracket + 1,'}');
-					if (secondBracket == NULL) break;
-					*secondBracket = (char)NULL;
-					hitsMisses.second = max(atoi(firstBracket + 1),1);
-				}
-				else if (starts_with(newLine, "----Average Cumulative Transaction Latency"))
-				{
-					char *firstBracket = strchr(newLine,'{');
-					if (firstBracket == NULL) break;
-
-					char *secondBracket = strchr(newLine,'}');
-					if (secondBracket == NULL) break;
-					*secondBracket = (char)NULL;
-					averageLatency = atof(firstBracket + 1);
-				}
-				else if (starts_with(newLine, "----Average Cumulative Adjusted Transaction Latency"))
-				{
-					char *firstBracket = strchr(newLine,'{');
-					if (firstBracket == NULL) break;
-
-					char *secondBracket = strchr(newLine,'}');
-					if (secondBracket == NULL) break;
-					*secondBracket = (char)NULL;
-					averageAdjustedLatency = atof(firstBracket + 1);
-				}				
-				else if (!foundEpoch && starts_with(newLine, "----Epoch"))
-				{
-					foundEpoch = true;
-
-					char *position = strchr(newLine,' ');
-					if (position == NULL) break;
-					epoch = atof(position + 1);
-				}
-				else if (!foundCommandline && starts_with(newLine, "----Command Line:"))
-				{
-					foundCommandline = true;
-
-					toBeProcessed.push_back(argv[i]);
-
-					basefilename = filename.substr(0,filename.find_last_of('-'));
-					string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
-					const string commandline(newLine);
-					string modUrlString = commandline.substr(commandline.find(':')+2,commandline.length());
-					vector<string> splitLine;
-					erase_all(modUrlString, "_");
-					erase_all(modUrlString, "{");
-					erase_all(modUrlString, "}");
-					split(splitLine, modUrlString, is_any_of(" "), token_compress_on);
-
-
-					for (vector<string>::const_iterator x = splitLine.begin(); x != splitLine.end(); ++x)
-					{
-						string::size_type start = x->find("[");
-						string::size_type end = x->find("]");
-						string benchmarkName;
-
-						if (start == string::npos || end == string::npos)
-							benchmarkName = *x;
-						else
-							benchmarkName = x->substr(start + 1,end - start - 1);
-
-						if (decoder.find(benchmarkName) != decoder.end())
-							benchmarkName = decoder[benchmarkName];
-
-						outline += "<td>" + ireplace_all_copy(currentUrlString,"%2",benchmarkName) + "</td>";
-					}
-					// then calculate the runtime for the last column
-					if (ends_with(argv[i],"stats.gz") || ends_with(argv[i],"stats.bz2"))
-					{
-						// 						if (files.find(basefilename) == files.end())
-						// 							files[basefilename] = outline;
-					}
-					else
-					{
-						if (files.find(basefilename) == files.end())
-							files[basefilename] = outline;
-
-						// do not read power files all the way through
-						break;
-						// 						stringstream current;
-						// 						current << std::dec << std::fixed << std::setprecision(6) << calcRunTime(inputStream);
-						// 						outline += "<td>" + ireplace_all_copy(currentUrlString,"%2",current.str()) + "</td>";						
-					}
-				}
-
-				if ((++lineCounter % 1000 )== 0)
-				{
-					char *position = strchr(newLine,'\n');
-					if (position != NULL)
-						*position = (char)NULL;
-					newLine[50] = NULL;
-					cerr << "\r" << std::setw(9) << lineCounter << " " << newLine;
-				}
-
-				inputStream.getline(newLine,NEWLINE_LENGTH);
-			}
-			boost::iostreams::close(inputStream);
-			stringstream current;
-			current << std::dec << std::fixed << std::setprecision(6) << ((double)epochCounter * epoch);
-			outline +=  "<td>" + current.str() + "</td>";
-			current.str("");
-			current << std::dec << std::fixed << std::setprecision(6) << ((float)readHitsMisses.first / ((float)readHitsMisses.first + readHitsMisses.second));
-			outline +=  "<td>" + current.str() + "</td>";
-			current.str("");
-			current << std::dec << std::fixed << std::setprecision(6) <<((float)hitsMisses.first / ((float)hitsMisses.first + hitsMisses.second));
-			outline +=  "<td>" + current.str() + "</td>";
-			current.str("");
-			current << std::dec << std::fixed << std::setprecision(6) << averageLatency;
-			outline +=  "<td>" + current.str() + "</td>";
-			current.str("");
-			current << std::dec << std::fixed << std::setprecision(6) << averageAdjustedLatency;
-			outline +=  "<td>" + current.str() + "</td>";
-
-			files[basefilename] = outline;
+			files.push_back(string(argv[i]));
 		}
+	}
+	for (vector<string>::const_iterator currentFile = files.begin(); currentFile != files.end(); ++currentFile)
+	{
+		filtering_istream inputStream;
+		inputStream.push(boost::iostreams::gzip_decompressor());
+		inputStream.push(file_source(*currentFile));
+
+		char newLine[NEWLINE_LENGTH];
+
+		if (!inputStream.is_complete())
+			continue;
+
+		pair<unsigned,unsigned> readHitsMisses;
+		pair<unsigned,unsigned> hitsMisses;
+		unsigned epochCounter = 0;
+		double epoch = 0.0;
+		float averageLatency;
+		float averageAdjustedLatency;
+		vector<string> currentLine;
+		string basefilename;
+		bool foundCommandline = false;
+		bool foundEpoch = false;
+
+		inputStream.getline(newLine,NEWLINE_LENGTH); 
+
+		unsigned lineCounter = 0;
+
+		while ((newLine[0] != NULL) && (!userStop))
+		{
+			const string filename(*currentFile);
+
+			if (starts_with(newLine, "----Cumulative DIMM Cache Read Hits/Misses"))
+			{
+				epochCounter++;
+
+				char *firstBracket = strchr(newLine,'{');
+				if (firstBracket == NULL) break;
+
+				char *secondBracket = strchr(newLine,'}');
+				if (secondBracket == NULL) break;
+				*secondBracket = (char)NULL;
+				readHitsMisses.first = max(atoi(firstBracket + 1),1);
+
+				firstBracket = strchr(secondBracket + 1,'{');
+				if (firstBracket == NULL) break;
+
+				secondBracket = strchr(secondBracket + 1,'}');
+				if (secondBracket == NULL) break;
+				*secondBracket = (char)NULL;
+				readHitsMisses.second = max(atoi(firstBracket + 1),1);
+			}
+			else if (starts_with(newLine, "----Cumulative DIMM Cache Hits/Misses"))
+			{
+				char *firstBracket = strchr(newLine,'{');
+				if (firstBracket == NULL) break;
+
+				char *secondBracket = strchr(newLine,'}');
+				if (secondBracket == NULL) break;
+				*secondBracket = (char)NULL;
+				hitsMisses.first = max(atoi(firstBracket + 1),1);
+
+				firstBracket = strchr(secondBracket + 1,'{');
+				if (firstBracket == NULL) break;
+
+				secondBracket = strchr(secondBracket + 1,'}');
+				if (secondBracket == NULL) break;
+				*secondBracket = (char)NULL;
+				hitsMisses.second = max(atoi(firstBracket + 1),1);
+			}
+			else if (starts_with(newLine, "----Average Cumulative Transaction Latency"))
+			{
+				char *firstBracket = strchr(newLine,'{');
+				if (firstBracket == NULL) break;
+
+				char *secondBracket = strchr(newLine,'}');
+				if (secondBracket == NULL) break;
+				*secondBracket = (char)NULL;
+				averageLatency = atof(firstBracket + 1);
+			}
+			else if (starts_with(newLine, "----Average Cumulative Adjusted Transaction Latency"))
+			{
+				char *firstBracket = strchr(newLine,'{');
+				if (firstBracket == NULL) break;
+
+				char *secondBracket = strchr(newLine,'}');
+				if (secondBracket == NULL) break;
+				*secondBracket = (char)NULL;
+				averageAdjustedLatency = atof(firstBracket + 1);
+			}				
+			else if (!foundEpoch && starts_with(newLine, "----Epoch"))
+			{
+				foundEpoch = true;
+
+				char *position = strchr(newLine,' ');
+				if (position == NULL) break;
+				epoch = atof(position + 1);
+			}
+			else if (!foundCommandline && starts_with(newLine, "----Command Line:"))
+			{
+				foundCommandline = true;
+
+				toBeProcessed.push_back(*currentFile);
+
+				basefilename = filename.substr(0,filename.find_last_of('-'));
+				//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
+				const string commandline(newLine);
+				string modUrlString = commandline.substr(commandline.find(':')+2,commandline.length());
+				vector<string> splitLine;
+				erase_all(modUrlString, "_");
+				erase_all(modUrlString, "{");
+				erase_all(modUrlString, "}");
+				split(splitLine, modUrlString, is_any_of(" "), token_compress_on);
+
+
+				for (vector<string>::const_iterator x = splitLine.begin(); x != splitLine.end(); ++x)
+				{
+					string::size_type start = x->find("[");
+					string::size_type end = x->find("]");
+					string benchmarkName;
+
+					if (start == string::npos || end == string::npos)
+						benchmarkName = *x;
+					else
+						benchmarkName = x->substr(start + 1,end - start - 1);
+
+					if (decoder.find(benchmarkName) != decoder.end())
+						benchmarkName = decoder[benchmarkName];
+
+					currentLine.push_back(benchmarkName);
+					//"<td>" + ireplace_all_copy(currentUrlString,"%2",benchmarkName) + "</td>";
+				}
+
+				// then calculate the runtime for the last column
+				if (!ends_with(*currentFile,"stats.gz") && !ends_with(*currentFile,"stats.bz2"))
+				{
+					if (results.find(basefilename) == results.end())
+						results[basefilename] = currentLine;
+
+					// do not read power files all the way through
+					break;
+				}
+			}
+
+			if ((++lineCounter % 2500 )== 0)
+			{
+				char *position = strchr(newLine,'\n');
+				if (position != NULL)
+					*position = (char)NULL;
+				newLine[50] = NULL;
+				cerr << "\r" << setiosflags(ios::right) << std::setw(4) << currentFile - files.begin() << "/" << setiosflags(ios::left) << std::setw(4) << files.end() - files.begin() << " "<< std::setw(9) << lineCounter << " " << newLine;
+
+				// 					if (lineCounter % 5000 == 0)
+				// 						break;
+			}
+
+			inputStream.getline(newLine,NEWLINE_LENGTH);
+		}
+		boost::iostreams::close(inputStream);
+
+		stringstream current;
+		current << std::dec << std::fixed << std::setprecision(6) << ((double)epochCounter * epoch);
+		currentLine.push_back(current.str());
+		current.str("");
+
+		current << std::dec << std::fixed << std::setprecision(6) << ((float)readHitsMisses.first / ((float)readHitsMisses.first + readHitsMisses.second));
+		currentLine.push_back(current.str());
+		current.str("");
+
+		current << std::dec << std::fixed << std::setprecision(6) <<((float)hitsMisses.first / ((float)hitsMisses.first + hitsMisses.second));
+		currentLine.push_back(current.str());
+		current.str("");
+
+		current << std::dec << std::fixed << std::setprecision(6) << averageLatency;
+		currentLine.push_back(current.str());
+		current.str("");
+
+		current << std::dec << std::fixed << std::setprecision(6) << averageAdjustedLatency;
+		currentLine.push_back(current.str());
+
+		results[basefilename] = currentLine;
+
 	}
 
 	// then generate result.html
@@ -2827,18 +2840,41 @@ int main(int argc, char** argv)
 	entirefile << instream.rdbuf();
 
 	string fileList;
-	for (map<string,string>::const_iterator x = files.begin(); x != files.end(); ++x)
+	string csvOutput;
+	for (map<string,vector<string> >::const_iterator x = results.begin(); x != results.end();++x)
 	{
 		fileList += "<tr>";
-		fileList += x->second;
-		fileList += "</tr>";
+		
+		for (vector<string>::const_iterator i = x->second.begin(), end = x->second.end();
+			i != end; )
+		{
+			csvOutput += *i;
+			
+			
+			fileList += "<td>" + ireplace_all_copy(ireplace_all_copy(urlString,"%2",*i),"%1",x->first) + "</td>";
+
+			if (++i != end)
+				csvOutput += ',';
+			else
+				csvOutput += '\n';
+
+		}
+		
+		fileList += "</tr>";		
 	}
 
+	// write the result html file
 	ofstream out("result.html");
 	string outString = entirefile.str();
 	replace_all(outString,"@@@", fileList);
 	out.write(outString.c_str(), outString.length()); 
-	out.close();		
+	out.close();
+
+	// write the result csv file
+	ofstream outCsv("result.csv");
+	outCsv.write(csvHeader.c_str(),csvHeader.length());
+	outCsv.write(csvOutput.c_str(), csvOutput.length());
+	outCsv.close();
 
 	// create the js directory 
 	bf::path jsDirectory = "js";
