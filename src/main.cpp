@@ -58,23 +58,10 @@ int main(int argc,char **argv, char *envp[])
 	}
 	else
 	{
-		System ds(settings);
+		System ds(settings); 
 		ds.runSimulations();
 	}
 
-// 	{
-// 		System ds(settings);
-// 		ds.runSimulations();
-// 	}
-// 	{
-// 		System ds(settings);
-// 		ds.runSimulations();
-// 	}
-
-
-
-	//cerr << ds.timing_specification;
-	//cerr << (dram_statistics) ds;
 	//_CrtDumpMemoryLeaks();
 	return 0;
 }
