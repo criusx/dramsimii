@@ -49,6 +49,7 @@ namespace DRAMsimII
 		const Command *lastCommand;						///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
+		std::vector<Transaction *> refreshCounter;              ///< holds the next refresh command time for the rank
 		const SystemConfiguration &systemConfig;		///< a pointer to common system config values
 		Statistics &statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
@@ -56,7 +57,7 @@ namespace DRAMsimII
 		bool dbReporting;								///< whether or not to report results to a db
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
-		std::vector<Transaction *> refreshCounter;		///< holds the next refresh command time for the rank
+		//std::vector<Transaction *> refreshCounter;		///< holds the next refresh command time for the rank
 
 		// functions
 		void retireCommand(Command *);
