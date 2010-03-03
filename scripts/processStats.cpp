@@ -98,7 +98,7 @@ using std::tr1::unordered_map;
 
 #define WINDOW 5
 
-void prepareOutputDir(const bf::path &outputDir, const string &filename, const string &commandLine, unsigned channelCount);
+void prepareOutputDir(const bf::path &outputDir, const string &filename, const string &commandLine, unsigned channelCount, list<pair<string,string> > &graphs);
 
 // globals
 bf::path executableDirectory;
@@ -110,6 +110,8 @@ std::string thumbnailResolution = "800";
 std::string terminal = "set terminal svg size 1920,1200 enhanced font \"Arial\" fsize 14\n";
 
 std::string extension = "svg";
+
+string thumbnailExtenstion = "png";
 
 bool generatePngFiles = false;
 
@@ -468,8 +470,15 @@ bool doneEntering = false;
 list<string> fileList;
 mutex fileListMutex;
 
+#define USE_USER_CONVERT
+
+#ifdef USE_USER_CONVERT
 #define CONVERT_COMMAND "/home/crius/ImageMagick/bin/convert"
 #define MOGRIFY_COMMAND "/home/crius/ImageMagick/bin/mogrify"
+#else
+#define CONVERT_COMMAND "convert"
+#define MOGRIFY_COMMAND "mogrify"
+#endif
 
 
 void thumbNailWorker()
@@ -592,6 +601,8 @@ void processPower(const string &filename)
 
 	inputStream.getline(newLine,NEWLINE_LENGTH); 
 
+	list<pair<string,string> > graphs;
+
 	// get a couple copies of gnuplot running
 	opstream p("gnuplot");
 	p << basicSetup << terminal;
@@ -699,7 +710,6 @@ void processPower(const string &filename)
 			}
 			else
 			{
-				//line = newLine;
 				if (boost::starts_with(newLine,"----Epoch"))
 				{
 					char *position = strchr(newLine, ' ');
@@ -934,21 +944,18 @@ void processPower(const string &filename)
 		//cerr << time << " " << i->first + i->second << endl;
 		time += epochTime;
 	}
-
-	p4 << "e" << endl << "unset output" << endl;
-	//cerr << "e" << endl << "unset output" << endl;
 	//////////////////////////////////////////////////////////////////////////
+	p4 << "e" << endl << "unset output" << endl;
+
+	p2 << endl << "exit" << endl;
+	p3 << endl << "exit" << endl;
+	p4 << endl << "exit" << endl;
 
 	p.close();
-	//cerr << "p close" << endl;
-	p2 << endl << "exit" << endl;
 	p2.close();
-	//cerr << "p2 close" << endl;
-	p3 << endl << "exit" << endl;
 	p3.close();
-	//cerr << "p3 close" << endl;
 	p4.close();
-	//cerr << "p4 close" << endl;
+
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
 		for (list<string>::const_iterator i = filesGenerated.begin(); i != filesGenerated.end(); ++i)
@@ -965,11 +972,11 @@ void processPower(const string &filename)
 //////////////////////////////////////////////////////////////////////////
 void prepareOutputDir(const bf::path &outputDir, const string &filename, const string &commandLine, unsigned channelCount, list<pair<string,string> > &graphs)
 {
-	bf::path openfile = executableDirectory / "template.html";
+	bf::path templateFile = executableDirectory / "template.html";
 
-	if (!fileExists(openfile.native_directory_string()))
+	if (!fileExists(templateFile.native_directory_string()))
 	{
-		cerr << "cannot find template:" << openfile.native_directory_string();
+		cerr << "cannot find template:" << templateFile.native_directory_string();
 		return;
 	}
 	string basename;
@@ -986,79 +993,63 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		return;
 
 	bf::path printFile = outputDir / ("index.html");
-
-	if (!fileExists(printFile.native_directory_string()))
-	{
-		ifstream is(openfile.directory_string().c_str(), ios::in | ios::ate);
-		ifstream::pos_type entireFileLength = is.tellg();
-		char *entireFile = new char[entireFileLength];
-
-		is.seekg(0,ios::beg);
-		is.read(entireFile,entireFileLength);
-		is.close();
-		string templateFile(entireFile);
-		delete[] entireFile;
-				
-		string find("@@@");
-		// update the title 
-		templateFile = templateFile.replace(templateFile.find(find),find.length(),commandLine);
-		
-		string distroStrings;
-		for (list<pair<string,string> >::const_iterator i = graphs.begin(), end = graphs.end(); i != end; ++i)
-		{
-			string thumbnailFilename = i->first.substr(0,i->first.find(extension));
-			distroStrings += "<h2>"+ i->second + "</h2><a rel=\"lightbox\" href=\"" + i->first +"\"><img class=\"fancyzoom\" src=\""+ thumbnailFilename + "-thumb.png\" alt=\"\" /></a>";
-		}
-//		for (unsigned i = 0; i < channelCount; i++)
-//			distroStrings += "<h2>Address Distribution, Channel "+ lexical_cast<string>(i) + "</h2><a rel=\"lightbox\" href=\"addressDistribution" + lexical_cast<string>(i) + ".svgz\"><img class=\"fancyzoom\" src=\"addressDistribution"+ lexical_cast<string>(i) + "-thumb.png\" alt=\"\" /></a>";
-//		for (unsigned i = 0; i < channelCount; i++)
-//			distroStrings += "<h2>Address Latency Distribution, Channel "+ lexical_cast<string>(i) + "</h2><a rel=\"lightbox\" href=\"addressLatencyDistribution"+ lexical_cast<string>(i) + ".svgz\"><img class=\"fancyzoom\" src=\"addressLatencyDistribution"+ lexical_cast<string>(i) + "-thumb.png\" alt=\"\" /></a>";
-		cerr << endl << printFile.native_directory_string() << endl;
 	
-		find = "<div id="gallery">";
-		templateFile = templateFile.replace(templateFile.find(find),find.length(),find + distroStrings);
+	ifstream instream;
 
-		std::ofstream out(printFile.native_directory_string().c_str());
-		out << templateFile;
-		out.close();
+	bool alreadyExists;
+	
+	if (alreadyExists = fileExists(printFile.native_directory_string()))
+	{
+		instream.open(printFile.native_directory_string().c_str(), ios::in | ios::ate);
 	}
 	else
 	{
-		ifstream is(printFile.native_directory_string().c_str(), ios::in | ios::ate);
-		ifstream::pos_type entireFileLength = is.tellg();
-		char *entireFile = new char[entireFileLength];
-
-		is.seekg(0, ios::beg);
-		is.read(entireFile, entireFileLength);
-		is.close();
-		string templateFile(entireFile);
-		delete[] entireFile;
-	
-		string distroStrings;
-		for (list<pair<string, string> >::const_iterator i = graphs.begin(),
-				end = graphs.end(); i != end; ++i)
-		{
-			string thumbnailFilename = i->first.substr(0, i->first.find(
-					extension));
-			distroStrings += "<h2>" + i->second
-					+ "</h2><a rel=\"lightbox\" href=\"" + i->first
-					+ "\"><img class=\"fancyzoom\" src=\"" + thumbnailFilename
-					+ "-thumb.png\" alt=\"\" /></a>";
-		}
-	
-		cerr << endl << printFile.native_directory_string() << endl;
-		
-		find = "<div id="gallery">";
-		templateFile = templateFile.replace(templateFile.find(find),
-				find.length(), find + distroStrings);
-		
-		std::ofstream out(printFile.native_directory_string().c_str());
-		out << templateFile;
-		out.close();
-
+		instream.open(templateFile.directory_string().c_str(), ios::in | ios::ate);
 	}
-	//cerr << "skipping creation of html file(" << printFile.string() << "), exists" << endl;
+		
+	ifstream::pos_type entireFileLength = instream.tellg();
+	char *entireFile = new char[entireFileLength];
+	
+	instream.seekg(0,ios::beg);
+	instream.read(entireFile,entireFileLength);
+	instream.close();
 
+	string outputContent(entireFile);
+	delete[] entireFile;
+
+	bool changesMade = false;
+
+	if (!alreadyExists)
+	{
+		string find("@@@");
+		// update the title 
+		outputContent = outputContent.replace(outputContent.find(find),find.length(),commandLine);
+		changesMade = true;
+	}
+
+
+	for (list<pair<string, string> >::const_iterator i = graphs.begin(),
+		end = graphs.end(); i != end; ++i)
+	{
+		string currentImageLink = "<h2>" + i->second
+			+ "</h2><a rel=\"lightbox\" href=\"" + i->first + "." + extension
+			+ "\"><img class=\"fancyzoom\" src=\"" + i->first + "-thumb." + thumbnailExtenstion +
+			+ "\" alt=\"\" /></a>";
+
+		if (outputContent.find(currentImageLink) == string::npos)
+		{
+			changesMade = true;
+			outputContent = outputContent.insert(outputContent.find("</div>"),currentImageLink);
+		}
+	}
+
+	if (changesMade)
+	{
+		cerr << endl << printFile.native_directory_string() << endl;
+		std::ofstream out(printFile.native_directory_string().c_str());
+		out << outputContent;
+		out.close();
+	}
 
 	bf::path htaccessOut = outputDir / ".htaccess";
 	if (!fileExists(htaccessOut.string()))
@@ -1066,8 +1057,6 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename, const s
 		bf::path htaccessFile = executableDirectory / ".htaccess";
 		bf::copy_file(htaccessFile, htaccessOut);
 	}
-	// 	else
-	// 		cerr << "skipping creation of htaccess file(" << htaccessOut.string() << "), exists" << endl;
 }
 
 
@@ -1953,7 +1942,7 @@ void processStats(const string &filename)
 		for (unsigned channelID = 0; channelID < channelLatencyDistribution.size(); channelID++)
 		{
 			outFilename = outputDir / ("addressLatencyDistribution" + lexical_cast<string>(channelID) + "." + extension);
-			graphs.push_back(pair<string,string>(filename.native_directory_string(),"Address Latency Distribution, Channel " + lexical_cast<string>(channelID)));
+			graphs.push_back(pair<string,string>("addressLatencyDistribution","Address Latency Distribution, Channel " + lexical_cast<string>(channelID)));
 			filesGenerated.push_back(outFilename.native_directory_string());
 			p2 << "set output '" << outFilename.native_directory_string() << "'" << endl << subAddrDistroA;
 			p2 << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"{/=18" << commandLine << "\"" << endl;
@@ -1994,7 +1983,7 @@ void processStats(const string &filename)
 		for (unsigned channelID = 0; channelID < channelDistribution.size(); channelID++)
 		{
 			outFilename = outputDir / ("addressDistribution" + lexical_cast<string>(channelID) + "." + extension);
-			graphs.push_back(pair<string,string>(filename.native_directory_string(),"Address Distribution, Channel " + lexical_cast<string>(channelID)));
+			graphs.push_back(pair<string,string>("addressDistribution","Address Distribution, Channel " + lexical_cast<string>(channelID)));
 			filesGenerated.push_back(outFilename.native_directory_string());
 			p1 << "set output '" << outFilename.native_directory_string() << "'" << endl << subAddrDistroA;
 			p1 << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"" << commandLine << "\"" << endl;
@@ -2034,7 +2023,7 @@ void processStats(const string &filename)
 		// make the overall address distribution graphs
 		outFilename = outputDir / ("addressDistribution." + extension);
 		filesGenerated.push_back(outFilename.native_directory_string());
-		graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Overall Address Distribution"));
+		graphs.push_back(pair<string,string>("addressDistribution","Overall Address Distribution"));
 			
 		p0 << "set output '" << outFilename.native_directory_string() << "'" << endl;
 		p0 << "set title \"" << commandLine << "\\nChannel Distribution Rate\"" << endl << addressDistroA;
@@ -2125,7 +2114,7 @@ void processStats(const string &filename)
 		// make the PC vs latency graph
 		outFilename = outputDir / ("latencyVsPc." + extension);
 		filesGenerated.push_back(outFilename.native_directory_string());
-		graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"PC vs. Latency"));
+		graphs.push_back(pair<string,string>("latencyVsPc","PC vs. Latency"));
 			
 		p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 		p1 << pcVsLatencyGraph << endl;
@@ -2154,7 +2143,7 @@ void processStats(const string &filename)
 		// make the PC vs average latency graph
 		outFilename = outputDir / ("avgLatencyVsPc." + extension);
 		filesGenerated.push_back(outFilename.native_directory_string());
-		graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"PC vs. Average Latency"));
+		graphs.push_back(pair<string,string>("avgLatencyVsPc","PC vs. Average Latency"));
 			
 		p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 		p1 << avgPcVsLatencyGraph << endl;
@@ -2182,7 +2171,7 @@ void processStats(const string &filename)
 	// make the transaction latency distribution graph
 	outFilename = outputDir / ("transactionLatencyDistribution." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Transaction Latency Distribution"));
+	graphs.push_back(pair<string,string>("transactionLatencyDistribution","Transaction Latency Distribution"));
 		
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""<< endl << transactionGraph << endl;
@@ -2199,7 +2188,7 @@ void processStats(const string &filename)
 	// make the zoomed transaction latency distribution graph
 	outFilename = outputDir / ("zoomedTransactionLatencyDistribution." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Zoomed Transaction Latency"));
+	graphs.push_back(pair<string,string>("zoomedTransactionLatencyDistribution","Zoomed Transaction Latency"));
 		
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""<< endl << 
@@ -2215,7 +2204,7 @@ void processStats(const string &filename)
 	// make the adjusted transaction latency distribution graph
 	outFilename = outputDir / ("adjustedTransactionLatencyDistribution." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Adjusted Transaction Latency"));
+	graphs.push_back(pair<string,string>("adjustedTransactionLatencyDistribution","Adjusted Transaction Latency"));
 		
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p2 << "set title \"" << commandLine << "\\nAdjusted Read Transaction Latency\""<< endl << transactionGraph << endl;
@@ -2233,7 +2222,7 @@ void processStats(const string &filename)
 	// make the zoomed adjusted transaction latency distribution graph
 	outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Zoomed Adjusted Transaction Latency"));
+	graphs.push_back(pair<string,string>("zoomedAdjustedTransactionLatencyDistribution","Zoomed Adjusted Transaction Latency"));
 		
 	p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p2 << "set title \"" << commandLine << "\\nZoomed Adjusted Read Transaction Latency\""<< endl << 
@@ -2253,7 +2242,7 @@ void processStats(const string &filename)
 	// make the bandwidth graph
 	outFilename = outputDir / ("bandwidth." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Bandwidth"));
+	graphs.push_back(pair<string,string>("bandwidth","Bandwidth"));
 		
 	p3 << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p3 << "set multiplot title \"" << commandLine << "\""<< endl;
@@ -2363,7 +2352,7 @@ void processStats(const string &filename)
 	// make the other IPC graph
 	outFilename = outputDir / ("averageIPCandLatency." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"IPC and Latency"));
+	graphs.push_back(pair<string,string>("averageIPCandLatency","IPC and Latency"));
 		
 	p1 << "reset" << endl << terminal << endl << basicSetup << endl << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p1 << "set multiplot layout 2,1 title \"" << commandLine << "\"" << endl;
@@ -2450,7 +2439,7 @@ void processStats(const string &filename)
 		// make the hit-miss graph
 		outFilename = outputDir / ("rowHitRate." + extension);
 		filesGenerated.push_back(outFilename.native_directory_string());
-		graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Row Reuse"));
+		graphs.push_back(pair<string,string>("rowHitRate","Row Reuse"));
 			
 		p2 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 		p2 << "set title \"" << "Reuse Rate of Open Rows vs. Time\\n" << commandLine << "\"" << endl << rowHitMissGraph << endl;
@@ -2491,7 +2480,7 @@ void processStats(const string &filename)
 		p3 << "reset" << endl << basicSetup << terminal;
 		p3 << "set title \"" << commandLine << "\\nWorking Set Size vs Time\" offset character 0, -1, 0 font '' norotate" << endl;
 		outFilename = outputDir / ("workingSet." + extension);
-		graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Working Set"));
+		graphs.push_back(pair<string,string>("workingSet","Working Set"));
 			
 		p3 << "set output '" << outFilename.native_directory_string() << "'" << endl;
 		filesGenerated.push_back(outFilename.native_directory_string());
@@ -2512,7 +2501,7 @@ void processStats(const string &filename)
 		// make special IPC graph
 		p0 << "reset" << endl << basicSetup << terminal;
 		outFilename = outputDir / ("bigIpcGraph." + extension);
-		graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"Big IPC"));
+		graphs.push_back(pair<string,string>("bigIpcGraph","Big IPC"));
 			
 		p0 << "set output '" << outFilename.native_directory_string() << "'" << endl;
 		filesGenerated.push_back(outFilename.native_directory_string());
@@ -2541,7 +2530,7 @@ void processStats(const string &filename)
 	// make the cache hit-miss graph
 	outFilename = outputDir / ("cacheHitRate." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string,string>(outFilename.native_directory_string(),"DIMM Cache Hit/Miss"));
+	graphs.push_back(pair<string,string>("cacheHitRate","DIMM Cache Hit/Miss"));
 		
 	p1 << "reset" << endl << terminal << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
 	p1 << "set title \"" << "Per-DIMM Cache Hit Rate\\n" << commandLine << "\"" << endl << hitMissScript << endl;
@@ -2675,7 +2664,7 @@ void processStats(const string &filename)
 	}
 
 	bf::path givenfilename(filename);
-	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, channelDistribution.size());
+	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, channelDistribution.size(), graphs);
 	return;
 }
 
@@ -2733,6 +2722,7 @@ int main(int argc, char** argv)
 
 	cypressResults = vm.count("cypress") > 0;
 
+	
 	// 	cerr << generateResultsOnly << " " << generatePngFiles << endl;
 	// 
 	// 	exit(0);
