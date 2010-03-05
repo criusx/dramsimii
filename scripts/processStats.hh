@@ -1,5 +1,19 @@
+//string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
+//string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
+string terminal =
+"set terminal svg size 1920,1200 enhanced font \"Arial\" fsize 14\n";
 
-std::string powerScripts[] = {"unset border\n\
+string thumbnailTerminal = "set terminal png tiny truecolor small size 800,500 enhanced\n";
+
+string extension = "svg";
+
+string processedExtension = "svgz";
+
+string thumbnailExtenstion = "png";
+
+string thumbnailResolution = "800";
+
+string powerScripts[] = {"unset border\n\
 							  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
 							  set autoscale xfixmin\n\
 							  set autoscale xfixmax\n\
@@ -47,7 +61,7 @@ std::string powerScripts[] = {"unset border\n\
 							  plot '-' u 1:2 t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
 							  '-' u 1:2 t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n"};
 
-std::string cumulPowerScript = "unset border\n\
+string cumulPowerScript = "unset border\n\
 							   set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
 							   set autoscale xfixmin\n\
 							   set autoscale xfixmax\n\
@@ -62,7 +76,7 @@ std::string cumulPowerScript = "unset border\n\
 							   plot '-' u 1:2 t \"Cumulative Energy\" w lines lw 2.00,\
 							   '-' u 1:2 t \"Reduced Cumulative Energy\" w lines lw 2.00\n";
 
-std::string hitMissScript = "unset border\n\
+string hitMissScript = "unset border\n\
 							set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
 							set yrange [0:*] noreverse nowriteback\n\
 							set y2range [0:*] noreverse nowriteback\n\
@@ -81,7 +95,7 @@ std::string hitMissScript = "unset border\n\
 							plot '-' u 1:2 t \"Access Count\" axes x1y2 with impulses lt rgb \"#dabCbC\",\
 							'-' u 1:2 t \"Hit Rate\" axes x1y1 w lines lw 2.00\n";
 
-std::string hitMissPowerScript = "unset border\n\
+string hitMissPowerScript = "unset border\n\
 								 set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
 								 set yrange [0:*] noreverse nowriteback\n\
 								 set xrange [0:*]\n\
@@ -98,7 +112,7 @@ std::string hitMissPowerScript = "unset border\n\
 								 '-' u 1:2 t \"DRAM Power\" axes x1y1 w lines lw 2.00\n";
 
 
-std::string bigPowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+string bigPowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
 							 set yrange [0:*] noreverse nowriteback\n\
 							 unset x2tics\n\
 							 set mxtics\n\
@@ -113,7 +127,7 @@ std::string bigPowerScript = "set key outside center bottom horizontal Left reve
 							 #set style data filledcurves below x1\n\
 							 set style histogram rowstacked title offset 0,0,0\n";
 
-std::string bigEnergyScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+string bigEnergyScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
 							  set autoscale xfixmin\n\
 							  set autoscale xfixmax\n\
 							  set yrange [0:*] noreverse nowriteback\n\
@@ -131,9 +145,9 @@ std::string bigEnergyScript = "set key outside center bottom horizontal Left rev
 							  set y2label \"Cumulative Energy (mJ)\"\n\
 							  set xlabel \"Time (s)\"\n";
 
-std::string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR"};
+string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR"};
 
-std::string subAddrDistroA = "unset y2tics\n\
+string subAddrDistroA = "unset y2tics\n\
 							 unset logscale y\n\
 							 set format x\n\
 							 set xtics\n\
@@ -146,7 +160,7 @@ std::string subAddrDistroA = "unset y2tics\n\
 							 set style data histograms\n\
 							 set style histogram rowstacked\n";
 
-std::string workingSetSetup = "set yrange [0 : *] noreverse nowriteback\n\
+string workingSetSetup = "set yrange [0 : *] noreverse nowriteback\n\
 							  set boxwidth 0.98 relative\n\
 							  set style fill solid 1.00 noborder\n\
 							  set xrange [0 : *] noreverse nowriteback\n\
@@ -155,7 +169,7 @@ std::string workingSetSetup = "set yrange [0 : *] noreverse nowriteback\n\
 							  set ylabel 'Working Set Size' offset character .05, 0, 0 font '' textcolor lt -1 rotate by 90\n\
 							  plot '-' using 1:2 t 'Working Set Size' with boxes\n";
 
-std::string basicSetup = "unset border\n\
+string basicSetup = "unset border\n\
 						 set size 1.0, 1.0\n\
 						 set origin 0.0, 0.0\n\
 						 set autoscale xfixmax\n\
@@ -168,7 +182,7 @@ std::string basicSetup = "unset border\n\
 						 set boxwidth 0.95 absolute\n\
 						 set ytics out\n";
 
-std::string addressDistroA = "unset y2tics\n\
+string addressDistroA = "unset y2tics\n\
 							 set xtics\n\
 							 set xlabel 'Time (s)'\n\
 							 set xrange [0:*]\n\
@@ -180,11 +194,11 @@ std::string addressDistroA = "unset y2tics\n\
 							 set style histogram rowstacked\n\
 							 set multiplot layout 3,1\n";
 
-std::string addressDistroB ="set title 'Rank Distribution Rate' offset character 0, -1, 0 font '' norotate\n";
+string addressDistroB ="set title 'Rank Distribution Rate' offset character 0, -1, 0 font '' norotate\n";
 
-std::string addressDistroC = "set title 'Bank Distribution Rate' offset character 0, -1, 0 font '' norotate\n";
+string addressDistroC = "set title 'Bank Distribution Rate' offset character 0, -1, 0 font '' norotate\n";
 
-std::string transactionGraph = "set logscale y\n\
+string transactionGraphScript = "set logscale y\n\
 							   set format x\n\
 							   set style fill solid 1.00 noborder\n\
 							   #set autoscale xfixmax\n\
@@ -192,37 +206,37 @@ std::string transactionGraph = "set logscale y\n\
 							   set ylabel 'Number of Transactions with this Execution Time'\n\
 							   plot '-' using 1:2 t 'Total Latency' with boxes\n";
 
-std::string bandwidthGraph = "set yrange [0 : *] noreverse nowriteback\n\
-							 set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
-							 set xrange [0:*]\n\
-							 set title 'System Bandwidth'\n\
-							 set size 1.0, 0.66\n\
-							 set origin 0.0, 0.33\n\
-							 set style data histograms\n\
-							 set style histogram rowstacked title offset 0,0,0\n\
-							 set ylabel 'Bandwidth (bytes per second)'\n\
-							 plot \
-							 '-' using 1 axes x2y1 title 'Read Bytes', \
-							 '-' using 1 axes x2y1 title 'Write Bytes', \
-							 '-' using 1 axes x2y1 title 'Cache Read Bytes', \
-							 '-' using 1 axes x2y1 title 'Cache Write Bytes', \
-							 '-' using 1:2 axes x1y1 title 'Average Bandwidth' with lines\n";
+string bandwidthGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
+								   set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+								   set xrange [0:*]\n\
+								   set title 'System Bandwidth'\n\
+								   set size 1.0, 0.66\n\
+								   set origin 0.0, 0.33\n\
+								   set style data histograms\n\
+								   set style histogram rowstacked title offset 0,0,0\n\
+								   set ylabel 'Bandwidth (bytes per second)'\n\
+								   plot \
+								   '-' using 1 axes x2y1 title 'Read Bytes', \
+								   '-' using 1 axes x2y1 title 'Write Bytes', \
+								   '-' using 1 axes x2y1 title 'Cache Read Bytes', \
+								   '-' using 1 axes x2y1 title 'Cache Write Bytes', \
+								   '-' using 1:2 axes x1y1 title 'Average Bandwidth' with lines\n";
 
-std::string pcVsLatencyGraph = "set logscale y \n\
+string pcVsLatencyGraphScript = "set logscale y \n\
 							   set yrange [1 : *] noreverse nowriteback\n\
 							   set xlabel 'PC Value' offset character .05, 0,0 font 'Arial, 14' textcolor lt -1 rotate by -45\n\
 							   set ylabel 'Total Latency (ns)'\n\
 							   set style fill solid 1.00 noborder\n\
 							   set format x '0x0%x'\n";
 
-std::string avgPcVsLatencyGraph = "set logscale y \n\
+string avgPcVsLatencyGraphScript = "set logscale y \n\
 								  set yrange [1 : *] noreverse nowriteback\n\
 								  set xlabel 'PC Value' offset character .05, 0,0 font 'Arial, 14' textcolor lt -1 rotate by -45\n\
 								  set ylabel 'Average Latency (ns)'\n\
 								  set style fill solid 1.00 noborder\n\
 								  set format x '0x0%x'\n";
 
-std::string smallIPCGraph = "set size 1.0, 0.345\n\
+string smallIPCGraphScript = "set size 1.0, 0.345\n\
 							set origin 0.0, 0.0\n\
 							set ylabel 'IPC'\n\
 							set y2label\n\
@@ -230,7 +244,7 @@ std::string smallIPCGraph = "set size 1.0, 0.345\n\
 							set style fill solid 1.00 noborder\n\
 							plot '-' using 1:2 title 'IPC' with impulses, '-' using 1:2 title 'Cumulative Average IPC' with lines, '-' using 1:2 title 'Moving Average IPC' with lines\n";
 
-std::string bigIPCGraph = "set origin 0.0, 0.0\n\
+string bigIPCGraphScript = "set origin 0.0, 0.0\n\
 						  set ylabel 'IPC'\n\
 						  set y2label\n\
 						  set title 'IPC vs. Time'  offset character 0, -1, 0 font '' norotate\n\
@@ -238,17 +252,17 @@ std::string bigIPCGraph = "set origin 0.0, 0.0\n\
 						  set boxwidth 0.95 relative\n\
 						  plot '-' using 1:2 title 'IPC' with boxes lt rgb \"#007872\", '-' using 1:2 title 'Cumulative Average IPC' with lines lw 6.00 lt rgb \"#57072B\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
 
-std::string cacheGraph0 = "set y2tics\n\
+string cacheGraph0 = "set y2tics\n\
 						  set format x\n";
 
-std::string cacheGraph1 = "unset xlabel\n\
+string cacheGraph1 = "unset xlabel\n\
 						  set ylabel 'Miss Rate'\n\
 						  set y2label 'Access Count'\n\
 						  set yrange [0:1] noreverse nowriteback\n\
 						  set title 'L1 ICache'\n\
 						  plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 
-std::string cacheGraph2 = "set yrange [0 : *] noreverse nowriteback\n\
+string cacheGraph2 = "set yrange [0 : *] noreverse nowriteback\n\
 						  unset xlabel\n\
 						  set ylabel 'Miss Rate'\n\
 						  set yrange [0:1] noreverse nowriteback\n\
@@ -256,7 +270,7 @@ std::string cacheGraph2 = "set yrange [0 : *] noreverse nowriteback\n\
 						  set title 'L1 DCache'  offset character 0, -1, 0 font '' norotate\n\
 						  plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 
-std::string cacheGraph3 = "set yrange [0 : *] noreverse nowriteback\n\
+string cacheGraph3 = "set yrange [0 : *] noreverse nowriteback\n\
 						  set xlabel 'Time (s)' offset character .05, 0, 0 font \"\" textcolor lt -1 rotate by 90\n\
 						  set ylabel 'Miss Rate'\n\
 						  set y2label 'Access Count'\n\
@@ -264,7 +278,7 @@ std::string cacheGraph3 = "set yrange [0 : *] noreverse nowriteback\n\
 						  set title 'L2 Cache' offset character 0, -1, 0 font '' norotate\n\
 						  plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 
-std::string otherIPCGraph = "set yrange [0 : *] noreverse nowriteback\n\
+string otherIPCGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
 							set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 							set ylabel 'Instructions Per Cycle'\n\
 							set y2label\n\
@@ -274,7 +288,7 @@ std::string otherIPCGraph = "set yrange [0 : *] noreverse nowriteback\n\
 							plot '-' using 1:2 title 'IPC' with impulses,\
 							'-' using 1:2 title 'Moving Average IPC' with lines\n";
 
-std::string averageTransactionLatencyScript = "set yrange [1 : *] noreverse nowriteback\n\
+string averageTransactionLatencyScript = "set yrange [1 : *] noreverse nowriteback\n\
 											  set xlabel 'Time (s)' offset character .05, 0,0 font ' textcolor lt -1 rotate by 90\n\
 											  set ylabel 'Latency (ns)'\n\
 											  #set logscale y\n\
@@ -289,7 +303,7 @@ std::string averageTransactionLatencyScript = "set yrange [1 : *] noreverse nowr
 											  '-' using 1:2 title \"Average + 2 std. dev.\" with lines lw 1.25\n";
 
 
-std::string rowHitMissGraph = "set yrange [0 : *] noreverse nowriteback\n\
+string rowHitMissGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
 							  set y2range [1 : *] noreverse nowriteback\n\
 							  set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 							  set ylabel 'Reuse Rate'\n\
@@ -299,6 +313,6 @@ std::string rowHitMissGraph = "set yrange [0 : *] noreverse nowriteback\n\
 							  set logscale y2\n\
 							  plot '-' using 1:2 axes x1y1 title 'Hit Rate' with filledcurve below x1 lt rgb \"#28B95A\", '-' using 1:2 axes x1y1 title 'Cumulative Average Hit Rate' with lines lw 1.250 lt rgb \"#B8283E\", '-' using 1:2 axes x1y2 t 'Accesses' with lines lw 1.250 lt rgb \"#5B28B8\"\n";
 
-const std::string urlString("<a href=\"%1/index.html\">%2</a>");
+const string urlString("<a href=\"%1/index.html\">%2</a>");
 
-const std::string csvHeader("Benchmark,Channels,Ranks,Banks,Rows,Columns,DRAM Width,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Runtime,Read Hit Rate,Hit Rate,Average Latency,Average Reduced Latency\n");
+const string csvHeader("Benchmark,Channels,Ranks,Banks,Rows,Columns,DRAM Width,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Runtime,Read Hit Rate,Hit Rate,Average Latency,Average Reduced Latency\n");

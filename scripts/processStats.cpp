@@ -100,22 +100,11 @@ using std::tr1::unordered_map;
 #define WINDOW 5
 
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
-		const string &commandLine, unsigned channelCount, list<pair<string,
-				string> > &graphs);
+					  const string &commandLine, unsigned channelCount, list<pair<string,
+					  string> > &graphs);
 
 // globals
 bf::path executableDirectory;
-
-std::string thumbnailResolution = "800";
-
-//std::string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
-//std::string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
-std::string terminal =
-		"set terminal svg size 1920,1200 enhanced font \"Arial\" fsize 14\n";
-
-std::string extension = "svg";
-
-string thumbnailExtenstion = "png";
 
 bool generatePngFiles = false;
 
@@ -154,34 +143,34 @@ protected:
 
 public:
 	BufferAccumulator():
-	values(),
-	buffer(),
-	scaleFactor(1),
-	count(0)
-	{}
+	  values(),
+		  buffer(),
+		  scaleFactor(1),
+		  count(0)
+	  {}
 
-	void push_back(const T& value)
-	{
-		buffer = value / (float)scaleFactor;
-		count++;
-		if (count == scaleFactor)
-		{
-			values.push_back(value);
+	  void push_back(const T& value)
+	  {
+		  buffer = value / (float)scaleFactor;
+		  count++;
+		  if (count == scaleFactor)
+		  {
+			  values.push_back(value);
 
-			if (values.size() > MAXIMUM_VECTOR_SIZE)
-			{
-				for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
-				{
-					//values[j] = T((values[2 * j] + values[2 * j + 1]) / 2.0F);
-					values[j] = T((values[2 * j] + values[2 * j + 1]) );
-				}
+			  if (values.size() > MAXIMUM_VECTOR_SIZE)
+			  {
+				  for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
+				  {
+					  //values[j] = T((values[2 * j] + values[2 * j + 1]) / 2.0F);
+					  values[j] = T((values[2 * j] + values[2 * j + 1]) );
+				  }
 
-				values.resize(MAXIMUM_VECTOR_SIZE / 2);
+				  values.resize(MAXIMUM_VECTOR_SIZE / 2);
 
-				scaleFactor *= 2;
-			}
-		}
-	}
+				  scaleFactor *= 2;
+			  }
+		  }
+	  }
 };
 #endif
 template<typename T>
@@ -192,26 +181,26 @@ class WeightedAverage
 
 public:
 	WeightedAverage() :
-		count(0), total(0)
-	{
-	}
+	  count(0), total(0)
+	  {
+	  }
 
-	void add(T value, unsigned count)
-	{
-		this->total += value * (T) count;
-		this->count += count;
-	}
+	  void add(T value, unsigned count)
+	  {
+		  this->total += value * (T) count;
+		  this->count += count;
+	  }
 
-	void clear()
-	{
-		total = 0;
-		count = 0;
-	}
+	  void clear()
+	  {
+		  total = 0;
+		  count = 0;
+	  }
 
-	T average()
-	{
-		return total / ((count > 0) ? (T) count : (T) 1);
-	}
+	  T average()
+	  {
+		  return total / ((count > 0) ? (T) count : (T) 1);
+	  }
 };
 
 // using the method of Mendenhall and Sincich (1995)
@@ -223,93 +212,93 @@ protected:
 	unsigned totalCount;
 public:
 	BoxPlot() :
-		values(), totalCount(0)
-	{
-	}
+	  values(), totalCount(0)
+	  {
+	  }
 
-	void clear()
-	{
-		values.clear();
-		totalCount = 0;
-	}
+	  void clear()
+	  {
+		  values.clear();
+		  totalCount = 0;
+	  }
 
-	void add(const T value, const unsigned count)
-	{
-		// shouldn't be any duplicates
-		if (values.find(value) != values.end())
-			throw;
+	  void add(const T value, const unsigned count)
+	  {
+		  // shouldn't be any duplicates
+		  if (values.find(value) != values.end())
+			  throw;
 
-		values[value] = count;
+		  values[value] = count;
 
-		totalCount += count;
-	}
+		  totalCount += count;
+	  }
 
-	tuple<T, T, T, T, T, T> getQuartiles() const
-	{
-		if (totalCount > 0)
-		{
-			unsigned median = max(round(totalCount / 2.0), 1.0);
-			unsigned firstQuartile = max(round((totalCount + 1.0) / 4.0), 1.0);
-			assert(firstQuartile <= median);
-			unsigned thirdQuartile = max(round((3.0 * totalCount + 3.0) / 4.0),
-					1.0);
-			if (thirdQuartile > totalCount)
-				thirdQuartile = totalCount;
-			assert(median <= thirdQuartile);
+	  tuple<T, T, T, T, T, T> getQuartiles() const
+	  {
+		  if (totalCount > 0)
+		  {
+			  unsigned median = max(round(totalCount / 2.0), 1.0);
+			  unsigned firstQuartile = max(round((totalCount + 1.0) / 4.0), 1.0);
+			  assert(firstQuartile <= median);
+			  unsigned thirdQuartile = max(round((3.0 * totalCount + 3.0) / 4.0),
+				  1.0);
+			  if (thirdQuartile > totalCount)
+				  thirdQuartile = totalCount;
+			  assert(median <= thirdQuartile);
 
-			T firstQuartileValue;
-			T thirdQuartileValue;
-			T medianValue;
+			  T firstQuartileValue;
+			  T thirdQuartileValue;
+			  T medianValue;
 
-			unsigned cumulativeSum = 0;
+			  unsigned cumulativeSum = 0;
 
-			typename map<T, unsigned>::const_iterator end = values.end();
-			WeightedAverage<double> wa;
+			  typename map<T, unsigned>::const_iterator end = values.end();
+			  WeightedAverage<double> wa;
 
-			// go determine which bin the quartile elements are in
-			for (typename map<T, unsigned>::const_iterator i = values.begin(); i
-					!= end; ++i)
-			{
-				wa.add(i->first, i->second);
+			  // go determine which bin the quartile elements are in
+			  for (typename map<T, unsigned>::const_iterator i = values.begin(); i
+				  != end; ++i)
+			  {
+				  wa.add(i->first, i->second);
 
-				if (firstQuartile > cumulativeSum && firstQuartile
-						<= cumulativeSum + i->second)
-					firstQuartileValue = i->first;
-				if (thirdQuartile > cumulativeSum && thirdQuartile
-						<= cumulativeSum + i->second)
-					thirdQuartileValue = i->first;
-				if (median > cumulativeSum && median <= cumulativeSum
-						+ i->second)
-				{
-					// only if it's the last element
-					if (totalCount % 2 == 1 && (cumulativeSum + i->second
-							== median))
-					{
-						typename map<T, unsigned>::const_iterator j(i);
-						++j;
-						if (j == end)
-							medianValue = i->first;
-						else
-							medianValue = (i->first + j->first) / 2;
-					}
-					else
-						medianValue = i->first;
+				  if (firstQuartile > cumulativeSum && firstQuartile
+					  <= cumulativeSum + i->second)
+					  firstQuartileValue = i->first;
+				  if (thirdQuartile > cumulativeSum && thirdQuartile
+					  <= cumulativeSum + i->second)
+					  thirdQuartileValue = i->first;
+				  if (median > cumulativeSum && median <= cumulativeSum
+					  + i->second)
+				  {
+					  // only if it's the last element
+					  if (totalCount % 2 == 1 && (cumulativeSum + i->second
+						  == median))
+					  {
+						  typename map<T, unsigned>::const_iterator j(i);
+						  ++j;
+						  if (j == end)
+							  medianValue = i->first;
+						  else
+							  medianValue = (i->first + j->first) / 2;
+					  }
+					  else
+						  medianValue = i->first;
 
-				}
-				cumulativeSum += i->second;
-			}
+				  }
+				  cumulativeSum += i->second;
+			  }
 
-			assert(firstQuartileValue <= medianValue);
-			assert(medianValue <= thirdQuartileValue);
+			  assert(firstQuartileValue <= medianValue);
+			  assert(medianValue <= thirdQuartileValue);
 
-			return tuple<T, T, T, T, T, T> (values.begin()->first,
-					firstQuartileValue, medianValue, wa.average(),
-					thirdQuartileValue, values.rbegin()->first);
-		}
-		else
-			return tuple<T, T, T, T, T, T> ((T) 0, (T) 0, (T) 0, (T) 0, (T) 0,
-					(T) 0);
-	}
+			  return tuple<T, T, T, T, T, T> (values.begin()->first,
+				  firstQuartileValue, medianValue, wa.average(),
+				  thirdQuartileValue, values.rbegin()->first);
+		  }
+		  else
+			  return tuple<T, T, T, T, T, T> ((T) 0, (T) 0, (T) 0, (T) 0, (T) 0,
+			  (T) 0);
+	  }
 };
 
 template<typename T>
@@ -320,60 +309,60 @@ protected:
 	unsigned totalCount;
 public:
 	StdDev() :
-		values(), totalCount(0)
-	{
-	}
+	  values(), totalCount(0)
+	  {
+	  }
 
-	void clear()
-	{
-		values.clear();
-		totalCount = 0;
-	}
+	  void clear()
+	  {
+		  values.clear();
+		  totalCount = 0;
+	  }
 
-	void add(const T value, const unsigned count)
-	{
-		// shouldn't be any duplicates
-		if (values.find(value) != values.end())
-			throw;
+	  void add(const T value, const unsigned count)
+	  {
+		  // shouldn't be any duplicates
+		  if (values.find(value) != values.end())
+			  throw;
 
-		values[value] = count;
+		  values[value] = count;
 
-		totalCount += count;
-	}
+		  totalCount += count;
+	  }
 
-	tuple<T, T, T, T> getStdDev() const
-	{
-		if (totalCount > 0)
-		{
-			typename map<T, unsigned>::const_iterator end = values.end();
-			WeightedAverage<double> wa;
+	  tuple<T, T, T, T> getStdDev() const
+	  {
+		  if (totalCount > 0)
+		  {
+			  typename map<T, unsigned>::const_iterator end = values.end();
+			  WeightedAverage<double> wa;
 
-			// go determine which bin the quartile elements are in
-			for (typename map<T, unsigned>::const_iterator i = values.begin(); i
-					!= end; ++i)
-			{
-				wa.add(i->first, i->second);
-			}
+			  // go determine which bin the quartile elements are in
+			  for (typename map<T, unsigned>::const_iterator i = values.begin(); i
+				  != end; ++i)
+			  {
+				  wa.add(i->first, i->second);
+			  }
 
-			double mean = wa.average();
+			  double mean = wa.average();
 
-			uint64_t sum = 0;
+			  uint64_t sum = 0;
 
-			for (typename map<T, unsigned>::const_iterator i = values.begin(); i
-					!= end; ++i)
-			{
-				sum += (uint64_t)((double) i->second * ((double) i->first
-						- mean) * ((double) i->first - mean));
-			}
+			  for (typename map<T, unsigned>::const_iterator i = values.begin(); i
+				  != end; ++i)
+			  {
+				  sum += (uint64_t)((double) i->second * ((double) i->first
+					  - mean) * ((double) i->first - mean));
+			  }
 
-			double stdDev = sqrt((double) sum / (double) totalCount);
+			  double stdDev = sqrt((double) sum / (double) totalCount);
 
-			return tuple<T, T, T, T> (values.begin()->first, mean, stdDev,
-					values.rbegin()->first);
-		}
-		else
-			return tuple<T, T, T, T> ((T) 0, (T) 0, (T) 0, (T) 0);
-	}
+			  return tuple<T, T, T, T> (values.begin()->first, mean, stdDev,
+				  values.rbegin()->first);
+		  }
+		  else
+			  return tuple<T, T, T, T> ((T) 0, (T) 0, (T) 0, (T) 0);
+	  }
 };
 
 class CumulativePriorMovingAverage
@@ -383,26 +372,26 @@ class CumulativePriorMovingAverage
 
 public:
 	CumulativePriorMovingAverage() :
-		average(0.0), totalCount(0.0)
-	{
-	}
+	  average(0.0), totalCount(0.0)
+	  {
+	  }
 
-	void add(double count, double value)
-	{
-		totalCount += count;
-		average += ((count * value - average) / totalCount);
-	}
+	  void add(double count, double value)
+	  {
+		  totalCount += count;
+		  average += ((count * value - average) / totalCount);
+	  }
 
-	double getAverage() const
-	{
-		return average;
-	}
+	  double getAverage() const
+	  {
+		  return average;
+	  }
 
-	void clear()
-	{
-		average = 0.0;
-		totalCount = 0.0;
-	}
+	  void clear()
+	  {
+		  average = 0.0;
+		  totalCount = 0.0;
+	  }
 };
 
 class PriorMovingAverage
@@ -412,44 +401,44 @@ class PriorMovingAverage
 
 public:
 	PriorMovingAverage(unsigned size) :
-		data(size), average(0)
-	{
-	}
+	  data(size), average(0)
+	  {
+	  }
 
-	double getAverage() const
-	{
-		return average;
-	}
+	  double getAverage() const
+	  {
+		  return average;
+	  }
 
-	void append(float x)
-	{
-		if (data.full())
-		{
-			float oldestItem = data.front();
-			int size = data.size();
-			average = average - (oldestItem / size) + (x / size);
-		}
-		else if (data.empty())
-		{
-			average = x;
-		}
-		else
-		{
-			float size = (float) data.size();
-			average = average * size / (size + 1.0F) + x / (size + 1.0F);
-		}
-		data.push_back(x);
-	}
+	  void append(float x)
+	  {
+		  if (data.full())
+		  {
+			  float oldestItem = data.front();
+			  int size = data.size();
+			  average = average - (oldestItem / size) + (x / size);
+		  }
+		  else if (data.empty())
+		  {
+			  average = x;
+		  }
+		  else
+		  {
+			  float size = (float) data.size();
+			  average = average * size / (size + 1.0F) + x / (size + 1.0F);
+		  }
+		  data.push_back(x);
+	  }
 
-	void clear()
-	{
-		average = 0.0;
-		boost::circular_buffer<float>::size_type size = data.size();
-		data.clear();
-		data.resize(size, 0.0F);
-		//for (boost::circular_buffer<float>::iterator i = data.begin(); i != data.end(); ++i)
-		//	*i = 0;
-	}
+	  void clear()
+	  {
+		  average = 0.0;
+		  boost::circular_buffer<float>::size_type size = data.size();
+		  data.clear();
+		  data.resize(size, 0.0F);
+		  //for (boost::circular_buffer<float>::iterator i = data.begin(); i != data.end(); ++i)
+		  //	*i = 0;
+	  }
 };
 
 template<class T>
@@ -529,7 +518,7 @@ void thumbNailWorker()
 				boost::mutex::scoped_lock lock(fileListMutex);
 				filename = fileList.front();
 				baseFilename = fileList.front().substr(0,
-						fileList.front().find(extension) - 1);
+					fileList.front().find(extension) - 1);
 				fileList.pop_front();
 			}
 			//string commandLine0 = CONVERT_COMMAND + " " + filename + "[" + thumbnailResolution + "] " + baseFilename + "-thumb.png";
@@ -543,15 +532,15 @@ void thumbNailWorker()
 
 			//string commandLine0 = string(CONVERT_COMMAND) + " " + filename + "'[" + thumbnailResolution + "]' " + baseFilename + "-thumb.png";
 			string commandLine0 = string(CONVERT_COMMAND) + " " + filename
-					+ " -resize " + thumbnailResolution + " " + baseFilename
-					+ "-thumb.png";
+				+ " -resize " + thumbnailResolution + " " + baseFilename
+				+ "-thumb.png";
 			string commandLine2 = "gzip -c -9 -f " + filename + " > "
-					+ filename + "z";
+				+ filename + "z";
 #ifndef NDEBUG
-			cerr << commandLine0 << endl;
+			//cerr << commandLine0 << endl;
 #endif
-			if (system(commandLine0.c_str()) != 0)
-				cerr << "Failed to create thumbnail for " << filename << endl;
+			// 			if (system(commandLine0.c_str()) != 0)
+			// 				cerr << "Failed to create thumbnail for " << filename << endl;
 			if (system(commandLine2.c_str()) != 0)
 				cerr << "Failed to compress " << filename << endl;
 
@@ -565,7 +554,7 @@ void thumbNailWorker()
 			if (generatePngFiles)
 			{
 				string commandLine1 = string(MOGRIFY_COMMAND)
-						+ " -resize 3840 -format png " + filename;
+					+ " -resize 3840 -format png " + filename;
 				system(commandLine1.c_str());
 			}
 
@@ -574,12 +563,706 @@ void thumbNailWorker()
 	}
 }
 
+void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+											   vector<vector<vector<vector<unsigned> > > > &channelLatencyDistribution,
+											   float epochTime, unsigned channelID, bool isThumbnail)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << subAddrDistroA;
+	p << "set multiplot layout "
+		<< channelLatencyDistribution[channelID].size()
+		<< ", 1 title \"{/=18" << commandLine << "\"" << endl;
+
+	for (unsigned rankID = 0; rankID
+		< channelLatencyDistribution[channelID].size(); rankID++)
+	{
+		p << "set title \"Rank " << rankID
+			<< " Distribution Rate\" offset character 0, 0, 0 font \"\" norotate"
+			<< endl;
+
+		if (rankID < channelLatencyDistribution[channelID].size() - 1)
+			p << "unset key" << endl << "unset label" << endl;
+		else
+			p << "set xlabel 'Time (s)' offset 0,0.6" << endl
+			<< "set key outside center bottom horizontal reverse Left"
+			<< endl;
+
+		p << "plot ";
+		for (unsigned a = 0; a
+			< channelLatencyDistribution[channelID][rankID].size()
+			- 1; a++)
+			p << "'-' using 1 axes x2y1 t 'bank_{" << a << "}  ',";
+		p
+			<< "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
+			<< endl;
+
+		for (unsigned bankID = 0; bankID
+			< channelLatencyDistribution[channelID][rankID].size()
+			- 1; bankID++)
+		{
+			for (unsigned epoch = 0; epoch
+				< channelLatencyDistribution[channelID][rankID][bankID].size(); epoch++)
+			{
+				p
+					<< max(
+					1E-5F,
+					channelLatencyDistribution[channelID][rankID][bankID][epoch]
+				/ ((float) channelLatencyDistribution[channelID][rankID].back()[epoch]))
+					<< endl;
+			}
+			p << "e" << endl;
+		}
+		p << channelLatencyDistribution[channelID][rankID][0].size()
+			* epochTime << " " << "0.2" << endl << "e" << endl;
+	}
+	p << "unset multiplot" << endl << "unset output" << endl;
+}
+
+
+void addressDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+										unsigned channelCount,const vector<vector<vector<vector<unsigned> > > > &channelDistribution,
+										unsigned rankCount, unsigned bankCount,
+										float epochTime, unsigned channelID, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << subAddrDistroA;
+	p << "set multiplot layout "
+		<< channelDistribution[channelID].size()
+		<< ", 1 title \"" << commandLine << "\"" << endl;
+
+	for (unsigned rankID = 0; rankID
+		< channelDistribution[channelID].size(); rankID++)
+	{
+		p << "set title \"Rank " << rankID
+			<< " Distribution Rate\" offset character 0, 0, 0 font \"\" norotate"
+			<< endl;
+
+		if (rankID < channelDistribution[channelID].size() - 1)
+			p << "unset key" << endl << "unset label" << endl;
+		else
+			p << "set xlabel 'Time (s)' offset 0,0.6" << endl
+			<< "set key outside center bottom horizontal reverse Left"
+			<< endl;
+
+		p << "plot ";
+		for (unsigned a = 0; a
+			< channelDistribution[channelID][rankID].size() - 1; a++)
+			p << "'-' using 1 axes x2y1 t 'bank_{" << a << "}  ',";
+		p
+			<< "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
+			<< endl;
+
+		for (unsigned bankID = 0; bankID
+			< channelDistribution[channelID][rankID].size() - 1; bankID++)
+		{
+			for (unsigned epoch = 0; epoch
+				< channelDistribution[channelID][rankID][bankID].size(); epoch++)
+			{
+				p
+					<< max(
+					1E-5F,
+					channelDistribution[channelID][rankID][bankID][epoch]
+				/ ((float) channelDistribution[channelID][rankID].back()[epoch]))
+					<< endl;
+			}
+			p << "e" << endl;
+		}
+		p << channelDistribution[channelID][rankID][0].size()
+			* epochTime << " " << "0.2" << endl << "e" << endl;
+	}
+	p << "unset multiplot" << endl << "unset output" << endl;
+}
+
+void overallAddressDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+									 unsigned channelCount,const vector<vector<vector<vector<unsigned> > > > &channelDistribution,
+									 unsigned rankCount, unsigned bankCount,
+									 float epochTime, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << commandLine << "\\nChannel Distribution Rate\""
+		<< endl << addressDistroA;
+	p << "plot ";
+	for (unsigned i = 0; i < channelCount; ++i)
+		p << "'-' using 1 axes x2y1 t 'ch[" << i << "]',";
+	p << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
+		<< endl;
+
+	for (unsigned channelID = 0; channelID < channelDistribution.size(); channelID++)
+	{
+		for (unsigned epochID = 0; epochID
+			< channelDistribution[0][0][0].size(); epochID++)
+		{
+			unsigned thisChannelTotal = 0;
+			unsigned allChannelTotal = 1;
+			for (unsigned rankID = 0; rankID < rankCount; rankID++)
+			{
+				for (unsigned bankID = 0; bankID < bankCount; bankID++)
+				{
+					thisChannelTotal
+						+= channelDistribution[channelID][rankID][bankID][epochID];
+					for (unsigned channelID2 = 0; channelID2 < channelCount; channelID2++)
+						allChannelTotal
+						+= channelDistribution[channelID2][rankID][bankID][epochID];
+				}
+			}
+			p << thisChannelTotal / ((float) allChannelTotal) << endl;
+		}
+		p << "e" << endl;
+	}
+
+	p << channelDistribution[0][0][0].size() * epochTime << " " << "0.2"
+		<< endl << "e" << endl;
+	p << addressDistroB << endl << "plot ";
+
+	for (unsigned i = 0; i < rankCount; ++i)
+		p << "'-' using 1 axes x2y1 t 'rk[" << i << "]',";
+	p << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
+		<< endl;
+
+	for (unsigned rankID = 0; rankID < rankCount; rankID++)
+	{
+		for (unsigned epochID = 0; epochID
+			< channelDistribution[0][0][0].size(); epochID++)
+		{
+			unsigned thisRankTotal = 0;
+			unsigned allRankTotal = 1;
+			for (unsigned channelID = 0; channelID < channelCount; channelID++)
+			{
+				for (unsigned bankID = 0; bankID < bankCount; bankID++)
+				{
+					thisRankTotal
+						+= channelDistribution[channelID][rankID][bankID][epochID];
+					for (unsigned rankID2 = 0; rankID2 < rankCount; rankID2++)
+						allRankTotal
+						+= channelDistribution[channelID][rankID2][bankID][epochID];
+				}
+			}
+			p << thisRankTotal / ((float) allRankTotal) << endl;
+		}
+		p << "e" << endl;
+	}
+	p << channelDistribution[0][0][0].size() * epochTime << " " << "0.2"
+		<< endl << "e" << endl;
+	p << addressDistroC << endl << "plot ";
+	for (unsigned i = 0; i < bankCount; ++i)
+		p << "'-' using 1 axes x2y1 t 'bk[" << i << "]',";
+	p << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
+		<< endl;
+
+	for (unsigned bankID = 0; bankID < bankCount; bankID++)
+	{
+		for (unsigned epochID = 0; epochID
+			< channelDistribution[0][0][0].size(); epochID++)
+		{
+			unsigned thisBankTotal = 0;
+			unsigned allBankTotal = 1;
+			for (unsigned rankID = 0; rankID < rankCount; rankID++)
+			{
+				for (unsigned channelID = 0; channelID < channelCount; channelID++)
+				{
+					thisBankTotal
+						+= channelDistribution[channelID][rankID][bankID][epochID];
+					for (unsigned bankID2 = 0; bankID2 < bankCount; bankID2++)
+						allBankTotal
+						+= channelDistribution[channelID][rankID][bankID2][epochID];
+				}
+			}
+			p << thisBankTotal / ((float) allBankTotal) << endl;
+		}
+		p << "e" << endl;
+	}
+	p << channelDistribution[0][0][0].size() * epochTime << " " << "0.2"
+		<< endl << "e" << endl;
+	p << "unset multiplot" << endl << "unset output" << endl;
+}
+
+void pcVsLatencyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+					  const std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> > &latencyVsPcLow,
+					  const std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> > &latencyVsPcHigh,
+					  float period, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << pcVsLatencyGraphScript << endl;
+	p << "set multiplot layout 1, 2 title \"" << commandLine
+		<< "\\nTotal Latency Due to Reads vs. PC Value\"" << endl;
+	p << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
+
+	if (latencyVsPcLow.size() > 0)
+		for (std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> >::const_iterator
+			i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); ++i)
+			p << i->first << " " << period * i->second.first << endl;
+	else
+		p << "4294967296 1.01" << endl;
+
+	p << endl << "e" << endl << "set format x '0x1%x'" << endl
+		<< "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
+	if (latencyVsPcHigh.size() > 0)
+		for (std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> >::const_iterator
+			i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); ++i)
+			p << (i->first - 0x100000000) << " " << period
+			* i->second.first << endl;
+	else
+		p << "4294967296 1.01" << endl;
+	p << "e" << endl << "unset multiplot" << endl << "unset output"
+		<< endl;
+}
+
+void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+							 const std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> > &latencyVsPcLow,
+							 const std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> > &latencyVsPcHigh,
+							 float period, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << avgPcVsLatencyGraphScript << endl;
+	p << "set multiplot layout 1, 2 title \"" << commandLine
+		<< "\\nAverage Latency Due to Reads vs. PC Value\"" << endl;
+	p << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
+
+	if (latencyVsPcLow.size() > 0)
+		for (std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> >::const_iterator
+			i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); ++i)
+			p << i->first << " " << period * (i->second.first
+			/ i->second.second) << endl;
+	else
+		p << "4294967296 1.01" << endl;
+
+	p << endl << "e" << endl;
+	p << "set format x '0x1%x'" << endl
+		<< "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
+	if (latencyVsPcHigh.size() > 0)
+		for (std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> >::const_iterator
+			i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); ++i)
+			p << (i->first - 0x100000000) << " " << period
+			* (i->second.first / i->second.second) << endl;
+	else
+		p << "4294967296 1.01" << endl;
+	p << "e" << endl << "unset multiplot" << endl << "unset output"
+		<< endl;
+}
+
+void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+										 const std::tr1::unordered_map<unsigned, unsigned> &distTransactionLatency, float period,
+										 bool isThumbnail, StdDev<float> &latencyDeviation)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << commandLine << "\\nRead Transaction Latency\""
+		<< endl << transactionGraphScript << endl;
+	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
+		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
+	{
+		latencyDeviation.add(i->first * period, i->second);
+		p << i->first * period << " " << i->second << endl;
+	}
+	p << "e" << endl << "unset output" << endl;
+}
+
+void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+											   const std::tr1::unordered_map<unsigned,unsigned> & distTransactionLatency, float period,
+											   bool isThumbnail, const StdDev<float> &latencyDeviation)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << commandLine << "\\nRead Transaction Latency\""
+		<< endl << "set xrange [0:"
+		<< latencyDeviation.getStdDev().get<1> () + 8
+		* latencyDeviation.getStdDev().get<2> () << "]" << endl
+		<< transactionGraphScript << endl;
+	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
+		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
+	{
+		p << i->first * period << " " << i->second << endl;
+	}
+	p << "e" << endl << "unset output" << endl;
+}
+
+void adjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+												 const std::tr1::unordered_map<unsigned,unsigned> & distAdjustedTransactionLatency, float period,
+												 bool isThumbnail, StdDev<float> &latencyDeviation)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << commandLine
+		<< "\\nAdjusted Read Transaction Latency\"" << endl
+		<< transactionGraphScript << endl;
+	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
+		distAdjustedTransactionLatency.begin(), end =
+		distAdjustedTransactionLatency.end(); i != end; ++i)
+	{
+		latencyDeviation.add(i->first * period, i->second);
+		p << i->first * period << " " << i->second << endl;
+	}
+	p << "e" << endl << "unset output" << endl;
+}
+
+void zoomedAdjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+													   const std::tr1::unordered_map<unsigned,unsigned> & distAdjustedTransactionLatency, float period,
+													   bool isThumbnail, const StdDev<float> &latencyDeviation)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << commandLine
+		<< "\\nZoomed Adjusted Read Transaction Latency\"" << endl
+		<< "set xrange [0:" << latencyDeviation.getStdDev().get<1> () + 8
+		* latencyDeviation.getStdDev().get<2> () << "]" << endl
+		<< transactionGraphScript << endl;
+	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
+		distAdjustedTransactionLatency.begin(), end =
+		distAdjustedTransactionLatency.end(); i != end; ++i)
+	{
+		p << i->first * period << " " << i->second << endl;
+	}
+#ifndef NDEBUG
+	cerr << "range is " << latencyDeviation.getStdDev().get<1> () + 3
+		* latencyDeviation.getStdDev().get<2> () << endl;
+#endif
+	p << "e" << endl << "unset output" << endl;
+}
+
+void bandwidthGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+					const vector<pair<uint64_t, uint64_t> > & bandwidthValues,const vector<float> &ipcValues,vector<pair<uint64_t, uint64_t> > &cacheBandwidthValues,
+					float epochTime, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set multiplot title \"" << commandLine << "\"" << endl;
+	p << bandwidthGraphScript << endl;
+
+	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
+		bandwidthValues.begin(); i != bandwidthValues.end(); ++i)
+		p << 1.0 * i->first << endl;
+	p << "e" << endl;
+
+	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
+		bandwidthValues.begin(); i != bandwidthValues.end(); ++i)
+		p << 1.0 * i->second << endl;
+	p << "e" << endl;
+
+	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
+		cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); ++i)
+		p << 1.0 * i->first << endl;
+	p << "e" << endl;
+
+	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
+		cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); ++i)
+		p << 1.0 * i->second << endl;
+	p << "e" << endl;
+
+	float time = 0.0F;
+	PriorMovingAverage bandwidthTotal(WINDOW);
+	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
+		bandwidthValues.begin(), j = cacheBandwidthValues.begin(); i
+		!= bandwidthValues.end() && j != cacheBandwidthValues.end(); ++i, ++j)
+	{
+		bandwidthTotal.append(1.0F * (float) (i->first + i->second + j->first
+			+ j->second));
+		p << time << " " << bandwidthTotal.getAverage() << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	p << smallIPCGraphScript << endl;
+
+	time = 0.0F;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i
+		!= ipcValues.end(); ++i)
+	{
+		p << time << " " << *i << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	time = 0.0F;
+	CumulativePriorMovingAverage ipcTotal;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i
+		!= ipcValues.end(); ++i)
+	{
+		ipcTotal.add(1, *i);
+		p << time << " " << ipcTotal.getAverage() << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	time = 0.0F;
+	PriorMovingAverage ipcBuffer(WINDOW);
+	for (vector<float>::const_iterator i = ipcValues.begin(); i
+		!= ipcValues.end(); ++i)
+	{
+		ipcBuffer.append(*i);
+		p << time << " " << ipcBuffer.getAverage() << endl;
+		time += epochTime;
+	}
+	p << "e" << endl << "unset multiplot" << endl << "unset output"
+		<< endl;
+}
+
+void cacheGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+				const vector<unsigned> & iCacheMisses,const vector<unsigned> &iCacheHits,
+				const vector<unsigned> & dCacheMisses,const vector<unsigned> &dCacheHits,
+				const vector<unsigned> & l2CacheMisses,const vector<unsigned> &l2CacheHits,
+				float epochTime, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set multiplot layout 3, 1 title \"" << commandLine << "\""
+		<< endl;
+	p << cacheGraph1 << endl;
+
+	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); ++i)
+		p << (float) i * epochTime << " " << iCacheMisses[i]
+	+ iCacheHits[i] << endl;
+	p << "e" << endl;
+	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); ++i)
+		p << (float) i * epochTime << " " << iCacheMisses[i]
+	/ ((float) max(iCacheMisses[i] + iCacheHits[i], 1U))
+		<< endl;
+	p << "e" << endl;
+
+	p << cacheGraph2 << endl;
+	for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); ++i)
+		p << (float) i * epochTime << " " << dCacheMisses[i]
+	+ dCacheHits[i] << endl;
+	p << "e" << endl;
+	for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); ++i)
+		p << (float) i * epochTime << " " << dCacheMisses[i]
+	/ ((float) max(dCacheMisses[i] + dCacheHits[i], 1U))
+		<< endl;
+	p << "e" << endl;
+
+	p << cacheGraph3 << endl;
+	for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); ++i)
+		p << (float) i * epochTime << " " << l2CacheMisses[i]
+	+ l2CacheHits[i] << endl;
+	p << "e" << endl;
+	for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); ++i)
+		p << (float) i * epochTime << " " << l2CacheMisses[i]
+	/ ((float) max(l2CacheMisses[i] + l2CacheHits[i], 1U))
+		<< endl;
+	p << "e" << endl << "unset multiplot" << endl << "unset output"
+		<< endl;
+}
+
+void averageIpcAndLatencyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+							   vector<unsigned> & transactionCount, vector<tuple<unsigned, unsigned, double, unsigned> > &transactionLatency,
+							   vector<float> &ipcValues,
+							   float epochTime, float period, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set multiplot layout 2,1 title \"" << commandLine << "\"" << endl;
+
+	// make the transaction latency graph
+	p << "set title 'Transaction Latency'" << endl
+		<< averageTransactionLatencyScript << endl;
+
+	float time = 0.0F;
+	// access count
+	for (vector<unsigned>::const_iterator i = transactionCount.begin(); i
+		!= transactionCount.end(); ++i)
+	{
+		p << time << " " << *i << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	time = 0.0F;
+	// minimum
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator
+		i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
+	{
+		p << time << " " << period * i->get<0> () << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	// mean
+	time = 0.0F;
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator
+		i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
+	{
+		p << time << " " << period * i->get<1> () << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	time = 0.0F;
+	// mean + 1 std dev
+	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator
+		i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
+	{
+		p << time << " " << period * (i->get<1> () + 2 * i->get<2> ()) << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	// ipc part
+	p << "set title 'Average IPC vs. Time'" << endl << otherIPCGraphScript << endl;
+
+	time = 0.0F;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i
+		!= ipcValues.end(); ++i)
+	{
+		p << time << " " << *i << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+
+#if 0
+	ipcTotal.clear();
+	time = 0.0F;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
+	{
+		ipcTotal.add(1, *i);
+		p1 << time << " " << ipcTotal.getAverage() << endl;
+		time += epochTime;
+	}
+	p1 << "e" << endl;
+#endif
+
+	PriorMovingAverage ipcBuffer(WINDOW);
+	time = 0.0F;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i
+		!= ipcValues.end(); ++i)
+	{
+		ipcBuffer.append(*i);
+		p << time << " " << ipcBuffer.getAverage() << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	p << "unset multiplot" << endl << "unset output" << endl;
+}
+
+void hitMissGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+				  const vector<float> & hitMissValues,const vector<unsigned> &hitMissTotals, float epochTime, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << "Reuse Rate of Open Rows vs. Time\\n"
+		<< commandLine << "\"" << endl << rowHitMissGraphScript << endl;
+
+	float time = 0.0F;
+	for (vector<float>::const_iterator i = hitMissValues.begin(); i
+		!= hitMissValues.end(); ++i)
+	{
+		p << time << " " << *i << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	CumulativePriorMovingAverage hitMissTotal;
+	time = 0.0F;
+	for (vector<float>::const_iterator i = hitMissValues.begin(); i
+		!= hitMissValues.end(); ++i)
+	{
+		hitMissTotal.add(1.0, *i);
+		p << time << " " << hitMissTotal.getAverage() << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	time = 0.0F;
+	for (vector<unsigned>::const_iterator i = hitMissTotals.begin(), end = hitMissTotals.end(); i
+		!= end; ++i)
+	{
+		p << time << " " << max(*i, 1U) << endl;
+		time += epochTime;
+	}
+
+	p << "e" << endl << "unset output" << endl;
+}
+
+void workingSetGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+					 const vector<unsigned> & workingSetSize, float epochTime, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+
+	p << "set title \"" << commandLine
+		<< "\\nWorking Set Size vs Time\" offset character 0, -1, 0 font '' norotate"
+		<< endl;	
+	p << workingSetSetup << endl;
+	float time = 0.0F;
+	for (vector<unsigned>::const_iterator i = workingSetSize.begin(); i
+		!= workingSetSize.end(); ++i)
+	{
+		p << time << " " << *i << endl;
+		time += epochTime;
+	}
+	p << "e" << endl << "unset output" << endl;
+}
+
+void bigIpcGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+				 const vector<float> & ipcValues, float epochTime, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << bigIPCGraphScript << endl;
+	float time = 0.0F;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i
+		!= ipcValues.end(); ++i)
+	{
+		p << time << " " << *i << endl;
+		time += epochTime;
+	}
+	p << "e" << endl;
+
+	time = 0.0F;
+	CumulativePriorMovingAverage ipcTotal;
+	for (vector<float>::const_iterator i = ipcValues.begin(); i
+		!= ipcValues.end(); ++i)
+	{
+		ipcTotal.add(1, *i);
+		p << time << " " << ipcTotal.getAverage() << endl;
+		time += epochTime;
+	}
+	p << "e" << endl << "0 0" << endl << "3.31 1E-5" << endl << "e"
+		<< endl << "unset output" << endl;
+}
+
+void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+					   const vector<pair<unsigned,unsigned> > & cacheHitMiss, float epochTime, bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << "Per-DIMM Cache Hit Rate\\n" << commandLine << "\""
+		<< endl << hitMissScript << endl;
+
+	float time = 0.0F;
+	for (vector<pair<unsigned, unsigned> >::const_iterator i =
+		cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
+	{
+		p << time << " " << i->first + i->second << endl;
+		//cerr << time << " " << i->first + i->second << endl;
+		time += epochTime;
+	}
+
+	p << "e" << endl;
+
+	time = 0.0F;
+	for (vector<pair<unsigned, unsigned> >::const_iterator i =
+		cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
+	{
+		p << time << " " << (double) i->first / (i->first + i->second) << endl;
+		//cerr << time << " " << i->first << " " <<  i->second << endl;
+		time += epochTime;
+	}
+
+	p << "e" << endl << "unset output" << endl;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void processPower(const bf::path &outputDir, const string &filename)
 {
-//	cerr << "process " << filename << " to " << outputDir.native_file_string()
-//			<< endl;
-	
+	//	cerr << "process " << filename << " to " << outputDir.native_file_string()
+	//			<< endl;
+
 	if (!fileExists(filename))
 	{
 		cerr << "cannot find " << filename << endl;
@@ -599,7 +1282,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 		if (!bf::is_directory(outputDir))
 		{
 			cerr << "Directory " << outputDir.leaf()
-					<< " exists, but is not a directory." << endl;
+				<< " exists, but is not a directory." << endl;
 			exit(-1);
 		}
 	}
@@ -609,7 +1292,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 	list<string> filesGenerated;
 
 	unsigned channelCount;
-	float epochTime;
+	float epochTime = 0.0F;
 
 	vector<vector<float> > values;
 	vector<float> valueBuffer;
@@ -707,8 +1390,8 @@ void processPower(const bf::path &outputDir, const string &filename)
 						}
 
 						energyValues.push_back(pair<float, float> (
-								energyValueBuffer.first / scaleFactor,
-								energyValueBuffer.second / scaleFactor));
+							energyValueBuffer.first / scaleFactor,
+							energyValueBuffer.second / scaleFactor));
 					}
 
 					// try to compress the array by half and double the scaleFactor
@@ -716,7 +1399,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 					{
 						// scale the array back by half
 						for (vector<vector<float> >::iterator i =
-								values.begin(); i != values.end(); ++i)
+							values.begin(); i != values.end(); ++i)
 						{
 							for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
 							{
@@ -731,11 +1414,11 @@ void processPower(const bf::path &outputDir, const string &filename)
 						for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
 						{
 							energyValues[j] = pair<float, float> (
-									(energyValues[2 * j].first + energyValues[2
-											* j + 1].first) / 2.0F,
-									(energyValues[2 * j].second
-											+ energyValues[2 * j + 1].second)
-											/ 2.0F);
+								(energyValues[2 * j].first + energyValues[2
+								* j + 1].first) / 2.0F,
+								(energyValues[2 * j].second
+								+ energyValues[2 * j + 1].second)
+								/ 2.0F);
 						}
 
 						energyValues.resize(MAXIMUM_VECTOR_SIZE / 2);
@@ -770,37 +1453,37 @@ void processPower(const bf::path &outputDir, const string &filename)
 					cerr << commandLine << endl;
 
 					p << "set title \"{/=18 Power vs. Time}\\n{/=14 "
-							<< commandLine
-							<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+						<< commandLine
+						<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
 					p3 << "set title \"{/=24 Power vs. Time}\\n{/=18 "
-							<< commandLine
-							<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
+						<< commandLine
+						<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
 
 					bf::path fileName = outputDir / ("energy." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
 					//cerr << fileName.native_directory_string();
 
 					p2 << "set output \"" << fileName.native_directory_string()
-							<< "\"\n";
+						<< "\"\n";
 					p2 << powerScripts[2] << endl;
 					p2 << "set title \"{/=18 Energy vs. Time}\\n{/=14 "
-							<< commandLine
-							<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+						<< commandLine
+						<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
 					p2
-							<< "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
+						<< "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
 
 					fileName = outputDir / ("bigEnergy." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
 
 					p4 << "set output \"" << fileName.native_directory_string()
-							<< "\"\n";
+						<< "\"\n";
 					p4 << bigEnergyScript << endl;
 					p4 << "set title \"{/=24 Energy vs. Time}\\n{/=18 "
-							<< commandLine
-							<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+						<< commandLine
+						<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
 					p4
-							<< "plot '-' u 1:2 axes x1y1 t \"Energy (P t)\" w boxes lt rgb \"#66CF03\" , '-' u 1:2 axes x1y2 t \"Cumulative Energy\" w lines lw 6.00 lt rgb \"#387400\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
-							<< endl;
+						<< "plot '-' u 1:2 axes x1y1 t \"Energy (P t)\" w boxes lt rgb \"#66CF03\" , '-' u 1:2 axes x1y2 t \"Cumulative Energy\" w lines lw 6.00 lt rgb \"#387400\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
+						<< endl;
 				}
 				else if (newLine[1] == '+')
 				{
@@ -808,13 +1491,13 @@ void processPower(const bf::path &outputDir, const string &filename)
 					bf::path fileName = outputDir / ("power." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
 					p << "set output \"" << fileName.native_directory_string()
-							<< "\"\n";
+						<< "\"\n";
 					p << powerScripts[0] << endl;
 
 					fileName = outputDir / ("bigPower." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
 					p3 << "set output \"" << fileName.native_directory_string()
-							<< "\"" << endl;
+						<< "\"" << endl;
 					p3 << bigPowerScript << endl;
 
 					vector<string> splitLine;
@@ -829,20 +1512,20 @@ void processPower(const bf::path &outputDir, const string &filename)
 						for (unsigned b = 0; b < 5; b++)
 						{
 							p << "'-' using 1 axes x2y1 title \"P_{sys}("
-									<< powerTypes[b] << ") ch[" << a << "]\",";
+								<< powerTypes[b] << ") ch[" << a << "]\",";
 							p3 << "'-' using 1 axes x2y1 title \"P_{sys}("
-									<< powerTypes[b] << ") ch[" << a << "]\",";
+								<< powerTypes[b] << ") ch[" << a << "]\",";
 						}
 					}
 					p
-							<< "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
+						<< "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
 					p3
-							<< "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
+						<< "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
 					p3
-							<< "'-' u 1:2 axes x1y1 sm csp t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
+						<< "'-' u 1:2 axes x1y1 sm csp t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
 					p3
-							<< "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
-							<< endl;
+						<< "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
+						<< endl;
 
 					values.reserve(channelCount * 5);
 					energyValues.reserve(channelCount * 5);
@@ -868,7 +1551,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 	// make the main power graph and big power graph
 	for (vector<vector<float> >::const_iterator i = values.begin(); i
-			!= values.end(); ++i)
+		!= values.end(); ++i)
 	{
 		for (vector<float>::const_iterator j = i->begin(); j != i->end(); ++j)
 		{
@@ -880,7 +1563,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 		p3 << "e" << endl;
 	}
 	p << "0 0" << endl << (!values.empty() ? values.back().size() : 0.0)
-			* epochTime << " 0.2" << endl << "e" << endl;
+		* epochTime << " 0.2" << endl << "e" << endl;
 	p3 << "0 0" << endl << 3.31 / epochTime << " 1e-5" << endl << "e" << endl;
 
 	p << powerScripts[1];
@@ -911,7 +1594,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 	p << "e" << endl;
 	p3 << "e" << endl;
 	p3 << "0 0" << endl << 3.31 << " 1e-5" << endl << "e" << endl
-			<< "unset output" << endl;
+		<< "unset output" << endl;
 
 	PriorMovingAverage powerMovingAverage(WINDOW);
 
@@ -926,7 +1609,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 		p << i * epochTime << " " << powerMovingAverage.getAverage() << endl;
 	}
 	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl
-			<< "exit" << endl;
+		<< "exit" << endl;
 
 	// various energy graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
@@ -949,14 +1632,14 @@ void processPower(const bf::path &outputDir, const string &filename)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch
-				* epochTime * epochTime << endl;
+			* epochTime * epochTime << endl;
 		cumulativeEnergy += totalPowerPerEpoch * epochTime;
 		p4 << i * epochTime << " " << cumulativeEnergy << endl;
 	}
 
 	p2 << "e" << endl << powerScripts[3] << endl;
 	p4 << "e" << endl << "0 0" << endl << "3.31 1e-5" << endl << "e"
-			<< "unset output" << endl;
+		<< "unset output" << endl;
 
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
@@ -965,7 +1648,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * epochTime
-				* epochTime << endl;
+			* epochTime << endl;
 	}
 	p2 << "e" << endl;
 
@@ -976,7 +1659,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 			totalPowerPerEpoch += values[j][i];
 
 		p2 << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch
-				* epochTime * epochTime * epochTime << endl;
+			* epochTime * epochTime * epochTime << endl;
 	}
 	p2 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 
@@ -985,14 +1668,14 @@ void processPower(const bf::path &outputDir, const string &filename)
 	path outFilename = outputDir / ("cumulativeEnergy." + extension);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	p4 << "reset" << endl << terminal << basicSetup << "set output '"
-			<< outFilename.native_directory_string() << "'" << endl;
+		<< outFilename.native_directory_string() << "'" << endl;
 	p4 << "set title \"" << "Cumulative Energy\\n" << commandLine << "\""
-			<< endl << cumulPowerScript;
+		<< endl << cumulPowerScript;
 
 	float time = 0.0F;
 	float totalPower = 0.0F;
 	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(); i
-			!= energyValues.end(); ++i)
+		!= energyValues.end(); ++i)
 	{
 		totalPower += i->first;
 
@@ -1006,8 +1689,8 @@ void processPower(const bf::path &outputDir, const string &filename)
 	time = 0.0F;
 	totalPower = 0.0F;
 	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(); i
-			!= energyValues.end(); ++i)
-	//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); ++i)
+		!= energyValues.end(); ++i)
+		//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); ++i)
 	{
 		//for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
 		//	totalPower += alternateValues[j][i];
@@ -1034,28 +1717,28 @@ void processPower(const bf::path &outputDir, const string &filename)
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
 		for (list<string>::const_iterator i = filesGenerated.begin(); i
-				!= filesGenerated.end(); ++i)
+			!= filesGenerated.end(); ++i)
 			fileList.push_back(*i);
 	}
 
 	bf::path givenfilename(filename);
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine,
-			channelCount, graphs);
+		channelCount, graphs);
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief setup the output directory
 //////////////////////////////////////////////////////////////////////////
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
-		const string &commandLine, unsigned channelCount, list<pair<string,
-				string> > &graphs)
+					  const string &commandLine, unsigned channelCount, list<pair<string,
+					  string> > &graphs)
 {
 	bf::path templateFile = executableDirectory / "template.html";
 
 	if (!fileExists(templateFile.native_directory_string()))
 	{
 		cerr << "cannot find template:"
-				<< templateFile.native_directory_string();
+			<< templateFile.native_directory_string();
 		return;
 	}
 	string basename;
@@ -1080,12 +1763,12 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 	if (alreadyExists = fileExists(printFile.native_directory_string()))
 	{
 		instream.open(printFile.native_directory_string().c_str(), ios::in
-				| ios::ate);
+			| ios::ate);
 	}
 	else
 	{
 		instream.open(templateFile.directory_string().c_str(), ios::in
-				| ios::ate);
+			| ios::ate);
 	}
 
 	ifstream::pos_type entireFileLength = instream.tellg();
@@ -1105,23 +1788,23 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 		string find("@@@");
 		// update the title 
 		outputContent = outputContent.replace(outputContent.find(find),
-				find.length(), commandLine);
+			find.length(), commandLine);
 		changesMade = true;
 	}
 
 	for (list<pair<string, string> >::const_iterator i = graphs.begin(), end =
-			graphs.end(); i != end; ++i)
+		graphs.end(); i != end; ++i)
 	{
 		string currentImageLink = "<h2>" + i->second
-				+ "</h2><a rel=\"lightbox\" href=\"" + i->first + "."
-				+ extension + "\"><img class=\"fancyzoom\" src=\"" + i->first
-				+ "-thumb." + thumbnailExtenstion + +"\" alt=\"\" /></a>";
+			+ "</h2><a rel=\"lightbox\" href=\"" + i->first + "."
+			+ processedExtension + "\"><img class=\"fancyzoom\" src=\"" + i->first
+			+ "-thumb." + thumbnailExtenstion + +"\" alt=\"\" /></a>";
 
 		if (outputContent.find(currentImageLink) == string::npos)
 		{
 			changesMade = true;
 			outputContent = outputContent.insert(outputContent.find("</div>"),
-					currentImageLink);
+				currentImageLink);
 		}
 	}
 
@@ -1146,9 +1829,9 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 //////////////////////////////////////////////////////////////////////////
 void processStats(const bf::path &outputDir, const string filename)
 {
-//	cerr << "process " << filename << " to " << outputDir.native_file_string()
-//			<< endl;
-	
+	//	cerr << "process " << filename << " to " << outputDir.native_file_string()
+	//			<< endl;
+
 	if (!fileExists(filename))
 	{
 		cerr << "cannot find " << filename << endl;
@@ -1168,7 +1851,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		if (!bf::is_directory(outputDir))
 		{
 			cerr << "Directory " << outputDir.leaf()
-					<< " exists, but is not a directory." << endl;
+				<< " exists, but is not a directory." << endl;
 			exit(-1);
 		}
 	}
@@ -1186,9 +1869,9 @@ void processStats(const bf::path &outputDir, const string filename)
 	vector<vector<vector<uint64_t> > > channelLatencyDistributionBuffer;
 
 	std::tr1::unordered_map<boost::uint64_t, pair<uint64_t, uint64_t> >
-			latencyVsPcLow;
+		latencyVsPcLow;
 	std::tr1::unordered_map<boost::uint64_t, pair<uint64_t, uint64_t> >
-			latencyVsPcHigh;
+		latencyVsPcHigh;
 
 	vector<tuple<unsigned, unsigned, double, unsigned> > transactionLatency;
 	StdDev<float> averageTransactionLatency;
@@ -1387,53 +2070,53 @@ void processStats(const bf::path &outputDir, const string filename)
 				for (unsigned i = channelCount; i > 0; --i)
 				{
 					channelLatencyDistribution.push_back(vector<vector<vector<
-							unsigned> > > ());
+						unsigned> > > ());
 					channelLatencyDistribution.back().reserve(rankCount);
 					channelLatencyDistributionBuffer.push_back(vector<vector<
-							uint64_t> > ());
+						uint64_t> > ());
 					channelLatencyDistributionBuffer.back().reserve(rankCount);
 
 					channelDistribution.push_back(vector<vector<
-							vector<unsigned> > > ());
+						vector<unsigned> > > ());
 					channelDistribution.back().reserve(rankCount);
 					channelDistributionBuffer.push_back(
-							vector<vector<uint64_t> > ());
+						vector<vector<uint64_t> > ());
 					channelDistributionBuffer.back().reserve(rankCount);
 
 					for (unsigned j = rankCount; j > 0; --j)
 					{
 						channelLatencyDistribution.back().push_back(vector<
-								vector<unsigned> > ());
+							vector<unsigned> > ());
 						channelLatencyDistribution.back().back().reserve(
-								bankCount + 1);
+							bankCount + 1);
 						channelLatencyDistributionBuffer.back().push_back(
-								vector<uint64_t> ());
+							vector<uint64_t> ());
 						channelLatencyDistributionBuffer.back().back().reserve(
-								bankCount + 1);
+							bankCount + 1);
 
 						channelDistribution.back().push_back(vector<vector<
-								unsigned> > ());
+							unsigned> > ());
 						channelDistribution.back().back().reserve(bankCount + 1);
 						channelDistributionBuffer.back().push_back(vector<
-								uint64_t> ());
+							uint64_t> ());
 						channelDistributionBuffer.back().back().reserve(
-								bankCount + 1);
+							bankCount + 1);
 
 						for (unsigned k = bankCount + 1; k > 0; --k)
 						{
 							channelLatencyDistribution.back().back().push_back(
-									vector<unsigned> ());
+								vector<unsigned> ());
 							channelLatencyDistribution.back().back().back().reserve(
-									MAXIMUM_VECTOR_SIZE);
+								MAXIMUM_VECTOR_SIZE);
 							channelLatencyDistributionBuffer.back().back().push_back(
-									0ULL);
+								0ULL);
 
 							channelDistribution.back().back().push_back(vector<
-									unsigned> ());
+								unsigned> ());
 							channelDistribution.back().back().back().reserve(
-									MAXIMUM_VECTOR_SIZE);
+								MAXIMUM_VECTOR_SIZE);
 							channelDistributionBuffer.back().back().push_back(
-									0ULL);
+								0ULL);
 						}
 					}
 				}
@@ -1460,18 +2143,18 @@ void processStats(const bf::path &outputDir, const string filename)
 			if (strcmp(splitline2, "system.cpu.dcache.overall_hits") == 0)
 				dCacheHitBuffer = atoi(position);
 			else if (strcmp(splitline2,
-					"system.cpu.dcache.overall_miss_latency") == 0)
+				"system.cpu.dcache.overall_miss_latency") == 0)
 				dCacheMissLatencyBuffer = atoi(position);
 			else if (strcmp(splitline2, "system.cpu.dcache.overall_misses")
-					== 0)
+				== 0)
 				dCacheMissBuffer = atoi(position);
 			else if (strcmp(splitline2, "system.cpu.icache.overall_hits") == 0)
 				iCacheHitBuffer = atoi(position);
 			else if (strcmp(splitline2,
-					"system.cpu.icache.overall_miss_latency") == 0)
+				"system.cpu.icache.overall_miss_latency") == 0)
 				iCacheMissLatencyBuffer = atof(position);
 			else if (strcmp(splitline2, "system.cpu.icache.overall_misses")
-					== 0)
+				== 0)
 				iCacheMissBuffer = atoi(position);
 			else if (strcmp(splitline2, "system.l2.overall_hits") == 0)
 				l2CacheHitBuffer = atoi(position);
@@ -1482,7 +2165,7 @@ void processStats(const bf::path &outputDir, const string filename)
 			else if (strcmp(splitline2, "system.l2.overall_mshr_hits") == 0)
 				l2MshrHitBuffer = atoi(position);
 			else if (strcmp(splitline2, "system.l2.overall_mshr_miss_latency")
-					== 0)
+				== 0)
 				l2MshrMissLatencyBuffer = atof(position);
 			else if (strcmp(splitline2, "system.l2.overall_mshr_misses") == 0)
 				l2MshrMissBuffer = atoi(position);
@@ -1496,7 +2179,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		else if (starts_with(newLine, "----Datarate"))
 		{
 			period = 1 / lexical_cast<float> (strchr(newLine, ' ') + 1)
-					/ 0.000000001F;
+				/ 0.000000001F;
 		}
 		else
 		{
@@ -1519,38 +2202,38 @@ void processStats(const bf::path &outputDir, const string filename)
 								for (unsigned k = 0; k < bankCount + 1; k++)
 								{
 									channelDistribution[i][j][k].push_back(
-											channelDistributionBuffer[i][j][k]
-													/ scaleFactor);
+										channelDistributionBuffer[i][j][k]
+									/ scaleFactor);
 									channelDistributionBuffer[i][j][k] = 0;
 									channelLatencyDistribution[i][j][k].push_back(
-											channelLatencyDistributionBuffer[i][j][k]
-													/ scaleFactor);
+										channelLatencyDistributionBuffer[i][j][k]
+									/ scaleFactor);
 									channelLatencyDistributionBuffer[i][j][k]
-											= 0;
+									= 0;
 								}
 							}
 						}
 
 						transactionLatency.push_back(
-								tuple<unsigned, unsigned, double, unsigned> (
-										(tuple<unsigned, unsigned, double,
-												unsigned> ) averageTransactionLatency.getStdDev()));
+							tuple<unsigned, unsigned, double, unsigned> (
+							(tuple<unsigned, unsigned, double,
+							unsigned> ) averageTransactionLatency.getStdDev()));
 						averageTransactionLatency.clear();
 
 						transactionCount.push_back(transactionCountBuffer
-								/ scaleFactor);
+							/ scaleFactor);
 						transactionCountBuffer = 0;
 
 						adjustedTransactionCount.push_back(
-								adjustedTransactionCountBuffer / scaleFactor);
+							adjustedTransactionCountBuffer / scaleFactor);
 						adjustedTransactionCountBuffer = 0;
 
 						hitMissValues.push_back(hitMissValueBuffer
-								/ scaleFactor);
+							/ scaleFactor);
 						hitMissValueBuffer = 0;
 
 						hitMissTotals.push_back(hitMissTotalBuffer
-								/ scaleFactor);
+							/ scaleFactor);
 						hitMissTotalBuffer = 0;
 
 						iCacheHits.push_back(iCacheHitBuffer / scaleFactor);
@@ -1560,7 +2243,7 @@ void processStats(const bf::path &outputDir, const string filename)
 						iCacheMissBuffer = 0;
 
 						iCacheMissLatency.push_back(iCacheMissLatencyBuffer
-								/ scaleFactor);
+							/ scaleFactor);
 						iCacheMissLatencyBuffer = 0;
 
 						dCacheHits.push_back(dCacheHitBuffer / scaleFactor);
@@ -1570,7 +2253,7 @@ void processStats(const bf::path &outputDir, const string filename)
 						dCacheMissBuffer = 0;
 
 						dCacheMissLatency.push_back(dCacheMissLatencyBuffer
-								/ scaleFactor);
+							/ scaleFactor);
 						dCacheMissLatencyBuffer = 0;
 
 						l2CacheHits.push_back(l2CacheHitBuffer / scaleFactor);
@@ -1580,7 +2263,7 @@ void processStats(const bf::path &outputDir, const string filename)
 						l2CacheMissBuffer = 0;
 
 						l2CacheMissLatency.push_back(l2CacheMissLatencyBuffer
-								/ scaleFactor);
+							/ scaleFactor);
 						l2CacheMissLatencyBuffer = 0;
 
 						l2MshrHits.push_back(l2MshrHitBuffer / scaleFactor);
@@ -1590,35 +2273,35 @@ void processStats(const bf::path &outputDir, const string filename)
 						l2CacheMissBuffer = 0;
 
 						l2MshrMissLatency.push_back(l2MshrMissLatencyBuffer
-								/ scaleFactor);
+							/ scaleFactor);
 						l2MshrMissLatencyBuffer = 0;
 
 						bandwidthValues.push_back(pair<uint64_t, uint64_t> (
-								bandwidthValuesBuffer.first / scaleFactor,
-								bandwidthValuesBuffer.second / scaleFactor));
+							bandwidthValuesBuffer.first / scaleFactor,
+							bandwidthValuesBuffer.second / scaleFactor));
 						bandwidthValuesBuffer.first
-								= bandwidthValuesBuffer.second = 0;
+							= bandwidthValuesBuffer.second = 0;
 
 						cacheBandwidthValues.push_back(
-								pair<uint64_t, uint64_t> (
-										cacheBandwidthValuesBuffer.first
-												/ scaleFactor,
-										cacheBandwidthValuesBuffer.second
-												/ scaleFactor));
+							pair<uint64_t, uint64_t> (
+							cacheBandwidthValuesBuffer.first
+							/ scaleFactor,
+							cacheBandwidthValuesBuffer.second
+							/ scaleFactor));
 						cacheBandwidthValuesBuffer.first
-								= cacheBandwidthValuesBuffer.second = 0;
+							= cacheBandwidthValuesBuffer.second = 0;
 
 						cacheHitMiss.push_back(pair<unsigned, unsigned> (
-								cacheHitMissBuffer.first,
-								cacheHitMissBuffer.second));
+							cacheHitMissBuffer.first,
+							cacheHitMissBuffer.second));
 						cacheHitMissBuffer.first = cacheHitMissBuffer.second
-								= 0;
+							= 0;
 
 						ipcValues.push_back(ipcValueBuffer / scaleFactor);
 						ipcValueBuffer = 0;
 
 						workingSetSize.push_back(workingSetSizeBuffer
-								/ scaleFactor);
+							/ scaleFactor);
 						workingSetSizeBuffer = 0;
 
 						if (ipcValues.size() >= MAXIMUM_VECTOR_SIZE)
@@ -1632,7 +2315,7 @@ void processStats(const bf::path &outputDir, const string filename)
 
 							// scale all the arrays by half
 							for (unsigned epoch = 0; epoch
-									< MAXIMUM_VECTOR_SIZE / 2; epoch++)
+								< MAXIMUM_VECTOR_SIZE / 2; epoch++)
 							{
 								for (unsigned i = 0; i < channelCount; ++i)
 								{
@@ -1641,130 +2324,130 @@ void processStats(const bf::path &outputDir, const string filename)
 										for (unsigned k = 0; k < bankCount + 1; k++)
 										{
 											channelDistribution[i][j][k][epoch]
-													= (channelDistribution[i][j][k][2
-															* epoch]
-															+ channelDistribution[i][j][k][2
-																	* epoch + 1])
-															/ 2;
+											= (channelDistribution[i][j][k][2
+												* epoch]
+											+ channelDistribution[i][j][k][2
+												* epoch + 1])
+												/ 2;
 											channelLatencyDistribution[i][j][k][epoch]
-													= (channelLatencyDistribution[i][j][k][2
-															* epoch]
-															+ channelLatencyDistribution[i][j][k][2
-																	* epoch + 1])
-															/ 2;
+											= (channelLatencyDistribution[i][j][k][2
+												* epoch]
+											+ channelLatencyDistribution[i][j][k][2
+												* epoch + 1])
+												/ 2;
 										}
 									}
 								}
 								//fixit
 								//transactionLatency[epoch] = (transactionLatency[2 * epoch] + transactionLatency[2 * epoch + 1]) / 2;
 								transactionLatency[epoch].get<0> ()
-										= (transactionLatency[2 * epoch].get<0> ()
-												+ transactionLatency[2 * epoch
-														+ 1].get<0> ()) / 2;
+									= (transactionLatency[2 * epoch].get<0> ()
+									+ transactionLatency[2 * epoch
+									+ 1].get<0> ()) / 2;
 								transactionLatency[epoch].get<1> ()
-										= (transactionLatency[2 * epoch].get<1> ()
-												+ transactionLatency[2 * epoch
-														+ 1].get<1> ()) / 2;
+									= (transactionLatency[2 * epoch].get<1> ()
+									+ transactionLatency[2 * epoch
+									+ 1].get<1> ()) / 2;
 								transactionLatency[epoch].get<2> ()
-										= (transactionLatency[2 * epoch].get<2> ()
-												+ transactionLatency[2 * epoch
-														+ 1].get<2> ()) / 2;
+									= (transactionLatency[2 * epoch].get<2> ()
+									+ transactionLatency[2 * epoch
+									+ 1].get<2> ()) / 2;
 								transactionLatency[epoch].get<3> ()
-										= (transactionLatency[2 * epoch].get<3> ()
-												+ transactionLatency[2 * epoch
-														+ 1].get<3> ()) / 2;
+									= (transactionLatency[2 * epoch].get<3> ()
+									+ transactionLatency[2 * epoch
+									+ 1].get<3> ()) / 2;
 								//transactionLatency[epoch].get<4>() = (transactionLatency[2 * epoch].get<4>() + transactionLatency[2 * epoch + 1].get<4>()) / 2;
 								//transactionLatency[epoch].get<5>() = (transactionLatency[2 * epoch].get<5>() + transactionLatency[2 * epoch + 1].get<5>()) / 2;
 
 								transactionCount[epoch] = (transactionCount[2
-										* epoch] + transactionCount[2 * epoch
-										+ 1]) / 2;
+									* epoch] + transactionCount[2 * epoch
+									+ 1]) / 2;
 
 								adjustedTransactionCount[epoch]
-										= (adjustedTransactionCount[2 * epoch]
-												+ adjustedTransactionCount[2
-														* epoch + 1]) / 2;
+								= (adjustedTransactionCount[2 * epoch]
+								+ adjustedTransactionCount[2
+									* epoch + 1]) / 2;
 
 								hitMissValues[epoch]
-										= (hitMissValues[2 * epoch]
-												+ hitMissValues[2 * epoch + 1])
-												/ 2;
+								= (hitMissValues[2 * epoch]
+								+ hitMissValues[2 * epoch + 1])
+									/ 2;
 
 								iCacheHits[epoch] = (iCacheHits[2 * epoch]
-										+ iCacheHits[2 * epoch + 1]) / 2;
+								+ iCacheHits[2 * epoch + 1]) / 2;
 
 								iCacheMisses[epoch] = (iCacheMisses[2 * epoch]
-										+ iCacheMisses[2 * epoch + 1]) / 2;
+								+ iCacheMisses[2 * epoch + 1]) / 2;
 
 								iCacheMissLatency[epoch] = (iCacheMissLatency[2
-										* epoch] + iCacheMissLatency[2 * epoch
-										+ 1]) / 2;
+									* epoch] + iCacheMissLatency[2 * epoch
+									+ 1]) / 2;
 
 								dCacheHits[epoch] = (dCacheHits[2 * epoch]
-										+ dCacheHits[2 * epoch + 1]) / 2;
+								+ dCacheHits[2 * epoch + 1]) / 2;
 
 								dCacheMisses[epoch] = (dCacheMisses[2 * epoch]
-										+ dCacheMisses[2 * epoch + 1]) / 2;
+								+ dCacheMisses[2 * epoch + 1]) / 2;
 
 								dCacheMissLatency[epoch] = (dCacheMissLatency[2
-										* epoch] + dCacheMissLatency[2 * epoch
-										+ 1]) / 2;
+									* epoch] + dCacheMissLatency[2 * epoch
+									+ 1]) / 2;
 
 								l2CacheHits[epoch] = (l2CacheHits[2 * epoch]
-										+ l2CacheHits[2 * epoch + 1]) / 2;
+								+ l2CacheHits[2 * epoch + 1]) / 2;
 
 								l2CacheMisses[epoch]
-										= (l2CacheMisses[2 * epoch]
-												+ l2CacheMisses[2 * epoch + 1])
-												/ 2;
+								= (l2CacheMisses[2 * epoch]
+								+ l2CacheMisses[2 * epoch + 1])
+									/ 2;
 
 								l2CacheMissLatency[epoch]
-										= (l2CacheMissLatency[2 * epoch]
-												+ l2CacheMissLatency[2 * epoch
-														+ 1]) / 2;
+								= (l2CacheMissLatency[2 * epoch]
+								+ l2CacheMissLatency[2 * epoch
+									+ 1]) / 2;
 
 								l2MshrHits[epoch] = (l2MshrHits[2 * epoch]
-										+ l2MshrHits[2 * epoch + 1]) / 2;
+								+ l2MshrHits[2 * epoch + 1]) / 2;
 
 								l2MshrMisses[epoch] = (l2MshrMisses[2 * epoch]
-										+ l2MshrMisses[2 * epoch + 1]) / 2;
+								+ l2MshrMisses[2 * epoch + 1]) / 2;
 
 								l2MshrMissLatency[epoch] = (l2MshrMissLatency[2
-										* epoch] + l2MshrMissLatency[2 * epoch
-										+ 1]) / 2;
+									* epoch] + l2MshrMissLatency[2 * epoch
+									+ 1]) / 2;
 
 								bandwidthValues[epoch].first
-										= (bandwidthValues[2 * epoch].first
-												+ bandwidthValues[2 * epoch + 1].first)
-												/ 2;
+									= (bandwidthValues[2 * epoch].first
+									+ bandwidthValues[2 * epoch + 1].first)
+									/ 2;
 								bandwidthValues[epoch].second
-										= (bandwidthValues[2 * epoch].second
-												+ bandwidthValues[2 * epoch + 1].second)
-												/ 2;
+									= (bandwidthValues[2 * epoch].second
+									+ bandwidthValues[2 * epoch + 1].second)
+									/ 2;
 
 								cacheBandwidthValues[epoch].first
-										= (cacheBandwidthValues[2 * epoch].first
-												+ cacheBandwidthValues[2
-														* epoch + 1].first) / 2;
+									= (cacheBandwidthValues[2 * epoch].first
+									+ cacheBandwidthValues[2
+									* epoch + 1].first) / 2;
 								cacheBandwidthValues[epoch].second
-										= (cacheBandwidthValues[2 * epoch].second
-												+ cacheBandwidthValues[2
-														* epoch + 1].second)
-												/ 2;
+									= (cacheBandwidthValues[2 * epoch].second
+									+ cacheBandwidthValues[2
+									* epoch + 1].second)
+									/ 2;
 
 								cacheHitMiss[epoch].first = (cacheHitMiss[2
-										* epoch].first + cacheHitMiss[2 * epoch
-										+ 1].first) / 2;
+									* epoch].first + cacheHitMiss[2 * epoch
+									+ 1].first) / 2;
 								cacheHitMiss[epoch].second = (cacheHitMiss[2
-										* epoch].second + cacheHitMiss[2
-										* epoch + 1].second) / 2;
+									* epoch].second + cacheHitMiss[2
+									* epoch + 1].second) / 2;
 
 								ipcValues[epoch] = (ipcValues[2 * epoch]
-										+ ipcValues[2 * epoch + 1]) / 2;
+								+ ipcValues[2 * epoch + 1]) / 2;
 
 								workingSetSize[epoch] = (workingSetSize[2
-										* epoch]
-										+ workingSetSize[2 * epoch + 1]) / 2;
+									* epoch]
+								+ workingSetSize[2 * epoch + 1]) / 2;
 							}
 
 							// resize all the vectors
@@ -1775,9 +2458,9 @@ void processStats(const bf::path &outputDir, const string filename)
 									for (unsigned k = 0; k < bankCount + 1; k++)
 									{
 										channelDistribution[i][j][k].resize(
-												MAXIMUM_VECTOR_SIZE / 2);
+											MAXIMUM_VECTOR_SIZE / 2);
 										channelLatencyDistribution[i][j][k].resize(
-												MAXIMUM_VECTOR_SIZE / 2);
+											MAXIMUM_VECTOR_SIZE / 2);
 									}
 								}
 							}
@@ -1787,7 +2470,7 @@ void processStats(const bf::path &outputDir, const string filename)
 							transactionCount.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 							adjustedTransactionCount.resize(MAXIMUM_VECTOR_SIZE
-									/ 2);
+								/ 2);
 
 							hitMissValues.resize(MAXIMUM_VECTOR_SIZE / 2);
 
@@ -1930,7 +2613,7 @@ void processStats(const bf::path &outputDir, const string filename)
 				bandwidthValuesBuffer.second = atol(firstBracket + 1);
 			}
 			else if (starts_with(newLine,
-					"----Average Transaction Latency Per PC Value"))
+				"----Average Transaction Latency Per PC Value"))
 			{
 				char *position = newLine;
 
@@ -1965,13 +2648,13 @@ void processStats(const bf::path &outputDir, const string filename)
 					if (PC < 0x100000000)
 					{
 						latencyVsPcLow[PC].first += numeric_cast<uint64_t> (
-								averageAccessTime * (float) numberAccesses);
+							averageAccessTime * (float) numberAccesses);
 						latencyVsPcLow[PC].second += numberAccesses;
 					}
 					else
 					{
 						latencyVsPcHigh[PC].first += numeric_cast<uint64_t> (
-								averageAccessTime * (float) numberAccesses);
+							averageAccessTime * (float) numberAccesses);
 						latencyVsPcHigh[PC].second += numberAccesses;
 					}
 
@@ -2009,7 +2692,7 @@ void processStats(const bf::path &outputDir, const string filename)
 				if (ipcLinesWritten < 1)
 				{
 					float currentValue = starts_with(newLine, "nan") ? 0.0F
-							: atof(newLine);
+						: atof(newLine);
 					if (currentValue != currentValue)
 						currentValue = 0.0F;
 
@@ -2041,7 +2724,7 @@ void processStats(const bf::path &outputDir, const string filename)
 				unsigned missCount = max(atoi(firstBracket + 1), 1);
 
 				hitMissValueBuffer += hitCount
-						/ ((double) missCount + hitCount);
+					/ ((double) missCount + hitCount);
 				hitMissTotalBuffer += (hitCount + missCount);
 			}
 			else if (starts_with(newLine, "----Utilization"))
@@ -2121,9 +2804,9 @@ void processStats(const bf::path &outputDir, const string filename)
 					unsigned value = atoi(leftBracket + 1);
 
 					channelLatencyDistributionBuffer[channel][rank][bank]
-							+= value;
+					+= value;
 					channelLatencyDistributionBuffer[channel][rank].back()
-							+= value;
+						+= value;
 
 					position = rightBracket + 1;
 				}
@@ -2185,64 +2868,18 @@ void processStats(const bf::path &outputDir, const string filename)
 	{
 		// make the address latency distribution per channel graphs
 		for (unsigned channelID = 0; channelID
-				< channelLatencyDistribution.size(); channelID++)
+			< channelLatencyDistribution.size(); channelID++)
 		{
-			outFilename = outputDir / ("addressLatencyDistribution"
-					+ lexical_cast<string> (channelID) + "." + extension);
+			outFilename = outputDir / ("addressLatencyDistribution" + lexical_cast<string> (channelID) + "." + extension);
+			addressLatencyDistributionPerChannelGraph(outFilename,p3,commandLine,channelDistribution,epochTime,channelID, false);
 			graphs.push_back(pair<string, string> (
-					"addressLatencyDistribution",
-					"Address Latency Distribution, Channel " + lexical_cast<
-							string> (channelID)));
+				"addressLatencyDistribution" + lexical_cast<string> (channelID),
+				"Address Latency Distribution, Channel " + lexical_cast<
+				string> (channelID)));
 			filesGenerated.push_back(outFilename.native_directory_string());
-			p2 << "set output '" << outFilename.native_directory_string()
-					<< "'" << endl << subAddrDistroA;
-			p2 << "set multiplot layout "
-					<< channelLatencyDistribution[channelID].size()
-					<< ", 1 title \"{/=18" << commandLine << "\"" << endl;
+			outFilename = outputDir / ("addressLatencyDistribution" + lexical_cast<string> (channelID) + "-thumb." + thumbnailExtenstion);
+			addressLatencyDistributionPerChannelGraph(outFilename,p3,commandLine,channelDistribution,epochTime,channelID, true);
 
-			for (unsigned rankID = 0; rankID
-					< channelLatencyDistribution[channelID].size(); rankID++)
-			{
-				p2 << "set title \"Rank " << rankID
-						<< " Distribution Rate\" offset character 0, 0, 0 font \"\" norotate"
-						<< endl;
-
-				if (rankID < channelLatencyDistribution[channelID].size() - 1)
-					p2 << "unset key" << endl << "unset label" << endl;
-				else
-					p2 << "set xlabel 'Time (s)' offset 0,0.6" << endl
-							<< "set key outside center bottom horizontal reverse Left"
-							<< endl;
-
-				p2 << "plot ";
-				for (unsigned a = 0; a
-						< channelLatencyDistribution[channelID][rankID].size()
-								- 1; a++)
-					p2 << "'-' using 1 axes x2y1 t 'bank_{" << a << "}  ',";
-				p2
-						<< "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
-						<< endl;
-
-				for (unsigned bankID = 0; bankID
-						< channelLatencyDistribution[channelID][rankID].size()
-								- 1; bankID++)
-				{
-					for (unsigned epoch = 0; epoch
-							< channelLatencyDistribution[channelID][rankID][bankID].size(); epoch++)
-					{
-						p2
-								<< max(
-										1E-5F,
-										channelLatencyDistribution[channelID][rankID][bankID][epoch]
-												/ ((float) channelLatencyDistribution[channelID][rankID].back()[epoch]))
-								<< endl;
-					}
-					p2 << "e" << endl;
-				}
-				p2 << channelLatencyDistribution[channelID][rankID][0].size()
-						* epochTime << " " << "0.2" << endl << "e" << endl;
-			}
-			p2 << "unset multiplot" << endl << "unset output" << endl;
 		}
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -2253,59 +2890,16 @@ void processStats(const bf::path &outputDir, const string filename)
 		// make the address distribution per channel graphs
 		for (unsigned channelID = 0; channelID < channelDistribution.size(); channelID++)
 		{
-			outFilename = outputDir / ("addressDistribution" + lexical_cast<
-					string> (channelID) + "." + extension);
-			graphs.push_back(pair<string, string> ("addressDistribution",
-					"Address Distribution, Channel " + lexical_cast<string> (
-							channelID)));
+			outFilename = outputDir / ("addressDistribution" + lexical_cast<string> (channelID) + "." + extension);
+			addressDistributionPerChannelGraph(outFilename,p3,commandLine,channelCount,channelDistribution,rankCount, bankCount,epochTime,channelID, false);
+			graphs.push_back(pair<string, string> ("addressDistribution" + lexical_cast<string> (channelID),
+				"Address Distribution, Channel " + lexical_cast<string> (
+				channelID)));
 			filesGenerated.push_back(outFilename.native_directory_string());
-			p1 << "set output '" << outFilename.native_directory_string()
-					<< "'" << endl << subAddrDistroA;
-			p1 << "set multiplot layout "
-					<< channelLatencyDistribution[channelID].size()
-					<< ", 1 title \"" << commandLine << "\"" << endl;
+			outFilename = outputDir / ("addressDistribution" + lexical_cast<string> (channelID) + "-thumb." + thumbnailExtenstion);
+			addressDistributionPerChannelGraph(outFilename,p3,commandLine,channelCount,channelDistribution,rankCount, bankCount,epochTime,channelID, true);
+			//////////////////////////////////////////////////////////////////////////
 
-			for (unsigned rankID = 0; rankID
-					< channelDistribution[channelID].size(); rankID++)
-			{
-				p1 << "set title \"Rank " << rankID
-						<< " Distribution Rate\" offset character 0, 0, 0 font \"\" norotate"
-						<< endl;
-
-				if (rankID < channelDistribution[channelID].size() - 1)
-					p1 << "unset key" << endl << "unset label" << endl;
-				else
-					p1 << "set xlabel 'Time (s)' offset 0,0.6" << endl
-							<< "set key outside center bottom horizontal reverse Left"
-							<< endl;
-
-				p1 << "plot ";
-				for (unsigned a = 0; a
-						< channelDistribution[channelID][rankID].size() - 1; a++)
-					p1 << "'-' using 1 axes x2y1 t 'bank_{" << a << "}  ',";
-				p1
-						<< "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
-						<< endl;
-
-				for (unsigned bankID = 0; bankID
-						< channelDistribution[channelID][rankID].size() - 1; bankID++)
-				{
-					for (unsigned epoch = 0; epoch
-							< channelDistribution[channelID][rankID][bankID].size(); epoch++)
-					{
-						p1
-								<< max(
-										1E-5F,
-										channelDistribution[channelID][rankID][bankID][epoch]
-												/ ((float) channelDistribution[channelID][rankID].back()[epoch]))
-								<< endl;
-					}
-					p1 << "e" << endl;
-				}
-				p1 << channelDistribution[channelID][rankID][0].size()
-						* epochTime << " " << "0.2" << endl << "e" << endl;
-			}
-			p1 << "unset multiplot" << endl << "unset output" << endl;
 		}
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -2315,107 +2909,12 @@ void processStats(const bf::path &outputDir, const string filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the overall address distribution graphs
 		outFilename = outputDir / ("addressDistribution." + extension);
+		overallAddressDistributionGraph(outFilename,p3,commandLine,channelCount,channelDistribution,rankCount,bankCount,epochTime,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("addressDistribution",
-				"Overall Address Distribution"));
-
-		p0 << "set output '" << outFilename.native_directory_string() << "'"
-				<< endl;
-		p0 << "set title \"" << commandLine << "\\nChannel Distribution Rate\""
-				<< endl << addressDistroA;
-		p0 << "plot ";
-		for (unsigned i = 0; i < channelCount; ++i)
-			p0 << "'-' using 1 axes x2y1 t 'ch[" << i << "]',";
-		p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
-				<< endl;
-
-		for (unsigned channelID = 0; channelID < channelDistribution.size(); channelID++)
-		{
-			for (unsigned epochID = 0; epochID
-					< channelDistribution[0][0][0].size(); epochID++)
-			{
-				unsigned thisChannelTotal = 0;
-				unsigned allChannelTotal = 1;
-				for (unsigned rankID = 0; rankID < rankCount; rankID++)
-				{
-					for (unsigned bankID = 0; bankID < bankCount; bankID++)
-					{
-						thisChannelTotal
-								+= channelDistribution[channelID][rankID][bankID][epochID];
-						for (unsigned channelID2 = 0; channelID2 < channelCount; channelID2++)
-							allChannelTotal
-									+= channelDistribution[channelID2][rankID][bankID][epochID];
-					}
-				}
-				p0 << thisChannelTotal / ((float) allChannelTotal) << endl;
-			}
-			p0 << "e" << endl;
-		}
-
-		p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2"
-				<< endl << "e" << endl;
-		p0 << addressDistroB << endl << "plot ";
-
-		for (unsigned i = 0; i < rankCount; ++i)
-			p0 << "'-' using 1 axes x2y1 t 'rk[" << i << "]',";
-		p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
-				<< endl;
-
-		for (unsigned rankID = 0; rankID < rankCount; rankID++)
-		{
-			for (unsigned epochID = 0; epochID
-					< channelDistribution[0][0][0].size(); epochID++)
-			{
-				unsigned thisRankTotal = 0;
-				unsigned allRankTotal = 1;
-				for (unsigned channelID = 0; channelID < channelCount; channelID++)
-				{
-					for (unsigned bankID = 0; bankID < bankCount; bankID++)
-					{
-						thisRankTotal
-								+= channelDistribution[channelID][rankID][bankID][epochID];
-						for (unsigned rankID2 = 0; rankID2 < rankCount; rankID2++)
-							allRankTotal
-									+= channelDistribution[channelID][rankID2][bankID][epochID];
-					}
-				}
-				p0 << thisRankTotal / ((float) allRankTotal) << endl;
-			}
-			p0 << "e" << endl;
-		}
-		p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2"
-				<< endl << "e" << endl;
-		p0 << addressDistroC << endl << "plot ";
-		for (unsigned i = 0; i < bankCount; ++i)
-			p0 << "'-' using 1 axes x2y1 t 'bk[" << i << "]',";
-		p0 << "'-' using 1:2 axes x1y1 notitle with points pointsize 0.01"
-				<< endl;
-
-		for (unsigned bankID = 0; bankID < bankCount; bankID++)
-		{
-			for (unsigned epochID = 0; epochID
-					< channelDistribution[0][0][0].size(); epochID++)
-			{
-				unsigned thisBankTotal = 0;
-				unsigned allBankTotal = 1;
-				for (unsigned rankID = 0; rankID < rankCount; rankID++)
-				{
-					for (unsigned channelID = 0; channelID < channelCount; channelID++)
-					{
-						thisBankTotal
-								+= channelDistribution[channelID][rankID][bankID][epochID];
-						for (unsigned bankID2 = 0; bankID2 < bankCount; bankID2++)
-							allBankTotal
-									+= channelDistribution[channelID][rankID][bankID2][epochID];
-					}
-				}
-				p0 << thisBankTotal / ((float) allBankTotal) << endl;
-			}
-			p0 << "e" << endl;
-		}
-		p0 << channelDistribution[0][0][0].size() * epochTime << " " << "0.2"
-				<< endl << "e" << endl;
-		p0 << "unset multiplot" << endl << "unset output" << endl;
+			"Overall Address Distribution"));
+		outFilename = outputDir / ("addressDistribution-thumb." + thumbnailExtenstion);
+		overallAddressDistributionGraph(outFilename,p3,commandLine,channelCount,channelDistribution,rankCount,bankCount,epochTime, true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
@@ -2424,34 +2923,11 @@ void processStats(const bf::path &outputDir, const string filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the PC vs latency graph
 		outFilename = outputDir / ("latencyVsPc." + extension);
+		pcVsLatencyGraph(outFilename,p0,commandLine,latencyVsPcLow,latencyVsPcHigh,period,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("latencyVsPc", "PC vs. Latency"));
-
-		p1 << "reset" << endl << terminal << basicSetup << "set output '"
-				<< outFilename.native_directory_string() << "'" << endl;
-		p1 << pcVsLatencyGraph << endl;
-		p1 << "set multiplot layout 1, 2 title \"" << commandLine
-				<< "\\nTotal Latency Due to Reads vs. PC Value\"" << endl;
-		p1 << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
-
-		if (latencyVsPcLow.size() > 0)
-			for (std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> >::const_iterator
-					i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); ++i)
-				p1 << i->first << " " << period * i->second.first << endl;
-		else
-			p1 << "4294967296 1.01" << endl;
-
-		p1 << endl << "e" << endl << "set format x '0x1%x'" << endl
-				<< "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
-		if (latencyVsPcHigh.size() > 0)
-			for (std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> >::const_iterator
-					i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); ++i)
-				p1 << (i->first - 0x100000000) << " " << period
-						* i->second.first << endl;
-		else
-			p1 << "4294967296 1.01" << endl;
-		p1 << "e" << endl << "unset multiplot" << endl << "unset output"
-				<< endl;
+		outFilename = outputDir / ("latencyVsPc-thumb." + thumbnailExtenstion);
+		pcVsLatencyGraph(outFilename,p0,commandLine,latencyVsPcLow,latencyVsPcHigh,period,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
@@ -2460,365 +2936,101 @@ void processStats(const bf::path &outputDir, const string filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the PC vs average latency graph
 		outFilename = outputDir / ("avgLatencyVsPc." + extension);
+		pcVsAverageLatencyGraph(outFilename,p1,commandLine,latencyVsPcLow,latencyVsPcHigh,period,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("avgLatencyVsPc",
-				"PC vs. Average Latency"));
-
-		p1 << "reset" << endl << terminal << basicSetup << "set output '"
-				<< outFilename.native_directory_string() << "'" << endl;
-		p1 << avgPcVsLatencyGraph << endl;
-		p1 << "set multiplot layout 1, 2 title \"" << commandLine
-				<< "\\nAverage Latency Due to Reads vs. PC Value\"" << endl;
-		p1 << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
-
-		if (latencyVsPcLow.size() > 0)
-			for (std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> >::const_iterator
-					i = latencyVsPcLow.begin(); i != latencyVsPcLow.end(); ++i)
-				p1 << i->first << " " << period * (i->second.first
-						/ i->second.second) << endl;
-		else
-			p1 << "4294967296 1.01" << endl;
-
-		p1 << endl << "e" << endl;
-		p1 << "set format x '0x1%x'" << endl
-				<< "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
-		if (latencyVsPcHigh.size() > 0)
-			for (std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> >::const_iterator
-					i = latencyVsPcHigh.begin(); i != latencyVsPcHigh.end(); ++i)
-				p1 << (i->first - 0x100000000) << " " << period
-						* (i->second.first / i->second.second) << endl;
-		else
-			p1 << "4294967296 1.01" << endl;
-		p1 << "e" << endl << "unset multiplot" << endl << "unset output"
-				<< endl;
+			"PC vs. Average Latency"));
+		outFilename = outputDir / ("avgLatencyVsPc-thumb." + thumbnailExtenstion);
+		pcVsAverageLatencyGraph(outFilename,p1,commandLine,latencyVsPcLow,latencyVsPcHigh,period,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
-	//////////////////////////////////////////////////////////////////////////
-	// make the transaction latency distribution graph
-	outFilename = outputDir / ("transactionLatencyDistribution." + extension);
-	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string, string> ("transactionLatencyDistribution",
-			"Transaction Latency Distribution"));
-
-	p2 << "reset" << endl << terminal << basicSetup << "set output '"
-			<< outFilename.native_directory_string() << "'" << endl;
-	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""
-			<< endl << transactionGraph << endl;
-	StdDev<float> latencyDeviation;
-	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
-			distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
 	{
-		latencyDeviation.add(i->first * period, i->second);
-		p2 << i->first * period << " " << i->second << endl;
-	}
-	p2 << "e" << endl << "unset output" << endl;
-	//////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////
+		// make the transaction latency distribution graph
+		StdDev<float> latencyDeviation, latencyDeviation2;
+		outFilename = outputDir / ("transactionLatencyDistribution." + extension);
+		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,false, latencyDeviation);
+		filesGenerated.push_back(outFilename.native_directory_string());
+		outFilename = outputDir / ("transactionLatencyDistribution-thumb." + thumbnailExtenstion);
+		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,true, latencyDeviation2);
+		graphs.push_back(pair<string, string> ("transactionLatencyDistribution",
+			"Transaction Latency Distribution"));
+		//////////////////////////////////////////////////////////////////////////
 
-	//////////////////////////////////////////////////////////////////////////
-	// make the zoomed transaction latency distribution graph
-	outFilename = outputDir / ("zoomedTransactionLatencyDistribution."
-			+ extension);
-	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string, string> (
+		//////////////////////////////////////////////////////////////////////////
+		// make the zoomed transaction latency distribution graph
+		outFilename = outputDir / ("zoomedTransactionLatencyDistribution." + extension);
+		zoomedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distTransactionLatency,period,false, latencyDeviation);
+		filesGenerated.push_back(outFilename.native_directory_string());
+		outFilename = outputDir / ("zoomedTransactionLatencyDistribution-thumb." + thumbnailExtenstion);
+		zoomedTransactionLatencyDistributionGraph(outFilename, p0, commandLine, distTransactionLatency, period,true, latencyDeviation2);	
+		graphs.push_back(pair<string, string> (
 			"zoomedTransactionLatencyDistribution",
 			"Zoomed Transaction Latency"));
-
-	p2 << "reset" << endl << terminal << basicSetup << "set output '"
-			<< outFilename.native_directory_string() << "'" << endl;
-	p2 << "set title \"" << commandLine << "\\nRead Transaction Latency\""
-			<< endl << "set xrange [0:"
-			<< latencyDeviation.getStdDev().get<1> () + 8
-					* latencyDeviation.getStdDev().get<2> () << "]" << endl
-			<< transactionGraph << endl;
-	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
-			distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
-	{
-		p2 << i->first * period << " " << i->second << endl;
+		//////////////////////////////////////////////////////////////////////////
 	}
-	p2 << "e" << endl << "unset output" << endl;
-	//////////////////////////////////////////////////////////////////////////
 
-	//////////////////////////////////////////////////////////////////////////
-	// make the adjusted transaction latency distribution graph
-	outFilename = outputDir / ("adjustedTransactionLatencyDistribution."
-			+ extension);
-	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string, string> (
+	{
+		//////////////////////////////////////////////////////////////////////////
+		// make the adjusted transaction latency distribution graph
+		StdDev<float> latencyDeviation, latencyDeviation2;
+		outFilename = outputDir / ("adjustedTransactionLatencyDistribution." + extension);
+		adjustedTransactionLatencyDistributionGraph(outFilename,p0,commandLine, distAdjustedTransactionLatency,period,false, latencyDeviation);
+		graphs.push_back(pair<string, string> (
 			"adjustedTransactionLatencyDistribution",
 			"Adjusted Transaction Latency"));
+		filesGenerated.push_back(outFilename.native_directory_string());
+		outFilename = outputDir / ("adjustedTransactionLatencyDistribution-thumb." + thumbnailExtenstion);
+		adjustedTransactionLatencyDistributionGraph(outFilename, p1, commandLine, distAdjustedTransactionLatency, period,true, latencyDeviation2);		
+		//////////////////////////////////////////////////////////////////////////
 
-	p2 << "reset" << endl << terminal << basicSetup << "set output '"
-			<< outFilename.native_directory_string() << "'" << endl;
-	p2 << "set title \"" << commandLine
-			<< "\\nAdjusted Read Transaction Latency\"" << endl
-			<< transactionGraph << endl;
-	latencyDeviation.clear();
-	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
-			distAdjustedTransactionLatency.begin(), end =
-			distAdjustedTransactionLatency.end(); i != end; ++i)
-	{
-		latencyDeviation.add(i->first * period, i->second);
-		p2 << i->first * period << " " << i->second << endl;
-	}
-	p2 << "e" << endl << "unset output" << endl;
-	//////////////////////////////////////////////////////////////////////////
-
-	//////////////////////////////////////////////////////////////////////////
-	// make the zoomed adjusted transaction latency distribution graph
-	outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution."
-			+ extension);
-	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string, string> (
+		//////////////////////////////////////////////////////////////////////////
+		// make the zoomed adjusted transaction latency distribution graph
+		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution." + extension);
+		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, period,false, latencyDeviation);
+		filesGenerated.push_back(outFilename.native_directory_string());
+		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution-thumb." + thumbnailExtenstion);
+		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distAdjustedTransactionLatency, period,true, latencyDeviation2);	
+		graphs.push_back(pair<string, string> (
 			"zoomedAdjustedTransactionLatencyDistribution",
-			"Zoomed Adjusted Transaction Latency"));
-
-	p2 << "reset" << endl << terminal << basicSetup << "set output '"
-			<< outFilename.native_directory_string() << "'" << endl;
-	p2 << "set title \"" << commandLine
-			<< "\\nZoomed Adjusted Read Transaction Latency\"" << endl
-			<< "set xrange [0:" << latencyDeviation.getStdDev().get<1> () + 8
-			* latencyDeviation.getStdDev().get<2> () << "]" << endl
-			<< transactionGraph << endl;
-	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
-			distAdjustedTransactionLatency.begin(), end =
-			distAdjustedTransactionLatency.end(); i != end; ++i)
-	{
-		p2 << i->first * period << " " << i->second << endl;
+			"Zoomed Adjusted Transaction Latency"));	
+		//////////////////////////////////////////////////////////////////////////
 	}
-#ifndef NDEBUG
-	cerr << "range is " << latencyDeviation.getStdDev().get<1> () + 3
-			* latencyDeviation.getStdDev().get<2> () << endl;
-#endif
-	p2 << "e" << endl << "unset output" << endl;
-	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
 	// make the bandwidth graph
 	outFilename = outputDir / ("bandwidth." + extension);
+	bandwidthGraph(outFilename, p2, commandLine, bandwidthValues, ipcValues,cacheBandwidthValues, epochTime,false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("bandwidth", "Bandwidth"));
-
-	p3 << "set output '" << outFilename.native_directory_string() << "'"
-			<< endl;
-	p3 << "set multiplot title \"" << commandLine << "\"" << endl;
-	p3 << bandwidthGraph << endl;
-
-	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
-			bandwidthValues.begin(); i != bandwidthValues.end(); ++i)
-		p3 << 1.0 * i->first << endl;
-	p3 << "e" << endl;
-
-	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
-			bandwidthValues.begin(); i != bandwidthValues.end(); ++i)
-		p3 << 1.0 * i->second << endl;
-	p3 << "e" << endl;
-
-	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
-			cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); ++i)
-		p3 << 1.0 * i->first << endl;
-	p3 << "e" << endl;
-
-	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
-			cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); ++i)
-		p3 << 1.0 * i->second << endl;
-	p3 << "e" << endl;
-
-	float time = 0.0F;
-	PriorMovingAverage bandwidthTotal(WINDOW);
-	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
-			bandwidthValues.begin(), j = cacheBandwidthValues.begin(); i
-			!= bandwidthValues.end() && j != cacheBandwidthValues.end(); ++i, ++j)
-	{
-		bandwidthTotal.append(1.0F * (float) (i->first + i->second + j->first
-				+ j->second));
-		p3 << time << " " << bandwidthTotal.getAverage() << endl;
-		time += epochTime;
-	}
-	p3 << "e" << endl;
+	outFilename = outputDir / ("bandwidth-thumb." + thumbnailExtenstion);
+	bandwidthGraph(outFilename, p2, commandLine, bandwidthValues, ipcValues,cacheBandwidthValues, epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
 
 	if (!cypressResults)
 	{
 		//////////////////////////////////////////////////////////////////////////
-		// make the small IPC graph
-		p3 << smallIPCGraph << endl;
-
-		time = 0.0F;
-		for (vector<float>::const_iterator i = ipcValues.begin(); i
-				!= ipcValues.end(); ++i)
-		{
-			p3 << time << " " << *i << endl;
-			time += epochTime;
-		}
-		p3 << "e" << endl;
-
-		time = 0.0F;
-		CumulativePriorMovingAverage ipcTotal;
-		for (vector<float>::const_iterator i = ipcValues.begin(); i
-				!= ipcValues.end(); ++i)
-		{
-			ipcTotal.add(1, *i);
-			p3 << time << " " << ipcTotal.getAverage() << endl;
-			time += epochTime;
-		}
-		p3 << "e" << endl;
-
-		time = 0.0F;
-		PriorMovingAverage ipcBuffer(WINDOW);
-		for (vector<float>::const_iterator i = ipcValues.begin(); i
-				!= ipcValues.end(); ++i)
-		{
-			ipcBuffer.append(*i);
-			p3 << time << " " << ipcBuffer.getAverage() << endl;
-			time += epochTime;
-		}
-		p3 << "e" << endl << "unset multiplot" << endl << "unset output"
-				<< endl;
-		//////////////////////////////////////////////////////////////////////////
-	}
-
-	if (!cypressResults)
-	{
 		// make the cache graph
 		outFilename = outputDir / ("cacheData." + extension);
+		cacheGraph(outFilename,p0,commandLine,iCacheMisses,iCacheHits,dCacheMisses,dCacheHits,l2CacheMisses,l2CacheHits, epochTime,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> (
-				outFilename.native_directory_string(), "Cache Data"));
-
-		p2 << "reset" << endl << terminal << basicSetup << cacheGraph0;
-		p2 << "set output '" << outFilename.native_directory_string() << "'"
-				<< endl;
-		p2 << "set multiplot layout 3, 1 title \"" << commandLine << "\""
-				<< endl;
-		p2 << cacheGraph1 << endl;
-
-		for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); ++i)
-			p2 << (float) i * epochTime << " " << iCacheMisses[i]
-					+ iCacheHits[i] << endl;
-		p2 << "e" << endl;
-		for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); ++i)
-			p2 << (float) i * epochTime << " " << iCacheMisses[i]
-					/ ((float) max(iCacheMisses[i] + iCacheHits[i], 1U))
-					<< endl;
-		p2 << "e" << endl;
-
-		p2 << cacheGraph2 << endl;
-		for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); ++i)
-			p2 << (float) i * epochTime << " " << dCacheMisses[i]
-					+ dCacheHits[i] << endl;
-		p2 << "e" << endl;
-		for (vector<unsigned>::size_type i = 0; i < dCacheMisses.size(); ++i)
-			p2 << (float) i * epochTime << " " << dCacheMisses[i]
-					/ ((float) max(dCacheMisses[i] + dCacheHits[i], 1U))
-					<< endl;
-		p2 << "e" << endl;
-
-		p2 << cacheGraph3 << endl;
-		for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); ++i)
-			p2 << (float) i * epochTime << " " << l2CacheMisses[i]
-					+ l2CacheHits[i] << endl;
-		p2 << "e" << endl;
-		for (vector<unsigned>::size_type i = 0; i < l2CacheMisses.size(); ++i)
-			p2 << (float) i * epochTime << " " << l2CacheMisses[i]
-					/ ((float) max(l2CacheMisses[i] + l2CacheHits[i], 1U))
-					<< endl;
-		p2 << "e" << endl << "unset multiplot" << endl << "unset output"
-				<< endl;
+			"cacheData", "Cache Data"));
+		outFilename = outputDir / ("cacheData-thumb." + thumbnailExtenstion);
+		cacheGraph(outFilename,p1,commandLine,iCacheMisses,iCacheHits,dCacheMisses,dCacheHits,l2CacheMisses,l2CacheHits, epochTime,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	// make the other IPC graph
 	outFilename = outputDir / ("averageIPCandLatency." + extension);
+	averageIpcAndLatencyGraph(outFilename, p0, commandLine, transactionCount, transactionLatency,ipcValues, epochTime, period,false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("averageIPCandLatency",
-			"IPC and Latency"));
-
-	p1 << "reset" << endl << terminal << endl << basicSetup << endl
-			<< "set output '" << outFilename.native_directory_string() << "'"
-			<< endl;
-	p1 << "set multiplot layout 2,1 title \"" << commandLine << "\"" << endl;
-
-	// make the transaction latency graph
-	p1 << "set title 'Transaction Latency'" << endl
-			<< averageTransactionLatencyScript << endl;
-
-	time = 0.0F;
-	// access count
-	for (vector<unsigned>::const_iterator i = transactionCount.begin(); i
-			!= transactionCount.end(); ++i)
-	{
-		p1 << time << " " << *i << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-	time = 0.0F;
-	// minimum
-	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator
-			i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
-	{
-		p1 << time << " " << period * i->get<0> () << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-	// mean
-	time = 0.0F;
-	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator
-			i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
-	{
-		p1 << time << " " << period * i->get<1> () << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-	time = 0.0F;
-	// mean + 1 std dev
-	for (vector<tuple<unsigned, unsigned, double, unsigned> >::const_iterator
-			i = transactionLatency.begin(); i != transactionLatency.end(); ++i)
-	{
-		p1 << time << " " << period * (i->get<1> () + 2 * i->get<2> ()) << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-	// ipc part
-	p1 << "set title 'Average IPC vs. Time'" << endl << otherIPCGraph << endl;
-
-	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
-			!= ipcValues.end(); ++i)
-	{
-		p1 << time << " " << *i << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-#if 0
-	ipcTotal.clear();
-	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i != ipcValues.end(); ++i)
-	{
-		ipcTotal.add(1, *i);
-		p1 << time << " " << ipcTotal.getAverage() << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-#endif
-
-	PriorMovingAverage ipcBuffer(WINDOW);
-	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
-			!= ipcValues.end(); ++i)
-	{
-		ipcBuffer.append(*i);
-		p1 << time << " " << ipcBuffer.getAverage() << endl;
-		time += epochTime;
-	}
-	p1 << "e" << endl;
-
-	p1 << "unset multiplot" << endl << "unset output" << endl;
+		"IPC and Latency"));
+	outFilename = outputDir / ("averageIPCandLatency-thumb." + thumbnailExtenstion);
+	averageIpcAndLatencyGraph(outFilename, p0, commandLine, transactionCount, transactionLatency,ipcValues, epochTime, period,true);
 	//////////////////////////////////////////////////////////////////////////
 
 	if (!cypressResults)
@@ -2826,69 +3038,24 @@ void processStats(const bf::path &outputDir, const string filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the hit-miss graph
 		outFilename = outputDir / ("rowHitRate." + extension);
+		hitMissGraph(outFilename,p0,commandLine,hitMissValues,hitMissTotals,epochTime,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("rowHitRate", "Row Reuse"));
-
-		p2 << "reset" << endl << terminal << basicSetup << "set output '"
-				<< outFilename.native_directory_string() << "'" << endl;
-		p2 << "set title \"" << "Reuse Rate of Open Rows vs. Time\\n"
-				<< commandLine << "\"" << endl << rowHitMissGraph << endl;
-
-		time = 0.0F;
-		for (vector<float>::const_iterator i = hitMissValues.begin(); i
-				!= hitMissValues.end(); ++i)
-		{
-			p2 << time << " " << *i << endl;
-			time += epochTime;
-		}
-		p2 << "e" << endl;
-
-		CumulativePriorMovingAverage hitMissTotal;
-		time = 0.0F;
-		for (vector<float>::const_iterator i = hitMissValues.begin(); i
-				!= hitMissValues.end(); ++i)
-		{
-			hitMissTotal.add(1.0, *i);
-			p2 << time << " " << hitMissTotal.getAverage() << endl;
-			time += epochTime;
-		}
-		p2 << "e" << endl;
-
-		time = 0.0F;
-		for (vector<unsigned>::const_iterator i = hitMissTotals.begin(); i
-				!= hitMissTotals.end(); ++i)
-		{
-			p2 << time << " " << max(*i, 1U) << endl;
-			time += epochTime;
-		}
-
-		p2 << "e" << endl << "unset output" << endl;
+		outFilename = outputDir / ("rowHitRate-thumb." + thumbnailExtenstion);
+		hitMissGraph(outFilename,p0,commandLine,hitMissValues,hitMissTotals,epochTime,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
 	if (!cypressResults)
 	{
 		//////////////////////////////////////////////////////////////////////////
-		// make the working set
-		p3 << "reset" << endl << basicSetup << terminal;
-		p3 << "set title \"" << commandLine
-				<< "\\nWorking Set Size vs Time\" offset character 0, -1, 0 font '' norotate"
-				<< endl;
+		// make the working set		
 		outFilename = outputDir / ("workingSet." + extension);
-		graphs.push_back(pair<string, string> ("workingSet", "Working Set"));
-
-		p3 << "set output '" << outFilename.native_directory_string() << "'"
-				<< endl;
+		workingSetGraph(outFilename,p1,commandLine,workingSetSize,epochTime,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
-		p3 << workingSetSetup << endl;
-		time = 0.0F;
-		for (vector<unsigned>::const_iterator i = workingSetSize.begin(); i
-				!= workingSetSize.end(); ++i)
-		{
-			p3 << time << " " << *i << endl;
-			time += epochTime;
-		}
-		p3 << "e" << endl << "unset output" << endl;
+		graphs.push_back(pair<string, string> ("workingSet", "Working Set"));
+		outFilename = outputDir / ("workingSet-thumb." + thumbnailExtenstion);
+		workingSetGraph(outFilename,p2,commandLine,workingSetSize,epochTime,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
@@ -2896,70 +3063,24 @@ void processStats(const bf::path &outputDir, const string filename)
 	{
 		//////////////////////////////////////////////////////////////////////////
 		// make special IPC graph
-		p0 << "reset" << endl << basicSetup << terminal;
 		outFilename = outputDir / ("bigIpcGraph." + extension);
+		bigIpcGraph(outFilename,p3,commandLine,ipcValues,epochTime,false);
 		graphs.push_back(pair<string, string> ("bigIpcGraph", "Big IPC"));
-
-		p0 << "set output '" << outFilename.native_directory_string() << "'"
-				<< endl;
 		filesGenerated.push_back(outFilename.native_directory_string());
-		p0 << bigIPCGraph << endl;
-		time = 0.0F;
-		for (vector<float>::const_iterator i = ipcValues.begin(); i
-				!= ipcValues.end(); ++i)
-		{
-			p0 << time << " " << *i << endl;
-			time += epochTime;
-		}
-		p0 << "e" << endl;
-
-		time = 0.0F;
-		CumulativePriorMovingAverage ipcTotal;
-		for (vector<float>::const_iterator i = ipcValues.begin(); i
-				!= ipcValues.end(); ++i)
-		{
-			ipcTotal.add(1, *i);
-			p0 << time << " " << ipcTotal.getAverage() << endl;
-			time += epochTime;
-		}
-		p0 << "e" << endl << "0 0" << endl << "3.31 1E-5" << endl << "e"
-				<< endl << "unset output" << endl;
+		outFilename = outputDir / ("bigIpcGraph-thumb." + thumbnailExtenstion);
+		bigIpcGraph(outFilename,p3,commandLine,ipcValues,epochTime,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	// make the cache hit-miss graph
 	outFilename = outputDir / ("cacheHitRate." + extension);
+	cacheHitMissGraph(outFilename,p1,commandLine,cacheHitMiss,epochTime,false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("cacheHitRate",
-			"DIMM Cache Hit/Miss"));
-
-	p1 << "reset" << endl << terminal << basicSetup << "set output '"
-			<< outFilename.native_directory_string() << "'" << endl;
-	p1 << "set title \"" << "Per-DIMM Cache Hit Rate\\n" << commandLine << "\""
-			<< endl << hitMissScript << endl;
-
-	time = 0.0F;
-	for (vector<pair<unsigned, unsigned> >::const_iterator i =
-			cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
-	{
-		p1 << time << " " << i->first + i->second << endl;
-		//cerr << time << " " << i->first + i->second << endl;
-		time += epochTime;
-	}
-
-	p1 << "e" << endl;
-
-	time = 0.0F;
-	for (vector<pair<unsigned, unsigned> >::const_iterator i =
-			cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
-	{
-		p1 << time << " " << (double) i->first / (i->first + i->second) << endl;
-		//cerr << time << " " << i->first << " " <<  i->second << endl;
-		time += epochTime;
-	}
-
-	p1 << "e" << endl << "unset output" << endl;
+		"DIMM Cache Hit/Miss"));
+	outFilename = outputDir / ("cacheHitRate-thumb." + thumbnailExtenstion);
+	cacheHitMissGraph(outFilename,p1,commandLine,cacheHitMiss,epochTime,true);	
 	//////////////////////////////////////////////////////////////////////////
 
 #ifndef NDEBUG
@@ -3001,11 +3122,11 @@ void processStats(const bf::path &outputDir, const string filename)
 
 		// calculate PsysACT-STBY
 		float PsysACT_STBY = devicesPerRank * voltageScaleFactor * frequencyScaleFactor *
-		IDD3N * vddMax * percentActive * (1.0F - CKE_LO_ACT);
+			IDD3N * vddMax * percentActive * (1.0F - CKE_LO_ACT);
 
 		// calculate PsysPRE-STBY
 		float PsysPRE_STBY = devicesPerRank * voltageScaleFactor * frequencyScaleFactor *
-		IDD2N * vddMax * (1 - percentActive) * (1 - CKE_LO_PRE);
+			IDD2N * vddMax * (1 - percentActive) * (1 - CKE_LO_PRE);
 
 		// calculate PsysPRE-PDN
 		float PsysPRE_PDN = voltageScaleFactor * IDD2P * vddMax * (1 - percentActive) * CKE_LO_PRE;
@@ -3064,13 +3185,13 @@ void processStats(const bf::path &outputDir, const string filename)
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
 		for (list<string>::const_iterator i = filesGenerated.begin(); i
-				!= filesGenerated.end(); ++i)
+			!= filesGenerated.end(); ++i)
 			fileList.push_back(*i);
 	}
 
 	bf::path givenfilename(filename);
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine,
-			channelDistribution.size(), graphs);
+		channelDistribution.size(), graphs);
 	return;
 }
 
@@ -3093,11 +3214,11 @@ int main(int argc, char** argv)
 	string settingsFile;
 	string extraSettings;
 	desc.add_options()("help", "help message")("create,f",
-			"Force creation of the index file only")("png,p",
-			"Generate PNG versions of the files")("cypress,c",
-			"Generate only select graphs for Cypress study")("output,o",
-			opt::value<string>(),
-			"Choose an output directory different from the current directory");
+		"Force creation of the index file only")("png,p",
+		"Generate PNG versions of the files")("cypress,c",
+		"Generate only select graphs for Cypress study")("output,o",
+		opt::value<string>(),
+		"Choose an output directory different from the current directory");
 
 	opt::variables_map vm;
 
@@ -3145,14 +3266,14 @@ int main(int argc, char** argv)
 	for (int i = 0; i < argc; ++i)
 	{
 		if (ends_with(argv[i], "power.gz") || ends_with(argv[i], "power.bz2")
-				|| ends_with(argv[i], "stats.gz") || ends_with(argv[i],
-				"stats.bz2"))
+			|| ends_with(argv[i], "stats.gz") || ends_with(argv[i],
+			"stats.bz2"))
 		{
 			files.push_back(string(argv[i]));
 		}
 	}
 	for (vector<string>::const_iterator currentFile = files.begin(); currentFile
-			!= files.end(); ++currentFile)
+		!= files.end(); ++currentFile)
 	{
 		filtering_istream inputStream;
 
@@ -3191,7 +3312,7 @@ int main(int argc, char** argv)
 			const string filename(*currentFile);
 
 			if (starts_with(newLine,
-					"----Cumulative DIMM Cache Read Hits/Misses"))
+				"----Cumulative DIMM Cache Read Hits/Misses"))
 			{
 				epochCounter++;
 
@@ -3216,7 +3337,7 @@ int main(int argc, char** argv)
 				readHitsMisses.second = max(atoi(firstBracket + 1), 1);
 			}
 			else if (starts_with(newLine,
-					"----Cumulative DIMM Cache Hits/Misses"))
+				"----Cumulative DIMM Cache Hits/Misses"))
 			{
 				char *firstBracket = strchr(newLine, '{');
 				if (firstBracket == NULL)
@@ -3239,7 +3360,7 @@ int main(int argc, char** argv)
 				hitsMisses.second = max(atoi(firstBracket + 1), 1);
 			}
 			else if (starts_with(newLine,
-					"----Average Cumulative Transaction Latency"))
+				"----Average Cumulative Transaction Latency"))
 			{
 				char *firstBracket = strchr(newLine, '{');
 				if (firstBracket == NULL)
@@ -3252,7 +3373,7 @@ int main(int argc, char** argv)
 				averageLatency = atof(firstBracket + 1);
 			}
 			else if (starts_with(newLine,
-					"----Average Cumulative Adjusted Transaction Latency"))
+				"----Average Cumulative Adjusted Transaction Latency"))
 			{
 				char *firstBracket = strchr(newLine, '{');
 				if (firstBracket == NULL)
@@ -3274,7 +3395,7 @@ int main(int argc, char** argv)
 				epoch = atof(position + 1);
 			}
 			else if (!foundCommandline && starts_with(newLine,
-					"----Command Line:"))
+				"----Command Line:"))
 			{
 				foundCommandline = true;
 
@@ -3284,16 +3405,16 @@ int main(int argc, char** argv)
 				//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
 				const string commandline(newLine);
 				string modUrlString = commandline.substr(commandline.find(':')
-						+ 2, commandline.length());
+					+ 2, commandline.length());
 				vector<string> splitLine;
 				erase_all(modUrlString, "_");
 				erase_all(modUrlString, "{");
 				erase_all(modUrlString, "}");
 				split(splitLine, modUrlString, is_any_of(" "),
-						token_compress_on);
+					token_compress_on);
 
 				for (vector<string>::const_iterator x = splitLine.begin(); x
-						!= splitLine.end(); ++x)
+					!= splitLine.end(); ++x)
 				{
 					string::size_type start = x->find("[");
 					string::size_type end = x->find("]");
@@ -3313,7 +3434,7 @@ int main(int argc, char** argv)
 
 				// then calculate the runtime for the last column
 				if (!ends_with(*currentFile, "stats.gz") && !ends_with(
-						*currentFile, "stats.bz2"))
+					*currentFile, "stats.bz2"))
 				{
 					if (results.find(basefilename) == results.end())
 						results[basefilename] = currentLine;
@@ -3330,10 +3451,10 @@ int main(int argc, char** argv)
 					*position = (char) NULL;
 				newLine[50] = NULL;
 				cerr << "\r" << setiosflags(ios::right) << std::setw(4)
-						<< currentFile - files.begin() + 1 << "/"
-						<< setiosflags(ios::left) << std::setw(4)
-						<< files.end() - files.begin() << " " << std::setw(9)
-						<< lineCounter << " " << newLine;
+					<< currentFile - files.begin() + 1 << "/"
+					<< setiosflags(ios::left) << std::setw(4)
+					<< files.end() - files.begin() << " " << std::setw(9)
+					<< lineCounter << " " << newLine;
 
 				// 					if (lineCounter % 5000 == 0)
 				// 						break;
@@ -3345,29 +3466,29 @@ int main(int argc, char** argv)
 
 		stringstream current;
 		current << std::dec << std::fixed << std::setprecision(6)
-				<< ((double) epochCounter * epoch);
+			<< ((double) epochCounter * epoch);
 		currentLine.push_back(current.str());
 		current.str("");
 
 		current << std::dec << std::fixed << std::setprecision(6)
-				<< ((float) readHitsMisses.first
-						/ ((float) readHitsMisses.first + readHitsMisses.second));
+			<< ((float) readHitsMisses.first
+			/ ((float) readHitsMisses.first + readHitsMisses.second));
 		currentLine.push_back(current.str());
 		current.str("");
 
 		current << std::dec << std::fixed << std::setprecision(6)
-				<< ((float) hitsMisses.first / ((float) hitsMisses.first
-						+ hitsMisses.second));
+			<< ((float) hitsMisses.first / ((float) hitsMisses.first
+			+ hitsMisses.second));
 		currentLine.push_back(current.str());
 		current.str("");
 
 		current << std::dec << std::fixed << std::setprecision(6)
-				<< averageLatency;
+			<< averageLatency;
 		currentLine.push_back(current.str());
 		current.str("");
 
 		current << std::dec << std::fixed << std::setprecision(6)
-				<< averageAdjustedLatency;
+			<< averageAdjustedLatency;
 		currentLine.push_back(current.str());
 
 		results[basefilename] = currentLine;
@@ -3380,7 +3501,7 @@ int main(int argc, char** argv)
 	if (!fileExists(openfile.native_directory_string()))
 	{
 		cerr << "cannot open template file: "
-				<< openfile.native_directory_string();
+			<< openfile.native_directory_string();
 		return -1;
 	}
 
@@ -3391,17 +3512,17 @@ int main(int argc, char** argv)
 	string fileList;
 	string csvOutput;
 	for (map<string, vector<string> >::const_iterator x = results.begin(); x
-			!= results.end(); ++x)
+		!= results.end(); ++x)
 	{
 		fileList += "<tr>";
 
 		for (vector<string>::const_iterator i = x->second.begin(), end =
-				x->second.end(); i != end;)
+			x->second.end(); i != end;)
 		{
 			csvOutput += *i;
 
 			fileList += "<td>" + ireplace_all_copy(ireplace_all_copy(urlString,
-					"%2", *i), "%1", x->first) + "</td>";
+				"%2", *i), "%1", x->first) + "</td>";
 
 			if (++i != end)
 				csvOutput += ',';
@@ -3430,7 +3551,7 @@ int main(int argc, char** argv)
 
 	// create the js directory 
 	bf::path jsDirectory((separateOutputDir ? outputDir : ".") / "js");	
-	
+
 	if (!exists(jsDirectory))
 		create_directory(jsDirectory);
 	else if (!is_directory(jsDirectory))
@@ -3459,7 +3580,7 @@ int main(int argc, char** argv)
 		boost::thread threadA(thumbNailWorker);
 
 		for (list<string>::const_iterator i = toBeProcessed.begin(); i
-				!= toBeProcessed.end(); ++i)
+			!= toBeProcessed.end(); ++i)
 		{
 			if (ends_with(*i, "power.gz") || ends_with(*i, "power.bz2"))
 			{
@@ -3474,8 +3595,8 @@ int main(int argc, char** argv)
 				{
 					bf::path filepath(*i);
 					bf::path path = filepath.branch_path()
-							/ filepath.leaf().substr(0, filepath.leaf().find(
-									"-power"));
+						/ filepath.leaf().substr(0, filepath.leaf().find(
+						"-power"));
 					processPower(path, *i);
 				}
 			}
@@ -3492,8 +3613,8 @@ int main(int argc, char** argv)
 				{
 					bf::path filepath(*i);
 					bf::path path = filepath.branch_path()
-							/ filepath.leaf().substr(0, filepath.leaf().find(
-									"-stats"));
+						/ filepath.leaf().substr(0, filepath.leaf().find(
+						"-stats"));
 					processStats(path, *i);
 				}
 			}
