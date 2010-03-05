@@ -563,6 +563,49 @@ void thumbNailWorker()
 	}
 }
 
+void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+											   vector<pair<float, float> > &energyValues,
+											   float epochTime, bool isThumbnail)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << "Cumulative Energy\\n" << commandLine << "\""
+		<< endl << cumulPowerScript;
+
+	float time = 0.0F;
+	float totalPower = 0.0F;
+	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(); i
+		!= energyValues.end(); ++i)
+	{
+		totalPower += i->first;
+
+		p << time << " " << totalPower << endl;
+
+		time += epochTime;
+	}
+
+	p << "e" << endl;
+
+	time = 0.0F;
+	totalPower = 0.0F;
+	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(); i
+		!= energyValues.end(); ++i)
+		//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); ++i)
+	{
+		//for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
+		//	totalPower += alternateValues[j][i];
+		totalPower += i->first - i->second;
+
+		p << time << " " << totalPower << endl;
+		//cerr << time << " " << totalPower << endl;
+
+		//cerr << time << " " << i->first + i->second << endl;
+		time += epochTime;
+	}
+	//////////////////////////////////////////////////////////////////////////
+	p << "e" << endl << "unset output" << endl;
+}
+
 void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 											   vector<vector<vector<vector<unsigned> > > > &channelLatencyDistribution,
 											   float epochTime, unsigned channelID, bool isThumbnail)
@@ -1452,38 +1495,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 					commandLine = splitLine[1];
 					cerr << commandLine << endl;
 
-					p << "set title \"{/=18 Power vs. Time}\\n{/=14 "
-						<< commandLine
-						<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
-					p3 << "set title \"{/=24 Power vs. Time}\\n{/=18 "
-						<< commandLine
-						<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
-
-					bf::path fileName = outputDir / ("energy." + extension);
-					filesGenerated.push_back(fileName.native_directory_string());
-					//cerr << fileName.native_directory_string();
-
-					p2 << "set output \"" << fileName.native_directory_string()
-						<< "\"\n";
-					p2 << powerScripts[2] << endl;
-					p2 << "set title \"{/=18 Energy vs. Time}\\n{/=14 "
-						<< commandLine
-						<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
-					p2
-						<< "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
-
-					fileName = outputDir / ("bigEnergy." + extension);
-					filesGenerated.push_back(fileName.native_directory_string());
-
-					p4 << "set output \"" << fileName.native_directory_string()
-						<< "\"\n";
-					p4 << bigEnergyScript << endl;
-					p4 << "set title \"{/=24 Energy vs. Time}\\n{/=18 "
-						<< commandLine
-						<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
-					p4
-						<< "plot '-' u 1:2 axes x1y1 t \"Energy (P t)\" w boxes lt rgb \"#66CF03\" , '-' u 1:2 axes x1y2 t \"Cumulative Energy\" w lines lw 6.00 lt rgb \"#387400\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
-						<< endl;
+					
 				}
 				else if (newLine[1] == '+')
 				{
@@ -1492,7 +1504,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 					filesGenerated.push_back(fileName.native_directory_string());
 					p << "set output \"" << fileName.native_directory_string()
 						<< "\"\n";
-					p << powerScripts[0] << endl;
+					p << totalPowerScript << endl;
 
 					fileName = outputDir / ("bigPower." + extension);
 					filesGenerated.push_back(fileName.native_directory_string());
@@ -1549,6 +1561,41 @@ void processPower(const bf::path &outputDir, const string &filename)
 	if (values.size() < 1)
 		return;
 
+	p << "set title \"{/=18 Power vs. Time}\\n{/=14 "
+		<< commandLine
+		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	p3 << "set title \"{/=24 Power vs. Time}\\n{/=18 "
+		<< commandLine
+		<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
+
+	bf::path fileName = outputDir / ("energy." + extension);
+	filesGenerated.push_back(fileName.native_directory_string());
+	//cerr << fileName.native_directory_string();
+
+	p2 << "set output \"" << fileName.native_directory_string()
+		<< "\"\n";
+	p2 << energyScript << endl;
+	p2 << "set title \"{/=18 Energy vs. Time}\\n{/=14 "
+		<< commandLine
+		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	p2
+		<< "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
+
+	fileName = outputDir / ("bigEnergy." + extension);
+	filesGenerated.push_back(fileName.native_directory_string());
+
+	p4 << "set output \"" << fileName.native_directory_string()
+		<< "\"\n";
+	p4 << bigEnergyScript << endl;
+	p4 << "set title \"{/=24 Energy vs. Time}\\n{/=18 "
+		<< commandLine
+		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	p4
+		<< "plot '-' u 1:2 axes x1y1 t \"Energy (P t)\" w boxes lt rgb \"#66CF03\" , '-' u 1:2 axes x1y2 t \"Cumulative Energy\" w lines lw 6.00 lt rgb \"#387400\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
+		<< endl;
+
+
+	//////////////////////////////////////////////////////////////////////////
 	// make the main power graph and big power graph
 	for (vector<vector<float> >::const_iterator i = values.begin(); i
 		!= values.end(); ++i)
@@ -1566,7 +1613,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 		* epochTime << " 0.2" << endl << "e" << endl;
 	p3 << "0 0" << endl << 3.31 / epochTime << " 1e-5" << endl << "e" << endl;
 
-	p << powerScripts[1];
+	p << averagePowerScript;
 
 	// make the total power bar graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
@@ -1637,7 +1684,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 		p4 << i * epochTime << " " << cumulativeEnergy << endl;
 	}
 
-	p2 << "e" << endl << powerScripts[3] << endl;
+	p2 << "e" << endl << energy2Script << endl;
 	p4 << "e" << endl << "0 0" << endl << "3.31 1e-5" << endl << "e"
 		<< "unset output" << endl;
 
@@ -1666,44 +1713,13 @@ void processPower(const bf::path &outputDir, const string &filename)
 	//////////////////////////////////////////////////////////////////////////
 	// the cumulative energy graph
 	path outFilename = outputDir / ("cumulativeEnergy." + extension);
+	cumulativeEnergyGraph(outFilename,p4,commandLine,energyValues,epochTime,false);
+	graphs.push_back(pair<string, string> ("cumulativeEnergy",
+		"Cumulative Energy"));
 	filesGenerated.push_back(outFilename.native_directory_string());
-	p4 << "reset" << endl << terminal << basicSetup << "set output '"
-		<< outFilename.native_directory_string() << "'" << endl;
-	p4 << "set title \"" << "Cumulative Energy\\n" << commandLine << "\""
-		<< endl << cumulPowerScript;
-
-	float time = 0.0F;
-	float totalPower = 0.0F;
-	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(); i
-		!= energyValues.end(); ++i)
-	{
-		totalPower += i->first;
-
-		p4 << time << " " << totalPower << endl;
-
-		time += epochTime;
-	}
-
-	p4 << "e" << endl;
-
-	time = 0.0F;
-	totalPower = 0.0F;
-	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(); i
-		!= energyValues.end(); ++i)
-		//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); ++i)
-	{
-		//for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
-		//	totalPower += alternateValues[j][i];
-		totalPower += i->first - i->second;
-
-		p4 << time << " " << totalPower << endl;
-		//cerr << time << " " << totalPower << endl;
-
-		//cerr << time << " " << i->first + i->second << endl;
-		time += epochTime;
-	}
+	outFilename = outputDir / ("cumulativeEnergy-thumb." + thumbnailExtension);
+	cumulativeEnergyGraph(outFilename,p4,commandLine,energyValues,epochTime,false);
 	//////////////////////////////////////////////////////////////////////////
-	p4 << "e" << endl << "unset output" << endl;
 
 	p2 << endl << "exit" << endl;
 	p3 << endl << "exit" << endl;
@@ -1798,7 +1814,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 		string currentImageLink = "<h2>" + i->second
 			+ "</h2><a rel=\"lightbox\" href=\"" + i->first + "."
 			+ processedExtension + "\"><img class=\"fancyzoom\" src=\"" + i->first
-			+ "-thumb." + thumbnailExtenstion + +"\" alt=\"\" /></a>";
+			+ "-thumb." + thumbnailExtension + +"\" alt=\"\" /></a>";
 
 		if (outputContent.find(currentImageLink) == string::npos)
 		{
@@ -2877,7 +2893,7 @@ void processStats(const bf::path &outputDir, const string filename)
 				"Address Latency Distribution, Channel " + lexical_cast<
 				string> (channelID)));
 			filesGenerated.push_back(outFilename.native_directory_string());
-			outFilename = outputDir / ("addressLatencyDistribution" + lexical_cast<string> (channelID) + "-thumb." + thumbnailExtenstion);
+			outFilename = outputDir / ("addressLatencyDistribution" + lexical_cast<string> (channelID) + "-thumb." + thumbnailExtension);
 			addressLatencyDistributionPerChannelGraph(outFilename,p3,commandLine,channelDistribution,epochTime,channelID, true);
 
 		}
@@ -2896,7 +2912,7 @@ void processStats(const bf::path &outputDir, const string filename)
 				"Address Distribution, Channel " + lexical_cast<string> (
 				channelID)));
 			filesGenerated.push_back(outFilename.native_directory_string());
-			outFilename = outputDir / ("addressDistribution" + lexical_cast<string> (channelID) + "-thumb." + thumbnailExtenstion);
+			outFilename = outputDir / ("addressDistribution" + lexical_cast<string> (channelID) + "-thumb." + thumbnailExtension);
 			addressDistributionPerChannelGraph(outFilename,p3,commandLine,channelCount,channelDistribution,rankCount, bankCount,epochTime,channelID, true);
 			//////////////////////////////////////////////////////////////////////////
 
@@ -2913,7 +2929,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("addressDistribution",
 			"Overall Address Distribution"));
-		outFilename = outputDir / ("addressDistribution-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("addressDistribution-thumb." + thumbnailExtension);
 		overallAddressDistributionGraph(outFilename,p3,commandLine,channelCount,channelDistribution,rankCount,bankCount,epochTime, true);
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -2926,7 +2942,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		pcVsLatencyGraph(outFilename,p0,commandLine,latencyVsPcLow,latencyVsPcHigh,period,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("latencyVsPc", "PC vs. Latency"));
-		outFilename = outputDir / ("latencyVsPc-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("latencyVsPc-thumb." + thumbnailExtension);
 		pcVsLatencyGraph(outFilename,p0,commandLine,latencyVsPcLow,latencyVsPcHigh,period,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -2940,7 +2956,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("avgLatencyVsPc",
 			"PC vs. Average Latency"));
-		outFilename = outputDir / ("avgLatencyVsPc-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("avgLatencyVsPc-thumb." + thumbnailExtension);
 		pcVsAverageLatencyGraph(outFilename,p1,commandLine,latencyVsPcLow,latencyVsPcHigh,period,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -2952,7 +2968,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		outFilename = outputDir / ("transactionLatencyDistribution." + extension);
 		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,false, latencyDeviation);
 		filesGenerated.push_back(outFilename.native_directory_string());
-		outFilename = outputDir / ("transactionLatencyDistribution-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("transactionLatencyDistribution-thumb." + thumbnailExtension);
 		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,true, latencyDeviation2);
 		graphs.push_back(pair<string, string> ("transactionLatencyDistribution",
 			"Transaction Latency Distribution"));
@@ -2963,7 +2979,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		outFilename = outputDir / ("zoomedTransactionLatencyDistribution." + extension);
 		zoomedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distTransactionLatency,period,false, latencyDeviation);
 		filesGenerated.push_back(outFilename.native_directory_string());
-		outFilename = outputDir / ("zoomedTransactionLatencyDistribution-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("zoomedTransactionLatencyDistribution-thumb." + thumbnailExtension);
 		zoomedTransactionLatencyDistributionGraph(outFilename, p0, commandLine, distTransactionLatency, period,true, latencyDeviation2);	
 		graphs.push_back(pair<string, string> (
 			"zoomedTransactionLatencyDistribution",
@@ -2981,7 +2997,7 @@ void processStats(const bf::path &outputDir, const string filename)
 			"adjustedTransactionLatencyDistribution",
 			"Adjusted Transaction Latency"));
 		filesGenerated.push_back(outFilename.native_directory_string());
-		outFilename = outputDir / ("adjustedTransactionLatencyDistribution-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("adjustedTransactionLatencyDistribution-thumb." + thumbnailExtension);
 		adjustedTransactionLatencyDistributionGraph(outFilename, p1, commandLine, distAdjustedTransactionLatency, period,true, latencyDeviation2);		
 		//////////////////////////////////////////////////////////////////////////
 
@@ -2990,7 +3006,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution." + extension);
 		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, period,false, latencyDeviation);
 		filesGenerated.push_back(outFilename.native_directory_string());
-		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution-thumb." + thumbnailExtension);
 		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distAdjustedTransactionLatency, period,true, latencyDeviation2);	
 		graphs.push_back(pair<string, string> (
 			"zoomedAdjustedTransactionLatencyDistribution",
@@ -3004,7 +3020,7 @@ void processStats(const bf::path &outputDir, const string filename)
 	bandwidthGraph(outFilename, p2, commandLine, bandwidthValues, ipcValues,cacheBandwidthValues, epochTime,false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("bandwidth", "Bandwidth"));
-	outFilename = outputDir / ("bandwidth-thumb." + thumbnailExtenstion);
+	outFilename = outputDir / ("bandwidth-thumb." + thumbnailExtension);
 	bandwidthGraph(outFilename, p2, commandLine, bandwidthValues, ipcValues,cacheBandwidthValues, epochTime,true);
 	//////////////////////////////////////////////////////////////////////////
 
@@ -3017,7 +3033,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> (
 			"cacheData", "Cache Data"));
-		outFilename = outputDir / ("cacheData-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("cacheData-thumb." + thumbnailExtension);
 		cacheGraph(outFilename,p1,commandLine,iCacheMisses,iCacheHits,dCacheMisses,dCacheHits,l2CacheMisses,l2CacheHits, epochTime,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -3029,7 +3045,7 @@ void processStats(const bf::path &outputDir, const string filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("averageIPCandLatency",
 		"IPC and Latency"));
-	outFilename = outputDir / ("averageIPCandLatency-thumb." + thumbnailExtenstion);
+	outFilename = outputDir / ("averageIPCandLatency-thumb." + thumbnailExtension);
 	averageIpcAndLatencyGraph(outFilename, p0, commandLine, transactionCount, transactionLatency,ipcValues, epochTime, period,true);
 	//////////////////////////////////////////////////////////////////////////
 
@@ -3041,7 +3057,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		hitMissGraph(outFilename,p0,commandLine,hitMissValues,hitMissTotals,epochTime,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("rowHitRate", "Row Reuse"));
-		outFilename = outputDir / ("rowHitRate-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("rowHitRate-thumb." + thumbnailExtension);
 		hitMissGraph(outFilename,p0,commandLine,hitMissValues,hitMissTotals,epochTime,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -3054,7 +3070,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		workingSetGraph(outFilename,p1,commandLine,workingSetSize,epochTime,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("workingSet", "Working Set"));
-		outFilename = outputDir / ("workingSet-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("workingSet-thumb." + thumbnailExtension);
 		workingSetGraph(outFilename,p2,commandLine,workingSetSize,epochTime,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -3067,7 +3083,7 @@ void processStats(const bf::path &outputDir, const string filename)
 		bigIpcGraph(outFilename,p3,commandLine,ipcValues,epochTime,false);
 		graphs.push_back(pair<string, string> ("bigIpcGraph", "Big IPC"));
 		filesGenerated.push_back(outFilename.native_directory_string());
-		outFilename = outputDir / ("bigIpcGraph-thumb." + thumbnailExtenstion);
+		outFilename = outputDir / ("bigIpcGraph-thumb." + thumbnailExtension);
 		bigIpcGraph(outFilename,p3,commandLine,ipcValues,epochTime,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
@@ -3079,7 +3095,7 @@ void processStats(const bf::path &outputDir, const string filename)
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("cacheHitRate",
 		"DIMM Cache Hit/Miss"));
-	outFilename = outputDir / ("cacheHitRate-thumb." + thumbnailExtenstion);
+	outFilename = outputDir / ("cacheHitRate-thumb." + thumbnailExtension);
 	cacheHitMissGraph(outFilename,p1,commandLine,cacheHitMiss,epochTime,true);	
 	//////////////////////////////////////////////////////////////////////////
 

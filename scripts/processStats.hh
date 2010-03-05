@@ -9,57 +9,61 @@ string extension = "svg";
 
 string processedExtension = "svgz";
 
-string thumbnailExtenstion = "png";
+string thumbnailExtension = "png";
 
 string thumbnailResolution = "800";
 
-string powerScripts[] = {"unset border\n\
-							  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							  set autoscale xfixmin\n\
-							  set autoscale xfixmax\n\
-							  set yrange [0:*] noreverse nowriteback\n\
-							  unset x2tics\n\
-							  set mxtics\n\
-							  set xrange [0:*]\n\
-							  set xlabel \"Time (s)\"\n\
-							  set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							  set ytics out\n\
-							  set multiplot\n\
-							  set size 1.0, 0.66\n\
-							  set origin 0.0, 0.34\n\
-							  set boxwidth 0.95 relative\n\
-							  set style fill  solid 1.00 noborder\n\
-							  set style data histograms\n\
-							  #set style data filledcurves below x1\n\
-							  set style histogram rowstacked title offset 0,0,0\n",
-							  "set size 1.0, 0.35\n\
-							  set origin 0.0, 0.0\n\
-							  set title \"Power Dissipated\"\n\
-							  set boxwidth 0.95 relative\n\
-							  plot '-' u 1:2 t \"Total Power\" w boxes,\
-							  '-' u 1:2 t \"Cumulative Average\" w lines lw 2.00,\
-							  '-' u 1:2 t \"Running Average\" w lines lw 2.00\n",
-							  "unset border\n\
-							  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							  set autoscale xfixmin\n\
-							  set autoscale xfixmax\n\
-							  set yrange [0:*] noreverse nowriteback\n\
-							  set title\n\
-							  set ytics out\n\
-							  set xtics out\n\
-							  set mxtics\n\
-							  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							  unset x2tics\n\
-							  set multiplot\n\
-							  set size 1.0, 0.5\n\
-							  set origin 0.0, 0.5\n\
-							  set ylabel \"Energy\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							  set xlabel \"Time (s)\"\n",
-							  "set size 1.0, 0.5\n\
-							  set origin 0.0, 0.0\n\
-							  set title\n\
-							  plot '-' u 1:2 t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
-							  '-' u 1:2 t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n"};
+// 0
+string totalPowerScript = "unset border\n\
+						  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+						  set autoscale xfixmin\n\
+						  set autoscale xfixmax\n\
+						  set yrange [0:*] noreverse nowriteback\n\
+						  unset x2tics\n\
+						  set mxtics\n\
+						  set xrange [0:*]\n\
+						  set xlabel \"Time (s)\"\n\
+						  set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+						  set ytics out\n\
+						  set multiplot\n\
+						  set size 1.0, 0.66\n\
+						  set origin 0.0, 0.34\n\
+						  set boxwidth 0.95 relative\n\
+						  set style fill  solid 1.00 noborder\n\
+						  set style data histograms\n\
+						  #set style data filledcurves below x1\n\
+						  set style histogram rowstacked title offset 0,0,0\n";
+
+string averagePowerScript = "set size 1.0, 0.35\n\
+							set origin 0.0, 0.0\n\
+							set title \"Power Dissipated\"\n\
+							set boxwidth 0.95 relative\n\
+							plot '-' u 1:2 t \"Total Power\" w boxes,\
+							'-' u 1:2 t \"Cumulative Average\" w lines lw 2.00,\
+							'-' u 1:2 t \"Running Average\" w lines lw 2.00\n";
+
+string energyScript = "unset border\n\
+					  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+					  set autoscale xfixmin\n\
+					  set autoscale xfixmax\n\
+					  set yrange [0:*] noreverse nowriteback\n\
+					  set title\n\
+					  set ytics out\n\
+					  set xtics out\n\
+					  set mxtics\n\
+					  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+					  unset x2tics\n\
+					  set multiplot\n\
+					  set size 1.0, 0.5\n\
+					  set origin 0.0, 0.5\n\
+					  set ylabel \"Energy\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+					  set xlabel \"Time (s)\"\n";
+
+string energy2Script = "set size 1.0, 0.5\n\
+					   set origin 0.0, 0.0\n\
+					   set title\n\
+					   plot '-' u 1:2 t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
+					   '-' u 1:2 t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n";
 
 string cumulPowerScript = "unset border\n\
 							   set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
