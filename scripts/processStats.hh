@@ -1,9 +1,10 @@
 //string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
 //string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
-string terminal =
-"set terminal svg size 1920,1200 enhanced font \"Arial\" fsize 14\n";
+// sudo apt-get install msttcorefonts
+string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Arial\" fsize 14\n";
+//string terminal = "set terminal svg size 1920,1200 enhanced\n";
 
-string thumbnailTerminal = "set terminal png tiny truecolor small size 800,500 enhanced\n";
+string thumbnailTerminal = "set terminal png truecolor font \"Arial\" size 800,500 enhanced \n";
 
 string extension = "svg";
 
@@ -12,6 +13,20 @@ string processedExtension = "svgz";
 string thumbnailExtension = "png";
 
 string thumbnailResolution = "800";
+
+// add export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts to .shrc
+string basicSetup = "unset border\n\
+					set size 1.0, 1.0\n\
+					set origin 0.0, 0.0\n\
+					set autoscale xfixmax\n\
+					set autoscale xfixmin\n\
+					set mxtics\n\
+					set xtics nomirror out\n\
+					set key outside center bottom horizontal reverse Left\n\
+					set style fill solid noborder\n\
+					#set boxwidth 0.95 relative\n\
+					set boxwidth 0.95 absolute\n\
+					set ytics out\n";
 
 // 0
 string totalPowerScript = "unset border\n\
@@ -173,18 +188,6 @@ string workingSetSetup = "set yrange [0 : *] noreverse nowriteback\n\
 							  set ylabel 'Working Set Size' offset character .05, 0, 0 font '' textcolor lt -1 rotate by 90\n\
 							  plot '-' using 1:2 t 'Working Set Size' with boxes\n";
 
-string basicSetup = "unset border\n\
-						 set size 1.0, 1.0\n\
-						 set origin 0.0, 0.0\n\
-						 set autoscale xfixmax\n\
-						 set autoscale xfixmin\n\
-						 set mxtics\n\
-						 set xtics nomirror out\n\
-						 set key outside center bottom horizontal reverse Left\n\
-						 set style fill solid noborder\n\
-						 #set boxwidth 0.95 relative\n\
-						 set boxwidth 0.95 absolute\n\
-						 set ytics out\n";
 
 string addressDistroA = "unset y2tics\n\
 							 set xtics\n\

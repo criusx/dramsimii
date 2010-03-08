@@ -166,8 +166,8 @@ readWriteGrouping = ['true']
 
 requests = [5000000]
 
-#benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
-benchmarks = ['bzip2', 'GemsFDTD']
+benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
+#benchmarks = ['bzip2', 'GemsFDTD']
 
 # per-DIMM cache parameters
 associativity = [8, 16, 32]
@@ -300,7 +300,7 @@ def main():
                                                         #print submitCommand
                                                         #sys.exit(0)
                                                         #os.system(currentCommandLine)
-                                                        #os.system(submitCommand)
+                                                        os.system(submitCommand)
 
                                                     # variations of the per-DIMM cache
                                                     elif opt == '-c':

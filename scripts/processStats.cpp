@@ -563,6 +563,231 @@ void thumbNailWorker()
 	}
 }
 
+void powerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+						   const vector<vector<float> > &values,
+						   float epochTime, bool isThumbnail)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << totalPowerScript << endl;
+	p << "set title \"{/=18 Power vs. Time}\\n{/=14 "
+		<< commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	p << "plot ";
+
+	unsigned channelCount = values.size() / 5;
+	for (unsigned a = 0; a < channelCount; a++)
+	{
+		for (unsigned b = 0; b < 5; b++)
+		{
+			p << "'-' using 1 axes x2y1 title \"P_{sys}("
+				<< powerTypes[b] << ") ch[" << a << "]\",";
+		}
+	}
+	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
+	for (vector<vector<float> >::const_iterator i = values.begin(); i
+		!= values.end(); ++i)
+	{
+		for (vector<float>::const_iterator j = i->begin(); j != i->end(); ++j)
+		{
+			//cerr << *j << " ";
+			p << *j << endl;
+		}
+		p << "e" << endl;
+	}
+	p << "0 0" << endl << (!values.empty() ? values.back().size() : 0.0)
+		* epochTime << " 0.2" << endl << "e" << endl;
+
+	p << averagePowerScript;
+
+	// make the total power bar graphs
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float totalPowerPerEpoch = 0.0F;
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			totalPowerPerEpoch += values[j][i];
+		p << i * epochTime << " " << totalPowerPerEpoch << endl;
+	}
+	p << "e" << endl;
+
+	// make the average power line
+	CumulativePriorMovingAverage cumulativePower;
+
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float total = 0;
+
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			total += values[j][i];
+		cumulativePower.add(1.0, total);
+		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
+	}
+	p << "e" << endl;
+
+	PriorMovingAverage powerMovingAverage(WINDOW);
+
+	// moving window average
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float total = 0;
+
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			total += values[j][i];
+		powerMovingAverage.append(total);
+		p << i * epochTime << " " << powerMovingAverage.getAverage() << endl;
+	}
+	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
+}
+
+void energyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+					const vector<vector<float> > &values,
+					float epochTime, bool isThumbnail)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << energyScript << endl;
+	p << "set title \"{/=18 Energy vs. Time}\\n{/=14 " << commandLine
+		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	p << "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
+	
+	// various energy graphs
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float totalPowerPerEpoch = 0.0F;
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			totalPowerPerEpoch += values[j][i];
+
+		p << i * epochTime << " " << totalPowerPerEpoch * epochTime << endl;
+	}
+	p << "e" << endl;
+
+	double cumulativeEnergy = 0.0F;
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float totalPowerPerEpoch = 0.0F;
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			totalPowerPerEpoch += values[j][i];
+
+		p << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch
+			* epochTime * epochTime << endl;
+		cumulativeEnergy += totalPowerPerEpoch * epochTime;
+	}
+
+	p << "e" << endl << energy2Script << endl;
+
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float totalPowerPerEpoch = 0.0F;
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			totalPowerPerEpoch += values[j][i];
+
+		p << i * epochTime << " " << totalPowerPerEpoch * epochTime
+			* epochTime << endl;
+	}
+	p << "e" << endl;
+
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float totalPowerPerEpoch = 0.0F;
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			totalPowerPerEpoch += values[j][i];
+
+		p << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch
+			* epochTime * epochTime * epochTime << endl;
+	}
+	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
+}
+
+void bigEnergyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+				   const vector<vector<float> > &values,
+				   float epochTime, bool isThumbnail)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << bigEnergyScript << endl;
+	p << "set title \"{/=24 Energy vs. Time}\\n{/=18 "
+		<< commandLine
+		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	p << "plot '-' u 1:2 axes x1y1 t \"Energy (P t)\" w boxes lt rgb \"#66CF03\" , '-' u 1:2 axes x1y2 t \"Cumulative Energy\" w lines lw 6.00 lt rgb \"#387400\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
+		<< endl;
+	// various energy graphs
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float totalPowerPerEpoch = 0.0F;
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			totalPowerPerEpoch += values[j][i];
+
+		p << i * epochTime << " " << totalPowerPerEpoch * epochTime << endl;
+	}
+	p << "e" << endl;
+
+	double cumulativeEnergy = 0.0F;
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float totalPowerPerEpoch = 0.0F;
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			totalPowerPerEpoch += values[j][i];
+
+		cumulativeEnergy += totalPowerPerEpoch * epochTime;
+		p << i * epochTime << " " << cumulativeEnergy << endl;
+	}
+
+	p << "e" << endl << "0 0" << endl << values.front().size() * epochTime << endl << "e" << endl
+		<< "unset output" << endl;
+}
+
+void bigPowerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+						   const vector<vector<float> > &values,
+						   float epochTime, bool isThumbnail)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"{/=24 Power vs. Time}\\n{/=18 "
+		<< commandLine
+		<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
+	
+	p << bigPowerScript << endl;
+	p << "plot ";
+
+	unsigned channelCount = values.size() / 5;
+	
+	for (unsigned a = 0; a < channelCount; a++)
+	{
+		for (unsigned b = 0; b < 5; b++)
+		{
+			p << "'-' using 1 axes x2y1 title \"P_{sys}("
+				<< powerTypes[b] << ") ch[" << a << "]\",";
+		}
+	}
+
+	//p << "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
+	p << "'-' u 1:2 axes x1y1 t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
+	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
+	for (vector<vector<float> >::const_iterator i = values.begin(); i
+		!= values.end(); ++i)
+	{
+		for (vector<float>::const_iterator j = i->begin(), end = i->end(); j != end; ++j)
+		{
+			//cerr << *j << " ";
+			p << *j << endl;
+		}
+		p << "e" << endl;
+	}
+	CumulativePriorMovingAverage cumulativePower;
+
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float total = 0;
+
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			total += values[j][i];
+		cumulativePower.add(1.0, total);
+		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
+	}
+	p << "e" << endl;
+	p << "0 0" << endl << values.front().size() * epochTime << " 1e-5" << endl << "e" << endl
+		<< "unset output" << endl;
+}
+
 void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 											   vector<pair<float, float> > &energyValues,
 											   float epochTime, bool isThumbnail)
@@ -664,8 +889,7 @@ void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opst
 
 
 void addressDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
-										unsigned channelCount,const vector<vector<vector<vector<unsigned> > > > &channelDistribution,
-										unsigned rankCount, unsigned bankCount,
+										const vector<vector<vector<vector<unsigned> > > > &channelDistribution,
 										float epochTime, unsigned channelID, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
@@ -1363,16 +1587,6 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 	list<pair<string, string> > graphs;
 
-	// get a couple copies of gnuplot running
-	opstream p("gnuplot");
-	p << basicSetup << terminal;
-	opstream p2("gnuplot");
-	p2 << basicSetup << terminal;
-	opstream p3("gnuplot");
-	p3 << basicSetup << terminal;
-	opstream p4("gnuplot");
-	p4 << basicSetup << terminal;
-
 	while ((newLine[0] != 0) && (!userStop))
 	{
 		if (newLine[0] == '-')
@@ -1394,16 +1608,13 @@ void processPower(const bf::path &outputDir, const string &filename)
 				if (writing == 0)
 				{
 					char *firstBrace = strchr(position2 + 1, '{');
-					if (firstBrace == NULL)
-						break;
+					if (firstBrace == NULL) break;
 
 					char *slash = strchr(firstBrace, '/');
-					if (slash == NULL)
-						break;
+					if (slash == NULL) break;
 
 					char *secondBrace = strchr(firstBrace, '}');
-					if (secondBrace == NULL)
-						break;
+					if (secondBrace == NULL) break;
 
 					*slash = *secondBrace = NULL;
 
@@ -1493,51 +1704,15 @@ void processPower(const bf::path &outputDir, const string &filename)
 					vector<string> splitLine;
 					split(splitLine, line, is_any_of(":"));
 					commandLine = splitLine[1];
-					cerr << commandLine << endl;
-
-					
+					//cerr << commandLine << endl;					
 				}
 				else if (newLine[1] == '+')
 				{
 					string line(newLine);
-					bf::path fileName = outputDir / ("power." + extension);
-					filesGenerated.push_back(fileName.native_directory_string());
-					p << "set output \"" << fileName.native_directory_string()
-						<< "\"\n";
-					p << totalPowerScript << endl;
-
-					fileName = outputDir / ("bigPower." + extension);
-					filesGenerated.push_back(fileName.native_directory_string());
-					p3 << "set output \"" << fileName.native_directory_string()
-						<< "\"" << endl;
-					p3 << bigPowerScript << endl;
 
 					vector<string> splitLine;
-					split(splitLine, line, is_any_of("[]"));
-					channelCount = lexical_cast<unsigned> (splitLine[1]);
-
-					p << "plot ";
-					p3 << "plot ";
-
-					for (unsigned a = 0; a < channelCount; a++)
-					{
-						for (unsigned b = 0; b < 5; b++)
-						{
-							p << "'-' using 1 axes x2y1 title \"P_{sys}("
-								<< powerTypes[b] << ") ch[" << a << "]\",";
-							p3 << "'-' using 1 axes x2y1 title \"P_{sys}("
-								<< powerTypes[b] << ") ch[" << a << "]\",";
-						}
-					}
-					p
-						<< "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
-					p3
-						<< "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
-					p3
-						<< "'-' u 1:2 axes x1y1 sm csp t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
-					p3
-						<< "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
-						<< endl;
+					split(splitLine,line,is_any_of("[]"));
+					channelCount = lexical_cast<unsigned>(splitLine[1]);
 
 					values.reserve(channelCount * 5);
 					energyValues.reserve(channelCount * 5);
@@ -1561,166 +1736,67 @@ void processPower(const bf::path &outputDir, const string &filename)
 	if (values.size() < 1)
 		return;
 
-	p << "set title \"{/=18 Power vs. Time}\\n{/=14 "
-		<< commandLine
-		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
-	p3 << "set title \"{/=24 Power vs. Time}\\n{/=18 "
-		<< commandLine
-		<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
-
-	bf::path fileName = outputDir / ("energy." + extension);
-	filesGenerated.push_back(fileName.native_directory_string());
-	//cerr << fileName.native_directory_string();
-
-	p2 << "set output \"" << fileName.native_directory_string()
-		<< "\"\n";
-	p2 << energyScript << endl;
-	p2 << "set title \"{/=18 Energy vs. Time}\\n{/=14 "
-		<< commandLine
-		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
-	p2
-		<< "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
-
-	fileName = outputDir / ("bigEnergy." + extension);
-	filesGenerated.push_back(fileName.native_directory_string());
-
-	p4 << "set output \"" << fileName.native_directory_string()
-		<< "\"\n";
-	p4 << bigEnergyScript << endl;
-	p4 << "set title \"{/=24 Energy vs. Time}\\n{/=18 "
-		<< commandLine
-		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
-	p4
-		<< "plot '-' u 1:2 axes x1y1 t \"Energy (P t)\" w boxes lt rgb \"#66CF03\" , '-' u 1:2 axes x1y2 t \"Cumulative Energy\" w lines lw 6.00 lt rgb \"#387400\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
-		<< endl;
-
+	// get a couple copies of gnuplot running
+	opstream p("gnuplot");
+	p << basicSetup << terminal;
+	opstream p2("gnuplot");
+	p2 << basicSetup << terminal;
+	opstream p3("gnuplot");
+	p3 << basicSetup << terminal;
+	opstream p4("gnuplot");
+	p4 << basicSetup << terminal;
 
 	//////////////////////////////////////////////////////////////////////////
-	// make the main power graph and big power graph
-	for (vector<vector<float> >::const_iterator i = values.begin(); i
-		!= values.end(); ++i)
-	{
-		for (vector<float>::const_iterator j = i->begin(); j != i->end(); ++j)
-		{
-			//cerr << *j << " ";
-			p << *j << endl;
-			p3 << *j << endl;
-		}
-		p << "e" << endl;
-		p3 << "e" << endl;
-	}
-	p << "0 0" << endl << (!values.empty() ? values.back().size() : 0.0)
-		* epochTime << " 0.2" << endl << "e" << endl;
-	p3 << "0 0" << endl << 3.31 / epochTime << " 1e-5" << endl << "e" << endl;
+	// make the power graph
+	path outFilename = outputDir / ("power." + extension);
+	powerGraph(outFilename,p,commandLine,values,epochTime,false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string, string> ("power","Overall Power"));
+	outFilename = outputDir / ("power-thumb." + thumbnailExtension);
+	powerGraph(outFilename,p2,commandLine,values,epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
 
-	p << averagePowerScript;
+	//////////////////////////////////////////////////////////////////////////
+	// make the big power graph
+	outFilename = outputDir / ("bigPower." + extension);
+	bigPowerGraph(outFilename,p3,commandLine,values,epochTime,false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string, string> ("bigPower","Power"));
+	outFilename = outputDir / ("bigPower-thumb." + thumbnailExtension);
+	bigPowerGraph(outFilename,p3,commandLine,values,epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////////////////////////////////////////////////
+	// make the energy graph
+	outFilename = outputDir / ("energy." + extension);
+	energyGraph(outFilename,p2,commandLine,values,epochTime,false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string,string>("energy","Energy"));
+	outFilename = outputDir / ("energy-thumb." + thumbnailExtension);
+	energyGraph(outFilename,p2,commandLine,values,epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
 
-	// make the total power bar graphs
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
-	{
-		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
-			totalPowerPerEpoch += values[j][i];
-		p << i * epochTime << " " << totalPowerPerEpoch << endl;
-	}
-	p << "e" << endl;
-
-	// make the average power line
-	CumulativePriorMovingAverage cumulativePower;
-
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
-	{
-		float total = 0;
-
-		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
-			total += values[j][i];
-		cumulativePower.add(1.0, total);
-		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
-		p3 << i * epochTime << " " << cumulativePower.getAverage() << endl;
-	}
-	p << "e" << endl;
-	p3 << "e" << endl;
-	p3 << "0 0" << endl << 3.31 << " 1e-5" << endl << "e" << endl
-		<< "unset output" << endl;
-
-	PriorMovingAverage powerMovingAverage(WINDOW);
-
-	// moving window average
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
-	{
-		float total = 0;
-
-		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
-			total += values[j][i];
-		powerMovingAverage.append(total);
-		p << i * epochTime << " " << powerMovingAverage.getAverage() << endl;
-	}
-	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl
-		<< "exit" << endl;
-
-	// various energy graphs
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
-	{
-		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
-			totalPowerPerEpoch += values[j][i];
-
-		p2 << i * epochTime << " " << totalPowerPerEpoch * epochTime << endl;
-		p4 << i * epochTime << " " << totalPowerPerEpoch * epochTime << endl;
-	}
-	p2 << "e" << endl;
-	p4 << "e" << endl;
-
-	double cumulativeEnergy = 0.0F;
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
-	{
-		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
-			totalPowerPerEpoch += values[j][i];
-
-		p2 << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch
-			* epochTime * epochTime << endl;
-		cumulativeEnergy += totalPowerPerEpoch * epochTime;
-		p4 << i * epochTime << " " << cumulativeEnergy << endl;
-	}
-
-	p2 << "e" << endl << energy2Script << endl;
-	p4 << "e" << endl << "0 0" << endl << "3.31 1e-5" << endl << "e"
-		<< "unset output" << endl;
-
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
-	{
-		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
-			totalPowerPerEpoch += values[j][i];
-
-		p2 << i * epochTime << " " << totalPowerPerEpoch * epochTime
-			* epochTime << endl;
-	}
-	p2 << "e" << endl;
-
-	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
-	{
-		float totalPowerPerEpoch = 0.0F;
-		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
-			totalPowerPerEpoch += values[j][i];
-
-		p2 << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch
-			* epochTime * epochTime * epochTime << endl;
-	}
-	p2 << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
-
+	//////////////////////////////////////////////////////////////////////////
+	// make the big energy graph
+	outFilename = outputDir / ("bigEnergy." + extension);
+	bigEnergyGraph(outFilename,p,commandLine,values,epochTime,false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string,string>("bigEnergy","Simple Energy"));
+	outFilename = outputDir / ("bigEnergy-thumb." + thumbnailExtension);
+	bigEnergyGraph(outFilename,p3,commandLine,values,epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
+	
 	//////////////////////////////////////////////////////////////////////////
 	// the cumulative energy graph
-	path outFilename = outputDir / ("cumulativeEnergy." + extension);
+	outFilename = outputDir / ("cumulativeEnergy." + extension);
 	cumulativeEnergyGraph(outFilename,p4,commandLine,energyValues,epochTime,false);
-	graphs.push_back(pair<string, string> ("cumulativeEnergy",
-		"Cumulative Energy"));
+	graphs.push_back(pair<string, string> ("cumulativeEnergy","Cumulative Energy"));
 	filesGenerated.push_back(outFilename.native_directory_string());
 	outFilename = outputDir / ("cumulativeEnergy-thumb." + thumbnailExtension);
-	cumulativeEnergyGraph(outFilename,p4,commandLine,energyValues,epochTime,false);
+	cumulativeEnergyGraph(outFilename,p4,commandLine,energyValues,epochTime,true);
 	//////////////////////////////////////////////////////////////////////////
 
+	p << endl << "exit" << endl;
 	p2 << endl << "exit" << endl;
 	p3 << endl << "exit" << endl;
 	p4 << endl << "exit" << endl;
@@ -2907,15 +2983,13 @@ void processStats(const bf::path &outputDir, const string filename)
 		for (unsigned channelID = 0; channelID < channelDistribution.size(); channelID++)
 		{
 			outFilename = outputDir / ("addressDistribution" + lexical_cast<string> (channelID) + "." + extension);
-			addressDistributionPerChannelGraph(outFilename,p3,commandLine,channelCount,channelDistribution,rankCount, bankCount,epochTime,channelID, false);
+			addressDistributionPerChannelGraph(outFilename,p3,commandLine,channelDistribution,epochTime,channelID, false);
 			graphs.push_back(pair<string, string> ("addressDistribution" + lexical_cast<string> (channelID),
 				"Address Distribution, Channel " + lexical_cast<string> (
 				channelID)));
 			filesGenerated.push_back(outFilename.native_directory_string());
 			outFilename = outputDir / ("addressDistribution" + lexical_cast<string> (channelID) + "-thumb." + thumbnailExtension);
-			addressDistributionPerChannelGraph(outFilename,p3,commandLine,channelCount,channelDistribution,rankCount, bankCount,epochTime,channelID, true);
-			//////////////////////////////////////////////////////////////////////////
-
+			addressDistributionPerChannelGraph(outFilename,p3,commandLine,channelDistribution,epochTime,channelID, true);
 		}
 		//////////////////////////////////////////////////////////////////////////
 	}

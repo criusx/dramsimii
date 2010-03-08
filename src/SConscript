@@ -69,7 +69,8 @@ try:
 		#if (env.Dictionary() contains 'TRACE_GENERATE'):
 		#	print "works"
 		env.Append(
-			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops','-ffast-math', '-fomit-frame-pointer', '-Wuninitialized', '-Wno-conversion',
+		# -funroll-all-loops -ffast-math -fprefetch-loop-arrays
+			CCFLAGS = ['-I/usr/include/libxml2', '-fprefetch-loop-arrays','-ffast-math', '-funroll-all-loops', '-fomit-frame-pointer', '-Wuninitialized', '-Wno-conversion',
 			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-generate', '-mtune=native']
 			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-use', '-mtune=native']
 			 '-finline-functions', '-march=native','-Wno-unused-variable', '-mtune=native']
