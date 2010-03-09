@@ -36,7 +36,7 @@
 #include <string>
 
 #include "base.hh"
-#include "lru.hh"
+#include "cache.hh"
 
 #include <boost/assert.hpp>
 
@@ -50,7 +50,7 @@ using DRAMsimII::isPowerOf2;
 using DRAMsimII::floorLog2;
 
 // create and initialize a LRU/MRU cache structure
-LRU::LRU(unsigned _numSets, unsigned _blkSize, unsigned _assoc,unsigned _hit_latency):
+Cache::Cache(unsigned _numSets, unsigned _blkSize, unsigned _assoc,unsigned _hit_latency):
 numSets(_numSets),
 blkSize(_blkSize),
 assoc(_assoc),
@@ -131,7 +131,7 @@ writeAllocate(false)
 	}	
 }
 
-LRU::LRU(const LRU&rhs):
+Cache::Cache(const Cache&rhs):
 numSets(rhs.numSets),
 blkSize(rhs.blkSize),
 assoc(rhs.assoc),
@@ -180,7 +180,7 @@ writeAllocate(rhs.writeAllocate)
 	
 }
 
-LRU::LRU(const DRAMsimII::Settings &settings):
+Cache::Cache(const DRAMsimII::Settings &settings):
 numSets((settings.cacheSize * 1024)/ settings.blockSize / settings.associativity),
 blkSize(settings.blockSize),
 assoc(settings.associativity),
@@ -228,7 +228,7 @@ writeAllocate(false)
 	}
 }
 
-LRU::~LRU()
+Cache::~Cache()
 {
 	for (unsigned i = 0; i < numSets; ++i) 
 	{ 
@@ -280,7 +280,7 @@ CacheSet::moveToHead(LRUBlk *blk)
 
 using DRAMsimII::Command;
 
-bool LRU::access(const Command *currentCommand, int &lat, BlkType *&blk, tick time, PacketList &writebacks)
+bool Cache::access(const Command *currentCommand, int &lat, BlkType *&blk, tick time, PacketList &writebacks)
 {
 	blk = accessBlock(currentCommand->getAddress().getPhysicalAddress(), lat, 0, time);
 
@@ -344,7 +344,7 @@ bool LRU::access(const Command *currentCommand, int &lat, BlkType *&blk, tick ti
 	return false;
 }
 
-void LRU::satisfyCpuSideRequest(const Command *currentCommand, BlkType *blk)
+void Cache::satisfyCpuSideRequest(const Command *currentCommand, BlkType *blk)
 {
 	BOOST_ASSERT(blk);
 	// Occasionally this is not true... if we are a lower-level cache
@@ -410,7 +410,7 @@ void LRU::satisfyCpuSideRequest(const Command *currentCommand, BlkType *blk)
 	// 	}
 }
 
-bool LRU::timingAccess(const Command *currentCommand, tick time)
+bool Cache::timingAccess(const Command *currentCommand, tick time)
 {
 	int lat = 3; // hit latency
 	BlkType *blk = NULL;
@@ -491,7 +491,7 @@ bool LRU::timingAccess(const Command *currentCommand, tick time)
 	return satisfied;
 }
 
-LRU::BlkType *LRU::handleFill(const Command *currentCommand, BlkType *blk, tick time)
+Cache::BlkType *Cache::handleFill(const Command *currentCommand, BlkType *blk, tick time)
 {
 	Addr addr = currentCommand->getAddress().getPhysicalAddress();
 	// #if TRACING_ON
@@ -553,7 +553,7 @@ LRU::BlkType *LRU::handleFill(const Command *currentCommand, BlkType *blk, tick 
 	return blk;
 }
 
-LRU::BlkType *LRU::allocateBlock(const Addr &addr, PacketList &writebacks)
+Cache::BlkType *Cache::allocateBlock(const Addr &addr, PacketList &writebacks)
 {
 	//PacketList writebacks;
 
@@ -592,7 +592,7 @@ LRU::BlkType *LRU::allocateBlock(const Addr &addr, PacketList &writebacks)
 }
 
 LRUBlk*
-LRU::accessBlock(Addr addr, int &lat, int context_src, tick curTick)
+Cache::accessBlock(Addr addr, int &lat, int context_src, tick curTick)
 {
 	Addr tag = extractTag(addr);
 
@@ -621,7 +621,7 @@ LRU::accessBlock(Addr addr, int &lat, int context_src, tick curTick)
 
 
 LRUBlk*
-LRU::findBlock(Addr addr) const
+Cache::findBlock(Addr addr) const
 {
 	Addr tag = extractTag(addr);
 	unsigned set = extractSet(addr);
@@ -630,7 +630,7 @@ LRU::findBlock(Addr addr) const
 }
 
 LRUBlk*
-LRU::findVictim(Addr addr, PacketList &writebacks)
+Cache::findVictim(Addr addr, PacketList &writebacks)
 {
 	unsigned set = extractSet(addr);
 	// grab a replacement candidate
@@ -649,7 +649,7 @@ LRU::findVictim(Addr addr, PacketList &writebacks)
 }
 
 void
-LRU::insertBlock(Addr addr, LRU::BlkType *blk, int context_src, tick curTick)
+Cache::insertBlock(Addr addr, Cache::BlkType *blk, int context_src, tick curTick)
 {
 	if (!blk->isTouched) 
 	{
@@ -682,7 +682,7 @@ LRU::insertBlock(Addr addr, LRU::BlkType *blk, int context_src, tick curTick)
 // }
 
 void
-LRU::cleanupRefs()
+Cache::cleanupRefs()
 {
 	for (unsigned i = 0; i < numSets*assoc; ++i) {
 		if (blks[i].isValid()) {
@@ -692,7 +692,7 @@ LRU::cleanupRefs()
 	}
 }
 
-LRU &LRU::operator =(const LRU& rhs)
+Cache &Cache::operator =(const Cache& rhs)
 {
 	const_cast<unsigned&>(numSets) = rhs.numSets;
 	const_cast<unsigned&>(blkSize) = rhs.blkSize;

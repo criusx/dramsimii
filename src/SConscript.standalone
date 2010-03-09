@@ -60,30 +60,30 @@ if not conf.CheckLib('boost_regex'):
 sourceBase = ['reporting/soapC.cpp',
 			'reporting/soapClient.cpp',
 			'reporting/stdsoap2.cpp',
-			'cache/lru.cc',
-			'Address.cpp',
-			'Bank.cpp',
-			'command.cpp',
-			'Channel.cpp',
-			'Statistics.cpp',
-			'System.cpp',
-			'Settings.cpp',
-			'SettingsXML.cpp',
-			'SystemConfiguration.cpp',
-			'TimingSpecification.cpp',
-			'event.cpp',
-			'fbdAMB.cpp',
-			'fbdChannel.cpp',
-			'fbdFrame.cpp',
-			'fbdSystem.cpp',
-			'InputStream.cpp',
-			'powerConfig.cpp',
-			'Rank.cpp',
-			'simulationParameters.cpp',
-			'transaction.cpp']
+			'cache/cache.cc',
+			'Address.cc',
+			'Bank.cc',
+			'command.cc',
+			'Channel.cc',
+			'Statistics.cc',
+			'System.cc',
+			'Settings.cc',
+			'SettingsXML.cc',
+			'SystemConfiguration.cc',
+			'TimingSpecification.cc',
+			'event.cc',
+			'fbdAMB.cc',
+			'fbdChannel.cc',
+			'fbdFrame.cc',
+			'fbdSystem.cc',
+			'InputStream.cc',
+			'powerConfig.cc',
+			'Rank.cc',
+			'simulationParameters.cc',
+			'transaction.cc']
 
-sourceFile = sourceBase + ['main.cpp']
-sourcesTest = sourceBase + ['unitTest.cpp']
+sourceFile = sourceBase + ['main.cc']
+sourcesTest = sourceBase + ['unitTest.cc']
 
 
 if platform == 'script' or platform == 'scriptDebug':

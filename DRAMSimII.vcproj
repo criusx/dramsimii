@@ -725,6 +725,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cache\cache.cc"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Channel.cpp"
 				>
 			</File>
@@ -862,10 +866,6 @@
 			</File>
 			<File
 				RelativePath=".\src\InputStream.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\cache\lru.cc"
 				>
 			</File>
 			<File

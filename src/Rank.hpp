@@ -75,7 +75,7 @@ namespace DRAMsimII
 		unsigned lastBankID;				///< id of the last accessed bank of this rank
 		unsigned banksPrecharged;			///< the number of banks in the precharge state
 
-		LRU tags;							///< the tagstore of the emulated cache
+		Cache tags;							///< the tagstore of the emulated cache
 
 	public:
 
