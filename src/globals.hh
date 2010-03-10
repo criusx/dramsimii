@@ -25,7 +25,7 @@
 #include <boost/integer_traits.hpp>
 #include <boost/cstdint.hpp>
 
-#include "enumTypes.h"
+#include "enumTypes.hh"
 
 
 // global vars and functions

@@ -18,15 +18,15 @@
 #define BANK_C_H
 #pragma once
 
-#include "globals.h"
-#include "command.h"
-#include "Settings.h"
-#include "transaction.h"
-#include "command.h"
-#include "TimingSpecification.h"
-#include "SystemConfiguration.h"
-#include "queue.h"
-#include "Statistics.h"
+#include "globals.hh"
+#include "command.hh"
+#include "Settings.hh"
+#include "transaction.hh"
+#include "command.hh"
+#include "TimingSpecification.hh"
+#include "SystemConfiguration.hh"
+#include "queue.hh"
+#include "Statistics.hh"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/access.hpp>

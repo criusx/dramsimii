@@ -18,8 +18,8 @@
 #define FBDFRAME_H
 #pragma once
 
-#include "globals.h"
-#include "command.h"
+#include "globals.hh"
+#include "command.hh"
 
 namespace DRAMsimII
 {

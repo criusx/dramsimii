@@ -18,16 +18,16 @@
 #define DRAMCHANNEL_H
 #pragma once
 
-#include "globals.h"
-#include "Rank.h"
-#include "powerConfig.h"
-#include "TimingSpecification.h"
-#include "SystemConfiguration.h"
-#include "Statistics.h"
-#include "queue.h"
-#include "powerConfig.h"
-#include "transaction.h"
-#include "command.h"
+#include "globals.hh"
+#include "Rank.hh"
+#include "powerConfig.hh"
+#include "TimingSpecification.hh"
+#include "SystemConfiguration.hh"
+#include "Statistics.hh"
+#include "queue.hh"
+#include "powerConfig.hh"
+#include "transaction.hh"
+#include "command.hh"
 
 #include <vector>
 #include <queue>

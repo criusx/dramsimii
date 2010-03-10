@@ -18,7 +18,7 @@
 #define INPUTSTREAM_H
 #pragma once
 
-#include "globals.h"
+#include "globals.hh"
 
 #include <fstream>
 #include <map>

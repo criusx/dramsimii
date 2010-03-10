@@ -41,7 +41,7 @@
 #include <boost/assert.hpp>
 
 using namespace DRAMsimII;
-using DRAMsimII::LRU;
+using DRAMsimII::Cache;
 using DRAMsimII::CacheSet;
 using std::cout;
 using std::endl;

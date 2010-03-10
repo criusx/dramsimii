@@ -15,7 +15,7 @@
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
-#include "command.h"
+#include "command.hh"
 
 using std::cerr;
 using std::endl;

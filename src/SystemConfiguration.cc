@@ -17,7 +17,7 @@
 #include <map>
 #include <string>
 #include <sstream>
-#include "SystemConfiguration.h"
+#include "SystemConfiguration.hh"
 
 
 #ifndef WIN32

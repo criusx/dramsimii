@@ -23,7 +23,7 @@
 #include <vector>
 #include <iostream>
 
-#include "Channel.h"
+#include "Channel.hh"
 #include "reporting/soapDRAMsimWSSoapHttpProxy.h"
 #include "reporting/DRAMsimWSSoapHttp.nsmap"
 

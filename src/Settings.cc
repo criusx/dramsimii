@@ -21,8 +21,8 @@
 #include <fstream>
 #include <string>
 
-#include "globals.h"
-#include "Settings.h"
+#include "globals.hh"
+#include "Settings.hh"
 
 using std::map;
 using std::string;

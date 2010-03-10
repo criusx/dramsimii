@@ -20,8 +20,8 @@
 //#include <stdlib.h>
 //#include <crtdbg.h>
 
-#include "globals.h"
-#include "System.h"
+#include "globals.hh"
+#include "System.hh"
 
 using std::cerr;
 using std::endl;

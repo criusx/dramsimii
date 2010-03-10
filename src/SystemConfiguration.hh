@@ -18,9 +18,9 @@
 #define DRAMSYSTEMCONFIGURATION_H
 #pragma once
 
-#include "globals.h"
-#include "Settings.h"
-#include "Address.h"
+#include "globals.hh"
+#include "Settings.hh"
+#include "Address.hh"
 
 #include <fstream>
 

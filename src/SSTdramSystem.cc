@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "SSTdramSystem.h"
+#include "SSTdramSystem.hh"
 
 #include <configuration.h>
 #include <instruction.h>

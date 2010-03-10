@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "Statistics.h"
-#include "globals.h"
+#include "Statistics.hh"
+#include "globals.hh"
 #ifdef M5
 #include "base/statistics.hh"
 #include "base/stats/types.hh"

@@ -16,7 +16,7 @@
 
 #include <iostream>
 #include <boost/functional.hpp>
-#include "Rank.h"
+#include "Rank.hh"
 
 using std::vector;
 using std::max;

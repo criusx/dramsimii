@@ -22,8 +22,8 @@
 #include <zlib.h>
 #include <fcntl.h>
 #include <sys/mman.h>
-#include "enumTypes.h"
-#include "m5-dramSystem.h"
+#include "enumTypes.hh"
+#include "m5-dramSystem.hh"
 
 using std::ofstream;
 using std::dec;

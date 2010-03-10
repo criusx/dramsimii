@@ -30,7 +30,7 @@
 #include <boost/functional.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "System.h"
+#include "System.hh"
 
 using std::setprecision;
 using std::string;

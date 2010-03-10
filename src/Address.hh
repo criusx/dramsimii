@@ -18,7 +18,7 @@
 #define ADDRESSES_H
 #pragma once
 
-#include "globals.h"
+#include "globals.hh"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>

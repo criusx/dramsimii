@@ -17,9 +17,9 @@
 #ifndef DRAMSETTINGS
 #define DRAMSETTINGS
 
-#include "InputStream.h"
-#include "Address.h"
-#include "enumTypes.h"
+#include "InputStream.hh"
+#include "Address.hh"
+#include "enumTypes.hh"
 
 #include <string>
 #include <iostream>

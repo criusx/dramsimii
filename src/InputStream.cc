@@ -29,10 +29,10 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
-#include "InputStream.h"
-#include "Settings.h"
-#include "SystemConfiguration.h"
-#include "Channel.h"
+#include "InputStream.hh"
+#include "Settings.hh"
+#include "SystemConfiguration.hh"
+#include "Channel.hh"
 
 using std::vector;
 using std::dec;

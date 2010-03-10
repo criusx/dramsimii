@@ -18,7 +18,7 @@
 #include <string>
 #include <sstream>
 
-#include "TimingSpecification.h"
+#include "TimingSpecification.hh"
 
 using std::ostream;
 using std::cerr;

@@ -18,9 +18,9 @@
 #define POWERCONFIG_H
 #pragma once
 
-#include "globals.h"
-#include "enumTypes.h"
-#include "Settings.h"
+#include "globals.hh"
+#include "enumTypes.hh"
+#include "Settings.hh"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>

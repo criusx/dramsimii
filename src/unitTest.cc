@@ -16,13 +16,13 @@
 
 #include <boost/iostreams/filtering_stream.hpp>
 
-#include "globals.h"
-#include "transaction.h"
-#include "Address.h"
-#include "queue.h"
-#include "System.h"
-#include "Settings.h"
-#include "SystemConfiguration.h"
+#include "globals.hh"
+#include "transaction.hh"
+#include "Address.hh"
+#include "queue.hh"
+#include "System.hh"
+#include "Settings.hh"
+#include "SystemConfiguration.hh"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>

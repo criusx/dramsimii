@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "fbdAMB.h"
+#include "fbdAMB.hh"
 
 using namespace DRAMsimII;
 

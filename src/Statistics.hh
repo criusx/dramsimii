@@ -18,10 +18,10 @@
 #define DRAMSTATISTICS_H
 #pragma once
 
-#include "globals.h"
-#include "transaction.h"
-#include "command.h"
-#include "Settings.h"
+#include "globals.hh"
+#include "transaction.hh"
+#include "command.hh"
+#include "Settings.hh"
 
 #include <fstream>
 #include <map>

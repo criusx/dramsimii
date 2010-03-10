@@ -18,20 +18,20 @@
 #define DRAMSYSTEM
 #pragma once
 
-#include "globals.h"
-#include "SystemConfiguration.h"
-#include "TimingSpecification.h"
-#include "Address.h"
-#include "command.h"
-#include "simulationParameters.h"
-#include "Statistics.h"
-#include "InputStream.h"
-#include "event.h"
-#include "Channel.h"
-#include "Rank.h"
-#include "Settings.h"
-#include "powerConfig.h"
-#include "SystemConfiguration.h"
+#include "globals.hh"
+#include "SystemConfiguration.hh"
+#include "TimingSpecification.hh"
+#include "Address.hh"
+#include "command.hh"
+#include "simulationParameters.hh"
+#include "Statistics.hh"
+#include "InputStream.hh"
+#include "event.hh"
+#include "Channel.hh"
+#include "Rank.hh"
+#include "Settings.hh"
+#include "powerConfig.hh"
+#include "SystemConfiguration.hh"
 
 #include <vector>
 #include <ostream>

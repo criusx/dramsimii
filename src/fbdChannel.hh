@@ -18,11 +18,11 @@
 #define FBDCHANNEL_H
 #pragma once
 
-#include "globals.h"
-#include "fbdAMB.h"
-#include "fbdFrame.h"
-#include "Channel.h"
-#include "queue.h"
+#include "globals.hh"
+#include "fbdAMB.hh"
+#include "fbdFrame.hh"
+#include "Channel.hh"
+#include "queue.hh"
 
 namespace DRAMsimII
 {

@@ -18,11 +18,11 @@
 #define COMMAND_H
 #pragma once
 
-#include "globals.h"
-#include "Address.h"
-#include "queue.h"
-#include "transaction.h"
-#include "event.h"
+#include "globals.hh"
+#include "Address.hh"
+#include "queue.hh"
+#include "transaction.hh"
+#include "event.hh"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>

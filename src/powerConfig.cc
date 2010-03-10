@@ -19,7 +19,7 @@
 #include <string>
 #include <iomanip>
 
-#include "powerConfig.h"
+#include "powerConfig.hh"
 
 using namespace DRAMsimII;
 

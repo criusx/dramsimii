@@ -18,8 +18,8 @@
 #define SIMULATION_PARAMETERS_H
 #pragma once
 
-#include "globals.h"
-#include "Settings.h"
+#include "globals.hh"
+#include "Settings.hh"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/access.hpp>

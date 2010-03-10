@@ -18,8 +18,8 @@
 #define FBDAMB_H
 #pragma once
 
-#include "globals.h"
-#include "queue.h"
+#include "globals.hh"
+#include "queue.hh"
 
 namespace DRAMsimII
 {

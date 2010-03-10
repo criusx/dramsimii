@@ -18,12 +18,12 @@
 #define RANK_C_H
 #pragma once
 
-#include "globals.h"
-#include "Bank.h"
-#include "Settings.h"
-#include "TimingSpecification.h"
+#include "globals.hh"
+#include "Bank.hh"
+#include "Settings.hh"
+#include "TimingSpecification.hh"
 
-#include "cache/lru.hh"
+#include "cache/cache.hh"
 
 #include <vector>
 

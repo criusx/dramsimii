@@ -43,9 +43,9 @@
 
 #include "blk.hh"
 #include "base.hh"
-#include "../globals.h"
-#include "../command.h"
-#include "../Settings.h"
+#include "../globals.hh"
+#include "../command.hh"
+#include "../Settings.hh"
 
 namespace DRAMsimII
 {
@@ -114,7 +114,7 @@ namespace DRAMsimII
 	/**
 	* A LRU cache tag store.
 	*/
-	class LRU : public BaseTags
+	class Cache : public BaseTags
 	{
 	public:
 
@@ -167,17 +167,17 @@ namespace DRAMsimII
 		* @param _assoc The associativity of the cache.
 		* @param _hit_latency The latency in cycles for a hit.
 		*/
-		LRU(unsigned _numSets, unsigned _blkSize, unsigned _assoc,
+		Cache(unsigned _numSets, unsigned _blkSize, unsigned _assoc,
 			unsigned _hit_latency);
 
-		LRU(const LRU&);
+		Cache(const Cache&);
 
-		LRU(const DRAMsimII::Settings &);
+		Cache(const DRAMsimII::Settings &);
 
 		/**
 		* Destructor
 		*/
-		virtual ~LRU();
+		virtual ~Cache();
 
 		bool access(const Command *currentCommand, int &lat, BlkType *&blk, tick, PacketList &);
 
@@ -319,7 +319,7 @@ namespace DRAMsimII
 		*/
 		virtual void cleanupRefs();
 
-		LRU &operator=(const LRU& rhs);
+		Cache &operator=(const Cache& rhs);
 	};
 
 }

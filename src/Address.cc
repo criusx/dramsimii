@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "Address.h"
-#include "globals.h"
+#include "Address.hh"
+#include "globals.hh"
 
-#include "Settings.h"
-#include "SystemConfiguration.h"
+#include "Settings.hh"
+#include "SystemConfiguration.hh"
 
 #include <iostream>
 #include <iomanip>

@@ -46,10 +46,10 @@ using std::setfill;
 
 #include <queue>
 
-#include "System.h"
-#include "fbdSystem.h"
-#include "Settings.h"
-#include "globals.h"
+#include "System.hh"
+#include "fbdSystem.hh"
+#include "Settings.hh"
+#include "globals.hh"
 
 using DRAMsimII::tick;
 

@@ -18,8 +18,8 @@
 #define DRAMTIMINGSPECIFICATION
 #pragma once
 
-#include "globals.h"
-#include "Settings.h"
+#include "globals.hh"
+#include "Settings.hh"
 
 #include <map>
 

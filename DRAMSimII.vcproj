@@ -62,7 +62,7 @@
 				ExpandAttributedSource="true"
 				AssemblerOutput="4"
 				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 				CompileAs="2"
 				DisableSpecificWarnings="4530"
@@ -717,11 +717,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\Address.cpp"
+				RelativePath=".\src\Address.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Bank.cpp"
+				RelativePath=".\src\Bank.cc"
 				>
 			</File>
 			<File
@@ -729,85 +729,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Channel.cpp"
+				RelativePath=".\src\Channel.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\command.cpp"
+				RelativePath=".\src\command.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\event.cpp"
+				RelativePath=".\src\event.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\fbdAMB.cpp"
+				RelativePath=".\src\fbdAMB.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\fbdChannel.cpp"
+				RelativePath=".\src\fbdChannel.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\fbdFrame.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="M5|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Test2|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DebugOpt|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="TestOpt|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\fbdSystem.cpp"
+				RelativePath=".\src\fbdFrame.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -865,11 +807,69 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\InputStream.cpp"
+				RelativePath=".\src\fbdSystem.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="M5|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Test2|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugOpt|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="TestOpt|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\InputStream.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\m5-dramSystem.cpp"
+				RelativePath=".\src\m5-dramSystem.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -921,7 +921,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\main.cpp"
+				RelativePath=".\src\main.cc"
 				>
 				<FileConfiguration
 					Name="Test2|Win32"
@@ -941,11 +941,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\powerConfig.cpp"
+				RelativePath=".\src\powerConfig.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\scripts\processStats.cpp"
+				RelativePath=".\scripts\processStats.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -965,23 +965,23 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\Rank.cpp"
+				RelativePath=".\src\Rank.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Settings.cpp"
+				RelativePath=".\src\Settings.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\SettingsXML.cpp"
+				RelativePath=".\src\SettingsXML.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\simulationParameters.cpp"
+				RelativePath=".\src\simulationParameters.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\SSTdramSystem.cpp"
+				RelativePath=".\src\SSTdramSystem.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -1033,27 +1033,27 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\src\Statistics.cpp"
+				RelativePath=".\src\Statistics.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\System.cpp"
+				RelativePath=".\src\System.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\SystemConfiguration.cpp"
+				RelativePath=".\src\SystemConfiguration.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\TimingSpecification.cpp"
+				RelativePath=".\src\TimingSpecification.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\transaction.cpp"
+				RelativePath=".\src\transaction.cc"
 				>
 			</File>
 			<File
-				RelativePath=".\src\unitTest.cpp"
+				RelativePath=".\src\unitTest.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"

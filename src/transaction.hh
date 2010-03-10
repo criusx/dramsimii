@@ -18,10 +18,10 @@
 #define TRANSACTION_H
 #pragma once
 
-#include "globals.h"
-#include "Address.h"
-#include "queue.h"
-#include "event.h"
+#include "globals.hh"
+#include "Address.hh"
+#include "queue.hh"
+#include "event.hh"
 
 #include <boost/pool/pool.hpp>
 #include <boost/serialization/base_object.hpp>

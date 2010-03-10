@@ -18,7 +18,7 @@
 #define EVENT_H
 #pragma once
 
-#include "Address.h"
+#include "Address.hh"
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>
