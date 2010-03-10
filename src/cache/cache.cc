@@ -34,14 +34,19 @@
 */
 
 #include <string>
+#include <cassert>
+#include <cstring>
 
 #include "base.hh"
 #include "cache.hh"
+#include "../Settings.hh"
 
 #include <boost/assert.hpp>
 
 using DRAMsimII::Cache;
 using DRAMsimII::CacheSet;
+using DRAMsimII::LRUBlk;
+using DRAMsimII::PacketList;
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -214,6 +219,7 @@ tagShift(floorLog2((settings.cacheSize * 1024) / settings.blockSize / settings.a
 setMask((settings.cacheSize * 1024) / settings.blockSize / settings.associativity - 1),
 blkMask(settings.blockSize - 1),
 writeAllocate(false),
+replacementPolicy(settings.replacementPolicy),
 nmruCount(settings.nmruTrackingCount)
 {
 	if (blkSize < 4 || !isPowerOf2(blkSize)) 
@@ -296,8 +302,7 @@ LRUBlk *CacheSet::findBlk(Addr tag) const
 }
 
 
-void
-CacheSet::moveToHead(LRUBlk *blk)
+void CacheSet::moveToHead(LRUBlk *blk)
 {
 	// nothing to do if blk is already head
 	if (blks[0] == blk)
@@ -634,8 +639,7 @@ Cache::BlkType *Cache::allocateBlock(const Addr &addr, PacketList &writebacks)
 	return blk;
 }
 
-LRUBlk*
-Cache::accessBlock(Addr addr, int &lat, int context_src, tick curTick)
+LRUBlk *Cache::accessBlock(Addr addr, int &lat, int context_src, tick curTick)
 {
 	Addr tag = extractTag(addr);
 
@@ -663,8 +667,7 @@ Cache::accessBlock(Addr addr, int &lat, int context_src, tick curTick)
 }
 
 
-LRUBlk*
-Cache::findBlock(Addr addr) const
+LRUBlk *Cache::findBlock(Addr addr) const
 {
 	Addr tag = extractTag(addr);
 	unsigned set = extractSet(addr);
@@ -672,8 +675,7 @@ Cache::findBlock(Addr addr) const
 	return blk;
 }
 
-LRUBlk*
-Cache::findVictim(Addr addr, PacketList &writebacks)
+LRUBlk *Cache::findVictim(Addr addr, PacketList &writebacks)
 {
 	unsigned set = extractSet(addr);
 	// grab a replacement candidate
@@ -691,8 +693,7 @@ Cache::findVictim(Addr addr, PacketList &writebacks)
 	return blk;
 }
 
-void
-Cache::insertBlock(Addr addr, Cache::BlkType *blk, int context_src, tick curTick)
+void Cache::insertBlock(Addr addr, Cache::BlkType *blk, int context_src, tick curTick)
 {
 	if (!blk->isTouched) 
 	{
@@ -724,8 +725,7 @@ Cache::insertBlock(Addr addr, Cache::BlkType *blk, int context_src, tick curTick
 //     }
 // }
 
-void
-Cache::cleanupRefs()
+void Cache::cleanupRefs()
 {
 	for (unsigned i = 0; i < numSets*assoc; ++i) {
 		if (blks[i].isValid()) {
@@ -746,11 +746,13 @@ Cache &Cache::operator =(const Cache& rhs)
 	blks = rhs.blks;
 	dataBlks = rhs.dataBlks;
 
-	setShift = rhs.setShift;
-	tagShift = rhs.tagShift;
-	setMask = rhs.setMask;
-	blkMask = rhs.blkMask;
-	writeAllocate = rhs.writeAllocate;
+	const_cast<int&>(setShift) = rhs.setShift;
+	const_cast<int&>(tagShift) = rhs.tagShift;
+	const_cast<unsigned&>(setMask) = rhs.setMask;
+	const_cast<unsigned&>(blkMask) = rhs.blkMask;
+	const_cast<bool&>(writeAllocate) = rhs.writeAllocate;
+	const_cast<ReplacementPolicy&>(replacementPolicy) = rhs.replacementPolicy;
+	const_cast<unsigned&>(nmruCount) = rhs.nmruCount;
 
 	unsigned blkIndex = 0;       // index into blks array
 	for (unsigned i = 0; i < numSets; ++i) 

@@ -21,21 +21,10 @@ if not conf.CheckCXXHeader('boost/circular_buffer.hpp'):
 	print 'Need Boost 1.35 or newer with the circular buffer library.'
 	print 'The circular buffer header files may also be copied from a newer Boost instance to an older one.'
 	Exit(1)
-if not conf.CheckLib('boost_thread'):
-	print 'Boost thread library not found, please install this.'
-	print 'e.g. sudo apt-get install "libboost-thread*"'
-	Exit(1)
 if not conf.CheckLib('boost_unit_test_framework'):
 	print 'Boost unit test framework not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-test*"'
 	Exit(1)
-if not conf.CheckLib('boost_signals'):
-	print 'Boost signals library not found, please install this.'
-	print 'e.g. sudo apt-get install "libboost-signals*"'
-	Exit(1)
-if not conf.CheckCXXHeader('vector'):
-   print 'vector must be installed!'
-   Exit(1)
 if not conf.CheckLib('boost_filesystem'):
 	print 'Boost filesystem library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-filesystem*"'
@@ -48,19 +37,8 @@ if not conf.CheckLib('xml2'):
 	print "Need libxml2 to compile this."
 	print "e.g. sudo apt-get install \".*libxml2.*\""
 	Exit(1)
-#if platform.startswith('script') and not conf.CheckLib('gomp'):
-#	print 'need a compiler that supports OpenMP.'
-#	print 'such as gcc 4.2+, icc 11+, Visual Studio 2005+, etc.'
-#	Exit(1)
-if not conf.CheckLib('boost_regex'):
-	print 'Boost regex library not found, please install this.'
-	print 'e.g. sudo apt-get install "libboost-regex*"'
-	Exit(1)
 
-sourceBase = ['reporting/soapC.cpp',
-			'reporting/soapClient.cpp',
-			'reporting/stdsoap2.cpp',
-			'cache/cache.cc',
+sourceBase = ['cache/cache.cc',
 			'Address.cc',
 			'Bank.cc',
 			'command.cc',
@@ -94,47 +72,52 @@ if platform == 'script' or platform == 'scriptDebug':
 env = conf.Finish()
 env.Append(CPPPATH = '/usr/include/ImageMagick')
 
+defines = ['__STDC_LIMIT_MACROS','NDEBUG']
+flags = ['-O3', '-funroll-all-loops', '-ffast-math', '-fprefetch-loop-arrays', '-std=c++0x', '-Wall', '-Wextra', '-Wunused', '-pedantic', '-Weffc++', '-mtune=native', '-march=native', '-Wconversion', '-Wuninitialized'] 
+includes = ['/usr/include/libxml2']
+
 ROOT = Dir('.').abspath
 SRCDIR = os.path.join(ROOT,'src')
 
 if platform == 'script':
 	envScript = env.Clone(OBJSUFFIX='.os')
-	envScript.Append(CCFLAGS = '-O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -Wconversion -Wuninitialized -DNDEBUG')
+	envScript.Append(CCFLAGS = '-O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -Wconversion -Wuninitialized -DNDEBUG -D__STDC_LIMIT_MACROS')
+	envScript.Append(CPPDEFINES = defines)
 	script = envScript.Program('processStats',"../scripts/processStats.cpp")
 	envScript.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptOpt':
 	envScript = env.Clone(OBJSUFFIX='.oso')
-	envScript.Append(CCFLAGS = '-g -O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -DNDEBUG')
+	envScript.Append(CCFLAGS = '-g -O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -DNDEBUG -D__STDC_LIMIT_MACROS')
 	script = envScript.Program('processStats.opt',"../scripts/processStats.cpp")
 	envScript.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd')
-	envScriptD.Append(CCFLAGS = '-ggdb3 -std=c++0x -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wno-conversion -Wuninitialized')
+	envScriptD.Append(CCFLAGS = '-ggdb3 -std=c++0x -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -D__STDC_LIMIT_MACROS -Wno-conversion -Wuninitialized')
 	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cpp")
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
-	envDebug.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
+	envDebug.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
 	debug = envDebug.Program('dramSimII.debug',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugOpt':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogO')
-	envDebug.Append(CCFLAGS = '-g -O3 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
+	envDebug.Append(CCFLAGS = '-g -O3 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
 	debug = envDebug.Program('dramSimII.debugOpt',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugsimple':
 	envDebugSimple = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogs')
-	envDebugSimple.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized')
+	envDebugSimple.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
 	debugSimple = envDebugSimple.Program('dramSimII.debugsimple',sourceFile)
 	envDebugSimple.Install(os.path.abspath('..') + "/bin", debugSimple)
 elif platform == 'test':
 	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
-	envTest.Append(CCFLAGS = '-g -Wall -Wextra -Weffc++ -DDEBUG -Wconversion -Wuninitialized')
+	envTest.Append(CCFLAGS = '-g -Wall -Wextra -Weffc++ -DDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
 	test = envTest.Program('dramSimII.test',sourcesTest)
 	envTest.Install(os.path.abspath('..') + "/bin", test)
 elif platform == 'testOpt':
 	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.oto')
-	envTest.Append(CCFLAGS = '-g -Wall -Wextra -O2 -mtune=native -march=native -Weffc++ -DDEBUG -Wconversion -Wuninitialized')
+	envTest.Append(CCFLAGS = '-g -Wall -Wextra -O2 -mtune=native -march=native -Weffc++ -DDEBUG -D__STDC_LIMIT_MACROS -Wconversion -Wuninitialized')
 	test = envTest.Program('dramSimII.testOpt',sourcesTest)
 	envTest.Install(os.path.abspath('..') + "/bin", test)
 elif platform == 'prof':
@@ -144,19 +127,19 @@ elif platform == 'prof':
 	envProf.Install(os.path.abspath('..') + "/bin", prof)
 elif platform == 'profgen':
 	envProfgen = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opg')
-	envProfgen.Append(CCFLAGS = '-O3 -mtune=native -march=native -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate -DNDEBUG',
+	envProfgen.Append(CCFLAGS = '-O3 -mtune=native -march=native -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-generate -DNDEBUG -D__STDC_LIMIT_MACROS',
 	LINKFLAGS = "-fprofile-generate")
 	profgen = envProfgen.Program('dramSimII.profgen', sourceFile)
 	envProfgen.Install(os.path.abspath('..') + "/bin", profgen)
 elif platform == 'profuse':
 	envProfuse = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opu')
-	envProfuse.Append(CCFLAGS = '-O3 -mtune=native -march=native -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-use -DNDEBUG',
+	envProfuse.Append(CCFLAGS = '-O3 -mtune=native -march=native -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -march=athlon64 -fprofile-use -DNDEBUG -D__STDC_LIMIT_MACROS',
 	LINKFLAGS = "-fprofile-use")
 	profuse = envProfuse.Program('dramSimII.profuse', sourceFile)
 	envProfuse.Install(os.path.abspath('..') + "/bin", profuse)
 elif platform == 'all':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
-	envDebug.Append(CCFLAGS = '-g -O -mtune=native -march=native -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG')
+	envDebug.Append(CCFLAGS = '-g -O -mtune=native -march=native -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG -D__STDC_LIMIT_MACROS')
 	debug = envDebug.Program('dramSimII.debug',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 	envTest = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ot')
@@ -164,11 +147,11 @@ elif platform == 'all':
 	test = envTest.Program('dramSimII.test',sourcesTest)
 	envTest.Install(os.path.abspath('..') + "/bin", test)
 	envProf = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.op')
-	envProf.Append(CCFLAGS = '-g -O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
+	envProf.Append(CCFLAGS = '-g -O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
 	prof = envProf.Program('dramSimII.prof',sourceFile)
 	envProf.Install(os.path.abspath('..') + "/bin", prof)
 	envProfgen = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opg')
-	envProfgen.Append(CCFLAGS = '-O3 -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -fprofile-generate -DNDEBUG -Wconversion -Wuninitialized')
+	envProfgen.Append(CCFLAGS = '-O3 -Wall -Wextra -funroll-loops -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -fprofile-generate -DNDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
 	profgen = envProfgen.Program('dramSimII.profgen', sourceFile)
 	envProfgen.Install(os.path.abspath('..') + "/bin", profgen)
 	envProfuse = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.opu')
@@ -176,12 +159,13 @@ elif platform == 'all':
 	profuse = envProfuse.Program('dramSimII.profuse', sourceFile)
 	envProfuse.Install(os.path.abspath('..') + "/bin", profuse)
 	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
-	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG')
+	envOpt.Append(CCFLAGS = '-O3 -funroll-loops -Wall -Wextra -Weffc++ -ffast-math -fomit-frame-pointer -finline-functions -mtune=native -march=native -DNDEBUG -D__STDC_LIMIT_MACROS')
 	opt = envOpt.Program('dramSimII.opt',sourceFile)
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)
 else:
-	envOpt = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.of')
-	#envOpt.Append(CCFLAGS = '-O3 -funroll-all-loops -ffast-math -fprefetch-loop-arrays -combine -fwhole-program -std=c++0x -Wall -Wextra -Wunused -pedantic -Weffc++  -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
-	envOpt.Append(CCFLAGS = '-O3 -funroll-all-loops -ffast-math -fprefetch-loop-arrays -std=c++0x -Wall -Wextra -Wunused -pedantic -Weffc++  -mtune=native -march=native -DNDEBUG -Wconversion -Wuninitialized')
+	envOpt = env.Clone(OBJSUFFIX='.of')
+	envOpt.Append(CPPPATH = includes)
+	envOpt.Append(CCFLAGS = flags)
+	envOpt.Append(CPPDEFINES = defines)
 	opt = envOpt.Program(target = 'dramSimII.opt',source = sourceFile)
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)

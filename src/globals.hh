@@ -16,16 +16,28 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 #pragma once
+//#define __STDC_LIMIT_MACROS
 
 #include <boost/iostreams/filtering_stream.hpp>
 #include <sstream>
 
 #include <limits>
 #include <cmath>
-#include <boost/integer_traits.hpp>
-#include <boost/cstdint.hpp>
 
 #include "enumTypes.hh"
+#ifdef _MSC_VER
+typedef __int64 int64_t;
+typedef __int64 uint64_t;
+#include <limits.h>
+#define TICK_MAX _I64_MAX
+#define TICK_MIN _I64_MIN
+#define PHYSICAL_ADDRESS_MAX _UI64_MAX
+#else
+#include <cstdint>
+#define TICK_MAX INT64_MAX
+#define TICK_MIN INT64_MIN
+#define PHYSICAL_ADDRESS_MAX UINT64_MAX
+#endif
 
 
 // global vars and functions
@@ -174,13 +186,21 @@ namespace DRAMsimII
 #define DEBUG_LOG(X)
 #endif
 
-	
-	typedef boost::int64_t tick;
-#define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
-#define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)
-	// x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
-	typedef boost::uint64_t PhysicalAddress;
-#define PHYSICAL_ADDRESS_MAX static_cast<PhysicalAddress>(boost::integer_traits<PhysicalAddress>::const_max)
+#ifdef _MSC_VER
+typedef __int64 PhysicalAddress;
+typedef __int64 tick;
+#else
+	typedef uint64_t PhysicalAddress;
+	typedef int64_t tick;
+#endif
+
+
+
+//	typedef boost::int64_t tick;
+//#define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
+//#define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)
+// x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
+//#define PHYSICAL_ADDRESS_MAX static_cast<PhysicalAddress>(boost::integer_traits<PhysicalAddress>::const_max)
 
 #define PI 3.1415926535897932384626433832795
 

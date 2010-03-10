@@ -33,11 +33,9 @@
 * Declaration of a LRU tag store.
 */
 
-#ifndef __LRU_HH__
-#define __LRU_HH__
+#ifndef __CACHE_HH__
+#define __CACHE_HH__
 
-#include <cassert>
-#include <cstring>
 #include <list>
 #include <vector>
 
@@ -45,7 +43,6 @@
 #include "base.hh"
 #include "../globals.hh"
 #include "../command.hh"
-#include "../Settings.hh"
 
 namespace DRAMsimII
 {
@@ -314,10 +311,9 @@ namespace DRAMsimII
 		*/
 		virtual void cleanupRefs();
 
-		Cache &operator=(const Cache& rhs);
-
-		std::ostream& operator<<(std::ostream&, const DRAMsimII::Cache::ReplacementPolicy);
+		Cache &operator=(const Cache& rhs);		
 	};
 
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Cache::ReplacementPolicy);
 }
-#endif // __LRU_HH__
+#endif // __CACHE_HH__

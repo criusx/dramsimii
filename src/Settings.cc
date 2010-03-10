@@ -60,7 +60,7 @@ refreshPolicy(NO_REFRESH),
 dramType(DDR),
 dataRate(800000000),
 commandOrderingAlgorithm(STRICT_ORDER),
-transactionOrderingAlgorithm(STRICT),
+transactionOrderingAlgorithm((TransactionOrderingAlgorithm)STRICT),
 systemType(BASELINE_CONFIG),
 perBankQueueDepth(),
 columnSize(0),
@@ -429,11 +429,11 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			break;
 		case transaction_ordering_policy_token:
 			if (nodeValue == "strict")
-				transactionOrderingAlgorithm = STRICT;
+				transactionOrderingAlgorithm = (TransactionOrderingAlgorithm)STRICT;
 			else if (nodeValue == "riff")
-				transactionOrderingAlgorithm = RIFF;
+				transactionOrderingAlgorithm = (TransactionOrderingAlgorithm)RIFF;
 			else
-				transactionOrderingAlgorithm = STRICT;						
+				transactionOrderingAlgorithm = (TransactionOrderingAlgorithm)STRICT;						
 			break;
 		case command_ordering_algorithm_token:
 			if (nodeValue == "strict")

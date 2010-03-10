@@ -22,13 +22,14 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#ifdef _MSC_VER
+typedef __int64 int64_t;
+typedef __int64 uint64_t;
+#else
+#include <cstdint>
+#endif
 
 #include "Channel.hh"
-#include "reporting/soapDRAMsimWSSoapHttpProxy.h"
-#include "reporting/DRAMsimWSSoapHttp.nsmap"
-
-#include <boost/thread.hpp>
-#include <boost/bind.hpp>
 
 using std::endl;
 using std::setw;
@@ -60,7 +61,6 @@ refreshCounter(settings.rankCount),
 systemConfig(sysConfig),
 statistics(stats),
 powerModel(settings),
-dbReporting(settings.dbReporting),
 rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig, stats)),
 finishedTransactions()
 {
@@ -113,7 +113,6 @@ systemConfig(systemConfig),
 statistics(stats),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
-dbReporting(rhs.dbReporting),
 // to initialize the references
 rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig, stats)),
 finishedTransactions()
@@ -143,7 +142,6 @@ systemConfig(sysConf),
 statistics(stats),
 powerModel(power),
 channelID(UINT_MAX),
-dbReporting(settings.dbReporting),
 rank(newRank)
 {}
 
@@ -163,7 +161,6 @@ systemConfig(rhs.systemConfig),
 statistics(rhs.statistics),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
-dbReporting(rhs.dbReporting),
 rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig, statistics)),
 finishedTransactions()
 {
@@ -588,9 +585,7 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 
 	float tRRDschAdjusted = 0.0F;
 
-	vector<int> rankArray;
-	vector<double> PsysACTSTBYArray, PsysACTArray;
-	unsigned totalReadHits = 0;
+	uint64_t totalReadHits = 0;
 
 	os << "+ch[" << channelID << "]";
 	
@@ -598,7 +593,7 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 	{
 		unsigned thisRankRasCount = 1;
 		
-		rankArray.push_back(k->getRankID());
+		//rankArray.push_back(k->getRankID());
 
 		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); ++l)
 		{
@@ -636,7 +631,7 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 		PsysACT_STBY += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() *
 			powerModel.getFrequencyScaleFactor() * PschACT_STBY;
 
-		PsysACTSTBYArray.push_back(PsysACT_STBY);
+		//PsysACTSTBYArray.push_back(PsysACT_STBY);
 
 		// calculate PsysPRE-STBY
 		double PschPRE_STBY = powerModel.getPdsPRE_STBY() * (1.0 - percentActive) * (1 - CKE_LO_PRE);
@@ -669,7 +664,7 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 
 		PsysACTAdjusted += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDschAdjusted) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
 
-		PsysACTArray.push_back(PsysACT);
+		//PsysACTArray.push_back(PsysACT);
 
 		double RDschPct = k->getReadCycles() / (double)(time - powerModel.getLastCalculation());
 
@@ -718,12 +713,7 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 
 	os << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << PsysWR << "} mW" << endl;
 
-	// report these results
-	if (dbReporting)
-	{
-		boost::thread(boost::bind(&DRAMsimII::Channel::sendPower,this,PsysRD, PsysWR, rankArray, PsysACTSTBYArray, PsysACTArray, systemTime));
-	}
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	// do speculative power calcs that leave out cache hits
 
@@ -775,41 +765,6 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 #endif
 	powerModel.setLastCalculation(time);
 }
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief sends power calculations off to a remote server, should be run incomingTransaction a separate thread
-/// @author Joe Gross
-//////////////////////////////////////////////////////////////////////////
-bool Channel::sendPower(double PsysRD, double PsysWR, vector<int> rankArray, vector<double> PsysACTSTBYArray, vector<double> PsysACTArray, const tick currentTime) const
-{
-	DRAMsimWSSoapHttp service;
-	_ns2__submitEpochResultElement submit;
-
-	string session(systemConfig.getSessionID());
-	submit.sessionID = &session;
-
-	submit.epoch = currentTime;
-
-	vector<int> channelArray(rank.size(),channelID);	
-	submit.channel = channelArray;
-
-	submit.rank = rankArray;
-
-	vector<float> ACTSTBYArray(PsysACTSTBYArray.size());
-	for (vector<float>::size_type i = 0; i < PsysACTSTBYArray.size(); ++i)
-		ACTSTBYArray[i] = PsysACTSTBYArray[i];
-	vector<float> ACTArray(PsysACTArray.size());
-	for (vector<float>::size_type i = 0; i < PsysACTArray.size() ; ++i)
-		ACTArray[i] = PsysACTArray[i];
-	submit.PsysACTSTBY = ACTSTBYArray;
-	submit.PsysACT = ACTArray;
-	submit.PsysRD = (float)PsysRD;
-	submit.PsysWR = (float)PsysWR;
-	_ns2__submitEpochResultResponseElement response;
-	int retVal = service.__ns1__submitEpochResult(&submit,&response);
-	return (retVal == 0);
-}
-
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief returns a pointer to the next transaction to issue to this channel without removing it
@@ -3155,7 +3110,6 @@ Channel& Channel::operator =(const Channel &rhs)
 	refreshCounter = rhs.refreshCounter;
 	channelID = rhs.channelID;
 	rank = rhs.rank;
-	dbReporting = rhs.dbReporting;
 	powerModel = rhs.powerModel;
 	timingSpecification = rhs.timingSpecification;
 

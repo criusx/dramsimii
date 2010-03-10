@@ -150,7 +150,7 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(0),
 banksPrecharged(0),
-tags(128,64,4,5),
+tags(128,64,4,5,0,Cache::LRU),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(newBank)
 {}

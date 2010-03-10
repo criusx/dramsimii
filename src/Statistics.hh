@@ -25,10 +25,16 @@
 
 #include <fstream>
 #include <map>
-#ifdef WIN32
+#ifdef _MSC_VER
 #include <unordered_map>
 #else
 #include <tr1/unordered_map>
+#endif
+#ifdef _MSC_VER
+typedef __int64 int64_t;
+typedef __int64 uint64_t;
+#else
+#include <cstdint>
 #endif
 
 #include <boost/serialization/base_object.hpp>
@@ -139,8 +145,6 @@ namespace DRAMsimII
 		};
 
 	protected:
-
-		typedef boost::uint64_t uint64_t;
 
 		const unsigned channels;
 		const unsigned ranks;

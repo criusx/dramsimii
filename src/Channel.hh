@@ -44,6 +44,7 @@ namespace DRAMsimII
 	{
 		// members
 	protected:
+
 		tick time;										///< channel time, allow for channel concurrency			
 		tick lastCommandIssueTime;						///< the last time a command was executed on this channel
 		const Command *lastCommand;						///< id of the last accessed rank of this channel
@@ -54,7 +55,6 @@ namespace DRAMsimII
 		Statistics &statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
-		bool dbReporting;								///< whether or not to report results to a db
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
 		//std::vector<Transaction *> refreshCounter;		///< holds the next refresh command time for the rank
@@ -146,7 +146,7 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-				ar & time & lastCommandIssueTime & transactionQueue & refreshCounter & channelID & dbReporting;
+				ar & time & lastCommandIssueTime & transactionQueue & refreshCounter & channelID;
 			}
 
 		}

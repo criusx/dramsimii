@@ -36,7 +36,6 @@ using std::setprecision;
 using std::setiosflags;
 using std::string;
 using std::pair;
-using boost::uint64_t;
 using std::vector;
 
 using namespace DRAMsimII;
