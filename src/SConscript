@@ -74,7 +74,8 @@ try:
 			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-generate', '-mtune=native']
 			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-use', '-mtune=native']
 			 '-finline-functions', '-march=native','-Wno-unused-variable', '-mtune=native']
-			,CPPDEFINES = ['M5', 'TRACE_GENERATE']
+			#,CPPDEFINES = ['M5', 'TRACE_GENERATE']
+			,CPPDEFINES = ['M5']
 			#,LINKFLAGS = ['-fprofile-use']
 			#,LINKFLAGS = ['-fprofile-generate']
 			)
@@ -128,7 +129,7 @@ Source('simulationParameters.cc')
 Source('Statistics.cc')
 Source('System.cc')
 Source('SystemConfiguration.cc')
-Source('TimingSpecificcion.cc')
+Source('TimingSpecification.cc')
 Source('transaction.cc')
 Source('reporting/soapC.cpp')
 Source('reporting/soapClient.cpp')

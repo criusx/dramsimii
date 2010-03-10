@@ -48,6 +48,9 @@
 			<cacheSize>8192</cacheSize>
 			<blockSize>64</blockSize>
 			<hitLatency>5</hitLatency>
+			<!-- nmru, lru -->
+			<replacementPolicy>nmru</replacementPolicy>
+			<nmruTrackingCount>4</nmruTrackingCount>
 		</cache>
 	</setup>
 	<timing>

@@ -132,7 +132,9 @@ IDD5(UINT_MAX),
 associativity(0),
 cacheSize(0),
 blockSize(0),
-hitLatency(0)
+hitLatency(0),
+replacementPolicy(Cache::LRU),
+nmruTrackingCount(UINT_MAX)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -188,6 +190,20 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			break;
 		case cache_blocksize_token:
 			blockSize = lexical_cast<unsigned>(nodeValue);
+			break;
+		case cache_replacementpolicy_token:
+			if (nodeValue == "lru")
+				replacementPolicy = Cache::LRU;
+			else if (nodeValue == "nmru")
+				replacementPolicy = Cache::NMRU;
+			else
+			{
+				cerr << "warn: unrecognized cache replacement policy";
+				replacementPolicy = Cache::LRU;
+			}
+			break;
+		case cache_nmrutrackingcount_token:
+			nmruTrackingCount = lexical_cast<unsigned>(nodeValue);
 			break;
 		case cpu_to_memory_clock_ratio:
 			cpuToMemoryClockRatio = lexical_cast<float>(nodeValue);

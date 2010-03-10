@@ -118,6 +118,12 @@ namespace DRAMsimII
 	{
 	public:
 
+		enum ReplacementPolicy
+		{
+			LRU,
+			NMRU
+		};
+
 		typedef DRAMsimII::PhysicalAddress Addr;
 		typedef boost::uint8_t uint8_t;
 		typedef DRAMsimII::tick tick;
@@ -130,34 +136,23 @@ namespace DRAMsimII
 		typedef std::list<LRUBlk*> BlkList;
 
 	protected:
-		/** The number of sets in the cache. */
-		const unsigned numSets;
-		/** The number of bytes in a block. */
-		const unsigned blkSize;
-		/** The associativity of the cache. */
-		const unsigned assoc;
-		/** The hit latency. */
-		const unsigned hitLatency;
 
-		/** The cache sets. */
-		std::vector<CacheSet> sets;
+		const unsigned numSets;					///< the number of sets
+		const unsigned blkSize;					///< the block size of the cache
+		const unsigned assoc;					///< the associativity of the cache
+		const unsigned hitLatency;				///< the hit latency
+		
+		std::vector<CacheSet> sets;				///< The cache sets.
+		std::vector<LRUBlk> blks;				///< The cache blocks.
+		std::vector<uint8_t> dataBlks;			///< The data blocks, 1 per cache block.
 
-		/** The cache blocks. */
-		std::vector<LRUBlk> blks;
-		/** The data blocks, 1 per cache block. */
-		std::vector<uint8_t> dataBlks;
-
-		/** The amount to shift the address to get the set. */
-		int setShift;
-		/** The amount to shift the address to get the tag. */
-		int tagShift;
-		/** Mask out all bits that aren't part of the set index. */
-		unsigned setMask;
-		/** Mask out all bits that aren't part of the block offset. */
-		unsigned blkMask;
-
-		/** Allocate a block for writes upon a write miss */
-		bool writeAllocate;
+		const int setShift;						///< The amount to shift the address to get the set.
+		const int tagShift;						///< The amount to shift the address to get the tag.
+		const unsigned setMask;					///< Mask out all bits that aren't part of the set index.
+		const unsigned blkMask;					///< Mask out all bits that aren't part of the block offset.
+		const bool writeAllocate;				///< Allocate a block for writes upon a write miss
+		const unsigned nmruCount;				///< the number of sets tracked when using the NMRU policy
+		ReplacementPolicy replacementPolicy;	///< the policy that dictates what cache block is evicted when necessary
 
 	public:
 		/**
@@ -168,7 +163,7 @@ namespace DRAMsimII
 		* @param _hit_latency The latency in cycles for a hit.
 		*/
 		Cache(unsigned _numSets, unsigned _blkSize, unsigned _assoc,
-			unsigned _hit_latency);
+			unsigned _hit_latency, unsigned _nmruCount, ReplacementPolicy _replacementPolicy);
 
 		Cache(const Cache&);
 
@@ -320,6 +315,8 @@ namespace DRAMsimII
 		virtual void cleanupRefs();
 
 		Cache &operator=(const Cache& rhs);
+
+		std::ostream& operator<<(std::ostream&, const DRAMsimII::Cache::ReplacementPolicy);
 	};
 
 }

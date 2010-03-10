@@ -14,7 +14,7 @@
 <!ELEMENT averageInterarrivalCycleCount (#PCDATA)>
 <!ELEMENT banks (#PCDATA)>
 <!ELEMENT blockSize (#PCDATA)>
-<!ELEMENT cache (associativity, cacheSize, blockSize, hitLatency) >
+<!ELEMENT cache (associativity, cacheSize, blockSize, hitLatency, replacementPolicy, nmruTrackingCount) >
 <!ELEMENT cacheLineSize (#PCDATA)>
 <!ELEMENT channelWidth (#PCDATA)>
 <!ELEMENT channels (#PCDATA)>
@@ -44,6 +44,7 @@ xsi:noNamespaceSchemaLocation CDATA #IMPLIED
 <!ELEMENT maxVCC (#PCDATA)>
 <!ELEMENT cacheSize (#PCDATA)>
 <!ELEMENT frequencySpec (#PCDATA)>
+<!ELEMENT nmruTrackingCount (#PCDATA)>
 <!ELEMENT outFile (#PCDATA)>
 <!ELEMENT outFileDirectory (#PCDATA)>
 <!ATTLIST outFile type (gz|bz|cout|uncompressed|none) #REQUIRED>
@@ -62,6 +63,7 @@ frequencySpec, maxVCC, systemVDD, IDD0,IDD1, IDD2P, IDD2N, IDD3P, IDD3N, IDD4R, 
 <!ELEMENT readWriteGrouping (#PCDATA)>
 <!ELEMENT refreshQueueDepth (#PCDATA)>
 <!ELEMENT refreshTime (#PCDATA)>
+<!ELEMENT replacementPolicy (#PCDATA)>
 <!ELEMENT requestCount (#PCDATA)>
 <!ELEMENT rowBufferPolicy (#PCDATA)>
 <!ELEMENT rowSize (#PCDATA)>

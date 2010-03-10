@@ -40,17 +40,18 @@
 
 #include <boost/assert.hpp>
 
-using namespace DRAMsimII;
 using DRAMsimII::Cache;
 using DRAMsimII::CacheSet;
 using std::cout;
+using std::cerr;
 using std::endl;
+using std::ostream;
 
 using DRAMsimII::isPowerOf2;
 using DRAMsimII::floorLog2;
 
 // create and initialize a LRU/MRU cache structure
-Cache::Cache(unsigned _numSets, unsigned _blkSize, unsigned _assoc,unsigned _hit_latency):
+Cache::Cache(unsigned _numSets, unsigned _blkSize, unsigned _assoc,unsigned _hit_latency, unsigned _nmruCount, ReplacementPolicy _replacementPolicy):
 numSets(_numSets),
 blkSize(_blkSize),
 assoc(_assoc),
@@ -62,7 +63,9 @@ setShift(floorLog2(blkSize)),
 tagShift(floorLog2(blkSize) + floorLog2(numSets)),
 setMask(numSets - 1),
 blkMask(blkSize - 1),
-writeAllocate(false)
+writeAllocate(false),
+nmruCount(_nmruCount),
+replacementPolicy(_replacementPolicy)
 {
 	// Check parameters
 	BOOST_ASSERT(blkSize >= 4 && isPowerOf2(blkSize));
@@ -70,19 +73,35 @@ writeAllocate(false)
 	BOOST_ASSERT(assoc > 0);
 	BOOST_ASSERT(hitLatency > 0);
 
-	// 	if (blkSize < 4 || !isPowerOf2(blkSize)) 
-	// 	{
-	// 		fatal("Block size must be at least 4 and a power of 2");
-	// 	}
-	// 	if (numSets <= 0 || !isPowerOf2(numSets)) {
-	// 		fatal("# of sets must be non-zero and a power of 2");
-	// 	}
-	// 	if (assoc <= 0) {
-	// 		fatal("associativity must be greater than zero");
-	// 	}
-	// 	if (hitLatency <= 0) {
-	// 		fatal("access latency must be greater than zero");
-	// 	}
+	if (replacementPolicy == Cache::NMRU)
+	{
+		if (nmruCount < 1)
+		{
+			cerr << "NMRU caches must be used with a count of >= 1" << endl;
+			exit(-2);
+		}
+	}
+
+	if (blkSize < 4 || !isPowerOf2(blkSize)) 
+	{
+		cerr << "Block size must be at least 4 and a power of 2" << endl;
+		exit(-2);
+	}
+	if (numSets <= 0 || !isPowerOf2(numSets)) 
+	{
+		cerr << "# of sets must be non-zero and a power of 2" << endl;
+		exit(-2);
+	}
+	if (assoc <= 0) 
+	{
+		cerr << "associativity must be greater than zero" << endl;
+		exit(-2);
+	}
+	if (hitLatency <= 0) 
+	{
+		cerr << "access latency must be greater than zero" << endl;
+		exit(-2);
+	}
 
 	//blkMask = blkSize - 1;
 	//setShift = floorLog2(blkSize);
@@ -143,7 +162,9 @@ setShift(rhs.setShift),
 tagShift(rhs.tagShift),
 setMask(rhs.setMask),
 blkMask(rhs.blkMask),
-writeAllocate(rhs.writeAllocate)
+writeAllocate(rhs.writeAllocate),
+nmruCount(rhs.nmruCount),
+replacementPolicy(rhs.replacementPolicy)
 {
 	unsigned blkIndex = 0;       // index into blks array
 	for (unsigned i = 0; i < numSets; ++i) 
@@ -192,8 +213,30 @@ setShift(floorLog2(settings.blockSize)),
 tagShift(floorLog2((settings.cacheSize * 1024) / settings.blockSize / settings.associativity) + floorLog2(settings.blockSize)), 
 setMask((settings.cacheSize * 1024) / settings.blockSize / settings.associativity - 1),
 blkMask(settings.blockSize - 1),
-writeAllocate(false)
+writeAllocate(false),
+nmruCount(settings.nmruTrackingCount)
 {
+	if (blkSize < 4 || !isPowerOf2(blkSize)) 
+	{
+		cerr << "Block size must be at least 4 and a power of 2" << endl;
+		exit(-2);
+	}
+	if (numSets <= 0 || !isPowerOf2(numSets)) 
+	{
+		cerr << "# of sets must be non-zero and a power of 2" << endl;
+		exit(-2);
+	}
+	if (assoc <= 0) 
+	{
+		cerr << "associativity must be greater than zero" << endl;
+		exit(-2);
+	}
+	if (hitLatency <= 0) 
+	{
+		cerr << "access latency must be greater than zero" << endl;
+		exit(-2);
+	}
+
 	unsigned blkIndex = 0;       // index into blks array
 	for (unsigned i = 0; i < numSets; ++i) 
 	{ // TODO switch this to work for copies
@@ -727,4 +770,22 @@ Cache &Cache::operator =(const Cache& rhs)
 	}
 
 	return *this;
+}
+
+
+ostream &DRAMsimII::operator<<(ostream &os, const Cache::ReplacementPolicy type)
+{
+	switch (type)
+	{
+	case Cache::LRU:
+		os << "LRU";
+		break;
+	case Cache::NMRU:
+		os << "NMRU";
+		break;
+	default:
+		os << "UNKWN  ";
+		break;
+	}
+	return os;
 }

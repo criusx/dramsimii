@@ -101,10 +101,13 @@ namespace DRAMsimII
 		auto_precharge_token,
 		average_interarrival_cycle_count,
 		bank_count_token,
+		// cache
 		cache_associativity_token,
 		cache_blocksize_token,
 		cache_hitlatency_token,
 		cache_size_token,
+		cache_replacementpolicy_token,
+		cache_nmrutrackingcount_token,
 		cachelines_per_row_token,
 		cacheline_size_token,
 		channel_count_token,

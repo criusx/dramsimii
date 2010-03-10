@@ -20,6 +20,7 @@
 #include "InputStream.hh"
 #include "Address.hh"
 #include "enumTypes.hh"
+#include "cache/cache.hh"
 
 #include <string>
 #include <iostream>
@@ -142,6 +143,8 @@ namespace DRAMsimII
 		unsigned cacheSize;		///< given in kiB
 		unsigned blockSize;
 		unsigned hitLatency;
+		Cache::ReplacementPolicy replacementPolicy;
+		unsigned nmruTrackingCount;
 	
 		bool setKeyValue(const std::string &nodeName, const std::string &nodeValue);
 		bool setKeyValue(const char* nodeName, const std::string &nodeValue) { std::string name(nodeName); return setKeyValue(name, nodeValue); }
@@ -170,6 +173,8 @@ namespace DRAMsimII
 			theMap[cache_blocksize_token] = "blockSize";
 			theMap[cache_size_token] = "cacheSize";
 			theMap[cache_hitlatency_token] = "hitLatency";
+			theMap[cache_replacementpolicy_token] = "replacementPolicy";
+			theMap[cache_nmrutrackingcount_token] = "nmruTrackingCount";
 
 			theMap[clock_granularity_token] = "clockGranularity";
 			theMap[channel_count_token] = "channels";
@@ -266,6 +271,9 @@ namespace DRAMsimII
 			theMap["associativity"] = cache_associativity_token;
 			theMap["blocksize"] = cache_blocksize_token;
 			theMap["cachesize"] = cache_size_token;
+			theMap["replacementpolicy"] = cache_replacementpolicy_token;
+			theMap["nmrutrackingcount"] = cache_nmrutrackingcount_token;
+
 			theMap["type"]=dram_type_token;
 			theMap["dbreporting"]=dbreporting_token;
 			theMap["datarate"]=datarate_token;
@@ -530,7 +538,7 @@ namespace DRAMsimII
 				rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS & tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI &
 				tRFC & tRP & tRRD & tRTP & tWR & tCMD & tInternalBurst & tBufferDelay & cpuToMemoryClockRatio & PdqRD & PdqWR & PdqRDoth &
 				PdqWRoth & DQperDRAM & DQSperDRAM & DMperDRAM & frequencySpec & maxVCC & VDD & IDD0 & IDD1 & IDD2P & IDD2N & IDD3P & IDD3N & IDD4W &
-				IDD4R & IDD5 & associativity & hitLatency & cacheSize & blockSize;
+				IDD4R & IDD5 & associativity & hitLatency & cacheSize & blockSize & nmruTrackingCount & replacementPolicy;
 		}
 	};
 }

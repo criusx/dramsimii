@@ -47,6 +47,7 @@ namespace DRAMsimII
 	class Bank;
 	class Rank;
 	class BusEvent;
+	class Cache;
 
 	void unitTests(const Settings &settings);
 	
@@ -61,12 +62,13 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::fbdFrame&);	
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandOrderingAlgorithm coa);
-	std::ostream& operator<<(std::ostream&, const RowBufferPolicy rbp);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::SystemConfigurationType ct);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::RefreshPolicy rp);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionOrderingAlgorithm toa);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::OutputFileType ot);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandOrderingAlgorithm);
+	std::ostream& operator<<(std::ostream&, const RowBufferPolicy);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::SystemConfigurationType);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::RefreshPolicy);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionOrderingAlgorithm);
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::OutputFileType);
+	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Cache::ReplacementPolicy);
 
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)
