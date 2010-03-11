@@ -678,8 +678,25 @@ LRUBlk *Cache::findBlock(Addr addr) const
 LRUBlk *Cache::findVictim(Addr addr, PacketList &writebacks)
 {
 	unsigned set = extractSet(addr);
-	// grab a replacement candidate
-	LRUBlk *blk = sets[set].blks[assoc-1];
+
+	LRUBlk *blk;
+
+	switch (replacementPolicy)
+	{
+	case Cache::LRU:
+		// grab a replacement candidate
+		blk = sets[set].blks[assoc-1];
+		
+		break;
+
+	case Cache::NMRU:
+		{
+			int index = rand() % (assoc - nmruCount);
+			blk = sets[set].blks[nmruCount + index];
+		}
+break;
+	}
+
 	if (blk->isValid()) 
 	{
 		replacements[0]++;
@@ -690,6 +707,7 @@ LRUBlk *Cache::findVictim(Addr addr, PacketList &writebacks)
 		//         DPRINTF(CacheRepl, "set %x: selecting blk %x for replacement\n",
 		//                 set, regenerateBlkAddr(blk->tag, set));
 	}
+
 	return blk;
 }
 

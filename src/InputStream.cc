@@ -524,12 +524,18 @@ Transaction *InputStream::getNextIncomingTransaction(const unsigned transactionI
 			double timestamp;
 			string input;
 			traceFile >> hex >> tempPA >> input >> dec >> timestamp >> hex >> PC;
-			//cerr << "warn: timestamp adjusted incorrectly to compensate for older trace files" << endl;
 			tick arrivalTime = (timestamp * 1E-10) * systemConfig.Frequency();
 
 			if (!traceFile.good()) /// found starting Hex address
 			{
-				cerr << "Unexpected EOF, Please fix input trace file" << endl;
+				if (traceFile.eof())
+					cerr << "Unexpected EOF, Please fix input trace file" << endl;
+				else if (traceFile.bad())
+					cerr << "Bad data in the stream" << endl;
+				else if (traceFile.fail())
+				{
+					cerr << "Failure reading stream: fail bit set" << endl;
+				}
 				return NULL;
 			}
 

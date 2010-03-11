@@ -27,7 +27,8 @@
 #include "enumTypes.hh"
 #ifdef _MSC_VER
 typedef __int64 int64_t;
-typedef __int64 uint64_t;
+#include <boost/cstdint.hpp>
+//typedef boost::uint64_t uint64_t;
 #include <limits.h>
 #define TICK_MAX _I64_MAX
 #define TICK_MIN _I64_MIN
@@ -187,7 +188,7 @@ namespace DRAMsimII
 #endif
 
 #ifdef _MSC_VER
-typedef __int64 PhysicalAddress;
+	typedef boost::uint64_t PhysicalAddress;
 typedef __int64 tick;
 #else
 	typedef uint64_t PhysicalAddress;

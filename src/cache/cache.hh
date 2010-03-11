@@ -251,7 +251,7 @@ namespace DRAMsimII
 		* @param addr The address to get the tag from.
 		* @return The tag of the address.
 		*/
-		Addr extractTag(Addr addr) const
+		inline Addr extractTag(Addr addr) const
 		{
 			return (addr >> tagShift);
 		}
@@ -261,7 +261,7 @@ namespace DRAMsimII
 		* @param addr The address to get the set from.
 		* @return The set index of the address.
 		*/
-		Addr extractSet(Addr addr) const
+		inline Addr extractSet(Addr addr) const
 		{
 			return ((addr >> setShift) & setMask);
 		}
@@ -271,7 +271,7 @@ namespace DRAMsimII
 		* @param addr The address to get the offset of.
 		* @return The block offset.
 		*/
-		Addr extractBlkOffset(Addr addr) const
+		inline Addr extractBlkOffset(Addr addr) const
 		{
 			return (addr & blkMask);
 		}
