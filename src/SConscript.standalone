@@ -37,6 +37,20 @@ if not conf.CheckLib('xml2'):
 	print "Need libxml2 to compile this."
 	print "e.g. sudo apt-get install \".*libxml2.*\""
 	Exit(1)
+if (platform == 'script' or platform == 'scriptDebug'):
+	if not conf.CheckLib('boost_thread'):
+		print 'Boost thread library not found, please install this.'
+		print 'e.g. sudo apt-get install libboost-thread-dev*"'
+		Exit(1)
+	if not conf.CheckLib('boost_signals'):
+		print 'Boost signals library not found, please install this.'
+		print 'e.g. sudo apt-get install "libboost-signals*"'
+		Exit(1)
+	if not conf.CheckLib('boost_regex'):
+		print 'Boost regex library not found, please install this.'
+		print 'e.g. sudo apt-get install "libboost-regex*"'
+		Exit(1)
+
 
 sourceBase = ['cache/cache.cc',
 			'Address.cc',
@@ -88,13 +102,13 @@ if platform == 'script':
 	env.Append(OBJSUFFIX='.os')
 	env.Append(CCFLAGS = optFlags)
 	env.Append(CPPDEFINES = optDefines)
-	script = env.Program('processStats',"../scripts/processStats.cpp")
+	script = env.Program('processStats',"../scripts/processStats.cc")
 	env.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd')
 	envScriptD.Append(CCFLAGS = debugFlags)
 	envScriptD.Append(CPPDEFINES = debugDefines)
-	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cpp")
+	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cc")
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
 	env.Append(OBJSUFFIX='.og')

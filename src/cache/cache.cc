@@ -830,8 +830,20 @@ ostream &DRAMsimII::operator<<(ostream &os, const Cache::ReplacementPolicy type)
 	case Cache::NMRU:
 		os << "NMRU";
 		break;
+	case Cache::MRU:
+		os << "MRU";
+		break;
+	case Cache::LFU:
+		os << "LFU";
+		break;
+	case Cache::RAND:
+		os << "RAND";
+		break;
+	case Cache::FIFO:
+		os << "FIFO";
+		break;
 	default:
-		os << "UNKWN  ";
+		os << "UNKWN";
 		break;
 	}
 	return os;
