@@ -1,108 +1,114 @@
 \section{DRAMsimII::System Class Reference}
 \label{class_d_r_a_msim_i_i_1_1_system}\index{DRAMsimII::System@{DRAMsimII::System}}
+
+
 represents a DRAM system, the memory controller(s) and associated channels  
 
 
-{\tt \#include $<$System.h$>$}
+
+
+{\ttfamily \#include $<$System.hh$>$}
+
+
 
 Inherited by {\bf DRAMsimII::fbdSystem}.
 
+
+
 Collaboration diagram for DRAMsimII::System:\subsection*{Public Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
 bool {\bf moveToTime} (const tick endTime)
-\begin{CompactList}\small\item\em moves all channels to the specified time \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em moves all channels to the specified time \item\end{DoxyCompactList}\item 
 bool {\bf enqueue} ({\bf Transaction} $\ast$trans)
-\begin{CompactList}\small\item\em enqueue the transaction \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em enqueue the transaction \item\end{DoxyCompactList}\item 
 virtual tick {\bf nextTick} () const 
-\begin{CompactList}\small\item\em returns the time at which the next event happens \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em returns the time at which the next event happens \item\end{DoxyCompactList}\item 
 void {\bf runSimulations} (const unsigned requestCount=0)
-\begin{CompactList}\small\item\em automatically runs the simulations according to the set parameters \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em automatically runs the simulations according to the set parameters \item\end{DoxyCompactList}\item 
 unsigned {\bf pendingTransactionCount} () const 
-\begin{CompactList}\small\item\em the number of finished transactions queued up due to moving the channel to a time \item\end{CompactList}\item 
-void {\bf getPendingTransactions} (std::queue$<$ std::pair$<$ unsigned, tick $>$ $>$ \&)\label{class_d_r_a_msim_i_i_1_1_system_96cf2bc6d42da76ab0133681d5df7ba3}
+\begin{DoxyCompactList}\small\item\em the number of finished transactions queued up due to moving the channel to a time \item\end{DoxyCompactList}\item 
+void {\bf getPendingTransactions} (std::queue$<$ std::pair$<$ unsigned, tick $>$ $>$ \&)\label{class_d_r_a_msim_i_i_1_1_system_a96cf2bc6d42da76ab0133681d5df7ba3}
 
-\begin{CompactList}\small\item\em move all the pending, finished transactions into a new queue \item\end{CompactList}\item 
-bool {\bf isFull} (const unsigned channelNumber) const \label{class_d_r_a_msim_i_i_1_1_system_268b8fa934e711a2dc6427cad866bf97}
+\begin{DoxyCompactList}\small\item\em move all the pending, finished transactions into a new queue \item\end{DoxyCompactList}\item 
+bool {\bf isFull} (const unsigned channelNumber) const \label{class_d_r_a_msim_i_i_1_1_system_a268b8fa934e711a2dc6427cad866bf97}
 
-\begin{CompactList}\small\item\em returns true if this channel has no more room \item\end{CompactList}\item 
-double {\bf Frequency} () const \label{class_d_r_a_msim_i_i_1_1_system_f5186162aea9ca2960aee28913853694}
+\begin{DoxyCompactList}\small\item\em returns true if this channel has no more room \item\end{DoxyCompactList}\item 
+double {\bf Frequency} () const \label{class_d_r_a_msim_i_i_1_1_system_af5186162aea9ca2960aee28913853694}
 
-\begin{CompactList}\small\item\em accessor to get the frequency of the DRAM system \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em accessor to get the frequency of the DRAM system \item\end{DoxyCompactList}\item 
 void {\bf resetToTime} (const tick {\bf time})
-\begin{CompactList}\small\item\em resets various counters to account for the fact that time starts now \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em resets various counters to account for the fact that time starts now \item\end{DoxyCompactList}\item 
 bool {\bf isEmpty} () const 
-\begin{CompactList}\small\item\em function to determine if there are any commands or transactions pending in this system \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em function to determine if there are any commands or transactions pending in this system \item\end{DoxyCompactList}\item 
 {\bf System} (const {\bf Settings} \&settings)
-\begin{CompactList}\small\item\em constructor for a dramSystem, based on dramSettings \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em constructor for a dramSystem, based on dramSettings \item\end{DoxyCompactList}\item 
 {\bf System} (const {\bf System} \&rhs)
-\begin{CompactList}\small\item\em copy constructor \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em copy constructor \item\end{DoxyCompactList}\item 
 bool {\bf operator==} (const {\bf System} \&rhs) const 
-\begin{CompactList}\small\item\em equality operator for the \doxyref{System}{p.}{class_d_r_a_msim_i_i_1_1_system} object \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em equality operator for the \doxyref{System}{p.}{class_d_r_a_msim_i_i_1_1_system} object \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
 unsigned {\bf findOldestChannel} () const 
-\begin{CompactList}\small\item\em goes through each channel to find the channel whose time is the least \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em goes through each channel to find the channel whose time is the least \item\end{DoxyCompactList}\item 
 void {\bf updateSystemTime} ()
-\begin{CompactList}\small\item\em updates the system time to be the same as that of the oldest channel \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em updates the system time to be the same as that of the oldest channel \item\end{DoxyCompactList}\item 
 void {\bf checkStats} ()
-\begin{CompactList}\small\item\em decides if enough time has passed to do a new power calculation \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em decides if enough time has passed to do a new power calculation \item\end{DoxyCompactList}\item 
 virtual void {\bf doPowerCalculation} ()
-\begin{CompactList}\small\item\em calculate and print the power consumption for each channel \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em calculate and print the power consumption for each channel \item\end{DoxyCompactList}\item 
 virtual void {\bf printStatistics} ()
-\begin{CompactList}\small\item\em prints out the statistics accumulated so far and about the current epoch \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em prints out the statistics accumulated so far and about the current epoch \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-const {\bf SystemConfiguration} {\bf systemConfig}\label{class_d_r_a_msim_i_i_1_1_system_5ff9102e89eb322f40a1901e000f639f}
+const {\bf SystemConfiguration} {\bf systemConfig}\label{class_d_r_a_msim_i_i_1_1_system_a5ff9102e89eb322f40a1901e000f639f}
 
-\begin{CompactList}\small\item\em stores the parameters for the DRAM system, including channel/rank/bank/row counts \item\end{CompactList}\item 
-{\bf SimulationParameters} {\bf simParameters}\label{class_d_r_a_msim_i_i_1_1_system_f378cf9783fb71615226c48438af37fa}
+\begin{DoxyCompactList}\small\item\em stores the parameters for the DRAM system, including channel/rank/bank/row counts \item\end{DoxyCompactList}\item 
+{\bf SimulationParameters} {\bf simParameters}\label{class_d_r_a_msim_i_i_1_1_system_af378cf9783fb71615226c48438af37fa}
 
-\begin{CompactList}\small\item\em has all the necessary parameters for the simulation run \item\end{CompactList}\item 
-{\bf Statistics} {\bf statistics}\label{class_d_r_a_msim_i_i_1_1_system_5c507dca818f43487519747691f56f4d}
+\begin{DoxyCompactList}\small\item\em has all the necessary parameters for the simulation run \item\end{DoxyCompactList}\item 
+{\bf Statistics} {\bf statistics}\label{class_d_r_a_msim_i_i_1_1_system_a5c507dca818f43487519747691f56f4d}
 
-\begin{CompactList}\small\item\em keeps running statistics about the simulation \item\end{CompactList}\item 
-std::vector$<$ {\bf Channel} $>$ {\bf channel}\label{class_d_r_a_msim_i_i_1_1_system_632b89a30258d92a11c83d922fdcc3f9}
+\begin{DoxyCompactList}\small\item\em keeps running statistics about the simulation \item\end{DoxyCompactList}\item 
+std::vector$<$ {\bf Channel} $>$ {\bf channel}\label{class_d_r_a_msim_i_i_1_1_system_a632b89a30258d92a11c83d922fdcc3f9}
 
-\begin{CompactList}\small\item\em represents the independent channels \item\end{CompactList}\item 
-{\bf InputStream} {\bf inputStream}\label{class_d_r_a_msim_i_i_1_1_system_0d8ddaa538206fa276de9b13df216c92}
+\begin{DoxyCompactList}\small\item\em represents the independent channels \item\end{DoxyCompactList}\item 
+{\bf InputStream} {\bf inputStream}\label{class_d_r_a_msim_i_i_1_1_system_a0d8ddaa538206fa276de9b13df216c92}
 
-\begin{CompactList}\small\item\em provides an interface to the input trace for the simulation \item\end{CompactList}\item 
-tick {\bf time}\label{class_d_r_a_msim_i_i_1_1_system_d1d3bf27bb3180101b65a3cb1e37d28e}
+\begin{DoxyCompactList}\small\item\em provides an interface to the input trace for the simulation \item\end{DoxyCompactList}\item 
+tick {\bf time}\label{class_d_r_a_msim_i_i_1_1_system_ad1d3bf27bb3180101b65a3cb1e37d28e}
 
-\begin{CompactList}\small\item\em master clock, usually set to the oldest channel's time \item\end{CompactList}\item 
-tick {\bf nextStats}\label{class_d_r_a_msim_i_i_1_1_system_fa5484a46e6c8e2555f1b8381448f736}
+\begin{DoxyCompactList}\small\item\em master clock, usually set to the oldest channel's time \item\end{DoxyCompactList}\item 
+tick {\bf nextStats}\label{class_d_r_a_msim_i_i_1_1_system_afa5484a46e6c8e2555f1b8381448f736}
 
-\begin{CompactList}\small\item\em the next time at which stats should be collected \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the next time at which stats should be collected \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-represents a DRAM system, the memory controller(s) and associated channels 
-
-contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks statistics, ability to read input streams, handle asynchronous requests, return requests at certain times \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
+represents a DRAM system, the memory controller(s) and associated channels contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks statistics, ability to read input streams, handle asynchronous requests, return requests at certain times \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
 
 
 \subsection{Constructor \& Destructor Documentation}
 \index{DRAMsimII::System@{DRAMsimII::System}!System@{System}}
 \index{System@{System}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{System}]{\setlength{\rightskip}{0pt plus 5cm}System::System (const {\bf Settings} \& {\em settings})\hspace{0.3cm}{\tt  [explicit]}}\label{class_d_r_a_msim_i_i_1_1_system_5458ffb64e5674ab02242e72e18207a1}
+\subsubsection[{System}]{\setlength{\rightskip}{0pt plus 5cm}System::System (const {\bf Settings} \& {\em settings})\hspace{0.3cm}{\ttfamily  [explicit]}}\label{class_d_r_a_msim_i_i_1_1_system_a5458ffb64e5674ab02242e72e18207a1}
 
 
 constructor for a dramSystem, based on dramSettings 
 
-\begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em settings}]the settings that define what the system should look like \end{description}
-\end{Desc}
+\begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em settings}]the settings that define what the system should look like \end{DoxyParams}
 \index{DRAMsimII::System@{DRAMsimII::System}!System@{System}}
 \index{System@{System}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{System}]{\setlength{\rightskip}{0pt plus 5cm}System::System (const {\bf System} \& {\em rhs})\hspace{0.3cm}{\tt  [explicit]}}\label{class_d_r_a_msim_i_i_1_1_system_1c77a21291a0ea8d4ac9f13916a22fe6}
+\subsubsection[{System}]{\setlength{\rightskip}{0pt plus 5cm}System::System (const {\bf System} \& {\em rhs})\hspace{0.3cm}{\ttfamily  [explicit]}}\label{class_d_r_a_msim_i_i_1_1_system_a1c77a21291a0ea8d4ac9f13916a22fe6}
 
 
 copy constructor 
@@ -112,148 +118,157 @@ will copy channel 0 into all the other channels via copy constructor and then us
 \subsection{Member Function Documentation}
 \index{DRAMsimII::System@{DRAMsimII::System}!checkStats@{checkStats}}
 \index{checkStats@{checkStats}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{checkStats}]{\setlength{\rightskip}{0pt plus 5cm}void System::checkStats ()\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_system_4f2d1c8ef8f9db004ef9c8d8933037b0}
+\subsubsection[{checkStats}]{\setlength{\rightskip}{0pt plus 5cm}void System::checkStats ()\hspace{0.3cm}{\ttfamily  [protected]}}\label{class_d_r_a_msim_i_i_1_1_system_a4f2d1c8ef8f9db004ef9c8d8933037b0}
 
 
 decides if enough time has passed to do a new power calculation 
 
 or stats calculation, if so, aggregate and report results \index{DRAMsimII::System@{DRAMsimII::System}!doPowerCalculation@{doPowerCalculation}}
 \index{doPowerCalculation@{doPowerCalculation}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{doPowerCalculation}]{\setlength{\rightskip}{0pt plus 5cm}void System::doPowerCalculation ()\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_msim_i_i_1_1_system_d8e50ab153b57dd2ac869061da0e9f76}
+\subsubsection[{doPowerCalculation}]{\setlength{\rightskip}{0pt plus 5cm}void System::doPowerCalculation ()\hspace{0.3cm}{\ttfamily  [protected, virtual]}}\label{class_d_r_a_msim_i_i_1_1_system_ad8e50ab153b57dd2ac869061da0e9f76}
 
 
 calculate and print the power consumption for each channel 
 
-\begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
+\begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
 \index{DRAMsimII::System@{DRAMsimII::System}!enqueue@{enqueue}}
 \index{enqueue@{enqueue}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{enqueue}]{\setlength{\rightskip}{0pt plus 5cm}bool System::enqueue ({\bf Transaction} $\ast$ {\em currentTransaction})}\label{class_d_r_a_msim_i_i_1_1_system_d489216e40658d17aa7734505333d951}
+\subsubsection[{enqueue}]{\setlength{\rightskip}{0pt plus 5cm}bool System::enqueue ({\bf Transaction} $\ast$ {\em currentTransaction})}\label{class_d_r_a_msim_i_i_1_1_system_ad489216e40658d17aa7734505333d951}
 
 
 enqueue the transaction 
 
-attempts to enqueue the transaction in the correct channel also sets the enqueue time to the current time \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em currentTransaction}]the transaction to be added to the per-channel queues \end{description}
-\end{Desc}
-\begin{Desc}
-\item[Returns:]true if the transaction was able to be enqueued \end{Desc}
+attempts to enqueue the transaction in the correct channel also sets the enqueue time to the current time \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em currentTransaction}]the transaction to be added to the per-\/channel queues \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the transaction was able to be enqueued 
+\end{DoxyReturn}
 \index{DRAMsimII::System@{DRAMsimII::System}!findOldestChannel@{findOldestChannel}}
 \index{findOldestChannel@{findOldestChannel}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{findOldestChannel}]{\setlength{\rightskip}{0pt plus 5cm}unsigned System::findOldestChannel () const\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_system_431477fc88402236be80b9d9cffaa792}
+\subsubsection[{findOldestChannel}]{\setlength{\rightskip}{0pt plus 5cm}unsigned System::findOldestChannel () const\hspace{0.3cm}{\ttfamily  [protected]}}\label{class_d_r_a_msim_i_i_1_1_system_a431477fc88402236be80b9d9cffaa792}
 
 
 goes through each channel to find the channel whose time is the least 
 
-\begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Returns:]the ordinal of the oldest channel \end{Desc}
+\begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+the ordinal of the oldest channel 
+\end{DoxyReturn}
 \index{DRAMsimII::System@{DRAMsimII::System}!isEmpty@{isEmpty}}
 \index{isEmpty@{isEmpty}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{isEmpty}]{\setlength{\rightskip}{0pt plus 5cm}bool System::isEmpty () const}\label{class_d_r_a_msim_i_i_1_1_system_0f7a38eb1f4710f2ea7d6058a22126cf}
+\subsubsection[{isEmpty}]{\setlength{\rightskip}{0pt plus 5cm}bool System::isEmpty () const}\label{class_d_r_a_msim_i_i_1_1_system_a0f7a38eb1f4710f2ea7d6058a22126cf}
 
 
 function to determine if there are any commands or transactions pending in this system 
 
-\begin{Desc}
-\item[Returns:]true if there are any transactions or commands in the queues, false otherwise \end{Desc}
+\begin{DoxyReturn}{Returns}
+true if there are any transactions or commands in the queues, false otherwise 
+\end{DoxyReturn}
 \index{DRAMsimII::System@{DRAMsimII::System}!moveToTime@{moveToTime}}
 \index{moveToTime@{moveToTime}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{moveToTime}]{\setlength{\rightskip}{0pt plus 5cm}bool System::moveToTime (const tick {\em endTime})}\label{class_d_r_a_msim_i_i_1_1_system_b82db2005e93bd298b3737e7c6381db6}
+\subsubsection[{moveToTime}]{\setlength{\rightskip}{0pt plus 5cm}bool System::moveToTime (const tick {\em endTime})}\label{class_d_r_a_msim_i_i_1_1_system_ab82db2005e93bd298b3737e7c6381db6}
 
 
 moves all channels to the specified time 
 
-if a transaction completes before the end time is reached, it is returned and transFinishTime variable is set \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em endTime}]the time which the channels should be moved to, finishing and queuing transactions as R/W finish \end{description}
-\end{Desc}
-\begin{Desc}
-\item[Returns:]a transaction which finished somewhere before the end time \end{Desc}
+if a transaction completes before the end time is reached, it is returned and transFinishTime variable is set \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em endTime}]the time which the channels should be moved to, finishing and queuing transactions as R/W finish \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a transaction which finished somewhere before the end time 
+\end{DoxyReturn}
 \index{DRAMsimII::System@{DRAMsimII::System}!nextTick@{nextTick}}
 \index{nextTick@{nextTick}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{nextTick}]{\setlength{\rightskip}{0pt plus 5cm}tick System::nextTick () const\hspace{0.3cm}{\tt  [virtual]}}\label{class_d_r_a_msim_i_i_1_1_system_fabcd4ee36a5d14c40f0b080f25e3225}
+\subsubsection[{nextTick}]{\setlength{\rightskip}{0pt plus 5cm}tick System::nextTick () const\hspace{0.3cm}{\ttfamily  [virtual]}}\label{class_d_r_a_msim_i_i_1_1_system_afabcd4ee36a5d14c40f0b080f25e3225}
 
 
 returns the time at which the next event happens 
 
 returns the time when the memory system next has an event\par
- the event may either be a conversion of a transaction into commands or it may be the the next time a command may be issued \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Returns:]the time of the next event, or TICK\_\-MAX if there was no next event found \end{Desc}
+ the event may either be a conversion of a transaction into commands or it may be the the next time a command may be issued \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+the time of the next event, or TICK\_\-MAX if there was no next event found 
+\end{DoxyReturn}
 \begin{Desc}
 \item[{\bf Todo}]should always be a next event due to perpetual stats collection, could throw an exception when there are no stats being collected \end{Desc}
 \index{DRAMsimII::System@{DRAMsimII::System}!operator==@{operator==}}
 \index{operator==@{operator==}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool System::operator== (const {\bf System} \& {\em rhs}) const}\label{class_d_r_a_msim_i_i_1_1_system_06f2eba0211e0cc8b681ddd2c3183803}
+\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool System::operator== (const {\bf System} \& {\em rhs}) const}\label{class_d_r_a_msim_i_i_1_1_system_a06f2eba0211e0cc8b681ddd2c3183803}
 
 
 equality operator for the \doxyref{System}{p.}{class_d_r_a_msim_i_i_1_1_system} object 
 
-\begin{Desc}
-\item[Returns:]true if the systems are equivalent \end{Desc}
+\begin{DoxyReturn}{Returns}
+true if the systems are equivalent 
+\end{DoxyReturn}
 \index{DRAMsimII::System@{DRAMsimII::System}!pendingTransactionCount@{pendingTransactionCount}}
 \index{pendingTransactionCount@{pendingTransactionCount}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{pendingTransactionCount}]{\setlength{\rightskip}{0pt plus 5cm}unsigned System::pendingTransactionCount () const}\label{class_d_r_a_msim_i_i_1_1_system_f1b69ba45e08937df7c8611311a69bc9}
+\subsubsection[{pendingTransactionCount}]{\setlength{\rightskip}{0pt plus 5cm}unsigned System::pendingTransactionCount () const}\label{class_d_r_a_msim_i_i_1_1_system_af1b69ba45e08937df7c8611311a69bc9}
 
 
 the number of finished transactions queued up due to moving the channel to a time 
 
-\begin{Desc}
-\item[Returns:]the number of transactions waiting in the queue \end{Desc}
+\begin{DoxyReturn}{Returns}
+the number of transactions waiting in the queue 
+\end{DoxyReturn}
 \index{DRAMsimII::System@{DRAMsimII::System}!printStatistics@{printStatistics}}
 \index{printStatistics@{printStatistics}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{printStatistics}]{\setlength{\rightskip}{0pt plus 5cm}void System::printStatistics ()\hspace{0.3cm}{\tt  [protected, virtual]}}\label{class_d_r_a_msim_i_i_1_1_system_94bba53dcf863cae4f965560d4875212}
+\subsubsection[{printStatistics}]{\setlength{\rightskip}{0pt plus 5cm}void System::printStatistics ()\hspace{0.3cm}{\ttfamily  [protected, virtual]}}\label{class_d_r_a_msim_i_i_1_1_system_a94bba53dcf863cae4f965560d4875212}
 
 
 prints out the statistics accumulated so far and about the current epoch 
 
-\begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
+\begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
 \index{DRAMsimII::System@{DRAMsimII::System}!resetToTime@{resetToTime}}
 \index{resetToTime@{resetToTime}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{resetToTime}]{\setlength{\rightskip}{0pt plus 5cm}void System::resetToTime (const tick {\em time})}\label{class_d_r_a_msim_i_i_1_1_system_95f4c59635520b99f1b614331c14e606}
+\subsubsection[{resetToTime}]{\setlength{\rightskip}{0pt plus 5cm}void System::resetToTime (const tick {\em time})}\label{class_d_r_a_msim_i_i_1_1_system_a95f4c59635520b99f1b614331c14e606}
 
 
 resets various counters to account for the fact that time starts now 
 
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em time}]the time to reset things to begin at \end{description}
-\end{Desc}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em time}]the time to reset things to begin at \end{DoxyParams}
 \index{DRAMsimII::System@{DRAMsimII::System}!runSimulations@{runSimulations}}
 \index{runSimulations@{runSimulations}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{runSimulations}]{\setlength{\rightskip}{0pt plus 5cm}void System::runSimulations (const unsigned {\em requestCount} = {\tt 0})}\label{class_d_r_a_msim_i_i_1_1_system_3074458953300d9bb6f8d0c13cb8dee7}
+\subsubsection[{runSimulations}]{\setlength{\rightskip}{0pt plus 5cm}void System::runSimulations (const unsigned {\em requestCount} = {\ttfamily 0})}\label{class_d_r_a_msim_i_i_1_1_system_a3074458953300d9bb6f8d0c13cb8dee7}
 
 
 automatically runs the simulations according to the set parameters 
 
 runs either until the trace file runs out or the request count reaches zero\par
  will print power and general stats at regular intervals\par
- pulls data from either a trace file or generates random requests according to parameters \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
+ pulls data from either a trace file or generates random requests according to parameters \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
 \index{DRAMsimII::System@{DRAMsimII::System}!updateSystemTime@{updateSystemTime}}
 \index{updateSystemTime@{updateSystemTime}!DRAMsimII::System@{DRAMsimII::System}}
-\subsubsection[{updateSystemTime}]{\setlength{\rightskip}{0pt plus 5cm}void System::updateSystemTime ()\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_system_da0fef31a04eb85e71d1c4bac8276ed2}
+\subsubsection[{updateSystemTime}]{\setlength{\rightskip}{0pt plus 5cm}void System::updateSystemTime ()\hspace{0.3cm}{\ttfamily  [protected]}}\label{class_d_r_a_msim_i_i_1_1_system_ada0fef31a04eb85e71d1c4bac8276ed2}
 
 
 updates the system time to be the same as that of the oldest channel 
 
-\begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
+\begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
 
 
-The documentation for this class was generated from the following files:\begin{CompactItemize}
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
 \item 
-src/System.h\item 
-src/System.cpp\end{CompactItemize}
+src/System.hh\item 
+src/System.cc\end{DoxyCompactItemize}

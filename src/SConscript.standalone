@@ -70,36 +70,38 @@ if platform == 'script' or platform == 'scriptDebug':
 		#Exit(1)
 
 env = conf.Finish()
-env.Append(CPPPATH = '/usr/include/ImageMagick')
+#env.Append(CPPPATH = ['/usr/include/ImageMagick','/usr/include/libxml2'])
+env.Append(CPPPATH = ['/usr/include/libxml2'])
 
-defines = ['__STDC_LIMIT_MACROS','NDEBUG']
-flags = ['-O3', '-funroll-all-loops', '-ffast-math', '-fprefetch-loop-arrays', '-std=c++0x', '-Wall', '-Wextra', '-Wunused', '-pedantic', '-Weffc++', '-mtune=native', '-march=native', '-Wconversion', '-Wuninitialized'] 
-includes = ['/usr/include/libxml2']
+baseDefines = ['__STDC_LIMIT_MACROS']
+debugDefines = baseDefines + ['DEBUG']
+optDefines = baseDefines + ['NDEBUG']
+baseFlags = [ '-Wconversion', '-Wuninitialized', '-std=c++0x', '-Wall', '-Wextra', '-Wunused', '-pedantic', '-Weffc++','-Wswitch-default', '-Wfloat-equal']
+optFlags = baseFlags + ['-O3', '-funroll-all-loops', '-ffast-math', '-fprefetch-loop-arrays',  '-mtune=native', '-march=native','-fomit-frame-pointer', '-finline-functions']
+debugFlags = baseFlags + ['-g', '-ggdb3', '-O0']
+
 
 ROOT = Dir('.').abspath
 SRCDIR = os.path.join(ROOT,'src')
 
 if platform == 'script':
-	envScript = env.Clone(OBJSUFFIX='.os')
-	envScript.Append(CCFLAGS = '-O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -Wconversion -Wuninitialized -DNDEBUG -D__STDC_LIMIT_MACROS')
-	envScript.Append(CPPDEFINES = defines)
-	script = envScript.Program('processStats',"../scripts/processStats.cpp")
-	envScript.Install(os.path.abspath('../scripts'),script)
-elif platform == 'scriptOpt':
-	envScript = env.Clone(OBJSUFFIX='.oso')
-	envScript.Append(CCFLAGS = '-g -O3 -std=c++0x -mtune=native -march=native -ffast-math -fomit-frame-pointer -finline-functions -DNDEBUG -D__STDC_LIMIT_MACROS')
-	script = envScript.Program('processStats.opt',"../scripts/processStats.cpp")
-	envScript.Install(os.path.abspath('../scripts'),script)
+	env.Append(OBJSUFFIX='.os')
+	env.Append(CCFLAGS = optFlags)
+	env.Append(CPPDEFINES = optDefines)
+	script = env.Program('processStats',"../scripts/processStats.cpp")
+	env.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd')
-	envScriptD.Append(CCFLAGS = '-ggdb3 -std=c++0x -O0 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -D__STDC_LIMIT_MACROS -Wno-conversion -Wuninitialized')
+	envScriptD.Append(CCFLAGS = debugFlags)
+	envScriptD.Append(CPPDEFINES = debugDefines)
 	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cpp")
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
-	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.og')
-	envDebug.Append(CCFLAGS = '-g -Weffc++ -Wall -Wextra -Wswitch-default -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
-	debug = envDebug.Program('dramSimII.debug',sourceFile)
-	envDebug.Install(os.path.abspath('..') + "/bin", debug)
+	env.Append(OBJSUFFIX='.og')
+	env.Append(CCFLAGS = debugFlags)
+	env.Append(CPPDEFINES = debugDefines)
+	debug = env.Program('dramSimII.debug',sourceFile)
+	env.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugOpt':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogO')
 	envDebug.Append(CCFLAGS = '-g -O3 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
@@ -163,9 +165,8 @@ elif platform == 'all':
 	opt = envOpt.Program('dramSimII.opt',sourceFile)
 	envOpt.Install(os.path.abspath('..') + "/bin", opt)
 else:
-	envOpt = env.Clone(OBJSUFFIX='.of')
-	envOpt.Append(CPPPATH = includes)
-	envOpt.Append(CCFLAGS = flags)
-	envOpt.Append(CPPDEFINES = defines)
-	opt = envOpt.Program(target = 'dramSimII.opt',source = sourceFile)
-	envOpt.Install(os.path.abspath('..') + "/bin", opt)
+	env.Append(OBJSUFFIX='.of')
+	env.Append(CCFLAGS = optFlags)
+	env.Append(CPPDEFINES = optDefines)
+	opt = env.Program(target = 'dramSimII.opt',source = sourceFile)
+	env.Install(os.path.abspath('..') + "/bin", opt)

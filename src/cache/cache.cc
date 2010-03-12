@@ -664,7 +664,7 @@ LRUBlk *Cache::findVictim(Addr addr, PacketList &writebacks)
 			blk = sets[set].blks[0];
 			int lowestRefCount = sets[set].blks[0]->refCount;
 			int greatestRefCount = sets[set].blks[0]->refCount;
-			for (int i = 1; i < assoc; ++i)
+			for (unsigned i = 1; i < assoc; ++i)
 			{
 				LRUBlk *currentBlock = sets[set].blks[i];
 				if (currentBlock->refCount < lowestRefCount)

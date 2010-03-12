@@ -11,4 +11,6 @@ digraph G
   Node3 [label="DRAMsimII::TimingSpecification",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_timing_specification.html",tooltip="contains all the specs for this channel&#39;s DIMMs"];
   Node4 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="perBankQueue"];
   Node4 [label="DRAMsimII::Queue\< Command \>",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_queue.html"];
+  Node5 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="statistics"];
+  Node5 [label="DRAMsimII::Statistics",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_statistics.html",tooltip="stores statistics about this memory system, primarily relating to counts of transactions/commands..."];
 }

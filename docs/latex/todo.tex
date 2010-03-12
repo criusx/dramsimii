@@ -1,48 +1,45 @@
 \label{todo__todo000001}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Bank::issueCAS}{p.}{class_d_r_a_msim_i_i_1_1_bank_1f759cc59082c2ca03271ca55f3ab1f6}(const tick currentTime, const Command $\ast$currentCommand) ]which is correct? \end{description}
+ 
+\begin{DoxyDescription}
+\item[Member \doxyref{DRAMsimII::Bank::issueCAS}{p.}{class_d_r_a_msim_i_i_1_1_bank_a1f759cc59082c2ca03271ca55f3ab1f6}(const tick currentTime, const Command $\ast$currentCommand) ]which is correct? 
+\end{DoxyDescription}
 
+\label{todo__todo000005}
+ 
+\begin{DoxyDescription}
+\item[Member \doxyref{DRAMsimII::Channel::checkForAvailableCommandSlots}{p.}{class_d_r_a_msim_i_i_1_1_channel_a311f351c816f6b817e1d9e8439f439fc}(const Transaction $\ast$trans) const  ]switch to iterator arithmetic 
+\end{DoxyDescription}
 
 \label{todo__todo000006}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Channel::checkForAvailableCommandSlots}{p.}{class_d_r_a_msim_i_i_1_1_channel_311f351c816f6b817e1d9e8439f439fc}(const Transaction $\ast$trans) const  ]switch to iterator arithmetic \end{description}
+ 
+\begin{DoxyDescription}
+\item[Member \doxyref{DRAMsimII::Channel::executeCommand}{p.}{class_d_r_a_msim_i_i_1_1_channel_ac70faefd9c39af71cb67096c00527331}(Command $\ast$thisCommand) ]let each rank figure out if the command is to it or not by combining issueCAS and issueCASother 
 
-
-\label{todo__todo000004}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Channel::doPowerCalculation}{p.}{class_d_r_a_msim_i_i_1_1_channel_0d13f91b788925a91ade7801391568d5}(const tick systemTime) ]actually simulate CKE, per rank \end{description}
-
-
-\label{todo__todo000004}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Channel::doPowerCalculation}{p.}{class_d_r_a_msim_i_i_1_1_channel_0d13f91b788925a91ade7801391568d5}(const tick systemTime) ]: account for CKE \end{description}
-
-
-\label{todo__todo000007}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Channel::executeCommand}{p.}{class_d_r_a_msim_i_i_1_1_channel_c70faefd9c39af71cb67096c00527331}(Command $\ast$thisCommand) ]let each rank figure out if the command is to it or not by combining issueCAS and issueCASother \end{description}
-
+let each rank figure out if the command is to it or not by combining issueCAS and issueCASother 
+\end{DoxyDescription}
 
 \label{todo__todo000002}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Channel::moveToTime}{p.}{class_d_r_a_msim_i_i_1_1_channel_86f558398b775ae647115f2de5394563}(const tick currentTime) ]continue until no events are processed, no commands issued, no transactions decoded \end{description}
+ 
+\begin{DoxyDescription}
+\item[Member \doxyref{DRAMsimII::Channel::moveToTime}{p.}{class_d_r_a_msim_i_i_1_1_channel_a86f558398b775ae647115f2de5394563}(const tick currentTime) ]continue until no events are processed, no commands issued, no transactions decoded 
 
+verify that this is right 
+\end{DoxyDescription}
 
-\label{todo__todo000002}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Channel::moveToTime}{p.}{class_d_r_a_msim_i_i_1_1_channel_86f558398b775ae647115f2de5394563}(const tick currentTime) ]verify that this is right \end{description}
-
-
-\label{todo__todo000013}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::System::nextTick}{p.}{class_d_r_a_msim_i_i_1_1_system_fabcd4ee36a5d14c40f0b080f25e3225}() const  ]should always be a next event due to perpetual stats collection, could throw an exception when there are no stats being collected \end{description}
-
+\label{todo__todo000010}
+ 
+\begin{DoxyDescription}
+\item[Member \doxyref{DRAMsimII::Statistics::collectTransactionStats}{p.}{class_d_r_a_msim_i_i_1_1_statistics_ae435d174dc17300c38b02497751688cb}(const Transaction $\ast$) ]use DQ $\ast$ length to calculate bytes Tx, Rx 
+\end{DoxyDescription}
 
 \label{todo__todo000011}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Statistics::collectTransactionStats}{p.}{class_d_r_a_msim_i_i_1_1_statistics_e435d174dc17300c38b02497751688cb}(const Transaction $\ast$) ]use DQ $\ast$ length to calculate bytes Tx, Rx \end{description}
-
+ 
+\begin{DoxyDescription}
+\item[Member \doxyref{DRAMsimII::Statistics::operator==}{p.}{class_d_r_a_msim_i_i_1_1_statistics_add4ecfbdd143d3cf6a8413d395a17e58}(const Statistics \&right) const  ]restore comparisons once tr1 implementations support this 
+\end{DoxyDescription}
 
 \label{todo__todo000012}
- \begin{description}
-\item[Member \doxyref{DRAMsimII::Statistics::operator==}{p.}{class_d_r_a_msim_i_i_1_1_statistics_dd4ecfbdd143d3cf6a8413d395a17e58}(const Statistics \&right) const  ]restore comparisons once tr1 implementations support this \end{description}
+ 
+\begin{DoxyDescription}
+\item[Member \doxyref{DRAMsimII::System::nextTick}{p.}{class_d_r_a_msim_i_i_1_1_system_afabcd4ee36a5d14c40f0b080f25e3225}() const  ]should always be a next event due to perpetual stats collection, could throw an exception when there are no stats being collected 
+\end{DoxyDescription}

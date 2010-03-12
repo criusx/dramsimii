@@ -55,6 +55,7 @@ refreshCounter(settings.rankCount),
 systemConfig(sysConfig),
 statistics(stats),
 powerModel(settings),
+channelID(UINT_MAX),
 rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig, stats)),
 finishedTransactions()
 {
@@ -136,7 +137,8 @@ systemConfig(sysConf),
 statistics(stats),
 powerModel(power),
 channelID(UINT_MAX),
-rank(newRank)
+rank(newRank),
+finishedTransactions()
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -564,7 +566,7 @@ Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 /// also does breakdowns of power consumed per channel and per epoch as well as averaged over time
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void Channel::doPowerCalculation(const tick systemTime, ostream& os)
+void Channel::doPowerCalculation(ostream& os)
 {	
 	double PsysRD = 0.0;
 	double PsysRdAdjusted = 0.0;
@@ -610,7 +612,7 @@ void Channel::doPowerCalculation(const tick systemTime, ostream& os)
 		BOOST_ASSERT(thisRankAdjustedRasCount <= thisRankRasCount);
 
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
-		double percentActive = 1.0F - (k->getPrechargeTime(time) / max((double)(time - powerModel.getLastCalculation()), 0.00000001));
+		double percentActive = 1.0 - (k->getPrechargeTime(time) / max((double)(time - powerModel.getLastCalculation()), 0.00000001));
 
 		assert(percentActive >= 0.0F && percentActive <= 1.0F);
 		assert(k->getPrechargeTime(time) <= time - powerModel.getLastCalculation());
@@ -2674,14 +2676,13 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 //////////////////////////////////////////////////////////////////////////
 tick Channel::earliestExecuteTime(const Command *currentCommand) const
 {
-
-	tick nextTime;	
-
 	const vector<Rank>::const_iterator currentRank = rank.begin() + currentCommand->getAddress().getRank();
 
 	const vector<Bank>::const_iterator currentBank = currentRank->bank.begin() + currentCommand->getAddress().getBank();
 
 #ifndef NDEBUG
+	tick nextTime = 0;
+
 	switch(currentCommand->getCommandType())
 	{
 	case Command::ACTIVATE:
@@ -2826,8 +2827,6 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 		break;
 	}
 
-	//return max(nextTime, time + timingSpecification.tCMD());
-	//return max(nextTime, max(time, lastCommandIssueTime + timingSpecification.tCMD()));
 	tick actualNext = max(nextTime, lastCommandIssueTime + timingSpecification.tCMD());
 	tick predictedNext = max(currentRank->next(currentCommand->getCommandType()), 
 		max(currentBank->next(currentCommand->getCommandType()), lastCommandIssueTime + timingSpecification.tCMD()));
@@ -3067,8 +3066,9 @@ void Channel::printVerilogCommand(const Command *thisCommand)
 	}
 	else if (thisCommand->isWrite())
 	{
-		systemConfig.verilogOutStream << "write\t\t(" << thisCommand->getAddress().getRank() << ",\t" << thisCommand->getAddress().getBank() << ",\t" << thisCommand->getAddress().getColumn() << ",\t" << (thisCommand->isPrecharge() ? "1" : "0") << ",\t" << (thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") <<
-			",\t0,\t10); //" << time << endl;
+		systemConfig.verilogOutStream << "write\t\t(" << thisCommand->getAddress().getRank() << ",\t" << thisCommand->getAddress().getBank() <<
+			",\t" << thisCommand->getAddress().getColumn() << ",\t" << (thisCommand->isPrecharge() ? "1" : "0") << ",\t" <<
+			(thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << ",\t0,\t10); //" << time << endl;
 	}
 	else if (thisCommand->isActivate())
 	{

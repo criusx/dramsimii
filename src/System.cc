@@ -21,6 +21,7 @@
 #include <ostream>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <cmath>
 #include <map>
 #include <vector>
@@ -43,6 +44,7 @@ using std::vector;
 using std::endl;
 using std::ostream;
 using std::min;
+using std::stringstream;
 using boost::lexical_cast;
 using namespace DRAMsimII;
 
@@ -84,18 +86,9 @@ nextStats(settings.epoch)
 	// else printing to these streams goes nowhere
 	string cacheSize = (settings.cacheSize >= 1024) ? lexical_cast<string>(settings.cacheSize / 1024) + "MB" : lexical_cast<string>(settings.cacheSize) + "kB";
 
-	systemConfig.statsOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
-		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
-		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
-		"cache[" << cacheSize << "] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]"
-		<< endl;
+	stringstream printCommandLine;
 
-	systemConfig.powerOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
+	printCommandLine << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
 		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
@@ -103,23 +96,20 @@ nextStats(settings.epoch)
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
 		"cache[" << cacheSize << "] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "] " <<
+		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" <<
+		settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]" << " policy[" <<
+		settings.replacementPolicy << ((settings.replacementPolicy == Cache::NMRU) ? lexical_cast<string>(settings.nmruTrackingCount) : string("")) << "]";
+
+	systemConfig.statsOutStream << printCommandLine.str() << endl;
+
+	systemConfig.powerOutStream << printCommandLine.str() <<
 		"IDD0[" << settings.IDD0 << "] IDD1[" << settings.IDD1 << "] IDD2N[" << settings.IDD2N << "] IDD2P[" << settings.IDD2P << "] IDD3N[" << settings.IDD3N <<
 		"] IDD3P[" << settings.IDD3P << "] IDD4R[" << settings.IDD4R << "] IDD4W[" << settings.IDD4W << "] VDD[" << settings.VDD << "] VDDmax[" << settings.maxVCC <<
 		"] spedFreq[" << settings.frequencySpec << "]" <<
 		endl;
 
 #ifndef NDEBUG 
-	systemConfig.timingOutStream << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
-		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
-		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
-		"cache[" << cacheSize << "] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" << settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]"
-		<< endl;
+	systemConfig.timingOutStream << printCommandLine.str() << endl;
 #endif
 
 
@@ -356,7 +346,7 @@ void System::doPowerCalculation()
 
 	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i != end; ++i)
 	{
-		i->doPowerCalculation(time, systemConfig.powerOutStream);
+		i->doPowerCalculation(systemConfig.powerOutStream);
 	}
 }
 

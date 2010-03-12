@@ -1,14 +1,22 @@
 \section{DRAMsimII::Command Class Reference}
 \label{class_d_r_a_msim_i_i_1_1_command}\index{DRAMsimII::Command@{DRAMsimII::Command}}
+
+
 represents a DRAM command from the memory controller to the DRAMs  
 
 
-{\tt \#include $<$command.h$>$}
+
+
+{\ttfamily \#include $<$command.hh$>$}
+
+
 
 Inherits {\bf DRAMsimII::Event}.
 
+
+
 Collaboration diagram for DRAMsimII::Command:\subsection*{Public Types}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
 enum {\bf CommandType} \{ \par
 {\bf ACTIVATE}, 
@@ -33,70 +41,74 @@ enum {\bf CommandType} \{ \par
 \par
 {\bf INVALID\_\-COMMAND}
  \}
-\begin{CompactList}\small\item\em available command types to send to DRAMs \item\end{CompactList}\subsection*{Public Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactList}\small\item\em available command types to send to DRAMs \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
 \item 
-{\bf Command} (const {\bf Command} \&)\label{class_d_r_a_msim_i_i_1_1_command_73edafc4b38e3c5febe1270f1c6ef0d5}
+{\bf Command} (const {\bf Command} \&)\label{class_d_r_a_msim_i_i_1_1_command_a73edafc4b38e3c5febe1270f1c6ef0d5}
 
-\begin{CompactList}\small\item\em copy constructor \item\end{CompactList}\item 
-{\bf Command} ()\label{class_d_r_a_msim_i_i_1_1_command_18df2d81039392daeb0b78c346a70537}
+\begin{DoxyCompactList}\small\item\em copy constructor \item\end{DoxyCompactList}\item 
+{\bf Command} ()\label{class_d_r_a_msim_i_i_1_1_command_a18df2d81039392daeb0b78c346a70537}
 
-\begin{CompactList}\small\item\em blank constructor for NULL commands \item\end{CompactList}\item 
-{\bf Command} ({\bf Transaction} $\ast${\bf hostTransaction}, const tick {\bf enqueueTime}, const bool autoPrecharge, const unsigned commandLength, const {\bf CommandType} {\bf commandType}=READ)\label{class_d_r_a_msim_i_i_1_1_command_8788e1ab0eff1a17e0576e45bb0f4993}
+\begin{DoxyCompactList}\small\item\em blank constructor for NULL commands \item\end{DoxyCompactList}\item 
+{\bf Command} ({\bf Transaction} $\ast${\bf hostTransaction}, const tick {\bf enqueueTime}, const bool autoPrecharge, const unsigned commandLength, const {\bf CommandType} {\bf commandType}=READ)\label{class_d_r_a_msim_i_i_1_1_command_a8788e1ab0eff1a17e0576e45bb0f4993}
 
-\begin{CompactList}\small\item\em constructor when the hostTransaction's address should be used \item\end{CompactList}\item 
-{\bf Command} ({\bf Transaction} $\ast${\bf hostTransaction}, const {\bf Address} \&addr, const tick {\bf enqueueTime}, const bool autoPrecharge, const unsigned commandLength, const {\bf CommandType} {\bf commandType}=READ)\label{class_d_r_a_msim_i_i_1_1_command_b8f2039baa068748fa987ae897a9510f}
+\begin{DoxyCompactList}\small\item\em constructor when the hostTransaction's address should be used \item\end{DoxyCompactList}\item 
+{\bf Command} ({\bf Transaction} $\ast${\bf hostTransaction}, const {\bf Address} \&addr, const tick {\bf enqueueTime}, const bool autoPrecharge, const unsigned commandLength, const {\bf CommandType} {\bf commandType}=READ)\label{class_d_r_a_msim_i_i_1_1_command_ab8f2039baa068748fa987ae897a9510f}
 
-\begin{CompactList}\small\item\em constructor when an explicit address is given \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em constructor when an explicit address is given \item\end{DoxyCompactList}\item 
 {\bf $\sim$Command} ()
-\begin{CompactList}\small\item\em destructor \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em destructor \item\end{DoxyCompactList}\item 
 void {\bf setAutoPrecharge} (const bool autoPrecharge) const 
-\begin{CompactList}\small\item\em to convert CAS(W)+P $<$=$>$ CAS(W) \item\end{CompactList}\item 
-bool {\bf operator==} (const {\bf Command} \&right) const \label{class_d_r_a_msim_i_i_1_1_command_7d846b35d3cfb89c4f6f24d1806b7977}
+\begin{DoxyCompactList}\small\item\em to convert CAS(W)+P $<$=$>$ CAS(W) \item\end{DoxyCompactList}\item 
+bool {\bf operator==} (const {\bf Command} \&right) const \label{class_d_r_a_msim_i_i_1_1_command_a7d846b35d3cfb89c4f6f24d1806b7977}
 
-\begin{CompactList}\small\item\em equality operator \item\end{CompactList}\item 
-bool {\bf operator!=} (const {\bf Command} \&right) const \label{class_d_r_a_msim_i_i_1_1_command_7680db3aeba3b242a5e45c6d1c7f3c49}
+\begin{DoxyCompactList}\small\item\em equality operator \item\end{DoxyCompactList}\item 
+bool {\bf operator!=} (const {\bf Command} \&right) const \label{class_d_r_a_msim_i_i_1_1_command_a7680db3aeba3b242a5e45c6d1c7f3c49}
 
-\begin{CompactList}\small\item\em inequality operator \item\end{CompactList}\item 
-void $\ast$ {\bf operator new} (size\_\-t size)\label{class_d_r_a_msim_i_i_1_1_command_e25604cfa43deb71cd91770ca9a83503}
+\begin{DoxyCompactList}\small\item\em inequality operator \item\end{DoxyCompactList}\item 
+void $\ast$ {\bf operator new} (size\_\-t size)\label{class_d_r_a_msim_i_i_1_1_command_ae25604cfa43deb71cd91770ca9a83503}
 
-\begin{CompactList}\small\item\em new operator overload \item\end{CompactList}\item 
-void {\bf operator delete} (void $\ast$)\label{class_d_r_a_msim_i_i_1_1_command_d4a5dbe9c559e026cda58119042946b7}
+\begin{DoxyCompactList}\small\item\em new operator overload \item\end{DoxyCompactList}\item 
+void {\bf operator delete} (void $\ast$)\label{class_d_r_a_msim_i_i_1_1_command_ad4a5dbe9c559e026cda58119042946b7}
 
-\begin{CompactList}\small\item\em delete operator overload \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em delete operator overload \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-{\bf CommandType} {\bf commandType}\label{class_d_r_a_msim_i_i_1_1_command_d9c96c151b429f1a6ae4f4f1f0bb6976}
+{\bf CommandType} {\bf commandType}\label{class_d_r_a_msim_i_i_1_1_command_ad9c96c151b429f1a6ae4f4f1f0bb6976}
 
-\begin{CompactList}\small\item\em what type of command this is \item\end{CompactList}\item 
-{\bf Transaction} $\ast$ {\bf hostTransaction}\label{class_d_r_a_msim_i_i_1_1_command_97b111d32b69123034865baeceef2755}
+\begin{DoxyCompactList}\small\item\em what type of command this is \item\end{DoxyCompactList}\item 
+{\bf Transaction} $\ast$ {\bf hostTransaction}\label{class_d_r_a_msim_i_i_1_1_command_a97b111d32b69123034865baeceef2755}
 
-\begin{CompactList}\small\item\em backward pointer to the original transaction \item\end{CompactList}\item 
-unsigned {\bf length}\label{class_d_r_a_msim_i_i_1_1_command_c1361b967fa7530dd8d3ef02dca9b30f}
+\begin{DoxyCompactList}\small\item\em backward pointer to the original transaction \item\end{DoxyCompactList}\item 
+unsigned {\bf length}\label{class_d_r_a_msim_i_i_1_1_command_ac1361b967fa7530dd8d3ef02dca9b30f}
 
-\begin{CompactList}\small\item\em the burst length \item\end{CompactList}\item 
-tick {\bf arrivalTime}\label{class_d_r_a_msim_i_i_1_1_event_5eae270c205a02b2fb28d11ab84a6ed9}
+\begin{DoxyCompactList}\small\item\em the burst length \item\end{DoxyCompactList}\item 
+bool {\bf hit}\label{class_d_r_a_msim_i_i_1_1_command_a9125588bca5f2a288b32d3b552ab7b54}
 
-\begin{CompactList}\small\item\em the time that this event was created \item\end{CompactList}\item 
-tick {\bf enqueueTime}\label{class_d_r_a_msim_i_i_1_1_event_55cd17fa82ce4031824037df59dc50d3}
+\begin{DoxyCompactList}\small\item\em a hit in the DIMM cache \item\end{DoxyCompactList}\item 
+tick {\bf arrivalTime}\label{class_d_r_a_msim_i_i_1_1_event_a5eae270c205a02b2fb28d11ab84a6ed9}
 
-\begin{CompactList}\small\item\em the time that this event was put into a queue \item\end{CompactList}\item 
-tick {\bf startTime}\label{class_d_r_a_msim_i_i_1_1_event_9f6b444813bf6568040678e0d8139d44}
+\begin{DoxyCompactList}\small\item\em the time that this event was created \item\end{DoxyCompactList}\item 
+tick {\bf enqueueTime}\label{class_d_r_a_msim_i_i_1_1_event_a55cd17fa82ce4031824037df59dc50d3}
 
-\begin{CompactList}\small\item\em when this actually started \item\end{CompactList}\item 
-tick {\bf completionTime}\label{class_d_r_a_msim_i_i_1_1_event_2a6e865d555bcde6264e8726edc95b38}
+\begin{DoxyCompactList}\small\item\em the time that this event was put into a queue \item\end{DoxyCompactList}\item 
+tick {\bf startTime}\label{class_d_r_a_msim_i_i_1_1_event_a9f6b444813bf6568040678e0d8139d44}
 
-\begin{CompactList}\small\item\em when this finished \item\end{CompactList}\item 
-const {\bf Address} {\bf address}\label{class_d_r_a_msim_i_i_1_1_event_6aa0830ccf3c9f103bc6dfaab1919562}
+\begin{DoxyCompactList}\small\item\em when this actually started \item\end{DoxyCompactList}\item 
+tick {\bf completionTime}\label{class_d_r_a_msim_i_i_1_1_event_a2a6e865d555bcde6264e8726edc95b38}
 
-\begin{CompactList}\small\item\em the address that this event involves \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em when this finished \item\end{DoxyCompactList}\item 
+const {\bf Address} {\bf address}\label{class_d_r_a_msim_i_i_1_1_event_a6aa0830ccf3c9f103bc6dfaab1919562}
+
+\begin{DoxyCompactList}\small\item\em the address that this event involves \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Static Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-static {\bf Queue}$<$ {\bf Command} $>$ {\bf freeCommandPool}\label{class_d_r_a_msim_i_i_1_1_command_c78f5b2f70f8ab738d7e45d7474837ff}
+static {\bf Queue}$<$ {\bf Command} $>$ {\bf freeCommandPool}\label{class_d_r_a_msim_i_i_1_1_command_ac78f5b2f70f8ab738d7e45d7474837ff}
 
-\begin{CompactList}\small\item\em command objects are stored here to avoid allocating memory after initialization \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em command objects are stored here to avoid allocating memory after initialization \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -105,7 +117,7 @@ represents a DRAM command from the memory controller to the DRAMs
 \subsection{Member Enumeration Documentation}
 \index{DRAMsimII::Command@{DRAMsimII::Command}!CommandType@{CommandType}}
 \index{CommandType@{CommandType}!DRAMsimII::Command@{DRAMsimII::Command}}
-\subsubsection[{CommandType}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf DRAMsimII::Command::CommandType}}\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e92}
+\subsubsection[{CommandType}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf DRAMsimII::Command::CommandType}}\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92}
 
 
 available command types to send to DRAMs 
@@ -114,39 +126,39 @@ a basic DRAM command may be any of the following \begin{Desc}
 \item[Enumerator: ]\par
 \begin{description}
 \index{ACTIVATE@{ACTIVATE}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!ACTIVATE@{ACTIVATE}}\item[{\em 
-ACTIVATE\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e92c037d54eecb9aa7670925e981caa7ddc}
+ACTIVATE\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92ac037d54eecb9aa7670925e981caa7ddc}
 }]open this row \index{READ@{READ}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!READ@{READ}}\item[{\em 
-READ\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e929e5469e5ec116bbeef43a086f9949300}
+READ\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a9e5469e5ec116bbeef43a086f9949300}
 }]read from the open row \index{READ\_\-AND\_\-PRECHARGE@{READ\_\-AND\_\-PRECHARGE}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!READ\_\-AND\_\-PRECHARGE@{READ\_\-AND\_\-PRECHARGE}}\item[{\em 
-READ\_\-AND\_\-PRECHARGE\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e92d8cde859482d4a3e0867ce05fd4a05e4}
+READ\_\-AND\_\-PRECHARGE\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92ad8cde859482d4a3e0867ce05fd4a05e4}
 }]read from the open row and then close it \index{WRITE@{WRITE}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!WRITE@{WRITE}}\item[{\em 
-WRITE\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9219f82df1d946ff2568adbd62fc49ebcc}
+WRITE\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a19f82df1d946ff2568adbd62fc49ebcc}
 }]write this value to the open row \index{WRITE\_\-AND\_\-PRECHARGE@{WRITE\_\-AND\_\-PRECHARGE}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!WRITE\_\-AND\_\-PRECHARGE@{WRITE\_\-AND\_\-PRECHARGE}}\item[{\em 
-WRITE\_\-AND\_\-PRECHARGE\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9210a9be5864dd7ce9fc13cc6cbd3d3bd2}
+WRITE\_\-AND\_\-PRECHARGE\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a10a9be5864dd7ce9fc13cc6cbd3d3bd2}
 }]write this value and then close the row \index{RETIRE\_\-COMMAND@{RETIRE\_\-COMMAND}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!RETIRE\_\-COMMAND@{RETIRE\_\-COMMAND}}\item[{\em 
-RETIRE\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9283569e9eff1ea387c1b7df4d5d4e5557}
+RETIRE\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a83569e9eff1ea387c1b7df4d5d4e5557}
 }]? \index{PRECHARGE@{PRECHARGE}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!PRECHARGE@{PRECHARGE}}\item[{\em 
-PRECHARGE\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e923c467a0641a84dca532a31fe8a192ccd}
+PRECHARGE\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a3c467a0641a84dca532a31fe8a192ccd}
 }]close this open row \index{PRECHARGE\_\-ALL@{PRECHARGE\_\-ALL}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!PRECHARGE\_\-ALL@{PRECHARGE\_\-ALL}}\item[{\em 
-PRECHARGE\_\-ALL\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e92b3d2407cca42c871a08cca093c8fffec}
+PRECHARGE\_\-ALL\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92ab3d2407cca42c871a08cca093c8fffec}
 }]precharge each bank in the rank, end of a refresh \index{ACTIVATE\_\-ALL@{ACTIVATE\_\-ALL}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!ACTIVATE\_\-ALL@{ACTIVATE\_\-ALL}}\item[{\em 
-ACTIVATE\_\-ALL\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e921a4adeb694cb31d932e844a2a2919a41}
+ACTIVATE\_\-ALL\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a1a4adeb694cb31d932e844a2a2919a41}
 }]activate a row in each bank in the rank, half of a refresh \index{DRIVE\_\-COMMAND@{DRIVE\_\-COMMAND}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!DRIVE\_\-COMMAND@{DRIVE\_\-COMMAND}}\item[{\em 
-DRIVE\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9214da52e3487c9ae9fc4c2a0dd03cc2d9}
+DRIVE\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a14da52e3487c9ae9fc4c2a0dd03cc2d9}
 }]? \index{DATA\_\-COMMAND@{DATA\_\-COMMAND}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!DATA\_\-COMMAND@{DATA\_\-COMMAND}}\item[{\em 
-DATA\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e92c3097d956e46d9f92c9bdb34c7ff7a13}
+DATA\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92ac3097d956e46d9f92c9bdb34c7ff7a13}
 }]for FBD, holds data instead of a command \index{CAS\_\-WITH\_\-DRIVE\_\-COMMAND@{CAS\_\-WITH\_\-DRIVE\_\-COMMAND}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!CAS\_\-WITH\_\-DRIVE\_\-COMMAND@{CAS\_\-WITH\_\-DRIVE\_\-COMMAND}}\item[{\em 
-CAS\_\-WITH\_\-DRIVE\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9224168f14afa62379fb862ed1dc2c35e0}
+CAS\_\-WITH\_\-DRIVE\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a24168f14afa62379fb862ed1dc2c35e0}
 }]? \index{REFRESH\_\-ALL@{REFRESH\_\-ALL}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!REFRESH\_\-ALL@{REFRESH\_\-ALL}}\item[{\em 
-REFRESH\_\-ALL\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9228b74de792cd065820bfb6d77e2aadf2}
+REFRESH\_\-ALL\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a28b74de792cd065820bfb6d77e2aadf2}
 }]refresh all banks in the rank \index{SELF\_\-REFRESH@{SELF\_\-REFRESH}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!SELF\_\-REFRESH@{SELF\_\-REFRESH}}\item[{\em 
-SELF\_\-REFRESH\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e92320774760d0fb5b3611206a58b9a5523}
+SELF\_\-REFRESH\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a320774760d0fb5b3611206a58b9a5523}
 }]put the rank into self refresh mode \index{DESELECT@{DESELECT}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!DESELECT@{DESELECT}}\item[{\em 
-DESELECT\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9299fb83bee151099cd3cea20f39703a56}
+DESELECT\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a99fb83bee151099cd3cea20f39703a56}
 }]command inhibit, does not allow new commands to be executed \index{NOOP@{NOOP}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!NOOP@{NOOP}}\item[{\em 
-NOOP\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9268f7f9c34c9e0886a0069a19b140944e}
+NOOP\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a68f7f9c34c9e0886a0069a19b140944e}
 }]the no operation command \index{INVALID\_\-COMMAND@{INVALID\_\-COMMAND}!DRAMsimII::Command@{DRAMsimII::Command}}\index{DRAMsimII::Command@{DRAMsimII::Command}!INVALID\_\-COMMAND@{INVALID\_\-COMMAND}}\item[{\em 
-INVALID\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e57f30350e9265654c338c8418fc0ef506dbd0503c05}
+INVALID\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_a6da0b8d60d4902551918e57f30350e92a65654c338c8418fc0ef506dbd0503c05}
 }]no command, or not a valid command at this time \end{description}
 \end{Desc}
 
@@ -155,7 +167,7 @@ INVALID\_\-COMMAND\label{class_d_r_a_msim_i_i_1_1_command_6da0b8d60d4902551918e5
 \subsection{Constructor \& Destructor Documentation}
 \index{DRAMsimII::Command@{DRAMsimII::Command}!$\sim$Command@{$\sim$Command}}
 \index{$\sim$Command@{$\sim$Command}!DRAMsimII::Command@{DRAMsimII::Command}}
-\subsubsection[{$\sim$Command}]{\setlength{\rightskip}{0pt plus 5cm}Command::$\sim$Command ()}\label{class_d_r_a_msim_i_i_1_1_command_b552bb3a07fdd1acbfd8ea76e69b2278}
+\subsubsection[{$\sim$Command}]{\setlength{\rightskip}{0pt plus 5cm}Command::$\sim$Command ()}\label{class_d_r_a_msim_i_i_1_1_command_ab552bb3a07fdd1acbfd8ea76e69b2278}
 
 
 destructor 
@@ -165,14 +177,14 @@ deletes the host transaction, thus unlinking the two
 \subsection{Member Function Documentation}
 \index{DRAMsimII::Command@{DRAMsimII::Command}!setAutoPrecharge@{setAutoPrecharge}}
 \index{setAutoPrecharge@{setAutoPrecharge}!DRAMsimII::Command@{DRAMsimII::Command}}
-\subsubsection[{setAutoPrecharge}]{\setlength{\rightskip}{0pt plus 5cm}void Command::setAutoPrecharge (const bool {\em autoPrecharge}) const}\label{class_d_r_a_msim_i_i_1_1_command_e1df06fd9d7d4a40113ba76d37196575}
+\subsubsection[{setAutoPrecharge}]{\setlength{\rightskip}{0pt plus 5cm}void Command::setAutoPrecharge (const bool {\em autoPrecharge}) const}\label{class_d_r_a_msim_i_i_1_1_command_ae1df06fd9d7d4a40113ba76d37196575}
 
 
 to convert CAS(W)+P $<$=$>$ CAS(W) 
 
 only affects CAS commands 
 
-The documentation for this class was generated from the following files:\begin{CompactItemize}
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
 \item 
-src/command.h\item 
-src/command.cpp\end{CompactItemize}
+src/command.hh\item 
+src/command.cc\end{DoxyCompactItemize}

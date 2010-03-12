@@ -1,106 +1,110 @@
 \section{DRAMsimII::Address Class Reference}
 \label{class_d_r_a_msim_i_i_1_1_address}\index{DRAMsimII::Address@{DRAMsimII::Address}}
+
+
 This class logically represents several interpretations of a memory address.  
 
 
-{\tt \#include $<$Address.h$>$}
+
+
+{\ttfamily \#include $<$Address.hh$>$}
 
 \subsection*{Public Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-{\bf Address} ()\label{class_d_r_a_msim_i_i_1_1_address_63f910c09d93bdd16d3744e47d13dc0e}
+{\bf Address} ()\label{class_d_r_a_msim_i_i_1_1_address_a63f910c09d93bdd16d3744e47d13dc0e}
 
-\begin{CompactList}\small\item\em the no-arg constructor \item\end{CompactList}\item 
-{\bf Address} (PhysicalAddress pA)\label{class_d_r_a_msim_i_i_1_1_address_8204347dbc9ff580abd2446bb7edd255}
+\begin{DoxyCompactList}\small\item\em the no-\/arg constructor \item\end{DoxyCompactList}\item 
+{\bf Address} (PhysicalAddress pA)\label{class_d_r_a_msim_i_i_1_1_address_a8204347dbc9ff580abd2446bb7edd255}
 
-\begin{CompactList}\small\item\em the constructor based on a physical address \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the constructor based on a physical address \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
 bool {\bf addressTranslation} ()
-\begin{CompactList}\small\item\em converts a given memory request from a physical address to a rank/bank/row/column representation \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em converts a given memory request from a physical address to a rank/bank/row/column representation \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-unsigned {\bf virtualAddress}\label{class_d_r_a_msim_i_i_1_1_address_c666d19c4bb12632573fd0088e96cce4}
+unsigned {\bf virtualAddress}\label{class_d_r_a_msim_i_i_1_1_address_ac666d19c4bb12632573fd0088e96cce4}
 
-\begin{CompactList}\small\item\em the virtual address \item\end{CompactList}\item 
-PhysicalAddress {\bf physicalAddress}\label{class_d_r_a_msim_i_i_1_1_address_17b1f2891afb1c6427595f7386f8fd48}
+\begin{DoxyCompactList}\small\item\em the virtual address \item\end{DoxyCompactList}\item 
+PhysicalAddress {\bf physicalAddress}\label{class_d_r_a_msim_i_i_1_1_address_a17b1f2891afb1c6427595f7386f8fd48}
 
-\begin{CompactList}\small\item\em the physical address \item\end{CompactList}\item 
-unsigned {\bf channel}\label{class_d_r_a_msim_i_i_1_1_address_8fb5de009ae35aa5eb9ad6e8d80195b8}
+\begin{DoxyCompactList}\small\item\em the physical address \item\end{DoxyCompactList}\item 
+unsigned {\bf channel}\label{class_d_r_a_msim_i_i_1_1_address_a8fb5de009ae35aa5eb9ad6e8d80195b8}
 
-\begin{CompactList}\small\item\em the enumerated channel id \item\end{CompactList}\item 
-unsigned {\bf rank}\label{class_d_r_a_msim_i_i_1_1_address_5da1fcbe9eb7e47322ff435b02e47a70}
+\begin{DoxyCompactList}\small\item\em the enumerated channel id \item\end{DoxyCompactList}\item 
+unsigned {\bf rank}\label{class_d_r_a_msim_i_i_1_1_address_a5da1fcbe9eb7e47322ff435b02e47a70}
 
-\begin{CompactList}\small\item\em the rank id \item\end{CompactList}\item 
-unsigned {\bf bank}\label{class_d_r_a_msim_i_i_1_1_address_ec81009e3aa060a1f81a686dead86b3d}
+\begin{DoxyCompactList}\small\item\em the rank id \item\end{DoxyCompactList}\item 
+unsigned {\bf bank}\label{class_d_r_a_msim_i_i_1_1_address_aec81009e3aa060a1f81a686dead86b3d}
 
-\begin{CompactList}\small\item\em the bank id \item\end{CompactList}\item 
-unsigned {\bf row}\label{class_d_r_a_msim_i_i_1_1_address_c5b4121363ce1d2d5a88ff829d6ecc84}
+\begin{DoxyCompactList}\small\item\em the bank id \item\end{DoxyCompactList}\item 
+unsigned {\bf row}\label{class_d_r_a_msim_i_i_1_1_address_ac5b4121363ce1d2d5a88ff829d6ecc84}
 
-\begin{CompactList}\small\item\em the row id \item\end{CompactList}\item 
-unsigned {\bf column}\label{class_d_r_a_msim_i_i_1_1_address_68b6537f0906082c17eb906f4dbf1a4b}
+\begin{DoxyCompactList}\small\item\em the row id \item\end{DoxyCompactList}\item 
+unsigned {\bf column}\label{class_d_r_a_msim_i_i_1_1_address_a68b6537f0906082c17eb906f4dbf1a4b}
 
-\begin{CompactList}\small\item\em the column id \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the column id \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Static Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-static unsigned {\bf channelAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_11349fa1c0555dc4059318d4c93e7f43}
+static unsigned {\bf channelAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_a11349fa1c0555dc4059318d4c93e7f43}
 
-\begin{CompactList}\small\item\em the number of bits to represent all channels \item\end{CompactList}\item 
-static unsigned {\bf rankAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_5b8470c0cb8af315691c90d2331dbc44}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent all channels \item\end{DoxyCompactList}\item 
+static unsigned {\bf rankAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_a5b8470c0cb8af315691c90d2331dbc44}
 
-\begin{CompactList}\small\item\em the number of bits to represent all ranks \item\end{CompactList}\item 
-static unsigned {\bf bankAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_c99876d659041711c5918c81e4446d7a}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent all ranks \item\end{DoxyCompactList}\item 
+static unsigned {\bf bankAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_ac99876d659041711c5918c81e4446d7a}
 
-\begin{CompactList}\small\item\em the number of bits to represent all banks \item\end{CompactList}\item 
-static unsigned {\bf rowAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_68909db0f9958d932a12b74ff98eb3cc}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent all banks \item\end{DoxyCompactList}\item 
+static unsigned {\bf rowAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_a68909db0f9958d932a12b74ff98eb3cc}
 
-\begin{CompactList}\small\item\em the number of bits to represent all rows \item\end{CompactList}\item 
-static unsigned {\bf columnAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_a3bb010911eee8fba8b16dd40344b4c1}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent all rows \item\end{DoxyCompactList}\item 
+static unsigned {\bf columnAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_aa3bb010911eee8fba8b16dd40344b4c1}
 
-\begin{CompactList}\small\item\em the number of bits to represent all columns \item\end{CompactList}\item 
-static unsigned {\bf columnSizeDepth}\label{class_d_r_a_msim_i_i_1_1_address_6772f2ae61044ec8c7d554ff80b0463a}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent all columns \item\end{DoxyCompactList}\item 
+static unsigned {\bf columnSizeDepth}\label{class_d_r_a_msim_i_i_1_1_address_a6772f2ae61044ec8c7d554ff80b0463a}
 
-\begin{CompactList}\small\item\em the minimum block that can be addressed \item\end{CompactList}\item 
-static unsigned {\bf rowLowAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_3034d24b617b7fc397e55b95667e6d0d}
+\begin{DoxyCompactList}\small\item\em the minimum block that can be addressed \item\end{DoxyCompactList}\item 
+static unsigned {\bf rowLowAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_a3034d24b617b7fc397e55b95667e6d0d}
 
-\begin{CompactList}\small\item\em the number of bits to represent the lower portion of the row \item\end{CompactList}\item 
-static unsigned {\bf rowHighAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_3067a64b5977d9b1f375a6eda50c53e6}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent the lower portion of the row \item\end{DoxyCompactList}\item 
+static unsigned {\bf rowHighAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_a3067a64b5977d9b1f375a6eda50c53e6}
 
-\begin{CompactList}\small\item\em the number of bits to represent the upper portion of the row \item\end{CompactList}\item 
-static unsigned {\bf columnLowAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_e80941c385a9b89fcd082bacb916b5a5}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent the upper portion of the row \item\end{DoxyCompactList}\item 
+static unsigned {\bf columnLowAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_ae80941c385a9b89fcd082bacb916b5a5}
 
-\begin{CompactList}\small\item\em the number of bits to represent the lower portion of a column \item\end{CompactList}\item 
-static unsigned {\bf columnHighAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_98ef042c63b6d22f81bc33823035cd94}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent the lower portion of a column \item\end{DoxyCompactList}\item 
+static unsigned {\bf columnHighAddressDepth}\label{class_d_r_a_msim_i_i_1_1_address_a98ef042c63b6d22f81bc33823035cd94}
 
-\begin{CompactList}\small\item\em the number of bits to represent the upper portion of a column \item\end{CompactList}\item 
-static AddressMappingScheme {\bf mappingScheme}\label{class_d_r_a_msim_i_i_1_1_address_c996a58ebfce70dd74f48e52fc7ff386}
+\begin{DoxyCompactList}\small\item\em the number of bits to represent the upper portion of a column \item\end{DoxyCompactList}\item 
+static AddressMappingScheme {\bf mappingScheme}\label{class_d_r_a_msim_i_i_1_1_address_ac996a58ebfce70dd74f48e52fc7ff386}
 
-\begin{CompactList}\small\item\em the mapping scheme to convert physical to logical addresses \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the mapping scheme to convert physical to logical addresses \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-This class logically represents several interpretations of a memory address. 
-
-A class to store various representations of an address The same address may be represented as a virtual address, physical address, or as channel, rank, bank, column and row identifiers 
+This class logically represents several interpretations of a memory address. A class to store various representations of an address The same address may be represented as a virtual address, physical address, or as channel, rank, bank, column and row identifiers 
 
 \subsection{Member Function Documentation}
 \index{DRAMsimII::Address@{DRAMsimII::Address}!addressTranslation@{addressTranslation}}
 \index{addressTranslation@{addressTranslation}!DRAMsimII::Address@{DRAMsimII::Address}}
-\subsubsection[{addressTranslation}]{\setlength{\rightskip}{0pt plus 5cm}bool Address::addressTranslation ()\hspace{0.3cm}{\tt  [protected]}}\label{class_d_r_a_msim_i_i_1_1_address_d4039f830c5947b91ceb40b8c54503bc}
+\subsubsection[{addressTranslation}]{\setlength{\rightskip}{0pt plus 5cm}bool Address::addressTranslation ()\hspace{0.3cm}{\ttfamily  [protected]}}\label{class_d_r_a_msim_i_i_1_1_address_ad4039f830c5947b91ceb40b8c54503bc}
 
 
 converts a given memory request from a physical address to a rank/bank/row/column representation 
 
-converts according to the address mapping scheme in systemConfig \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Returns:]true if the conversion was successful, false if there was some problem \end{Desc}
+converts according to the address mapping scheme in systemConfig \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+true if the conversion was successful, false if there was some problem 
+\end{DoxyReturn}
 
 
-The documentation for this class was generated from the following files:\begin{CompactItemize}
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
 \item 
-src/Address.h\item 
-src/Address.cpp\end{CompactItemize}
+src/Address.hh\item 
+src/Address.cc\end{DoxyCompactItemize}

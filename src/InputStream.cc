@@ -65,22 +65,22 @@ InputStream::InputStream(const Settings& settings,const SystemConfiguration &sys
 type(settings.inFileType),
 systemConfig(systemConfigVal),
 channel(systemChannel),
-channelLocality(1.0F / settings.channelCount),
-rankLocality(1.0F / settings.rankCount),
-bankLocality(1.0F / settings.bankCount),
+channelLocality(1.0F / (float)settings.channelCount),
+rankLocality(1.0F / (float)settings.rankCount),
+bankLocality(1.0F / (float)settings.bankCount),
 time(0),
-rowLocality(1.0F / settings.rowCount),
+rowLocality(1.0F / (float)settings.rowCount),
 readPercentage(settings.readPercentage),
 shortBurstRatio(settings.shortBurstRatio),
 arrivalThreshold(0.0F),
 cpuToMemoryRatio(settings.dataRate * 1E-9),
-averageInterarrivalCycleCount(max(settings.averageInterarrivalCycleCount,1)),
+averageInterarrivalCycleCount(max(settings.averageInterarrivalCycleCount,(const unsigned)1)),
 interarrivalDistributionModel(settings.arrivalDistributionModel),
 traceFilename(settings.inFile),
 randomNumberGenerator(std::time(0)),
 rngDistributionModel(0,1),
 rngIntDistributionModel(0u,16383u),
-gaussianDistribution(max(settings.averageInterarrivalCycleCount,1),8),
+gaussianDistribution(max(settings.averageInterarrivalCycleCount,(const unsigned)1),8),
 rngGenerator(randomNumberGenerator, rngDistributionModel),
 rngIntGenerator(randomNumberGenerator, rngIntDistributionModel),
 arrivalGenerator(randomNumberGenerator, gaussianDistribution)
@@ -520,6 +520,9 @@ Transaction *InputStream::getNextIncomingTransaction(const unsigned transactionI
 		break;
 	case DRAMSIM:
 		{
+			if (traceFile.eof())
+				return NULL;
+
 			PhysicalAddress tempPA, PC;
 			double timestamp;
 			string input;
@@ -533,9 +536,7 @@ Transaction *InputStream::getNextIncomingTransaction(const unsigned transactionI
 				else if (traceFile.bad())
 					cerr << "Bad data in the stream" << endl;
 				else if (traceFile.fail())
-				{
 					cerr << "Failure reading stream: fail bit set" << endl;
-				}
 				return NULL;
 			}
 

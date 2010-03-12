@@ -1,209 +1,210 @@
 \section{DRAMsimII::Bank Class Reference}
 \label{class_d_r_a_msim_i_i_1_1_bank}\index{DRAMsimII::Bank@{DRAMsimII::Bank}}
+
+
 this class logically represents a bank  
 
 
-{\tt \#include $<$Bank.h$>$}
+
+
+{\ttfamily \#include $<$Bank.hh$>$}
+
+
 
 Collaboration diagram for DRAMsimII::Bank:\subsection*{Public Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-void {\bf issueRAS} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_bank_58c189cd77508d1fdf98335554823d97}
+void {\bf issueRAS} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_bank_a58c189cd77508d1fdf98335554823d97}
 
-\begin{CompactList}\small\item\em this logically issues a RAS command and updates all variables to reflect this \item\end{CompactList}\item 
-void {\bf issuePRE} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_bank_6ec29dfb3c6fa9a12be7057ea7878125}
+\begin{DoxyCompactList}\small\item\em this logically issues a RAS command and updates all variables to reflect this \item\end{DoxyCompactList}\item 
+void {\bf issuePRE} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_bank_a6ec29dfb3c6fa9a12be7057ea7878125}
 
-\begin{CompactList}\small\item\em issue a precharge command to this bank \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em issue a precharge command to this bank \item\end{DoxyCompactList}\item 
 void {\bf issueCAS} (const tick currentTime, const {\bf Command} $\ast$currentCommand)
 \item 
-void {\bf issueCASW} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_bank_3db7fb5a6064cde0b141a2adc6547538}
+void {\bf issueCASW} (const tick currentTime, const {\bf Command} $\ast$currentCommand)\label{class_d_r_a_msim_i_i_1_1_bank_a3db7fb5a6064cde0b141a2adc6547538}
 
-\begin{CompactList}\small\item\em issue a CASW command to this bank \item\end{CompactList}\item 
-void {\bf issueREF} ()\label{class_d_r_a_msim_i_i_1_1_bank_e95c270613412c1435c931e30b6860a9}
+\begin{DoxyCompactList}\small\item\em issue a CASW command to this bank \item\end{DoxyCompactList}\item 
+void {\bf issueREF} ()\label{class_d_r_a_msim_i_i_1_1_bank_ae95c270613412c1435c931e30b6860a9}
 
-\begin{CompactList}\small\item\em issue a refresh command to this bank \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em issue a refresh command to this bank \item\end{DoxyCompactList}\item 
 void {\bf resetToTime} (const tick time)
-\begin{CompactList}\small\item\em reset statistics so that it appears the last command was not long ago \item\end{CompactList}\item 
-tick {\bf next} ({\bf Command::CommandType} nextCommandType) const \label{class_d_r_a_msim_i_i_1_1_bank_a896a275af07a53299ce3b5c2c33fea1}
+\begin{DoxyCompactList}\small\item\em reset statistics so that it appears the last command was not long ago \item\end{DoxyCompactList}\item 
+tick {\bf next} ({\bf Command::CommandType} nextCommandType) const \label{class_d_r_a_msim_i_i_1_1_bank_aa896a275af07a53299ce3b5c2c33fea1}
 
-\begin{CompactList}\small\item\em returns the next time this command type may be issued \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em returns the next time this command type may be issued \item\end{DoxyCompactList}\item 
 bool {\bf aggressiveInsert} ({\bf Transaction} $\ast$value, const tick time)
-\begin{CompactList}\small\item\em see if there is room to insert a command using the Close Page Aggressive algorithm and then insert \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em see if there is room to insert a command using the Close Page Aggressive algorithm and then insert \item\end{DoxyCompactList}\item 
 bool {\bf openPageAggressiveInsertCheck} (const {\bf Transaction} $\ast$value, const tick time) const 
-\begin{CompactList}\small\item\em check to see if this transaction can be inserted successfully via the open page aggressive insert mechanism \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em check to see if this transaction can be inserted successfully via the open page aggressive insert mechanism \item\end{DoxyCompactList}\item 
 bool {\bf closePageAggressiveInsertCheck} (const {\bf Transaction} $\ast$value, const tick time) const 
-\begin{CompactList}\small\item\em see if there is room to insert a command using the Close Page Aggressive algorithm \item\end{CompactList}\item 
-void {\bf collapse} ()\label{class_d_r_a_msim_i_i_1_1_bank_c3aa018b8b63cbc809190eadee5990cd}
+\begin{DoxyCompactList}\small\item\em see if there is room to insert a command using the Close Page Aggressive algorithm \item\end{DoxyCompactList}\item 
+void {\bf collapse} ()\label{class_d_r_a_msim_i_i_1_1_bank_ac3aa018b8b63cbc809190eadee5990cd}
 
-\begin{CompactList}\small\item\em reduce discrete CAS and Precharge commands to CAS+P to free up space \item\end{CompactList}\item 
-{\bf Bank} (const {\bf Settings} \&settings, const {\bf TimingSpecification} \&timingVal, const {\bf SystemConfiguration} \&systemConfigVal)\label{class_d_r_a_msim_i_i_1_1_bank_2fe9b0cf5dd28eb2d756d3f920f26988}
+\begin{DoxyCompactList}\small\item\em reduce discrete CAS and Precharge commands to CAS+P to free up space \item\end{DoxyCompactList}\item 
+{\bf Bank} (const {\bf Settings} \&settings, const {\bf TimingSpecification} \&timingVal, const {\bf SystemConfiguration} \&systemConfigVal, {\bf Statistics} \&stats)\label{class_d_r_a_msim_i_i_1_1_bank_a2c48c0bd69bd3be45485ee31c1ddeff0}
 
-\begin{CompactList}\small\item\em constructor with timing spec and system config values \item\end{CompactList}\item 
-{\bf Bank} (const {\bf Bank} \&, const {\bf TimingSpecification} \&timingVal, const {\bf SystemConfiguration} \&systemConfigVal)\label{class_d_r_a_msim_i_i_1_1_bank_a931ab46ebcdb9a382e1dfc54e712414}
+\begin{DoxyCompactList}\small\item\em constructor with timing spec and system config values \item\end{DoxyCompactList}\item 
+{\bf Bank} (const {\bf Bank} \&, const {\bf TimingSpecification} \&timingVal, const {\bf SystemConfiguration} \&systemConfigVal, {\bf Statistics} \&stats)\label{class_d_r_a_msim_i_i_1_1_bank_a7d0a8034459071ece65161188db4fa38}
 
-\begin{CompactList}\small\item\em copy constructor with timing spec and sysconfig information \item\end{CompactList}\item 
-{\bf Bank} (const {\bf Bank} \&)\label{class_d_r_a_msim_i_i_1_1_bank_455d191c606241ace4ff939ae247185e}
+\begin{DoxyCompactList}\small\item\em copy constructor with timing spec and sysconfig information \item\end{DoxyCompactList}\item 
+{\bf Bank} (const {\bf Bank} \&)\label{class_d_r_a_msim_i_i_1_1_bank_a455d191c606241ace4ff939ae247185e}
 
-\begin{CompactList}\small\item\em copy constructor \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em copy constructor \item\end{DoxyCompactList}\item 
 bool {\bf operator==} (const {\bf Bank} \&rhs) const 
-\begin{CompactList}\small\item\em equality operator to check values for equality \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em equality operator to check values for equality \item\end{DoxyCompactList}\item 
 {\bf Bank} \& {\bf operator=} (const {\bf Bank} \&rhs)
-\begin{CompactList}\small\item\em assignment operator to copy non-reference values \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em assignment operator to copy non-\/reference values \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-{\bf Queue}$<$ {\bf Command} $>$ {\bf perBankQueue}\label{class_d_r_a_msim_i_i_1_1_bank_6e2ca8ec2f63931e083a03f8143684a2}
+{\bf Queue}$<$ {\bf Command} $>$ {\bf perBankQueue}\label{class_d_r_a_msim_i_i_1_1_bank_a6e2ca8ec2f63931e083a03f8143684a2}
 
-\begin{CompactList}\small\item\em the command priority queue, stores the commands to be executed \item\end{CompactList}\item 
-tick {\bf lastRASTime}\label{class_d_r_a_msim_i_i_1_1_bank_ae46b468fcd2d6357a3cfb3345752393}
+\begin{DoxyCompactList}\small\item\em the command priority queue, stores the commands to be executed \item\end{DoxyCompactList}\item 
+tick {\bf lastRASTime}\label{class_d_r_a_msim_i_i_1_1_bank_aae46b468fcd2d6357a3cfb3345752393}
 
-\begin{CompactList}\small\item\em when did last RAS command start? \item\end{CompactList}\item 
-tick {\bf lastCASTime}\label{class_d_r_a_msim_i_i_1_1_bank_9638ce1c0abbed003ee7e015cf719654}
+\begin{DoxyCompactList}\small\item\em when did last RAS command start? \item\end{DoxyCompactList}\item 
+tick {\bf lastCASTime}\label{class_d_r_a_msim_i_i_1_1_bank_a9638ce1c0abbed003ee7e015cf719654}
 
-\begin{CompactList}\small\item\em when did last CAS command start? \item\end{CompactList}\item 
-tick {\bf lastCASWTime}\label{class_d_r_a_msim_i_i_1_1_bank_73c5d235d450948bc2dde4001a2f00d6}
+\begin{DoxyCompactList}\small\item\em when did last CAS command start? \item\end{DoxyCompactList}\item 
+tick {\bf lastCASWTime}\label{class_d_r_a_msim_i_i_1_1_bank_a73c5d235d450948bc2dde4001a2f00d6}
 
-\begin{CompactList}\small\item\em when did last CASW command start? \item\end{CompactList}\item 
-tick {\bf lastPrechargeTime}\label{class_d_r_a_msim_i_i_1_1_bank_cfa7062dc21939cca1cd738f9067dd02}
+\begin{DoxyCompactList}\small\item\em when did last CASW command start? \item\end{DoxyCompactList}\item 
+tick {\bf lastPrechargeTime}\label{class_d_r_a_msim_i_i_1_1_bank_acfa7062dc21939cca1cd738f9067dd02}
 
-\begin{CompactList}\small\item\em when did last Precharge command start? \item\end{CompactList}\item 
-unsigned {\bf lastCASLength}\label{class_d_r_a_msim_i_i_1_1_bank_83398f833decb4c62bc2217370d5ba0b}
+\begin{DoxyCompactList}\small\item\em when did last Precharge command start? \item\end{DoxyCompactList}\item 
+unsigned {\bf lastCASLength}\label{class_d_r_a_msim_i_i_1_1_bank_a83398f833decb4c62bc2217370d5ba0b}
 
-\begin{CompactList}\small\item\em the length of the last CAS command issued \item\end{CompactList}\item 
-unsigned {\bf lastCASWLength}\label{class_d_r_a_msim_i_i_1_1_bank_13671b3b1796ca5b2caa0962173917bd}
+\begin{DoxyCompactList}\small\item\em the length of the last CAS command issued \item\end{DoxyCompactList}\item 
+unsigned {\bf lastCASWLength}\label{class_d_r_a_msim_i_i_1_1_bank_a13671b3b1796ca5b2caa0962173917bd}
 
-\begin{CompactList}\small\item\em the length of the last CASW command issued \item\end{CompactList}\item 
-tick {\bf nextActivateTime}\label{class_d_r_a_msim_i_i_1_1_bank_6a48df6911a12cb377e96ce17ffb4812}
+\begin{DoxyCompactList}\small\item\em the length of the last CASW command issued \item\end{DoxyCompactList}\item 
+tick {\bf nextActivateTime}\label{class_d_r_a_msim_i_i_1_1_bank_a6a48df6911a12cb377e96ce17ffb4812}
 
-\begin{CompactList}\small\item\em the time at which an ACT may be sent to this rank \item\end{CompactList}\item 
-tick {\bf nextReadTime}\label{class_d_r_a_msim_i_i_1_1_bank_1a3853a15aeb5acdebb08276cd3ab058}
+\begin{DoxyCompactList}\small\item\em the time at which an ACT may be sent to this rank \item\end{DoxyCompactList}\item 
+tick {\bf nextReadTime}\label{class_d_r_a_msim_i_i_1_1_bank_a1a3853a15aeb5acdebb08276cd3ab058}
 
-\begin{CompactList}\small\item\em the time at which a CAS may be sent to this rank \item\end{CompactList}\item 
-tick {\bf nextWriteTime}\label{class_d_r_a_msim_i_i_1_1_bank_a9457ae760afdb834c9b68ee769ade5f}
+\begin{DoxyCompactList}\small\item\em the time at which a CAS may be sent to this rank \item\end{DoxyCompactList}\item 
+tick {\bf nextWriteTime}\label{class_d_r_a_msim_i_i_1_1_bank_aa9457ae760afdb834c9b68ee769ade5f}
 
-\begin{CompactList}\small\item\em the time at which a CASW may be sent to this rank \item\end{CompactList}\item 
-tick {\bf nextPrechargeTime}\label{class_d_r_a_msim_i_i_1_1_bank_5ce499e4b27efbcc9eb49e135651c971}
+\begin{DoxyCompactList}\small\item\em the time at which a CASW may be sent to this rank \item\end{DoxyCompactList}\item 
+tick {\bf nextPrechargeTime}\label{class_d_r_a_msim_i_i_1_1_bank_a5ce499e4b27efbcc9eb49e135651c971}
 
-\begin{CompactList}\small\item\em the time at which a Pre may be sent to this rank \item\end{CompactList}\item 
-unsigned {\bf openRowID}\label{class_d_r_a_msim_i_i_1_1_bank_40240127116ab430e809ed300949511e}
+\begin{DoxyCompactList}\small\item\em the time at which a Pre may be sent to this rank \item\end{DoxyCompactList}\item 
+unsigned {\bf openRowID}\label{class_d_r_a_msim_i_i_1_1_bank_a40240127116ab430e809ed300949511e}
 
-\begin{CompactList}\small\item\em if the bank is open, what is the row id? \item\end{CompactList}\item 
-bool {\bf activated}\label{class_d_r_a_msim_i_i_1_1_bank_3446e366c59cb3e21c6d411a612750ba}
+\begin{DoxyCompactList}\small\item\em if the bank is open, what is the row id? \item\end{DoxyCompactList}\item 
+bool {\bf activated}\label{class_d_r_a_msim_i_i_1_1_bank_a3446e366c59cb3e21c6d411a612750ba}
 
-\begin{CompactList}\small\item\em if the bank is activated, else precharged \item\end{CompactList}\item 
-unsigned {\bf RASCount}\label{class_d_r_a_msim_i_i_1_1_bank_338a21bc0828ef57cd2d9d4aa7c0ae90}
+\begin{DoxyCompactList}\small\item\em if the bank is activated, else precharged \item\end{DoxyCompactList}\item 
+unsigned {\bf RASCount}\label{class_d_r_a_msim_i_i_1_1_bank_a338a21bc0828ef57cd2d9d4aa7c0ae90}
 
-\begin{CompactList}\small\item\em the total number of RAS commands in this epoch \item\end{CompactList}\item 
-unsigned {\bf totalRASCount}\label{class_d_r_a_msim_i_i_1_1_bank_a90b366a2a825ccf900f92f61ad212ea}
+\begin{DoxyCompactList}\small\item\em the total number of RAS commands in this epoch \item\end{DoxyCompactList}\item 
+unsigned {\bf totalRASCount}\label{class_d_r_a_msim_i_i_1_1_bank_aa90b366a2a825ccf900f92f61ad212ea}
 
-\begin{CompactList}\small\item\em the number of RAS commands \item\end{CompactList}\item 
-unsigned {\bf CASCount}\label{class_d_r_a_msim_i_i_1_1_bank_9e2f81ec167624aa605ebc364d4e1fc2}
+\begin{DoxyCompactList}\small\item\em the number of RAS commands \item\end{DoxyCompactList}\item 
+unsigned {\bf CASCount}\label{class_d_r_a_msim_i_i_1_1_bank_a9e2f81ec167624aa605ebc364d4e1fc2}
 
-\begin{CompactList}\small\item\em the total number of CAS commands in this epoch \item\end{CompactList}\item 
-unsigned {\bf totalCASCount}\label{class_d_r_a_msim_i_i_1_1_bank_17aa509630e5e07577b48763bb2106c3}
+\begin{DoxyCompactList}\small\item\em the total number of CAS commands in this epoch \item\end{DoxyCompactList}\item 
+unsigned {\bf totalCASCount}\label{class_d_r_a_msim_i_i_1_1_bank_a17aa509630e5e07577b48763bb2106c3}
 
-\begin{CompactList}\small\item\em the number of CAS commands \item\end{CompactList}\item 
-unsigned {\bf CASWCount}\label{class_d_r_a_msim_i_i_1_1_bank_55f29a529b11815fceb24a8f3649360a}
+\begin{DoxyCompactList}\small\item\em the number of CAS commands \item\end{DoxyCompactList}\item 
+unsigned {\bf CASWCount}\label{class_d_r_a_msim_i_i_1_1_bank_a55f29a529b11815fceb24a8f3649360a}
 
-\begin{CompactList}\small\item\em the total number of CAS+W commands in this epoch \item\end{CompactList}\item 
-unsigned {\bf totalCASWCount}\label{class_d_r_a_msim_i_i_1_1_bank_97b466c58dcf79bf7aec3172e0c8d70e}
+\begin{DoxyCompactList}\small\item\em the total number of CAS+W commands in this epoch \item\end{DoxyCompactList}\item 
+unsigned {\bf totalCASWCount}\label{class_d_r_a_msim_i_i_1_1_bank_a97b466c58dcf79bf7aec3172e0c8d70e}
 
-\begin{CompactList}\small\item\em the number of CASW commands \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the number of CASW commands \item\end{DoxyCompactList}\item 
+bool {\bf allHits}\label{class_d_r_a_msim_i_i_1_1_bank_a111f3114d025628ca1f50c71206d46f4}
+
+\begin{DoxyCompactList}\small\item\em whether every CAS was a read and hit in the cache, the RAS can be eliminated \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-this class logically represents a bank 
-
-contains per bank queues as well as stats about when events happened 
+this class logically represents a bank contains per bank queues as well as stats about when events happened 
 
 \subsection{Member Function Documentation}
 \index{DRAMsimII::Bank@{DRAMsimII::Bank}!aggressiveInsert@{aggressiveInsert}}
 \index{aggressiveInsert@{aggressiveInsert}!DRAMsimII::Bank@{DRAMsimII::Bank}}
-\subsubsection[{aggressiveInsert}]{\setlength{\rightskip}{0pt plus 5cm}bool Bank::aggressiveInsert ({\bf Transaction} $\ast$ {\em incomingTransaction}, \/  const tick {\em time})}\label{class_d_r_a_msim_i_i_1_1_bank_c482cea1bc37902a208c9f848df27355}
+\subsubsection[{aggressiveInsert}]{\setlength{\rightskip}{0pt plus 5cm}bool Bank::aggressiveInsert ({\bf Transaction} $\ast$ {\em incomingTransaction}, \/  const tick {\em time})}\label{class_d_r_a_msim_i_i_1_1_bank_ac482cea1bc37902a208c9f848df27355}
 
 
 see if there is room to insert a command using the Close Page Aggressive algorithm and then insert 
 
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em incomingTransaction}]the transaction to insert \item[{\em time}]the current time, used to check and prevent against starvation of commands \end{description}
-\end{Desc}
-\begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em incomingTransaction}]the transaction to insert \item[{\em time}]the current time, used to check and prevent against starvation of commands \end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
 \index{DRAMsimII::Bank@{DRAMsimII::Bank}!closePageAggressiveInsertCheck@{closePageAggressiveInsertCheck}}
 \index{closePageAggressiveInsertCheck@{closePageAggressiveInsertCheck}!DRAMsimII::Bank@{DRAMsimII::Bank}}
-\subsubsection[{closePageAggressiveInsertCheck}]{\setlength{\rightskip}{0pt plus 5cm}bool Bank::closePageAggressiveInsertCheck (const {\bf Transaction} $\ast$ {\em incomingTransaction}, \/  const tick {\em time}) const}\label{class_d_r_a_msim_i_i_1_1_bank_a168722615032aaa2924257d78dc66a9}
+\subsubsection[{closePageAggressiveInsertCheck}]{\setlength{\rightskip}{0pt plus 5cm}bool Bank::closePageAggressiveInsertCheck (const {\bf Transaction} $\ast$ {\em incomingTransaction}, \/  const tick {\em time}) const}\label{class_d_r_a_msim_i_i_1_1_bank_aa168722615032aaa2924257d78dc66a9}
 
 
 see if there is room to insert a command using the Close Page Aggressive algorithm 
 
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em incomingTransaction}]the transaction to insert \item[{\em time}]the current time, used to check and prevent against starvation of commands \end{description}
-\end{Desc}
-\begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em incomingTransaction}]the transaction to insert \item[{\em time}]the current time, used to check and prevent against starvation of commands \end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
 \index{DRAMsimII::Bank@{DRAMsimII::Bank}!issueCAS@{issueCAS}}
 \index{issueCAS@{issueCAS}!DRAMsimII::Bank@{DRAMsimII::Bank}}
-\subsubsection[{issueCAS}]{\setlength{\rightskip}{0pt plus 5cm}void Bank::issueCAS (const tick {\em currentTime}, \/  const {\bf Command} $\ast$ {\em currentCommand})}\label{class_d_r_a_msim_i_i_1_1_bank_1f759cc59082c2ca03271ca55f3ab1f6}
-
-
+\subsubsection[{issueCAS}]{\setlength{\rightskip}{0pt plus 5cm}void Bank::issueCAS (const tick {\em currentTime}, \/  const {\bf Command} $\ast$ {\em currentCommand})}\label{class_d_r_a_msim_i_i_1_1_bank_a1f759cc59082c2ca03271ca55f3ab1f6}
 
 
 \begin{Desc}
 \item[{\bf Todo}]which is correct? \end{Desc}
+
+
 \index{DRAMsimII::Bank@{DRAMsimII::Bank}!openPageAggressiveInsertCheck@{openPageAggressiveInsertCheck}}
 \index{openPageAggressiveInsertCheck@{openPageAggressiveInsertCheck}!DRAMsimII::Bank@{DRAMsimII::Bank}}
-\subsubsection[{openPageAggressiveInsertCheck}]{\setlength{\rightskip}{0pt plus 5cm}bool Bank::openPageAggressiveInsertCheck (const {\bf Transaction} $\ast$ {\em incomingTransaction}, \/  const tick {\em time}) const}\label{class_d_r_a_msim_i_i_1_1_bank_ee120e04392028aace4dfa79c408e3d4}
+\subsubsection[{openPageAggressiveInsertCheck}]{\setlength{\rightskip}{0pt plus 5cm}bool Bank::openPageAggressiveInsertCheck (const {\bf Transaction} $\ast$ {\em incomingTransaction}, \/  const tick {\em time}) const}\label{class_d_r_a_msim_i_i_1_1_bank_aee120e04392028aace4dfa79c408e3d4}
 
 
 check to see if this transaction can be inserted successfully via the open page aggressive insert mechanism 
 
-goes through the per bank queue to see that there is a slot to insert into and that there is a precharge command to the same row that it can insert before also looks for CAS, Pre commands that can be compressed in order to fit this \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em incomingTransaction}]the transaction to test \item[{\em time}]the current time, used to check and prevent against starvation of commands \end{description}
-\end{Desc}
-\begin{Desc}
-\item[Returns:]true if it is able to be inserted, false otherwise \end{Desc}
+goes through the per bank queue to see that there is a slot to insert into and that there is a precharge command to the same row that it can insert before also looks for CAS, Pre commands that can be compressed in order to fit this \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em incomingTransaction}]the transaction to test \item[{\em time}]the current time, used to check and prevent against starvation of commands \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if it is able to be inserted, false otherwise 
+\end{DoxyReturn}
 \index{DRAMsimII::Bank@{DRAMsimII::Bank}!operator=@{operator=}}
 \index{operator=@{operator=}!DRAMsimII::Bank@{DRAMsimII::Bank}}
-\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Bank} \& Bank::operator= (const {\bf Bank} \& {\em rhs})}\label{class_d_r_a_msim_i_i_1_1_bank_a920eb2489a9724e3d2093aa7765c330}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Bank} \& Bank::operator= (const {\bf Bank} \& {\em rhs})}\label{class_d_r_a_msim_i_i_1_1_bank_aa920eb2489a9724e3d2093aa7765c330}
 
 
-assignment operator to copy non-reference values 
+assignment operator to copy non-\/reference values 
 
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em rhs}]the incomingTransaction that will be copied into this object \end{description}
-\end{Desc}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em rhs}]the incomingTransaction that will be copied into this object \end{DoxyParams}
 \index{DRAMsimII::Bank@{DRAMsimII::Bank}!operator==@{operator==}}
 \index{operator==@{operator==}!DRAMsimII::Bank@{DRAMsimII::Bank}}
-\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool Bank::operator== (const {\bf Bank} \& {\em rhs}) const}\label{class_d_r_a_msim_i_i_1_1_bank_d8aad44df9b266d6a91daa622c5d61f1}
+\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool Bank::operator== (const {\bf Bank} \& {\em rhs}) const}\label{class_d_r_a_msim_i_i_1_1_bank_ad8aad44df9b266d6a91daa622c5d61f1}
 
 
 equality operator to check values for equality 
 
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em rhs}]the incomingTransaction that will be copied into this object \end{description}
-\end{Desc}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em rhs}]the incomingTransaction that will be copied into this object \end{DoxyParams}
 \index{DRAMsimII::Bank@{DRAMsimII::Bank}!resetToTime@{resetToTime}}
 \index{resetToTime@{resetToTime}!DRAMsimII::Bank@{DRAMsimII::Bank}}
-\subsubsection[{resetToTime}]{\setlength{\rightskip}{0pt plus 5cm}void Bank::resetToTime (const tick {\em time})}\label{class_d_r_a_msim_i_i_1_1_bank_79b5b7f7e8541bea8742f5cb7d8045db}
+\subsubsection[{resetToTime}]{\setlength{\rightskip}{0pt plus 5cm}void Bank::resetToTime (const tick {\em time})}\label{class_d_r_a_msim_i_i_1_1_bank_a79b5b7f7e8541bea8742f5cb7d8045db}
 
 
 reset statistics so that it appears the last command was not long ago 
 
-choose recent times for the lastX actions so that values are not so large when looking to see when the next available time to execute any dependent command. Often issued just after fast-forwarding finishes in a simulator 
+choose recent times for the lastX actions so that values are not so large when looking to see when the next available time to execute any dependent command. Often issued just after fast-\/forwarding finishes in a simulator 
 
-The documentation for this class was generated from the following files:\begin{CompactItemize}
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
 \item 
-src/Bank.h\item 
-src/Bank.cpp\end{CompactItemize}
+src/Bank.hh\item 
+src/Bank.cc\end{DoxyCompactItemize}

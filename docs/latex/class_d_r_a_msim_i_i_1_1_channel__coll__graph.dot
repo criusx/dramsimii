@@ -14,17 +14,16 @@ digraph G
   Node5 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="hostTransaction"];
   Node5 [label="DRAMsimII::Transaction",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_transaction.html",tooltip="a request to read or write some portion of memory, atomically"];
   Node3 -> Node5 [dir=back,color="midnightblue",fontsize="10",style="solid"];
-  Node6 -> Node5 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="freeTransactionPool"];
-  Node6 [label="DRAMsimII::Queue\< Transaction \>",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_queue.html"];
-  Node7 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="freeCommandPool"];
-  Node7 [label="DRAMsimII::Queue\< Command \>",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_queue.html"];
-  Node8 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="systemConfig"];
-  Node8 [label="DRAMsimII::SystemConfiguration",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_system_configuration.html",tooltip="stores the system configuration options for a dramSystem"];
-  Node9 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="timingSpecification"];
-  Node9 [label="DRAMsimII::TimingSpecification",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_timing_specification.html",tooltip="contains all the specs for this channel&#39;s DIMMs"];
-  Node10 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="powerModel"];
-  Node10 [label="DRAMsimII::PowerConfig",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_power_config.html",tooltip="stores power configuration parameters for this DRAM system necessary to calculate..."];
-  Node6 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="transactionQueue"];
+  Node6 -> Node2 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="freeCommandPool"];
+  Node6 [label="DRAMsimII::Queue\< Command \>",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_queue.html"];
+  Node7 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="systemConfig"];
+  Node7 [label="DRAMsimII::SystemConfiguration",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_system_configuration.html",tooltip="stores the system configuration options for a dramSystem"];
+  Node8 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="timingSpecification"];
+  Node8 [label="DRAMsimII::TimingSpecification",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_timing_specification.html",tooltip="contains all the specs for this channel&#39;s DIMMs"];
+  Node9 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="powerModel"];
+  Node9 [label="DRAMsimII::PowerConfig",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_power_config.html",tooltip="stores power configuration parameters for this DRAM system necessary to calculate..."];
+  Node10 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="transactionQueue"];
+  Node10 [label="DRAMsimII::Queue\< Transaction \>",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_queue.html"];
   Node11 -> Node1 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="statistics"];
   Node11 [label="DRAMsimII::Statistics",height=0.2,width=0.4,color="black",URL="$class_d_r_a_msim_i_i_1_1_statistics.html",tooltip="stores statistics about this memory system, primarily relating to counts of transactions/commands..."];
 }

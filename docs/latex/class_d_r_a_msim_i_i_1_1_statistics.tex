@@ -1,71 +1,102 @@
 \section{DRAMsimII::Statistics Class Reference}
 \label{class_d_r_a_msim_i_i_1_1_statistics}\index{DRAMsimII::Statistics@{DRAMsimII::Statistics}}
+
+
 stores statistics about this memory system, primarily relating to counts of transactions/commands  
 
 
-{\tt \#include $<$Statistics.h$>$}
+
+
+{\ttfamily \#include $<$Statistics.hh$>$}
 
 \subsection*{Public Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-{\bf Statistics} (const {\bf Settings} \&settings)\label{class_d_r_a_msim_i_i_1_1_statistics_b934be5ce63e8f1a2385378eaf7d9c0f}
+{\bf Statistics} (const {\bf Settings} \&settings)\label{class_d_r_a_msim_i_i_1_1_statistics_ab934be5ce63e8f1a2385378eaf7d9c0f}
 
-\begin{CompactList}\small\item\em constructor based on a given set of \doxyref{Settings}{p.}{class_d_r_a_msim_i_i_1_1_settings} \item\end{CompactList}\item 
-void {\bf clear} ()\label{class_d_r_a_msim_i_i_1_1_statistics_4faa80fa024777d57b6fa4b3559eec0a}
+\begin{DoxyCompactList}\small\item\em constructor based on a given set of \doxyref{Settings}{p.}{class_d_r_a_msim_i_i_1_1_settings} \item\end{DoxyCompactList}\item 
+void {\bf clear} ()\label{class_d_r_a_msim_i_i_1_1_statistics_a4faa80fa024777d57b6fa4b3559eec0a}
 
-\begin{CompactList}\small\item\em reset collected statistics up to this point \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em reset collected statistics up to this point \item\end{DoxyCompactList}\item 
 void {\bf collectTransactionStats} (const {\bf Transaction} $\ast$)
-\begin{CompactList}\small\item\em collects transaction statistics once a transaction has finished \item\end{CompactList}\item 
-void {\bf collectCommandStats} (const {\bf Command} $\ast$)\label{class_d_r_a_msim_i_i_1_1_statistics_350c117a7661cf53c5be4afdc548265d}
+\begin{DoxyCompactList}\small\item\em collects transaction statistics once a transaction has finished \item\end{DoxyCompactList}\item 
+void {\bf collectCommandStats} (const {\bf Command} $\ast$)\label{class_d_r_a_msim_i_i_1_1_statistics_a350c117a7661cf53c5be4afdc548265d}
 
-\begin{CompactList}\small\item\em collects commands stats once a command has executed \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em collects commands stats once a command has executed \item\end{DoxyCompactList}\item 
+void {\bf reportRowBufferAccess} (const {\bf Transaction} $\ast$currentTransaction, bool isHit)\label{class_d_r_a_msim_i_i_1_1_statistics_aa8332f04f8e8e8a3a60e1f386eabbb79}
+
+\begin{DoxyCompactList}\small\item\em tells of a row buffer hit when setting up commands \item\end{DoxyCompactList}\item 
 bool {\bf operator==} (const {\bf Statistics} \&right) const 
-\begin{CompactList}\small\item\em equality operator to test if two sets of statistics are equal \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em equality operator to test if two sets of statistics are equal \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-unsigned {\bf readBytesTransferred}\label{class_d_r_a_msim_i_i_1_1_statistics_ce110a484a7a8e5e55111d08c4ed46b4}
+const unsigned {\bf cacheHitLatency}\label{class_d_r_a_msim_i_i_1_1_statistics_a01a85b3e61912d467cbd07d0ecb9a235}
 
-\begin{CompactList}\small\item\em the number of bytes read from DRAMs this epoch \item\end{CompactList}\item 
-unsigned {\bf writeBytesTransferred}\label{class_d_r_a_msim_i_i_1_1_statistics_ffe711e7d5e593d2b6dc5b35ec7064ce}
+\begin{DoxyCompactList}\small\item\em the latency caused when a transaction hits in the cache \item\end{DoxyCompactList}\item 
+std::vector$<$ std::pair$<$ unsigned, unsigned $>$ $>$ {\bf dimmCacheBandwidthData}\label{class_d_r_a_msim_i_i_1_1_statistics_a0519bda9d8211620d46cbadafebba33a}
 
-\begin{CompactList}\small\item\em the number of bytes written to DRAMs this epoch \item\end{CompactList}\item 
-float {\bf timePerEpoch}\label{class_d_r_a_msim_i_i_1_1_statistics_abd9529bd4025a1902237221dd2a862b}
+\begin{DoxyCompactList}\small\item\em per channel count of bytes read and written \item\end{DoxyCompactList}\item 
+std::vector$<$ std::pair$<$ unsigned, unsigned $>$ $>$ {\bf bandwidthData}\label{class_d_r_a_msim_i_i_1_1_statistics_aae19bedc3cac37ac2f3091d8881ded21}
 
-\begin{CompactList}\small\item\em the number of seconds that have elapsed per epoch \item\end{CompactList}\item 
-unsigned {\bf rowHits}\label{class_d_r_a_msim_i_i_1_1_statistics_c50dbc84cfc2a6663628a452f8f12b55}
+\begin{DoxyCompactList}\small\item\em per channel count of bytes read and written \item\end{DoxyCompactList}\item 
+float {\bf timePerEpoch}\label{class_d_r_a_msim_i_i_1_1_statistics_aabd9529bd4025a1902237221dd2a862b}
 
-\begin{CompactList}\small\item\em the number of row hits this epoch \item\end{CompactList}\item 
-unsigned {\bf rowMisses}\label{class_d_r_a_msim_i_i_1_1_statistics_285b5431967fd62a7d5aceaf65c148e8}
+\begin{DoxyCompactList}\small\item\em the number of seconds that have elapsed per epoch \item\end{DoxyCompactList}\item 
+std::vector$<$ std::vector$<$ std::pair$<$ unsigned, unsigned $>$ $>$ $>$ {\bf rowBufferAccesses}\label{class_d_r_a_msim_i_i_1_1_statistics_a4f0607a67275df8011c0552f69f40c14}
 
-\begin{CompactList}\small\item\em the number of row misses this epoch \item\end{CompactList}\item 
-std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf commandDelay}\label{class_d_r_a_msim_i_i_1_1_statistics_1e7c04aec466e485921d029fed78cef7}
+\begin{DoxyCompactList}\small\item\em the number of row hits this epoch \item\end{DoxyCompactList}\item 
+std::vector$<$ std::vector$<$ unsigned $>$ $>$ {\bf rasReduction}\label{class_d_r_a_msim_i_i_1_1_statistics_ab46d8760f6493bf70360f32d0ea22d37}
 
-\begin{CompactList}\small\item\em stores the start time - enqueue time stats for commands \item\end{CompactList}\item 
-std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf commandExecution}\label{class_d_r_a_msim_i_i_1_1_statistics_4916a8db7b11670624bfbc4954ea1f0d}
+\begin{DoxyCompactList}\small\item\em the number of unnecessary RAS commands \item\end{DoxyCompactList}\item 
+unsigned {\bf issuedAtTFAW}\label{class_d_r_a_msim_i_i_1_1_statistics_a6aee8e088dccf6ecdf0e647e485de947}
 
-\begin{CompactList}\small\item\em stores the finish time - start time stats for commands \item\end{CompactList}\item 
-std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf commandTurnaround}\label{class_d_r_a_msim_i_i_1_1_statistics_0126f561db902664181d5cbe4204d57d}
+\begin{DoxyCompactList}\small\item\em the number of commands executed at exactly tFAW \item\end{DoxyCompactList}\item 
+std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf commandDelay}\label{class_d_r_a_msim_i_i_1_1_statistics_a1e7c04aec466e485921d029fed78cef7}
 
-\begin{CompactList}\small\item\em stores the finish time - enqueue time stats for commands \item\end{CompactList}\item 
-std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf transactionDecodeDelay}\label{class_d_r_a_msim_i_i_1_1_statistics_73f0086dc52647d03f93fba392845e20}
+\begin{DoxyCompactList}\small\item\em stores the start time -\/ enqueue time stats for commands \item\end{DoxyCompactList}\item 
+std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf commandExecution}\label{class_d_r_a_msim_i_i_1_1_statistics_a4916a8db7b11670624bfbc4954ea1f0d}
 
-\begin{CompactList}\small\item\em stores the decode time - enqueue time stats for transactions \item\end{CompactList}\item 
-std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf transactionExecution}\label{class_d_r_a_msim_i_i_1_1_statistics_c1cd49ee1f60d9c2af695a10133094c3}
+\begin{DoxyCompactList}\small\item\em stores the finish time -\/ start time stats for commands \item\end{DoxyCompactList}\item 
+std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf commandTurnaround}\label{class_d_r_a_msim_i_i_1_1_statistics_a0126f561db902664181d5cbe4204d57d}
 
-\begin{CompactList}\small\item\em stores the finish time - start time stats for transactions \item\end{CompactList}\item 
-std::map$<$ PhysicalAddress, DelayCounter $>$ {\bf pcOccurrence}\label{class_d_r_a_msim_i_i_1_1_statistics_56564e2f052a21f1ed63a6c06794d498}
+\begin{DoxyCompactList}\small\item\em stores the finish time -\/ enqueue time stats for commands \item\end{DoxyCompactList}\item 
+std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf transactionDecodeDelay}\label{class_d_r_a_msim_i_i_1_1_statistics_a73f0086dc52647d03f93fba392845e20}
 
-\begin{CompactList}\small\item\em stores the PC address, number of times it was seen and total latency \item\end{CompactList}\item 
-std::map$<$ PhysicalAddress, unsigned $>$ {\bf workingSet}\label{class_d_r_a_msim_i_i_1_1_statistics_2920436ea74c579a2f1f7e6654987a83}
+\begin{DoxyCompactList}\small\item\em stores the decode time -\/ enqueue time stats for transactions \item\end{DoxyCompactList}\item 
+std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf transactionExecution}\label{class_d_r_a_msim_i_i_1_1_statistics_ac1cd49ee1f60d9c2af695a10133094c3}
 
-\begin{CompactList}\small\item\em stores all the addresses seen in an epoch to calculate the working set \item\end{CompactList}\item 
-std::vector$<$ unsigned $>$ {\bf aggregateBankUtilization}\label{class_d_r_a_msim_i_i_1_1_statistics_19ccc90fbd490bb9a81223d32e7de572}
+\begin{DoxyCompactList}\small\item\em stores the finish time -\/ start time stats for transactions \item\end{DoxyCompactList}\item 
+std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf adjustedTransactionExecution}\label{class_d_r_a_msim_i_i_1_1_statistics_a6bf671378018023a967fdbd9163557ea}
 
-\begin{CompactList}\small\item\em the bank usage per bank \item\end{CompactList}\item 
-std::vector$<$ tick $>$ {\bf bankLatencyUtilization}\label{class_d_r_a_msim_i_i_1_1_statistics_1315948279be57a57e231da2960e981f}
+\begin{DoxyCompactList}\small\item\em the adjusted times, excluding transactions that hit in the cache \item\end{DoxyCompactList}\item 
+std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf cumulativeTransactionExecution}\label{class_d_r_a_msim_i_i_1_1_statistics_aba826645414b7a526813a96b17716fc3}
 
-\begin{CompactList}\small\item\em the latency due to each bank per unit time \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the transaction execution time of all transactions to the present \item\end{DoxyCompactList}\item 
+std::tr1::unordered\_\-map$<$ unsigned, unsigned $>$ {\bf cumulativeAdjustedTransactionExecution}\label{class_d_r_a_msim_i_i_1_1_statistics_a9610a1fe96aaef78899a68b01f353e14}
+
+\begin{DoxyCompactList}\small\item\em average transaction execution, adjusted for cache hits \item\end{DoxyCompactList}\item 
+tick {\bf cacheLatency}\label{class_d_r_a_msim_i_i_1_1_statistics_a76959413330c2960420c889f5cbffee2}
+
+\begin{DoxyCompactList}\small\item\em the latency due to transactions that were serviced by the cache \item\end{DoxyCompactList}\item 
+std::map$<$ PhysicalAddress, DelayCounter $>$ {\bf pcOccurrence}\label{class_d_r_a_msim_i_i_1_1_statistics_a56564e2f052a21f1ed63a6c06794d498}
+
+\begin{DoxyCompactList}\small\item\em stores the PC address, number of times it was seen and total latency \item\end{DoxyCompactList}\item 
+std::map$<$ PhysicalAddress, unsigned $>$ {\bf workingSet}\label{class_d_r_a_msim_i_i_1_1_statistics_a2920436ea74c579a2f1f7e6654987a83}
+
+\begin{DoxyCompactList}\small\item\em stores all the addresses seen in an epoch to calculate the working set \item\end{DoxyCompactList}\item 
+std::vector$<$ unsigned $>$ {\bf aggregateBankUtilization}\label{class_d_r_a_msim_i_i_1_1_statistics_a19ccc90fbd490bb9a81223d32e7de572}
+
+\begin{DoxyCompactList}\small\item\em the bank usage per bank \item\end{DoxyCompactList}\item 
+std::vector$<$ tick $>$ {\bf bankLatencyUtilization}\label{class_d_r_a_msim_i_i_1_1_statistics_a1315948279be57a57e231da2960e981f}
+
+\begin{DoxyCompactList}\small\item\em the latency due to each bank per unit time \item\end{DoxyCompactList}\item 
+std::vector$<$ std::vector$<$ std::pair$<$ std::pair$<$ uint64\_\-t, uint64\_\-t $>$, std::pair$<$ uint64\_\-t, uint64\_\-t $>$ $>$ $>$ $>$ {\bf hitRate}\label{class_d_r_a_msim_i_i_1_1_statistics_abfd91f1d31099fee83253d301b7b6bc0}
+
+\begin{DoxyCompactList}\small\item\em the hit rate of the commands in the per-\/DIMM cache \item\end{DoxyCompactList}\item 
+std::vector$<$ std::vector$<$ std::pair$<$ std::pair$<$ uint64\_\-t, uint64\_\-t $>$, std::pair$<$ uint64\_\-t, uint64\_\-t $>$ $>$ $>$ $>$ {\bf cumulativeHitRate}\label{class_d_r_a_msim_i_i_1_1_statistics_a57f721795e3340c7f5a35dee16d4344f}
+
+\begin{DoxyCompactList}\small\item\em the hit rate of the commands in the per-\/DIMM cache for the entire run \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -74,7 +105,7 @@ stores statistics about this memory system, primarily relating to counts of tran
 \subsection{Member Function Documentation}
 \index{DRAMsimII::Statistics@{DRAMsimII::Statistics}!collectTransactionStats@{collectTransactionStats}}
 \index{collectTransactionStats@{collectTransactionStats}!DRAMsimII::Statistics@{DRAMsimII::Statistics}}
-\subsubsection[{collectTransactionStats}]{\setlength{\rightskip}{0pt plus 5cm}void Statistics::collectTransactionStats (const {\bf Transaction} $\ast$ {\em currentTransaction})}\label{class_d_r_a_msim_i_i_1_1_statistics_e435d174dc17300c38b02497751688cb}
+\subsubsection[{collectTransactionStats}]{\setlength{\rightskip}{0pt plus 5cm}void Statistics::collectTransactionStats (const {\bf Transaction} $\ast$ {\em currentTransaction})}\label{class_d_r_a_msim_i_i_1_1_statistics_ae435d174dc17300c38b02497751688cb}
 
 
 collects transaction statistics once a transaction has finished 
@@ -83,9 +114,11 @@ collects transaction statistics once a transaction has finished
 
 \begin{Desc}
 \item[{\bf Todo}]use DQ $\ast$ length to calculate bytes Tx, Rx \end{Desc}
+
+
 \index{DRAMsimII::Statistics@{DRAMsimII::Statistics}!operator==@{operator==}}
 \index{operator==@{operator==}!DRAMsimII::Statistics@{DRAMsimII::Statistics}}
-\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool Statistics::operator== (const {\bf Statistics} \& {\em right}) const}\label{class_d_r_a_msim_i_i_1_1_statistics_dd4ecfbdd143d3cf6a8413d395a17e58}
+\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool Statistics::operator== (const {\bf Statistics} \& {\em right}) const}\label{class_d_r_a_msim_i_i_1_1_statistics_add4ecfbdd143d3cf6a8413d395a17e58}
 
 
 equality operator to test if two sets of statistics are equal 
@@ -96,7 +129,9 @@ equality operator to test if two sets of statistics are equal
 \item[{\bf Todo}]restore comparisons once tr1 implementations support this \end{Desc}
 
 
-The documentation for this class was generated from the following files:\begin{CompactItemize}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
 \item 
-src/Statistics.h\item 
-src/Statistics.cpp\end{CompactItemize}
+src/Statistics.hh\item 
+src/Statistics.cc\end{DoxyCompactItemize}

@@ -1,100 +1,105 @@
 \section{DRAMsimII::Transaction Class Reference}
 \label{class_d_r_a_msim_i_i_1_1_transaction}\index{DRAMsimII::Transaction@{DRAMsimII::Transaction}}
+
+
 a request to read or write some portion of memory, atomically  
 
 
-{\tt \#include $<$transaction.h$>$}
+
+
+{\ttfamily \#include $<$transaction.hh$>$}
+
+
 
 Inherits {\bf DRAMsimII::Event}.
 
+
+
 Collaboration diagram for DRAMsimII::Transaction:\subsection*{Public Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-tick {\bf getDecodeTime} () const \label{class_d_r_a_msim_i_i_1_1_transaction_6f3ffd616ea2ac0a57c00c870c3ed7c7}
+tick {\bf getDecodeTime} () const \label{class_d_r_a_msim_i_i_1_1_transaction_a6f3ffd616ea2ac0a57c00c870c3ed7c7}
 
-\begin{CompactList}\small\item\em get its decode time \item\end{CompactList}\item 
-tick {\bf getDecodeDelay} () const \label{class_d_r_a_msim_i_i_1_1_transaction_9150a5afae5893e9ccd1b05b396aeea0}
+\begin{DoxyCompactList}\small\item\em get its decode time \item\end{DoxyCompactList}\item 
+tick {\bf getDecodeDelay} () const \label{class_d_r_a_msim_i_i_1_1_transaction_a9150a5afae5893e9ccd1b05b396aeea0}
 
-\begin{CompactList}\small\item\em get the time it took before this transaction was decoded \item\end{CompactList}\item 
-PhysicalAddress {\bf getProgramCounter} () const \label{class_d_r_a_msim_i_i_1_1_transaction_4062ffc918d35c057ebc6b03fe0be3ba}
+\begin{DoxyCompactList}\small\item\em get the time it took before this transaction was decoded \item\end{DoxyCompactList}\item 
+PhysicalAddress {\bf getProgramCounter} () const \label{class_d_r_a_msim_i_i_1_1_transaction_a4062ffc918d35c057ebc6b03fe0be3ba}
 
-\begin{CompactList}\small\item\em get the program counter for this transaction \item\end{CompactList}\item 
-unsigned {\bf getLength} () const \label{class_d_r_a_msim_i_i_1_1_transaction_92b4de22f19d5d659f236f40f442801d}
+\begin{DoxyCompactList}\small\item\em get the program counter for this transaction \item\end{DoxyCompactList}\item 
+unsigned {\bf getLength} () const \label{class_d_r_a_msim_i_i_1_1_transaction_a92b4de22f19d5d659f236f40f442801d}
 
-\begin{CompactList}\small\item\em get the number of bytes requested \item\end{CompactList}\item 
-TransactionType {\bf getType} () const \label{class_d_r_a_msim_i_i_1_1_transaction_f8a03aa94ca2d4e196d54c5ca46d0e1a}
+\begin{DoxyCompactList}\small\item\em get the number of bytes requested \item\end{DoxyCompactList}\item 
+TransactionType {\bf getType} () const \label{class_d_r_a_msim_i_i_1_1_transaction_af8a03aa94ca2d4e196d54c5ca46d0e1a}
 
-\begin{CompactList}\small\item\em get what type of transaction this is \item\end{CompactList}\item 
-unsigned {\bf getOriginalTransaction} () const \label{class_d_r_a_msim_i_i_1_1_transaction_e7a386db95dd3b642b05029d7002a401}
+\begin{DoxyCompactList}\small\item\em get what type of transaction this is \item\end{DoxyCompactList}\item 
+unsigned {\bf getOriginalTransaction} () const \label{class_d_r_a_msim_i_i_1_1_transaction_ae7a386db95dd3b642b05029d7002a401}
 
-\begin{CompactList}\small\item\em get the external transaction that this is a representation for \item\end{CompactList}\item 
-{\bf Transaction} (const TransactionType transType, const tick {\bf arrivalTime}, const unsigned burstLength, const {\bf Address} \&{\bf address}, PhysicalAddress {\bf PC}, int threadNumber, const unsigned originalTrans=UINT\_\-MAX)\label{class_d_r_a_msim_i_i_1_1_transaction_5c1c99a53ce9d4a799f245268d2dc537}
+\begin{DoxyCompactList}\small\item\em get the external transaction that this is a representation for \item\end{DoxyCompactList}\item 
+{\bf Transaction} (const TransactionType transType, const tick {\bf arrivalTime}, const unsigned burstLength, const {\bf Address} \&{\bf address}, PhysicalAddress {\bf PC}, int threadNumber, const unsigned originalTrans=UINT\_\-MAX)\label{class_d_r_a_msim_i_i_1_1_transaction_a5c1c99a53ce9d4a799f245268d2dc537}
 
-\begin{CompactList}\small\item\em constructor to use when creating a transaction based on a request that has a possible program counter and thread ID \item\end{CompactList}\item 
-{\bf Transaction} (const TransactionType transType, const tick {\bf arrivalTime}, const unsigned burstLength, const {\bf Address} \&{\bf address}, const unsigned originalTrans=UINT\_\-MAX)\label{class_d_r_a_msim_i_i_1_1_transaction_fbd63f694ace99a07fa448160507064f}
+\begin{DoxyCompactList}\small\item\em constructor to use when creating a transaction based on a request that has a possible program counter and thread ID \item\end{DoxyCompactList}\item 
+{\bf Transaction} (const TransactionType transType, const tick {\bf arrivalTime}, const unsigned burstLength, const {\bf Address} \&{\bf address}, const unsigned originalTrans=UINT\_\-MAX)\label{class_d_r_a_msim_i_i_1_1_transaction_afbd63f694ace99a07fa448160507064f}
 
-\begin{CompactList}\small\item\em constructor to use when creating a transaction that is linked to a native transaction \item\end{CompactList}\item 
-{\bf Transaction} (const TransactionType transType, const tick {\bf arrivalTime}, const unsigned burstLength, const PhysicalAddress physicalAddress, PhysicalAddress {\bf PC}, int threadNumber, const unsigned originalTrans=UINT\_\-MAX)\label{class_d_r_a_msim_i_i_1_1_transaction_d01bf6da8c4f48a704fd0ba444a4475c}
+\begin{DoxyCompactList}\small\item\em constructor to use when creating a transaction that is linked to a native transaction \item\end{DoxyCompactList}\item 
+{\bf Transaction} (const TransactionType transType, const tick {\bf arrivalTime}, const unsigned burstLength, const PhysicalAddress physicalAddress, PhysicalAddress {\bf PC}, int threadNumber, const unsigned originalTrans=UINT\_\-MAX)\label{class_d_r_a_msim_i_i_1_1_transaction_ad01bf6da8c4f48a704fd0ba444a4475c}
 
-\begin{CompactList}\small\item\em constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction \item\end{CompactList}\item 
-{\bf Transaction} (const {\bf Transaction} \&rhs)\label{class_d_r_a_msim_i_i_1_1_transaction_bf61afbd5abc7698fc59e9ee86f620a7}
+\begin{DoxyCompactList}\small\item\em constructor to create a transaction with a certain size, enqueue time, attributes, and pointer to encapsulated external transaction \item\end{DoxyCompactList}\item 
+{\bf Transaction} (const {\bf Transaction} \&rhs)\label{class_d_r_a_msim_i_i_1_1_transaction_abf61afbd5abc7698fc59e9ee86f620a7}
 
-\begin{CompactList}\small\item\em copy constructor to duplicate a transaction \item\end{CompactList}\item 
-{\bf Transaction} ()\label{class_d_r_a_msim_i_i_1_1_transaction_b47005b855d38bc324bb79fd023baa13}
+\begin{DoxyCompactList}\small\item\em copy constructor to duplicate a transaction \item\end{DoxyCompactList}\item 
+{\bf Transaction} ()\label{class_d_r_a_msim_i_i_1_1_transaction_ab47005b855d38bc324bb79fd023baa13}
 
-\begin{CompactList}\small\item\em constructor to make a transaction with no values set \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em constructor to make a transaction with no values set \item\end{DoxyCompactList}\item 
 void $\ast$ {\bf operator new} (size\_\-t size)
-\begin{CompactList}\small\item\em overloads the new operator to draw from the transaction pool instead \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em overloads the new operator to draw from the transaction pool instead \item\end{DoxyCompactList}\item 
 void {\bf operator delete} (void $\ast$)
-\begin{CompactList}\small\item\em override the delete operator to send transactions back to the pool \item\end{CompactList}\item 
-bool {\bf operator==} (const {\bf Transaction} \&right) const \label{class_d_r_a_msim_i_i_1_1_transaction_b4f7300d5c8d4ef667d7f060c1e148a2}
+\begin{DoxyCompactList}\small\item\em override the delete operator to send transactions back to the pool \item\end{DoxyCompactList}\item 
+bool {\bf operator==} (const {\bf Transaction} \&right) const \label{class_d_r_a_msim_i_i_1_1_transaction_ab4f7300d5c8d4ef667d7f060c1e148a2}
 
-\begin{CompactList}\small\item\em comparison operator definition \item\end{CompactList}\item 
-bool {\bf operator!=} (const {\bf Transaction} \&right) const \label{class_d_r_a_msim_i_i_1_1_transaction_08a3515c210fcd34a4131a2f9c0263c0}
+\begin{DoxyCompactList}\small\item\em comparison operator definition \item\end{DoxyCompactList}\item 
+bool {\bf operator!=} (const {\bf Transaction} \&right) const \label{class_d_r_a_msim_i_i_1_1_transaction_a08a3515c210fcd34a4131a2f9c0263c0}
 
-\begin{CompactList}\small\item\em inequality operator \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em inequality operator \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-const TransactionType {\bf type}\label{class_d_r_a_msim_i_i_1_1_transaction_8d8b784a0f82bfc5fed936d335d2d786}
+const TransactionType {\bf type}\label{class_d_r_a_msim_i_i_1_1_transaction_a8d8b784a0f82bfc5fed936d335d2d786}
 
-\begin{CompactList}\small\item\em transaction type \item\end{CompactList}\item 
-const unsigned {\bf length}\label{class_d_r_a_msim_i_i_1_1_transaction_b902d44749de4defc083b7538e05182a}
+\begin{DoxyCompactList}\small\item\em transaction type \item\end{DoxyCompactList}\item 
+const unsigned {\bf length}\label{class_d_r_a_msim_i_i_1_1_transaction_ab902d44749de4defc083b7538e05182a}
 
-\begin{CompactList}\small\item\em the number of words requested \item\end{CompactList}\item 
-tick {\bf decodeTime}\label{class_d_r_a_msim_i_i_1_1_transaction_38069cc0a59d1b13b7f2cfced6ab0d48}
+\begin{DoxyCompactList}\small\item\em the number of words requested \item\end{DoxyCompactList}\item 
+tick {\bf decodeTime}\label{class_d_r_a_msim_i_i_1_1_transaction_a38069cc0a59d1b13b7f2cfced6ab0d48}
 
-\begin{CompactList}\small\item\em when the transaction was split up into several commands \item\end{CompactList}\item 
-PhysicalAddress {\bf PC}\label{class_d_r_a_msim_i_i_1_1_transaction_d9d99dfe661ea94e0eaaab4b417b1469}
+\begin{DoxyCompactList}\small\item\em when the transaction was split up into several commands \item\end{DoxyCompactList}\item 
+PhysicalAddress {\bf PC}\label{class_d_r_a_msim_i_i_1_1_transaction_ad9d99dfe661ea94e0eaaab4b417b1469}
 
-\begin{CompactList}\small\item\em the program counter associated with this transaction \item\end{CompactList}\item 
-int {\bf threadNum}\label{class_d_r_a_msim_i_i_1_1_transaction_d7881887e5ad330b281f4a5a196a8822}
+\begin{DoxyCompactList}\small\item\em the program counter associated with this transaction \item\end{DoxyCompactList}\item 
+int {\bf threadNum}\label{class_d_r_a_msim_i_i_1_1_transaction_ad7881887e5ad330b281f4a5a196a8822}
 
-\begin{CompactList}\small\item\em the thread number associated with this transaction \item\end{CompactList}\item 
-const unsigned {\bf originalTransaction}\label{class_d_r_a_msim_i_i_1_1_transaction_7ca48ffef86da91fa3acfe4dda88f922}
+\begin{DoxyCompactList}\small\item\em the thread number associated with this transaction \item\end{DoxyCompactList}\item 
+const unsigned {\bf originalTransaction}\label{class_d_r_a_msim_i_i_1_1_transaction_a7ca48ffef86da91fa3acfe4dda88f922}
 
-\begin{CompactList}\small\item\em utility counter id in the event that this transaction represents another version of a transaction \item\end{CompactList}\item 
-tick {\bf arrivalTime}\label{class_d_r_a_msim_i_i_1_1_event_5eae270c205a02b2fb28d11ab84a6ed9}
+\begin{DoxyCompactList}\small\item\em utility counter id in the event that this transaction represents another version of a transaction \item\end{DoxyCompactList}\item 
+bool {\bf hit}\label{class_d_r_a_msim_i_i_1_1_transaction_aede03bcdc308e5283358dfed9b1807be}
 
-\begin{CompactList}\small\item\em the time that this event was created \item\end{CompactList}\item 
-tick {\bf enqueueTime}\label{class_d_r_a_msim_i_i_1_1_event_55cd17fa82ce4031824037df59dc50d3}
+\begin{DoxyCompactList}\small\item\em whether this transation hit in the DIMM cache \item\end{DoxyCompactList}\item 
+tick {\bf arrivalTime}\label{class_d_r_a_msim_i_i_1_1_event_a5eae270c205a02b2fb28d11ab84a6ed9}
 
-\begin{CompactList}\small\item\em the time that this event was put into a queue \item\end{CompactList}\item 
-tick {\bf startTime}\label{class_d_r_a_msim_i_i_1_1_event_9f6b444813bf6568040678e0d8139d44}
+\begin{DoxyCompactList}\small\item\em the time that this event was created \item\end{DoxyCompactList}\item 
+tick {\bf enqueueTime}\label{class_d_r_a_msim_i_i_1_1_event_a55cd17fa82ce4031824037df59dc50d3}
 
-\begin{CompactList}\small\item\em when this actually started \item\end{CompactList}\item 
-tick {\bf completionTime}\label{class_d_r_a_msim_i_i_1_1_event_2a6e865d555bcde6264e8726edc95b38}
+\begin{DoxyCompactList}\small\item\em the time that this event was put into a queue \item\end{DoxyCompactList}\item 
+tick {\bf startTime}\label{class_d_r_a_msim_i_i_1_1_event_a9f6b444813bf6568040678e0d8139d44}
 
-\begin{CompactList}\small\item\em when this finished \item\end{CompactList}\item 
-const {\bf Address} {\bf address}\label{class_d_r_a_msim_i_i_1_1_event_6aa0830ccf3c9f103bc6dfaab1919562}
+\begin{DoxyCompactList}\small\item\em when this actually started \item\end{DoxyCompactList}\item 
+tick {\bf completionTime}\label{class_d_r_a_msim_i_i_1_1_event_a2a6e865d555bcde6264e8726edc95b38}
 
-\begin{CompactList}\small\item\em the address that this event involves \item\end{CompactList}\end{CompactItemize}
-\subsection*{Static Protected Attributes}
-\begin{CompactItemize}
-\item 
-static {\bf Queue}$<$ {\bf Transaction} $>$ {\bf freeTransactionPool}\label{class_d_r_a_msim_i_i_1_1_transaction_a607d2000268ce016d2f83eeb19e4c64}
+\begin{DoxyCompactList}\small\item\em when this finished \item\end{DoxyCompactList}\item 
+const {\bf Address} {\bf address}\label{class_d_r_a_msim_i_i_1_1_event_a6aa0830ccf3c9f103bc6dfaab1919562}
 
-\begin{CompactList}\small\item\em transactions are stored here to avoid allocating memory after initialization \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the address that this event involves \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -103,21 +108,21 @@ a request to read or write some portion of memory, atomically
 \subsection{Member Function Documentation}
 \index{DRAMsimII::Transaction@{DRAMsimII::Transaction}!operator delete@{operator delete}}
 \index{operator delete@{operator delete}!DRAMsimII::Transaction@{DRAMsimII::Transaction}}
-\subsubsection[{operator delete}]{\setlength{\rightskip}{0pt plus 5cm}void Transaction::operator delete (void $\ast$ {\em mem})}\label{class_d_r_a_msim_i_i_1_1_transaction_4161098bb071135f21c2a7f95a6d5580}
+\subsubsection[{operator delete}]{\setlength{\rightskip}{0pt plus 5cm}void Transaction::operator delete (void $\ast$ {\em mem})}\label{class_d_r_a_msim_i_i_1_1_transaction_a4161098bb071135f21c2a7f95a6d5580}
 
 
 override the delete operator to send transactions back to the pool 
 
 return transactions to the transaction pool rather than to free memory \index{DRAMsimII::Transaction@{DRAMsimII::Transaction}!operator new@{operator new}}
 \index{operator new@{operator new}!DRAMsimII::Transaction@{DRAMsimII::Transaction}}
-\subsubsection[{operator new}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ Transaction::operator new (size\_\-t {\em size})}\label{class_d_r_a_msim_i_i_1_1_transaction_d2b57bb609cc842f92e4319c555d3bf1}
+\subsubsection[{operator new}]{\setlength{\rightskip}{0pt plus 5cm}void $\ast$ Transaction::operator new (size\_\-t {\em size})}\label{class_d_r_a_msim_i_i_1_1_transaction_ad2b57bb609cc842f92e4319c555d3bf1}
 
 
 overloads the new operator to draw from the transaction pool instead 
 
 avoids the system call for most of runtime by drawing from a pool 
 
-The documentation for this class was generated from the following files:\begin{CompactItemize}
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
 \item 
-src/transaction.h\item 
-src/transaction.cpp\end{CompactItemize}
+src/transaction.hh\item 
+src/transaction.cc\end{DoxyCompactItemize}

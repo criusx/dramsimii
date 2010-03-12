@@ -1,9 +1,15 @@
 \section{M5dramSystem Class Reference}
 \label{class_m5dram_system}\index{M5dramSystem@{M5dramSystem}}
+
+
 wrapper class to allow M5 to work with DRAMsimII  
 
 
-{\tt \#include $<$m5-dramSystem.h$>$}
+
+
+{\ttfamily \#include $<$m5-\/dramSystem.hh$>$}
+
+
 
 Collaboration diagram for M5dramSystem:\nopagebreak
 \begin{figure}[H]
@@ -13,63 +19,57 @@ Collaboration diagram for M5dramSystem:\nopagebreak
 \end{center}
 \end{figure}
 \subsection*{Public Types}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-typedef M5dramSystemParams {\bf Params}\label{class_m5dram_system_bc049789b7ba009ac06888952383d456}
+typedef M5dramSystemParams {\bf Params}\label{class_m5dram_system_abc049789b7ba009ac06888952383d456}
 
-\begin{CompactList}\small\item\em the parameters used to initialize the memory system object \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the parameters used to initialize the memory system object \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
 {\bf M5dramSystem} (const {\bf Params} $\ast$)
-\begin{CompactList}\small\item\em constructor \item\end{CompactList}\item 
-void {\bf getAddressRanges} (AddrRangeList \&resp, bool \&snoop)\label{class_m5dram_system_17d8fd3640bd4767ca88ace2ac3036b9}
+\begin{DoxyCompactList}\small\item\em constructor \item\end{DoxyCompactList}\item 
+void {\bf getAddressRanges} (AddrRangeList \&resp, bool \&snoop)\label{class_m5dram_system_a17d8fd3640bd4767ca88ace2ac3036b9}
 
-\begin{CompactList}\small\item\em returns the address range available in this device \item\end{CompactList}\item 
-int {\bf getCPURatio} () const \label{class_m5dram_system_1525d7f1a5251189661baf1ba2ae67c6}
+\begin{DoxyCompactList}\small\item\em returns the address range available in this device \item\end{DoxyCompactList}\item 
+int {\bf getCPURatio} () const \label{class_m5dram_system_a1525d7f1a5251189661baf1ba2ae67c6}
 
-\begin{CompactList}\small\item\em returns the ratio of the cpu frequency to the memory frequency \item\end{CompactList}\item 
+\begin{DoxyCompactList}\small\item\em returns the ratio of the cpu frequency to the memory frequency \item\end{DoxyCompactList}\item 
 void {\bf moveToTime} (tick now)
-\begin{CompactList}\small\item\em move all channels in this system to the specified time \item\end{CompactList}\item 
-virtual {\bf $\sim$M5dramSystem} ()\label{class_m5dram_system_4c99c0541618888f5920e6edc7999617}
+\begin{DoxyCompactList}\small\item\em move all channels in this system to the specified time \item\end{DoxyCompactList}\item 
+virtual {\bf $\sim$M5dramSystem} ()\label{class_m5dram_system_a4c99c0541618888f5920e6edc7999617}
 
-\begin{CompactList}\small\item\em deletes the DRAMsim object \item\end{CompactList}\item 
-virtual void {\bf unserialize} (Checkpoint $\ast$cp, const std::string \&section)\label{class_m5dram_system_84b8962622745c06e42f699da498bd24}
+\begin{DoxyCompactList}\small\item\em deletes the DRAMsim object \item\end{DoxyCompactList}\item 
+virtual void {\bf unserialize} (Checkpoint $\ast$cp, const std::string \&section)\label{class_m5dram_system_a84b8962622745c06e42f699da498bd24}
 
-\begin{CompactList}\small\item\em restores the memory array after resuming from a checkpoint \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em restores the memory array after resuming from a checkpoint \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Member Functions}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-virtual void {\bf init} ()\label{class_m5dram_system_c9871abf81b50f9439a9c1f304f18141}
+virtual void {\bf init} ()\label{class_m5dram_system_ac9871abf81b50f9439a9c1f304f18141}
 
-\begin{CompactList}\small\item\em initializes the ports of this object \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em initializes the ports of this object \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
-\begin{CompactItemize}
+\begin{DoxyCompactItemize}
 \item 
-TickEvent {\bf tickEvent}\label{class_m5dram_system_2c1df40ac4ba1b6ee79a89c36717e6b5}
+TickEvent {\bf tickEvent}\label{class_m5dram_system_a2c1df40ac4ba1b6ee79a89c36717e6b5}
 
-\begin{CompactList}\small\item\em instance of TickEvent to allow the wrapper to receive/send events to the global queue \item\end{CompactList}\item 
-std::vector$<$ MemoryPort $\ast$ $>$ {\bf ports}\label{class_m5dram_system_c74ac86e7c7390068a33e60dfb352427}
+\begin{DoxyCompactList}\small\item\em instance of TickEvent to allow the wrapper to receive/send events to the global queue \item\end{DoxyCompactList}\item 
+std::vector$<$ MemoryPort $\ast$ $>$ {\bf ports}\label{class_m5dram_system_ac74ac86e7c7390068a33e60dfb352427}
 
-\begin{CompactList}\small\item\em ports to send/recv data to other simulator components \item\end{CompactList}\item 
-std::queue$<$ std::pair$<$ unsigned, tick $>$ $>$ {\bf finishedTransactions}\label{class_m5dram_system_ef2801ef6e3717682ae2e81219c462d1}
+\begin{DoxyCompactList}\small\item\em ports to send/recv data to other simulator components \item\end{DoxyCompactList}\item 
+std::queue$<$ std::pair$<$ unsigned, tick $>$ $>$ {\bf finishedTransactions}\label{class_m5dram_system_aef2801ef6e3717682ae2e81219c462d1}
 
-\begin{CompactList}\small\item\em channels will return values as they finish transactions \item\end{CompactList}\item 
-int {\bf lastPortIndex}\label{class_m5dram_system_8dec460f8036d2885f730687e207624c}
+\begin{DoxyCompactList}\small\item\em channels will return values as they finish transactions \item\end{DoxyCompactList}\item 
+int {\bf lastPortIndex}\label{class_m5dram_system_a8dec460f8036d2885f730687e207624c}
 
-\begin{CompactList}\small\item\em the last port accessed \item\end{CompactList}\item 
-{\bf DRAMsimII::System} $\ast$ {\bf ds}\label{class_m5dram_system_ce32ccab57bc7bb099862cb701cc6a34}
+\begin{DoxyCompactList}\small\item\em the last port accessed \item\end{DoxyCompactList}\item 
+{\bf DRAMsimII::System} $\ast$ {\bf ds}\label{class_m5dram_system_ace32ccab57bc7bb099862cb701cc6a34}
 
-\begin{CompactList}\small\item\em pointer to the DRAMsimII class \item\end{CompactList}\item 
-bool {\bf needRetry}\label{class_m5dram_system_b1c16d57a7d7a3a07c8c0250be821432}
+\begin{DoxyCompactList}\small\item\em pointer to the DRAMsimII class \item\end{DoxyCompactList}\item 
+int {\bf cpuRatio}\label{class_m5dram_system_a2fbee1e022242e218e235df762bcd82a}
 
-\begin{CompactList}\small\item\em if the memory system needs to issue a retry statement before any more requests will come in \item\end{CompactList}\item 
-unsigned {\bf mostRecentChannel}\label{class_m5dram_system_8f2613214d10b04b640bc26db979484b}
-
-\begin{CompactList}\small\item\em the most recent channel that a request was sent to \item\end{CompactList}\item 
-int {\bf cpuRatio}\label{class_m5dram_system_2fbee1e022242e218e235df762bcd82a}
-
-\begin{CompactList}\small\item\em the ratio of the cpu frequency to the memory frequency \item\end{CompactList}\end{CompactItemize}
+\begin{DoxyCompactList}\small\item\em the ratio of the cpu frequency to the memory frequency \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -78,42 +78,41 @@ wrapper class to allow M5 to work with DRAMsimII
 \subsection{Constructor \& Destructor Documentation}
 \index{M5dramSystem@{M5dramSystem}!M5dramSystem@{M5dramSystem}}
 \index{M5dramSystem@{M5dramSystem}!M5dramSystem@{M5dramSystem}}
-\subsubsection[{M5dramSystem}]{\setlength{\rightskip}{0pt plus 5cm}M5dramSystem::M5dramSystem (const {\bf Params} $\ast$ {\em p})}\label{class_m5dram_system_84fc057ba92f2b4259bb6e48dfda6e67}
+\subsubsection[{M5dramSystem}]{\setlength{\rightskip}{0pt plus 5cm}M5dramSystem::M5dramSystem (const {\bf Params} $\ast$ {\em p})}\label{class_m5dram_system_a84fc057ba92f2b4259bb6e48dfda6e67}
 
 
 constructor 
 
 builds a \doxyref{M5dramSystem}{p.}{class_m5dram_system} object
 
-looks for the settings file and constructs a dramSystem object from that \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em p}]the M5 parameters object to extract parameters from \end{description}
-\end{Desc}
-\begin{Desc}
-\item[Returns:]a new \doxyref{M5dramSystem}{p.}{class_m5dram_system} object \end{Desc}
+looks for the settings file and constructs a dramSystem object from that \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em p}]the M5 parameters object to extract parameters from \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a new \doxyref{M5dramSystem}{p.}{class_m5dram_system} object 
+\end{DoxyReturn}
 
 
 \subsection{Member Function Documentation}
 \index{M5dramSystem@{M5dramSystem}!moveToTime@{moveToTime}}
 \index{moveToTime@{moveToTime}!M5dramSystem@{M5dramSystem}}
-\subsubsection[{moveToTime}]{\setlength{\rightskip}{0pt plus 5cm}void M5dramSystem::moveToTime (tick {\em now})}\label{class_m5dram_system_e6c0544f5199f8479bdba75cf338aa2c}
+\subsubsection[{moveToTime}]{\setlength{\rightskip}{0pt plus 5cm}void M5dramSystem::moveToTime (tick {\em now})}\label{class_m5dram_system_ae6c0544f5199f8479bdba75cf338aa2c}
 
 
 move all channels in this system to the specified time 
 
-tells the channels that nothing arrived since the last wakeup and now, so go do whatever would have happened during this time and return finished transactions note that this should probably only process one event per channel at most so that finished transactions can be returned in a timely fashion \begin{Desc}
-\item[Author:]Joe Gross \end{Desc}
-\begin{Desc}
-\item[Parameters:]
-\begin{description}
-\item[{\em now}]the current time \end{description}
-\end{Desc}
+tells the channels that nothing arrived since the last wakeup and now, so go do whatever would have happened during this time and return finished transactions note that this should probably only process one event per channel at most so that finished transactions can be returned in a timely fashion \begin{DoxyAuthor}{Author}
+Joe Gross 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em now}]the current time \end{DoxyParams}
 
 
-The documentation for this class was generated from the following files:\begin{CompactItemize}
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
 \item 
-src/m5-dramSystem.h\item 
-src/m5-dramSystem.cpp\end{CompactItemize}
+src/m5-\/dramSystem.hh\item 
+src/m5-\/dramSystem.cc\end{DoxyCompactItemize}
