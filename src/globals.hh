@@ -27,7 +27,9 @@
 #include "enumTypes.hh"
 #ifdef _MSC_VER
 typedef __int64 int64_t;
-#include <boost/cstdint.hpp>
+typedef unsigned __int64 uint64_t;
+typedef unsigned __int8 uint8_t;
+//#include <boost/cstdint.hpp>
 //typedef boost::uint64_t uint64_t;
 #include <limits.h>
 #define TICK_MAX _I64_MAX

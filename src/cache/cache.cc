@@ -47,6 +47,7 @@ using DRAMsimII::Cache;
 using DRAMsimII::CacheSet;
 using DRAMsimII::LRUBlk;
 using DRAMsimII::PacketList;
+using DRAMsimII::Command;
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -287,46 +288,6 @@ Cache::~Cache()
 		}
 	}
 }
-
-
-LRUBlk *CacheSet::findBlk(Addr tag) const
-{
-	for (int i = 0; i < assoc; ++i) 
-	{
-		if (blks[i]->tag == tag && blks[i]->isValid()) 
-		{
-			return blks[i];
-		}
-	}
-	return 0;
-}
-
-
-void CacheSet::moveToHead(LRUBlk *blk)
-{
-	// nothing to do if blk is already head
-	if (blks[0] == blk)
-		return;
-
-	// write 'next' block into blks[i], moving up from MRU toward LRU
-	// until we overwrite the block we moved to head.
-
-	// start by setting up to write 'blk' into blks[0]
-	int i = 0;
-	LRUBlk *next = blk;
-
-	do {
-		assert(i < assoc);
-		// swap blks[i] and next
-		LRUBlk *tmp = blks[i];
-		blks[i] = next;
-		next = tmp;
-		++i;
-	} while (next != blk);
-}
-
-
-using DRAMsimII::Command;
 
 bool Cache::access(const Command *currentCommand, int &lat, BlkType *&blk, tick time, PacketList &writebacks)
 {
@@ -694,7 +655,37 @@ LRUBlk *Cache::findVictim(Addr addr, PacketList &writebacks)
 			int index = rand() % (assoc - nmruCount);
 			blk = sets[set].blks[nmruCount + index];
 		}
-break;
+		break;
+	case Cache::MRU:
+		blk = sets[set].blks[0];
+		break;
+	case Cache::LFU:
+		{
+			blk = sets[set].blks[0];
+			int lowestRefCount = sets[set].blks[0]->refCount;
+			int greatestRefCount = sets[set].blks[0]->refCount;
+			for (int i = 1; i < assoc; ++i)
+			{
+				LRUBlk *currentBlock = sets[set].blks[i];
+				if (currentBlock->refCount < lowestRefCount)
+				{
+					lowestRefCount = currentBlock->refCount;
+					blk = currentBlock;
+				}
+				if (currentBlock->refCount > greatestRefCount)
+					greatestRefCount = currentBlock->refCount;
+			}
+			//cerr << greatestRefCount << endl;
+		}
+
+	case Cache::RAND:
+		blk = sets[set].blks[rand() % assoc];
+		break;
+		
+	default:
+		cerr << "Not implemented yet" << endl;
+		exit(-3);
+		break;
 	}
 
 	if (blk->isValid()) 
@@ -707,7 +698,6 @@ break;
 		//         DPRINTF(CacheRepl, "set %x: selecting blk %x for replacement\n",
 		//                 set, regenerateBlkAddr(blk->tag, set));
 	}
-
 	return blk;
 }
 
@@ -790,6 +780,43 @@ Cache &Cache::operator =(const Cache& rhs)
 	}
 
 	return *this;
+}
+
+
+LRUBlk *CacheSet::findBlk(Addr tag) const
+{
+	for (int i = 0; i < assoc; ++i) 
+	{
+		if (blks[i]->tag == tag && blks[i]->isValid()) 
+		{
+			return blks[i];
+		}
+	}
+	return 0;
+}
+
+
+void CacheSet::moveToHead(LRUBlk *blk)
+{
+	// nothing to do if blk is already head
+	if (blks[0] == blk)
+		return;
+
+	// write 'next' block into blks[i], moving up from MRU toward LRU
+	// until we overwrite the block we moved to head.
+
+	// start by setting up to write 'blk' into blks[0]
+	int i = 0;
+	LRUBlk *next = blk;
+
+	do {
+		assert(i < assoc);
+		// swap blks[i] and next
+		LRUBlk *tmp = blks[i];
+		blks[i] = next;
+		next = tmp;
+		++i;
+	} while (next != blk);
 }
 
 

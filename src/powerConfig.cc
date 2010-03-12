@@ -108,7 +108,7 @@ bool PowerConfig::operator==(const PowerConfig& rhs) const
 	return (AlmostEqual<float>(VDD, rhs.VDD) && AlmostEqual<float>(VDDmax, rhs.VDDmax) && IDD0 == rhs.IDD0 &&
 		IDD2P == rhs.IDD2P && IDD2N == rhs.IDD2N && IDD3P == rhs.IDD3P && IDD1 == rhs.IDD1 &&
 		IDD3N == rhs.IDD3N && IDD4R == rhs.IDD4R && IDD4W == rhs.IDD4W &&
-		IDD5 == rhs.IDD5 && AlmostEqual<float>(PdsACT, rhs.PdsACT) && AlmostEqual<float>(PdsACT_STBY, rhs.PdsACT_STBY) &&
+		IDD5 == rhs.IDD5 && AlmostEqual<double>(PdsACT, rhs.PdsACT) && AlmostEqual<double>(PdsACT_STBY, rhs.PdsACT_STBY) &&
 		AlmostEqual<double>(PdsRD, rhs.PdsRD) &&
 		AlmostEqual<double>(PdsACT_PDN, rhs.PdsACT_PDN) &&
 		AlmostEqual<double>(PdsPRE_STBY, rhs.PdsPRE_STBY) &&

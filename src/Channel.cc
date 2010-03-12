@@ -22,12 +22,6 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#ifdef _MSC_VER
-typedef __int64 int64_t;
-typedef __int64 uint64_t;
-#else
-#include <cstdint>
-#endif
 
 #include "Channel.hh"
 

@@ -74,13 +74,13 @@ readPercentage(settings.readPercentage),
 shortBurstRatio(settings.shortBurstRatio),
 arrivalThreshold(0.0F),
 cpuToMemoryRatio(settings.dataRate * 1E-9),
-averageInterarrivalCycleCount(settings.averageInterarrivalCycleCount),
+averageInterarrivalCycleCount(max(settings.averageInterarrivalCycleCount,1)),
 interarrivalDistributionModel(settings.arrivalDistributionModel),
 traceFilename(settings.inFile),
 randomNumberGenerator(std::time(0)),
 rngDistributionModel(0,1),
 rngIntDistributionModel(0u,16383u),
-gaussianDistribution(settings.averageInterarrivalCycleCount,8),
+gaussianDistribution(max(settings.averageInterarrivalCycleCount,1),8),
 rngGenerator(randomNumberGenerator, rngDistributionModel),
 rngIntGenerator(randomNumberGenerator, rngIntDistributionModel),
 arrivalGenerator(randomNumberGenerator, gaussianDistribution)
@@ -688,7 +688,10 @@ Transaction *InputStream::getNextRandomRequest(const unsigned transactionID)
 				}
 			}
 #endif
-			nextTime = (int)max(0.0,arrivalGenerator());
+			{
+				double a = arrivalGenerator();
+				nextTime = max(0,(int)a);
+			}
 			break;
 		case POISSON_DISTRIBUTION:
 			while (true)

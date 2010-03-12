@@ -196,6 +196,10 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				replacementPolicy = Cache::LRU;
 			else if (nodeValue == "nmru")
 				replacementPolicy = Cache::NMRU;
+			else if (nodeValue == "mru")
+				replacementPolicy = Cache::MRU;
+			else if (nodeValue == "lfu")
+				replacementPolicy = Cache::LFU;
 			else
 			{
 				cerr << "warn: unrecognized cache replacement policy";

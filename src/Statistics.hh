@@ -30,12 +30,6 @@
 #else
 #include <tr1/unordered_map>
 #endif
-#ifdef _MSC_VER
-typedef __int64 int64_t;
-typedef __int64 uint64_t;
-#else
-#include <cstdint>
-#endif
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/utility.hpp>

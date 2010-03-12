@@ -118,7 +118,11 @@ namespace DRAMsimII
 		enum ReplacementPolicy
 		{
 			LRU,
-			NMRU
+			NMRU,
+			MRU,
+			LFU,
+			RAND,
+			FIFO
 		};
 
 		typedef DRAMsimII::PhysicalAddress Addr;

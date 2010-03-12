@@ -73,7 +73,6 @@ namespace DRAMsimII
 	{
 		typedef DRAMsimII::tick Tick;
 		typedef DRAMsimII::PhysicalAddress Addr;
-		typedef boost::uint8_t uint8_t;
 
 	public:
 		/** The address space ID of this block. */
