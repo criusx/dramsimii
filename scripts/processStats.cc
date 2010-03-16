@@ -3643,7 +3643,7 @@ int main(int argc, char** argv)
 	bf::path jsDirectory((separateOutputDir ? outputDir : ".") / "js");	
 
 	if (!exists(jsDirectory))
-		create_directory(jsDirectory);
+		bf::create_directories(jsDirectory);
 	else if (!is_directory(jsDirectory))
 	{
 		cerr << "error: 'js' exists but is not a directory" << endl;
