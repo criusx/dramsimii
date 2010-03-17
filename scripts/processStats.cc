@@ -59,6 +59,7 @@ using boost::starts_with;
 using boost::erase_all;
 using boost::ends_with;
 using boost::replace_all;
+using boost::replace_first;
 using boost::token_compress_on;
 using boost::trim;
 using boost::ireplace_all_copy;
@@ -3303,11 +3304,12 @@ int main(int argc, char** argv)
 	opt::options_description desc("Basic options");
 	string settingsFile;
 	string extraSettings;
-	desc.add_options()("help", "help message")("create,f",
-		"Force creation of the index file only")("png,p",
-		"Generate PNG versions of the files")("cypress,c",
-		"Generate only select graphs for Cypress study")("output,o",
-		opt::value<string>(),
+	desc.add_options()
+		("help", "help message")
+		("create,f","Force creation of the index file only")
+		("png,p","Generate PNG versions of the files")
+		("cypress,c","Generate only select graphs for Cypress study")
+		("output,o",opt::value<string>(),
 		"Choose an output directory different from the current directory");
 
 	opt::variables_map vm;
@@ -3353,6 +3355,7 @@ int main(int argc, char** argv)
 
 	vector<string> files;
 
+	// figure out which in the command line are viable files to analyze
 	for (int i = 0; i < argc; ++i)
 	{
 		if (ends_with(argv[i], "power.gz") || ends_with(argv[i], "power.bz2")
@@ -3362,6 +3365,9 @@ int main(int argc, char** argv)
 			files.push_back(string(argv[i]));
 		}
 	}
+
+	// gather stats from all the files to generate the html file
+#pragma omp parallel
 	for (vector<string>::const_iterator currentFile = files.begin(); currentFile
 		!= files.end(); ++currentFile)
 	{
@@ -3500,6 +3506,7 @@ int main(int argc, char** argv)
 				erase_all(modUrlString, "_");
 				erase_all(modUrlString, "{");
 				erase_all(modUrlString, "}");
+				replace_first(modUrlString,"  ]","]");
 				split(splitLine, modUrlString, is_any_of(" "),
 					token_compress_on);
 
@@ -3581,8 +3588,8 @@ int main(int argc, char** argv)
 			<< averageAdjustedLatency;
 		currentLine.push_back(current.str());
 
+#pragma omp critical
 		results[basefilename] = currentLine;
-
 	}
 
 	// then generate result.html

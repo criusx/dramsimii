@@ -44,7 +44,6 @@ namespace DRAMsimII
 		const SystemConfiguration& systemConfig; ///< reference to system configuration information
 		Statistics& statistics;				///< reference for collecting statistics
 
-
 	protected:
 
 		tick lastRefreshTime;				///< the time of the last refresh

@@ -100,13 +100,13 @@ SRCDIR = os.path.join(ROOT,'src')
 
 if platform == 'script':
 	env.Append(OBJSUFFIX='.os')
-	env.Append(CCFLAGS = optFlags)
+	env.Append(CCFLAGS = optFlags + ['-fopenmp'])
 	env.Append(CPPDEFINES = optDefines)
 	script = env.Program('processStats',"../scripts/processStats.cc")
 	env.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd')
-	envScriptD.Append(CCFLAGS = debugFlags)
+	envScriptD.Append(CCFLAGS = debugFlags + ['-fopenmp'])
 	envScriptD.Append(CPPDEFINES = debugDefines)
 	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cc")
 	envScriptD.Install(os.path.abspath('../scripts'),script)
