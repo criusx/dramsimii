@@ -123,6 +123,7 @@ namespace DRAMsimII
 		debug_token,
 		decode_window_token,
 		deprecated_ignore_token,
+		dimm_count_token,
 		dm_per_dram_token,
 		dq_per_dram_token,
 		dqs_per_dram_token,

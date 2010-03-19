@@ -89,6 +89,7 @@ namespace DRAMsimII
 		unsigned clockGranularity;
 		unsigned cachelinesPerRow;
 		unsigned channelCount;
+		unsigned dimmCount;
 		unsigned rankCount;
 		unsigned bankCount;
 		float shortBurstRatio;
@@ -178,6 +179,7 @@ namespace DRAMsimII
 
 			theMap[clock_granularity_token] = "clockGranularity";
 			theMap[channel_count_token] = "channels";
+			theMap[dimm_count_token] = "dimms";
 			theMap[channel_width_token] = "channelWidth";
 			theMap[addr_mapping_scheme_token] = "physicalAddressMappingPolicy";
 			theMap[row_buffer_management_policy_token] = "rowBufferPolicy";
@@ -332,6 +334,7 @@ namespace DRAMsimII
 			theMap["channel_count"] = channel_count_token;
 			theMap["channelcount"] = channel_count_token;
 			theMap["channels"] = channel_count_token;
+			theMap["dimms"] = dimm_count_token;
 			theMap["channel_width" ] = channel_width_token;
 			theMap["channelwidth"] = channel_width_token;
 			theMap["rank_count"] = rank_count_token;

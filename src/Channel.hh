@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef DRAMCHANNEL_H
-#define DRAMCHANNEL_H
+#ifndef CHANNEL_HH
+#define CHANNEL_HH
 #pragma once
 
 #include "globals.hh"
@@ -28,6 +28,7 @@
 #include "powerConfig.hh"
 #include "transaction.hh"
 #include "command.hh"
+#include "dimm.hh"
 
 #include <vector>
 #include <queue>
@@ -55,10 +56,10 @@ namespace DRAMsimII
 		Statistics &statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
+		std::vector<DIMM> dimm;							///< represents the DIMMs attached to this channel
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
-		//std::vector<Transaction *> refreshCounter;		///< holds the next refresh command time for the rank
-
+	
 		// functions
 		void retireCommand(Command *);
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	

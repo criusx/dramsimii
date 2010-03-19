@@ -39,38 +39,39 @@ using namespace DRAMsimII;
 using namespace std;
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief constructs the dramChannel using this settings reference, also makes a reference to the dramSystemConfiguration object
-/// @param settings the settings file that defines the number of ranks, refresh policy, etc.
-/// @param sysConfig a const reference is made to this for some functions to grab parameters from
-/// @param stats a reference to the stats object that will be collecting data
+/// @brief constructs the dramChannel using this _settings reference, also makes a reference to the dramSystemConfiguration object
+/// @param _settings the _settings file that defines the number of ranks, refresh policy, etc.
+/// @param _systemConfig a const reference is made to this for some functions to grab parameters from
+/// @param _stats a reference to the _stats object that will be collecting data
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-Channel::Channel(const Settings& settings, const SystemConfiguration& sysConfig, Statistics& stats):
+Channel::Channel(const Settings& _settings, const SystemConfiguration& _systemConfig, Statistics& _stats):
 time(0ll),
 lastCommandIssueTime(-100ll),
 lastCommand(NULL),
-timingSpecification(settings),
-transactionQueue(settings.transactionQueueDepth),
-refreshCounter(settings.rankCount),
-systemConfig(sysConfig),
-statistics(stats),
-powerModel(settings),
+timingSpecification(_settings),
+transactionQueue(_settings.transactionQueueDepth),
+refreshCounter(_settings.rankCount),
+systemConfig(_systemConfig),
+statistics(_stats),
+powerModel(_settings),
 channelID(UINT_MAX),
-rank(sysConfig.getRankCount(), Rank(settings, timingSpecification, sysConfig, stats)),
+dimm(_settings.dimmCount, DIMM(_settings,timingSpecification,_systemConfig, statistics)),
+rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
 finishedTransactions()
 {
 	// assign an id to each channel (normally done with commands)
-// 	for (unsigned i = 0; i < settings.rankCount; ++i)
+// 	for (unsigned i = 0; i < _settings.rankCount; ++i)
 // 	{
 // 		rank[i].setRankID(i);
 // 	}
 
 	// initialize the refresh counters per rank
 	
-	if (settings.refreshPolicy != NO_REFRESH)
+	if (_settings.refreshPolicy != NO_REFRESH)
 	{
 		// stagger the times that each rank will be refreshed so they don't all arrive incomingTransaction a burst
-		unsigned step = settings.tREFI / settings.rankCount;
+		unsigned step = _settings.tREFI / _settings.rankCount;
 		Address addr(0,0,0,0,0);
 		
 		for (unsigned j = 0; j < refreshCounter.size(); ++j)
@@ -109,7 +110,8 @@ statistics(stats),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
 // to initialize the references
-rank((unsigned)systemConfig.getRankCount(), Rank(rhs.rank[0],timingSpecification, systemConfig, stats)),
+dimm((unsigned)systemConfig.getDimmCount(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, stats)),
+rank((unsigned)systemConfig.getRankCount() * systemConfig.getDimmCount(), Rank(rhs.rank[0], timingSpecification, systemConfig, stats)),
 finishedTransactions()
 {
 	// to fill incomingTransaction the values
@@ -157,11 +159,13 @@ systemConfig(rhs.systemConfig),
 statistics(rhs.statistics),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
-rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0],timingSpecification, systemConfig, statistics)),
+dimm((unsigned)rhs.rank.size(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, statistics)),
+rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0], timingSpecification, systemConfig, statistics)),
 finishedTransactions()
 {
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
+	dimm = rhs.dimm;
 	rank = rhs.rank;
 
 	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); ++i)
@@ -213,14 +217,17 @@ Channel::~Channel()
 void Channel::setChannelID(const unsigned value)
 {
 	 channelID = value;
-	 unsigned rankID = 0;
+	 unsigned currentId = 0;
 	 for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
 	 {
-		 i->setRankID(value, rankID++);
+		 i->setRankID(value, currentId++);
 	 }
-	 for (vector<Transaction *>::iterator i = refreshCounter.begin(), end = refreshCounter.end(); i != end; ++i)
+	 
+	 currentId = 0;
+	 for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
+		 i != end; ++i)
 	 {
-		 //(*i)->getAddress().setChannel(value);
+		 i->setDimmId(value, currentId++);
 	 }
 }
 
@@ -969,7 +976,7 @@ const Transaction *Channel::readNextRefresh() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief reset some stats to account for the fact that fast-forwarding has moved time forward significantly
+/// @brief reset some _stats to account for the fact that fast-forwarding has moved time forward significantly
 /// @param time the time at which the timing model begins
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
@@ -984,7 +991,14 @@ void Channel::resetToTime(const tick time)
 		(*i)->setArrivalTime((*i)->getArrivalTime() + time);
 		//*i = *i + time;
 	}
+
 	for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
+	{
+		i->resetToTime(time);
+	}
+
+	for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
+		i != end; ++i)
 	{
 		i->resetToTime(time);
 	}
@@ -1136,7 +1150,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 	// ensure that this transaction belongs on this channel
 	assert(incomingTransaction->getAddress().getChannel() == channelID || incomingTransaction->isRefresh());
 	assert(incomingTransaction->getAddress().getChannel() < systemConfig.getChannelCount());
-	assert(incomingTransaction->getAddress().getRank() < systemConfig.getRankCount());
+	assert(incomingTransaction->getAddress().getRank() < (systemConfig.getRankCount() * systemConfig.getDimmCount()));
 
 	vector<Rank>::iterator destinationRank = rank.begin() + incomingTransaction->getAddress().getRank();
 
@@ -2297,6 +2311,8 @@ void Channel::executeCommand(Command *thisCommand)
 
 	Bank &currentBank = currentRank.bank[thisCommand->getAddress().getBank()];
 
+	vector<DIMM>::iterator currentDimm = dimm.begin() + thisCommand->getAddress().getDimm();
+
 	currentRank.setLastBankID(thisCommand->getAddress().getBank());
 
 	thisCommand->setStartTime(time);
@@ -2317,7 +2333,9 @@ void Channel::executeCommand(Command *thisCommand)
 			if (time - currentRank.lastActivateTimes.back() == timingSpecification.tFAW())
 				statistics.reportTFawCommand();
 			
-			currentRank.issueRAS(time, thisCommand);			
+			currentRank.issueRAS(time, thisCommand);	
+
+			currentDimm->issueRAS(time, thisCommand);
 
 			// specific for RAS command
 			thisCommand->setCompletionTime(thisCommand->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRAS());
@@ -3104,6 +3122,7 @@ Channel& Channel::operator =(const Channel &rhs)
 	refreshCounter = rhs.refreshCounter;
 	channelID = rhs.channelID;
 	rank = rhs.rank;
+	dimm = rhs.dimm;
 	powerModel = rhs.powerModel;
 	timingSpecification = rhs.timingSpecification;
 
@@ -3126,7 +3145,7 @@ bool Channel::operator ==(const Channel& rhs) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief the insertion operator, adds a string to the given stream with stats about this channel
+/// @brief the insertion operator, adds a string to the given stream with _stats about this channel
 /// @return the input stream but with a string representing the channel state appended
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////

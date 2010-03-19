@@ -39,9 +39,7 @@ namespace DRAMsimII
 		enum AddressMappingScheme
 		{
 			CLOSE_PAGE_BASELINE,			
-			//OPEN_PAGE_BASELINE,
 			SDRAM_BASE_MAP,
-			//SDRAM_CLOSE_PAGE_MAP,
 			SDRAM_HIPERF_MAP,
 			CLOSE_PAGE_BASELINE_OPT,
 			CLOSE_PAGE_LOW_LOCALITY,
@@ -57,17 +55,18 @@ namespace DRAMsimII
 		static unsigned rowAddressDepth;		///< the number of bits to represent all rows
 		static unsigned columnAddressDepth;		///< the number of bits to represent all columns
 		static unsigned columnSizeDepth;		///< the minimum block that can be addressed
-		//static unsigned cacheLineSize;			///< the size of a cacheline in the cpu
 		static unsigned rowLowAddressDepth;		///< the number of bits to represent the lower portion of the row
 		static unsigned rowHighAddressDepth;	///< the number of bits to represent the upper portion of the row
 		static unsigned columnLowAddressDepth;	///< the number of bits to represent the lower portion of a column
 		static unsigned columnHighAddressDepth; ///< the number of bits to represent the upper portion of a column
+		static unsigned rankCount;				///< the number of ranks per DIMM
 		static AddressMappingScheme mappingScheme;	///< the mapping scheme to convert physical to logical addresses
 
 		unsigned virtualAddress;			///< the virtual address
 		PhysicalAddress physicalAddress;	///< the physical address
 
 		unsigned channel;					///< the enumerated channel id
+		unsigned dimm;						///< the dimm id
 		unsigned rank;						///< the rank id
 		unsigned bank;						///< the bank id
 		unsigned row;						///< the row id
@@ -84,6 +83,7 @@ namespace DRAMsimII
 		// accessors
 		PhysicalAddress getPhysicalAddress() const { return physicalAddress; }
 		unsigned getChannel() const { return channel; }
+		unsigned getDimm() const { return dimm; }
 		unsigned getRank() const { return rank; }
 		unsigned getBank() const { return bank; }
 		unsigned getRow() const { return row; }
@@ -94,7 +94,7 @@ namespace DRAMsimII
 		void setAddress(const unsigned channel, const unsigned rank, const unsigned bank, const unsigned row, const unsigned column);
 		void setAddress(const Address &rhs);
 		void setChannel(const unsigned value) { channel = value; }
-		void setRank(const unsigned value) { rank = value; }
+		void setRank(const unsigned value) { dimm = value / rankCount; rank = value; }
 		void setBank(const unsigned value) { bank = value; }
 		void setRow(const unsigned value) { row = value; }
 		void setColumn(const unsigned value) { column = value; }
@@ -123,8 +123,10 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-				ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth & columnAddressDepth & columnSizeDepth &
-					mappingScheme & virtualAddress & physicalAddress & channel & rank & bank & row & column & columnLowAddressDepth & columnHighAddressDepth;
+				ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth 
+					& columnAddressDepth & columnSizeDepth & mappingScheme & 
+					virtualAddress & physicalAddress & channel & rank 
+					& bank & row & column & columnLowAddressDepth & columnHighAddressDepth & dimm;
 			}
 		}
 	};

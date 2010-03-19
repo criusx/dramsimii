@@ -33,8 +33,8 @@
 * Declaration of a LRU tag store.
 */
 
-#ifndef __CACHE_HH__
-#define __CACHE_HH__
+#ifndef CACHE_HH
+#define CACHE_HH
 
 #include <list>
 #include <vector>

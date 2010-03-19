@@ -43,6 +43,7 @@ unsigned Address::columnLowAddressDepth;
 unsigned Address::columnHighAddressDepth;
 unsigned Address::rowLowAddressDepth;
 unsigned Address::rowHighAddressDepth;
+unsigned Address::rankCount;
 Address::AddressMappingScheme Address::mappingScheme;
 
 Address::Address():
@@ -102,17 +103,18 @@ PhysicalAddress Address::maxAddress()
 		columnAddressDepth + columnSizeDepth)) - 1;
 }
 
-void Address::initialize(const Settings &dramSettings)
+void Address::initialize(const Settings &_settings)
 {
-	channelAddressDepth = log2(dramSettings.channelCount);
-	rankAddressDepth = log2(dramSettings.rankCount);
-	bankAddressDepth = log2(dramSettings.bankCount);
-	rowAddressDepth  = log2(dramSettings.rowCount);
-	columnAddressDepth  = log2(dramSettings.columnCount);
+	channelAddressDepth = log2(_settings.channelCount);
+	rankCount = _settings.rankCount;
+	rankAddressDepth = log2(_settings.rankCount * _settings.dimmCount);
+	bankAddressDepth = log2(_settings.bankCount);
+	rowAddressDepth  = log2(_settings.rowCount);
+	columnAddressDepth  = log2(_settings.columnCount);
 	//FIXME: shouldn't this already be set appropriately?
-	columnSizeDepth	= log2(dramSettings.dramType == DRDRAM ? 16 : dramSettings.columnSize);
-	mappingScheme = dramSettings.addressMappingScheme;
-	unsigned cachelineDepth = log2(dramSettings.cacheLineSize);
+	columnSizeDepth	= log2(_settings.dramType == DRDRAM ? 16 : _settings.columnSize);
+	mappingScheme = _settings.addressMappingScheme;
+	unsigned cachelineDepth = log2(_settings.cacheLineSize);
 	assert(cachelineDepth > columnSizeDepth);
 	columnLowAddressDepth = cachelineDepth - columnSizeDepth;
 	columnHighAddressDepth = columnAddressDepth - columnLowAddressDepth;
@@ -136,6 +138,7 @@ void Address::initialize(const SystemConfiguration &systemConfig)
 	columnLowAddressDepth = cachelineDepth - columnSizeDepth;
 	columnHighAddressDepth = columnAddressDepth - columnLowAddressDepth;
 	assert(rowAddressDepth > 3);
+	rankCount = systemConfig.getRankCount();
 	rowLowAddressDepth = 3;
 	rowHighAddressDepth = rowAddressDepth - 3;
 }
@@ -750,6 +753,8 @@ bool Address::addressTranslation()
 		break;
 	}
 
+	dimm = rank / rankCount;
+
 	// If there is still "stuff" left, the input address is out of range
 	if (tempAddress)
 	{
@@ -772,6 +777,7 @@ void Address::setAddress(const unsigned channel, const unsigned rank, const unsi
 	this->bank = bank;
 	this->column = column;
 	this->row = row;
+	this->dimm = rank / rankCount;
 
 	reverseAddressTranslation();
 
@@ -791,15 +797,19 @@ void Address::setAddress(const Address &rhs)
 	bank = rhs.bank;
 	column = rhs.column;
 	row = rhs.row;
+	dimm = rhs.rank / rankCount;
 }
 
 std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address& thisAddress)
 {
-	return os << "addr[0x" << hex << thisAddress.physicalAddress <<
-		"] chan[" << setbase(16) << thisAddress.channel << "] rank[" <<
-		thisAddress.rank << "] bank[" << setbase(16) << thisAddress.bank <<
-		"] row[" << setbase(16) << thisAddress.row << "] col[" <<
-		setbase(16) << thisAddress.column << "]";
+	return os <<
+		"addr[0x" << hex << thisAddress.physicalAddress <<
+		"] chan[" << setbase(16) << thisAddress.channel << 
+		"] dimm[" << setbase(16) << thisAddress.dimm <<
+		"] rank[" << setbase(16) << thisAddress.rank << 
+		"] bank[" << setbase(16) << thisAddress.bank <<
+		"] row[" << setbase(16) << thisAddress.row << 
+		"] col[" << setbase(16) << thisAddress.column << "]";
 }
 
 std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address::AddressMappingScheme &mappingScheme)

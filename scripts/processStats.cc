@@ -565,8 +565,8 @@ void thumbNailWorker()
 }
 
 void powerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
-						   const vector<vector<float> > &values,
-						   float epochTime, bool isThumbnail)
+				const vector<vector<float> > &values,
+				float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -640,8 +640,8 @@ void powerGraph(const bf::path &outFilename, opstream &p, const string& commandL
 }
 
 void energyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
-					const vector<vector<float> > &values,
-					float epochTime, bool isThumbnail)
+				 const vector<vector<float> > &values,
+				 float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -649,7 +649,7 @@ void energyGraph(const bf::path &outFilename, opstream &p, const string& command
 	p << "set title \"{/=18 Energy vs. Time}\\n{/=14 " << commandLine
 		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
 	p << "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
-	
+
 	// various energy graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
@@ -699,8 +699,8 @@ void energyGraph(const bf::path &outFilename, opstream &p, const string& command
 }
 
 void bigEnergyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
-				   const vector<vector<float> > &values,
-				   float epochTime, bool isThumbnail)
+					const vector<vector<float> > &values,
+					float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -737,20 +737,20 @@ void bigEnergyGraph(const bf::path &outFilename, opstream &p, const string& comm
 }
 
 void bigPowerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
-						   const vector<vector<float> > &values,
-						   float epochTime, bool isThumbnail)
+				   const vector<vector<float> > &values,
+				   float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << "set title \"{/=24 Power vs. Time}\\n{/=18 "
 		<< commandLine
 		<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
-	
+
 	p << bigPowerScript << endl;
 	p << "plot ";
 
 	unsigned channelCount = values.size() / 5;
-	
+
 	for (unsigned a = 0; a < channelCount; a++)
 	{
 		for (unsigned b = 0; b < 5; b++)
@@ -790,8 +790,8 @@ void bigPowerGraph(const bf::path &outFilename, opstream &p, const string& comma
 }
 
 void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
-											   vector<pair<float, float> > &energyValues,
-											   float epochTime, bool isThumbnail)
+						   vector<pair<float, float> > &energyValues,
+						   float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -1525,6 +1525,27 @@ void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const string& c
 	p << "e" << endl << "unset output" << endl;
 }
 
+bool ensureDirectoryExists(const bf::path &outputDir)
+{
+	if (!bf::exists(outputDir))
+	{
+		if (!bf::create_directories(outputDir))
+		{
+			cerr << "Could not create dir " << outputDir.leaf();
+			return false;
+		}
+	}
+	else
+	{
+		if (!bf::is_directory(outputDir))
+		{
+			cerr << "Directory " << outputDir.leaf()
+				<< " exists, but is not a directory." << endl;
+			return false;
+		}
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void processPower(const bf::path &outputDir, const string &filename)
 {
@@ -1537,23 +1558,8 @@ void processPower(const bf::path &outputDir, const string &filename)
 		return;
 	}
 
-	if (!bf::exists(outputDir))
-	{
-		if (!bf::create_directories(outputDir))
-		{
-			cerr << "Could not create dir " << outputDir.leaf();
-			exit(-1);
-		}
-	}
-	else
-	{
-		if (!bf::is_directory(outputDir))
-		{
-			cerr << "Directory " << outputDir.leaf()
-				<< " exists, but is not a directory." << endl;
-			exit(-1);
-		}
-	}
+	if (!ensureDirectoryExists(outputDir))
+		exit(-1);
 
 	unsigned writing = 0;
 
@@ -1766,7 +1772,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 	outFilename = outputDir / ("bigPower-thumb." + thumbnailExtension);
 	bigPowerGraph(outFilename,p3,commandLine,values,epochTime,true);
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// make the energy graph
 	outFilename = outputDir / ("energy." + extension);
@@ -1786,7 +1792,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 	outFilename = outputDir / ("bigEnergy-thumb." + thumbnailExtension);
 	bigEnergyGraph(outFilename,p3,commandLine,values,epochTime,true);
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// the cumulative energy graph
 	outFilename = outputDir / ("cumulativeEnergy." + extension);
@@ -1807,6 +1813,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 	p3.close();
 	p4.close();
 
+#pragma omp critical
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
 		for (list<string>::const_iterator i = filesGenerated.begin(); i
@@ -1922,32 +1929,14 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 //////////////////////////////////////////////////////////////////////////
 void processStats(const bf::path &outputDir, const string filename)
 {
-	//	cerr << "process " << filename << " to " << outputDir.native_file_string()
-	//			<< endl;
-
 	if (!fileExists(filename))
 	{
 		cerr << "cannot find " << filename << endl;
 		return;
 	}
 
-	if (!bf::exists(outputDir))
-	{
-		if (!bf::create_directories(outputDir))
-		{
-			cerr << "Could not create dir " << outputDir.leaf();
-			exit(-1);
-		}
-	}
-	else
-	{
-		if (!bf::is_directory(outputDir))
-		{
-			cerr << "Directory " << outputDir.leaf()
-				<< " exists, but is not a directory." << endl;
-			exit(-1);
-		}
-	}
+	if (!ensureDirectoryExists(outputDir))
+		exit(-1);
 
 	std::list<string> filesGenerated;
 
@@ -3273,6 +3262,7 @@ void processStats(const bf::path &outputDir, const string filename)
 	p2.close();
 	p3.close();
 
+#pragma omp critical
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
 		for (list<string>::const_iterator i = filesGenerated.begin(); i
@@ -3309,7 +3299,8 @@ int main(int argc, char** argv)
 		("create,f","Force creation of the index file only")
 		("png,p","Generate PNG versions of the files")
 		("cypress,c","Generate only select graphs for Cypress study")
-		("output,o",opt::value<string>(),
+		("process,r","Only process the files, do not regenerate the html file")
+		("output,o",opt::value<string>(),		
 		"Choose an output directory different from the current directory");
 
 	opt::variables_map vm;
@@ -3343,7 +3334,15 @@ int main(int argc, char** argv)
 		cerr << outputDir.native_directory_string() << endl;
 	}
 
+	if (vm.count("create") > 0 && vm.count("process") > 0)
+	{
+		cerr << "Error, cannot use --create and --process together, as they exclude one another" << endl;
+		exit(-1);
+	}
+
 	bool generateResultsOnly = vm.count("create") > 0;
+
+	bool processFilesOnly = vm.count("process") > 0;
 
 	generatePngFiles = vm.count("png") > 0;
 
@@ -3366,285 +3365,288 @@ int main(int argc, char** argv)
 		}
 	}
 
-	// gather stats from all the files to generate the html file
-#pragma omp parallel
-	for (vector<string>::const_iterator currentFile = files.begin(); currentFile
-		!= files.end(); ++currentFile)
+	if (!processFilesOnly)
 	{
-		filtering_istream inputStream;
-
-		if (ends_with(*currentFile, "gz"))
-			inputStream.push(boost::iostreams::gzip_decompressor());
-		else if (ends_with(*currentFile, "bz2"))
-			inputStream.push(boost::iostreams::bzip2_decompressor());
-		else
-			continue;
-
-		inputStream.push(file_source(*currentFile));
-
-		char newLine[NEWLINE_LENGTH];
-
-		if (!inputStream.is_complete())
-			continue;
-
-		pair<unsigned, unsigned> readHitsMisses;
-		pair<unsigned, unsigned> hitsMisses;
-		unsigned epochCounter = 0;
-		double epoch = 0.0;
-		float averageLatency;
-		float averageAdjustedLatency;
-		vector<string> currentLine;
-		string basefilename;
-
-		bool foundCommandline = false;
-		bool foundEpoch = false;
-
-		inputStream.getline(newLine, NEWLINE_LENGTH);
-
-		unsigned lineCounter = 0;
-
-		while ((newLine[0] != NULL) && (!userStop))
+		// gather stats from all the files to generate the html file
+#pragma omp parallel
+		for (vector<string>::const_iterator currentFile = files.begin(); 
+			currentFile != files.end(); ++currentFile)
 		{
-			const string filename(*currentFile);
+			filtering_istream inputStream;
 
-			if (starts_with(newLine,
-				"----Cumulative DIMM Cache Read Hits/Misses"))
-			{
-				epochCounter++;
+			if (ends_with(*currentFile, "stats.gz"))
+				inputStream.push(boost::iostreams::gzip_decompressor());
+			else if (ends_with(*currentFile, "stats.bz2"))
+				inputStream.push(boost::iostreams::bzip2_decompressor());
+			else
+				continue;
 
-				char *firstBracket = strchr(newLine, '{');
-				if (firstBracket == NULL)
-					break;
+			inputStream.push(file_source(*currentFile));
 
-				char *secondBracket = strchr(newLine, '}');
-				if (secondBracket == NULL)
-					break;
-				*secondBracket = (char) NULL;
-				readHitsMisses.first = max(atoi(firstBracket + 1), 1);
+			char newLine[NEWLINE_LENGTH];
 
-				firstBracket = strchr(secondBracket + 1, '{');
-				if (firstBracket == NULL)
-					break;
+			if (!inputStream.is_complete())
+				continue;
 
-				secondBracket = strchr(secondBracket + 1, '}');
-				if (secondBracket == NULL)
-					break;
-				*secondBracket = (char) NULL;
-				readHitsMisses.second = max(atoi(firstBracket + 1), 1);
-			}
-			else if (starts_with(newLine,
-				"----Cumulative DIMM Cache Hits/Misses"))
-			{
-				char *firstBracket = strchr(newLine, '{');
-				if (firstBracket == NULL)
-					break;
+			pair<unsigned, unsigned> readHitsMisses;
+			pair<unsigned, unsigned> hitsMisses;
+			unsigned epochCounter = 0;
+			double epoch = 0.0;
+			float averageLatency;
+			float averageAdjustedLatency;
+			vector<string> currentLine;
+			string basefilename;
 
-				char *secondBracket = strchr(newLine, '}');
-				if (secondBracket == NULL)
-					break;
-				*secondBracket = (char) NULL;
-				hitsMisses.first = max(atoi(firstBracket + 1), 1);
-
-				firstBracket = strchr(secondBracket + 1, '{');
-				if (firstBracket == NULL)
-					break;
-
-				secondBracket = strchr(secondBracket + 1, '}');
-				if (secondBracket == NULL)
-					break;
-				*secondBracket = (char) NULL;
-				hitsMisses.second = max(atoi(firstBracket + 1), 1);
-			}
-			else if (starts_with(newLine,
-				"----Average Cumulative Transaction Latency"))
-			{
-				char *firstBracket = strchr(newLine, '{');
-				if (firstBracket == NULL)
-					break;
-
-				char *secondBracket = strchr(newLine, '}');
-				if (secondBracket == NULL)
-					break;
-				*secondBracket = (char) NULL;
-				averageLatency = atof(firstBracket + 1);
-			}
-			else if (starts_with(newLine,
-				"----Average Cumulative Adjusted Transaction Latency"))
-			{
-				char *firstBracket = strchr(newLine, '{');
-				if (firstBracket == NULL)
-					break;
-
-				char *secondBracket = strchr(newLine, '}');
-				if (secondBracket == NULL)
-					break;
-				*secondBracket = (char) NULL;
-				averageAdjustedLatency = atof(firstBracket + 1);
-			}
-			else if (!foundEpoch && starts_with(newLine, "----Epoch"))
-			{
-				foundEpoch = true;
-
-				char *position = strchr(newLine, ' ');
-				if (position == NULL)
-					break;
-				epoch = atof(position + 1);
-			}
-			else if (!foundCommandline && starts_with(newLine,
-				"----Command Line:"))
-			{
-				foundCommandline = true;
-
-				toBeProcessed.push_back(*currentFile);
-
-				basefilename = filename.substr(0, filename.find_last_of('-'));
-				//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
-				const string commandline(newLine);
-				string modUrlString = commandline.substr(commandline.find(':')
-					+ 2, commandline.length());
-				vector<string> splitLine;
-				erase_all(modUrlString, "_");
-				erase_all(modUrlString, "{");
-				erase_all(modUrlString, "}");
-				replace_first(modUrlString,"  ]","]");
-				split(splitLine, modUrlString, is_any_of(" "),
-					token_compress_on);
-
-				for (vector<string>::const_iterator x = splitLine.begin(); x
-					!= splitLine.end(); ++x)
-				{
-					string::size_type start = x->find("[");
-					string::size_type end = x->find("]");
-					string benchmarkName;
-
-					if (start == string::npos || end == string::npos)
-						benchmarkName = *x;
-					else
-						benchmarkName = x->substr(start + 1, end - start - 1);
-
-					if (decoder.find(benchmarkName) != decoder.end())
-						benchmarkName = decoder[benchmarkName];
-
-					currentLine.push_back(benchmarkName);
-					//"<td>" + ireplace_all_copy(currentUrlString,"%2",benchmarkName) + "</td>";
-				}
-
-				// then calculate the runtime for the last column
-				if (!ends_with(*currentFile, "stats.gz") && !ends_with(
-					*currentFile, "stats.bz2"))
-				{
-					if (results.find(basefilename) == results.end())
-						results[basefilename] = currentLine;
-
-					// do not read power files all the way through
-					break;
-				}
-			}
-
-			if ((++lineCounter % 2500) == 0)
-			{
-				char *position = strchr(newLine, '\n');
-				if (position != NULL)
-					*position = (char) NULL;
-				newLine[50] = NULL;
-				cerr << "\r" << setiosflags(ios::right) << std::setw(4)
-					<< currentFile - files.begin() + 1 << "/"
-					<< setiosflags(ios::left) << std::setw(4)
-					<< files.end() - files.begin() << " " << std::setw(9)
-					<< lineCounter << " " << newLine;
-
-				// 					if (lineCounter % 5000 == 0)
-				// 						break;
-			}
+			bool foundCommandline = false;
+			bool foundEpoch = false;
 
 			inputStream.getline(newLine, NEWLINE_LENGTH);
-		}
-		boost::iostreams::close(inputStream);
 
-		stringstream current;
-		current << std::dec << std::fixed << std::setprecision(6)
-			<< ((double) epochCounter * epoch);
-		currentLine.push_back(current.str());
-		current.str("");
+			unsigned lineCounter = 0;
 
-		current << std::dec << std::fixed << std::setprecision(6)
-			<< ((float) readHitsMisses.first
-			/ ((float) readHitsMisses.first + readHitsMisses.second));
-		currentLine.push_back(current.str());
-		current.str("");
+			while ((newLine[0] != NULL) && (!userStop))
+			{
+				const string filename(*currentFile);
 
-		current << std::dec << std::fixed << std::setprecision(6)
-			<< ((float) hitsMisses.first / ((float) hitsMisses.first
-			+ hitsMisses.second));
-		currentLine.push_back(current.str());
-		current.str("");
+				if (starts_with(newLine,
+					"----Cumulative DIMM Cache Read Hits/Misses"))
+				{
+					epochCounter++;
 
-		current << std::dec << std::fixed << std::setprecision(6)
-			<< averageLatency;
-		currentLine.push_back(current.str());
-		current.str("");
+					char *firstBracket = strchr(newLine, '{');
+					if (firstBracket == NULL)
+						break;
 
-		current << std::dec << std::fixed << std::setprecision(6)
-			<< averageAdjustedLatency;
-		currentLine.push_back(current.str());
+					char *secondBracket = strchr(newLine, '}');
+					if (secondBracket == NULL)
+						break;
+					*secondBracket = (char) NULL;
+					readHitsMisses.first = max(atoi(firstBracket + 1), 1);
+
+					firstBracket = strchr(secondBracket + 1, '{');
+					if (firstBracket == NULL)
+						break;
+
+					secondBracket = strchr(secondBracket + 1, '}');
+					if (secondBracket == NULL)
+						break;
+					*secondBracket = (char) NULL;
+					readHitsMisses.second = max(atoi(firstBracket + 1), 1);
+				}
+				else if (starts_with(newLine,
+					"----Cumulative DIMM Cache Hits/Misses"))
+				{
+					char *firstBracket = strchr(newLine, '{');
+					if (firstBracket == NULL)
+						break;
+
+					char *secondBracket = strchr(newLine, '}');
+					if (secondBracket == NULL)
+						break;
+					*secondBracket = (char) NULL;
+					hitsMisses.first = max(atoi(firstBracket + 1), 1);
+
+					firstBracket = strchr(secondBracket + 1, '{');
+					if (firstBracket == NULL)
+						break;
+
+					secondBracket = strchr(secondBracket + 1, '}');
+					if (secondBracket == NULL)
+						break;
+					*secondBracket = (char) NULL;
+					hitsMisses.second = max(atoi(firstBracket + 1), 1);
+				}
+				else if (starts_with(newLine,
+					"----Average Cumulative Transaction Latency"))
+				{
+					char *firstBracket = strchr(newLine, '{');
+					if (firstBracket == NULL)
+						break;
+
+					char *secondBracket = strchr(newLine, '}');
+					if (secondBracket == NULL)
+						break;
+					*secondBracket = (char) NULL;
+					averageLatency = atof(firstBracket + 1);
+				}
+				else if (starts_with(newLine,
+					"----Average Cumulative Adjusted Transaction Latency"))
+				{
+					char *firstBracket = strchr(newLine, '{');
+					if (firstBracket == NULL)
+						break;
+
+					char *secondBracket = strchr(newLine, '}');
+					if (secondBracket == NULL)
+						break;
+					*secondBracket = (char) NULL;
+					averageAdjustedLatency = atof(firstBracket + 1);
+				}
+				else if (!foundEpoch && starts_with(newLine, "----Epoch"))
+				{
+					foundEpoch = true;
+
+					char *position = strchr(newLine, ' ');
+					if (position == NULL)
+						break;
+					epoch = atof(position + 1);
+				}
+				else if (!foundCommandline && starts_with(newLine,
+					"----Command Line:"))
+				{
+					foundCommandline = true;
+
+					toBeProcessed.push_back(*currentFile);
+
+					basefilename = filename.substr(0, filename.find_last_of('-'));
+					//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
+					const string commandline(newLine);
+					string modUrlString = commandline.substr(commandline.find(':')
+						+ 2, commandline.length());
+					vector<string> splitLine;
+					erase_all(modUrlString, "_");
+					erase_all(modUrlString, "{");
+					erase_all(modUrlString, "}");
+					replace_first(modUrlString,"  ]","]");
+					split(splitLine, modUrlString, is_any_of(" "),
+						token_compress_on);
+
+					for (vector<string>::const_iterator x = splitLine.begin(); x
+						!= splitLine.end(); ++x)
+					{
+						string::size_type start = x->find("[");
+						string::size_type end = x->find("]");
+						string benchmarkName;
+
+						if (start == string::npos || end == string::npos)
+							benchmarkName = *x;
+						else
+							benchmarkName = x->substr(start + 1, end - start - 1);
+
+						if (decoder.find(benchmarkName) != decoder.end())
+							benchmarkName = decoder[benchmarkName];
+
+						currentLine.push_back(benchmarkName);
+						//"<td>" + ireplace_all_copy(currentUrlString,"%2",benchmarkName) + "</td>";
+					}
+
+					// then calculate the runtime for the last column
+					if (!ends_with(*currentFile, "stats.gz") && !ends_with(
+						*currentFile, "stats.bz2"))
+					{
+						if (results.find(basefilename) == results.end())
+							results[basefilename] = currentLine;
+
+						// do not read power files all the way through
+						break;
+					}
+				}
+
+				if ((++lineCounter % 7500) == 0)
+				{
+					char *position = strchr(newLine, '\n');
+					if (position != NULL)
+						*position = (char) NULL;
+					newLine[50] = NULL;
+					cerr << "\r" << setiosflags(ios::right) << std::setw(4)
+						<< currentFile - files.begin() + 1 << "/"
+						<< setiosflags(ios::left) << std::setw(4)
+						<< files.end() - files.begin() << " " << std::setw(9)
+						<< lineCounter << " " << newLine << "\r";
+
+					// 					if (lineCounter % 5000 == 0)
+					// 						break;
+				}
+
+				inputStream.getline(newLine, NEWLINE_LENGTH);
+			}
+			boost::iostreams::close(inputStream);
+
+			stringstream current;
+			current << std::dec << std::fixed << std::setprecision(6)
+				<< ((double) epochCounter * epoch);
+			currentLine.push_back(current.str());
+			current.str("");
+
+			current << std::dec << std::fixed << std::setprecision(6)
+				<< ((float) readHitsMisses.first
+				/ ((float) readHitsMisses.first + readHitsMisses.second));
+			currentLine.push_back(current.str());
+			current.str("");
+
+			current << std::dec << std::fixed << std::setprecision(6)
+				<< ((float) hitsMisses.first / ((float) hitsMisses.first
+				+ hitsMisses.second));
+			currentLine.push_back(current.str());
+			current.str("");
+
+			current << std::dec << std::fixed << std::setprecision(6)
+				<< averageLatency;
+			currentLine.push_back(current.str());
+			current.str("");
+
+			current << std::dec << std::fixed << std::setprecision(6)
+				<< averageAdjustedLatency;
+			currentLine.push_back(current.str());
 
 #pragma omp critical
-		results[basefilename] = currentLine;
-	}
-
-	// then generate result.html
-	bf::path openfile = executableDirectory / "template2.html";
-
-	if (!fileExists(openfile.native_directory_string()))
-	{
-		cerr << "cannot open template file: "
-			<< openfile.native_directory_string();
-		return -1;
-	}
-
-	ifstream instream(openfile.directory_string().c_str());
-	stringstream entirefile;
-	entirefile << instream.rdbuf();
-
-	string fileList;
-	string csvOutput;
-	for (map<string, vector<string> >::const_iterator x = results.begin(); x
-		!= results.end(); ++x)
-	{
-		fileList += "<tr>";
-
-		for (vector<string>::const_iterator i = x->second.begin(), end =
-			x->second.end(); i != end;)
-		{
-			csvOutput += *i;
-
-			fileList += "<td>" + ireplace_all_copy(ireplace_all_copy(urlString,
-				"%2", *i), "%1", x->first) + "</td>";
-
-			if (++i != end)
-				csvOutput += ',';
-			else
-				csvOutput += '\n';
-
+			results[basefilename] = currentLine;
 		}
 
-		fileList += "</tr>";
+		// then generate result.html
+		bf::path openfile = executableDirectory / "template2.html";
+
+		if (!fileExists(openfile.native_directory_string()))
+		{
+			cerr << "cannot open template file: "
+				<< openfile.native_directory_string();
+			return -1;
+		}
+
+		ifstream instream(openfile.directory_string().c_str());
+		stringstream entirefile;
+		entirefile << instream.rdbuf();
+
+		string fileList;
+		string csvOutput;
+		for (map<string, vector<string> >::const_iterator x = results.begin(); x
+			!= results.end(); ++x)
+		{
+			fileList += "<tr>";
+
+			for (vector<string>::const_iterator i = x->second.begin(), end =
+				x->second.end(); i != end;)
+			{
+				csvOutput += *i;
+
+				fileList += "<td>" + ireplace_all_copy(ireplace_all_copy(urlString,
+					"%2", *i), "%1", x->first) + "</td>";
+
+				if (++i != end)
+					csvOutput += ',';
+				else
+					csvOutput += '\n';
+
+			}
+
+			fileList += "</tr>";
+		}
+
+		// write the result html file
+		bf::path outputHtml((separateOutputDir ? outputDir : ".") / "result.html");
+		ofstream out(outputHtml.native_file_string().c_str());
+		string outString = entirefile.str();
+		replace_all(outString, "@@@", fileList);
+		out.write(outString.c_str(), outString.length());
+		out.close();
+
+		// write the result csv file
+		bf::path outputCsv((separateOutputDir ? outputDir : ".") / "result.csv");	
+		ofstream outCsv(outputCsv.native_file_string().c_str());
+		outCsv.write(csvHeader.c_str(), csvHeader.length());
+		outCsv.write(csvOutput.c_str(), csvOutput.length());
+		outCsv.close();
 	}
-
-	// write the result html file
-	bf::path outputHtml((separateOutputDir ? outputDir : ".") / "result.html");
-	ofstream out(outputHtml.native_file_string().c_str());
-	string outString = entirefile.str();
-	replace_all(outString, "@@@", fileList);
-	out.write(outString.c_str(), outString.length());
-	out.close();
-
-	// write the result csv file
-	bf::path outputCsv((separateOutputDir ? outputDir : ".") / "result.csv");	
-	ofstream outCsv(outputCsv.native_file_string().c_str());
-	outCsv.write(csvHeader.c_str(), csvHeader.length());
-	outCsv.write(csvOutput.c_str(), csvOutput.length());
-	outCsv.close();
 
 	// create the js directory 
 	bf::path jsDirectory((separateOutputDir ? outputDir : ".") / "js");	
@@ -3676,6 +3678,7 @@ int main(int argc, char** argv)
 	{
 		boost::thread threadA(thumbNailWorker);
 
+#pragma omp parallel
 		for (list<string>::const_iterator i = toBeProcessed.begin(); i
 			!= toBeProcessed.end(); ++i)
 		{
@@ -3723,8 +3726,8 @@ int main(int argc, char** argv)
 
 		cerr << "Waiting for post-processing to finish." << endl;
 
-		threadA.join();
-		threadB.join();
+		//threadA.join();
+		//threadB.join();
 	}
 
 	return 0;

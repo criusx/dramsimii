@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef EVENT_H
-#define EVENT_H
+#ifndef EVENT_HH
+#define EVENT_HH
 #pragma once
 
 #include "Address.hh"

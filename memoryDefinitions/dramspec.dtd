@@ -26,6 +26,7 @@
 <!ELEMENT cpuToMemoryClockRatio (#PCDATA) >
 <!ELEMENT datarate (#PCDATA)>
 <!ELEMENT decodeWindow (#PCDATA)>
+<!ELEMENT dimms (#PCDATA)>
 <!ELEMENT DQperDRAM (#PCDATA)>
 <!ELEMENT DQSperDRAM (#PCDATA)>
 <!ELEMENT DMperDRAM (#PCDATA)>
@@ -95,7 +96,7 @@ cpuToMemoryClockRatio, epoch)>
 <!ELEMENT tWTR (#PCDATA)>
 <!ELEMENT timing (tBufferDelay, tBurst, tCAS, tCMD, tCWD, tFAW, tRAS, tRC, tRCD, tRFC, tRRD,
 tRP, tRTP, tRTRS, tWR, tWTR, tAL, refreshTime, tREFI, seniorityAgeLimit)>
-<!ELEMENT setup (datarate, clockGranularity, channels, ranks, banks, rows, columns,
+<!ELEMENT setup (datarate, clockGranularity, channels, dimms, ranks, banks, rows, columns,
 channelWidth, physicalAddressMappingPolicy, rowBufferPolicy, rowSize, columnSize,
 postedCAS,autoRefreshPolicy,commandOrderingAlgorithm,
 transactionOrderingAlgorithm, perBankQueueDepth, systemConfigurationType,

@@ -8,7 +8,11 @@
 		<!-- set to 2 for DDR, DDR2, DDR3, etc. -->
 		<clockGranularity>2</clockGranularity>
 		<channels>1</channels>
-		<ranks>4</ranks>
+		<!-- dimms per channel -->
+		<dimms>2</dimms>
+		<!-- ranks per dimm -->
+		<ranks>2</ranks>
+		<!-- banks per rank -->
 		<banks>8</banks>
 		<rows>16384</rows>
 		<columns>1024</columns>

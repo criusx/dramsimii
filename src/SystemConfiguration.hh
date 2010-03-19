@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef DRAMSYSTEMCONFIGURATION_H
-#define DRAMSYSTEMCONFIGURATION_H
+#ifndef SYSTEMCONFIGURATION_HH
+#define SYSTEMCONFIGURATION_HH
 #pragma once
 
 #include "globals.hh"
@@ -62,6 +62,7 @@ namespace DRAMsimII
 		int clockGranularity;
 		unsigned cachelinesPerRow;										///< dependent variable
 		unsigned channelCount;											///< How many logical channels are there ?
+		unsigned dimmCount;
 		unsigned rankCount;												///< How many ranks are there per channel ?
 		unsigned bankCount;												///< How many banks per device?
 		unsigned rowCount;												///< rows per bank
@@ -93,6 +94,7 @@ namespace DRAMsimII
 		unsigned getRankCount() const { return rankCount; }
 		unsigned getBankCount() const { return bankCount; }
 		unsigned getChannelCount() const { return channelCount; }
+		unsigned getDimmCount() const { return dimmCount; }
 		unsigned getRowCount() const { return rowCount; }
 		unsigned getColumnCount() const { return columnCount; }
 		unsigned getColumnSize() const { return columnSize; }

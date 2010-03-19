@@ -90,6 +90,7 @@ autoPrecharge(settings.autoPrecharge),
 clockGranularity(settings.clockGranularity),
 cachelinesPerRow(settings.cachelinesPerRow),
 channelCount(settings.channelCount),
+dimmCount(settings.dimmCount),
 rankCount(settings.rankCount),
 bankCount(settings.bankCount),
 rowCount(settings.rowCount),
@@ -101,6 +102,8 @@ readPercentage(settings.readPercentage),
 sessionID(settings.sessionID),
 outType(settings.outFileType)
 {
+	Address::initialize(settings);
+
 	assert(decodeWindow >= 1);
 
 	// initialize the output streams
@@ -253,6 +256,7 @@ autoPrecharge(rhs.autoPrecharge),
 clockGranularity(rhs.clockGranularity),
 cachelinesPerRow(rhs.cachelinesPerRow),
 channelCount(rhs.channelCount),
+dimmCount(rhs.dimmCount),
 rankCount(rhs.rankCount),
 bankCount(rhs.bankCount),
 rowCount(rhs.rowCount),
@@ -340,6 +344,7 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	clockGranularity = rhs.clockGranularity;
 	cachelinesPerRow = rhs.cachelinesPerRow;
 	channelCount = rhs.channelCount;
+	dimmCount = rhs.dimmCount;
 	rankCount = rhs.rankCount;
 	bankCount = rhs.bankCount;
 	decodeWindow = rhs.decodeWindow;
@@ -352,36 +357,37 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	return *this;
 }
 
-bool SystemConfiguration::operator ==(const SystemConfiguration& right) const
+bool SystemConfiguration::operator ==(const SystemConfiguration& rhs) const
 {
-	return (commandOrderingAlgorithm == right.commandOrderingAlgorithm &&
-		transactionOrderingAlgorithm == right.transactionOrderingAlgorithm &&
-		configType == right.configType &&
-		refreshTime == right.refreshTime &&
-		refreshPolicy == right.refreshPolicy &&
-		columnSize == right.columnSize &&
-		rowSize == right.rowSize &&
-		cachelineSize == right.cachelineSize &&
-		seniorityAgeLimit == right.seniorityAgeLimit &&
-		dramType == right.dramType &&
-		rowBufferManagementPolicy == right.rowBufferManagementPolicy &&
-		addressMappingScheme == right.addressMappingScheme &&
-		AlmostEqual<double>(datarate,right.datarate) &&
-		postedCAS == right.postedCAS &&
-		readWriteGrouping == right.readWriteGrouping &&
-		autoPrecharge == right.autoPrecharge &&
-		clockGranularity == right.clockGranularity &&
-		cachelinesPerRow == right.cachelinesPerRow &&
-		channelCount == right.channelCount &&
-		rankCount == right.rankCount &&
-		bankCount == right.bankCount &&
-		rowCount == right.rowCount &&
-		columnCount == right.columnCount &&
-		decodeWindow == right.decodeWindow &&
-		epoch == right.epoch &&
-		AlmostEqual<double>(shortBurstRatio,right.shortBurstRatio) &&
-		AlmostEqual<double>(readPercentage,right.readPercentage) &&
-		sessionID == right.sessionID);
+	return (commandOrderingAlgorithm == rhs.commandOrderingAlgorithm &&
+		transactionOrderingAlgorithm == rhs.transactionOrderingAlgorithm &&
+		configType == rhs.configType &&
+		refreshTime == rhs.refreshTime &&
+		refreshPolicy == rhs.refreshPolicy &&
+		columnSize == rhs.columnSize &&
+		rowSize == rhs.rowSize &&
+		cachelineSize == rhs.cachelineSize &&
+		seniorityAgeLimit == rhs.seniorityAgeLimit &&
+		dramType == rhs.dramType &&
+		rowBufferManagementPolicy == rhs.rowBufferManagementPolicy &&
+		addressMappingScheme == rhs.addressMappingScheme &&
+		AlmostEqual<double>(datarate,rhs.datarate) &&
+		postedCAS == rhs.postedCAS &&
+		readWriteGrouping == rhs.readWriteGrouping &&
+		autoPrecharge == rhs.autoPrecharge &&
+		clockGranularity == rhs.clockGranularity &&
+		cachelinesPerRow == rhs.cachelinesPerRow &&
+		channelCount == rhs.channelCount &&
+		dimmCount == rhs.dimmCount &&
+		rankCount == rhs.rankCount &&
+		bankCount == rhs.bankCount &&
+		rowCount == rhs.rowCount &&
+		columnCount == rhs.columnCount &&
+		decodeWindow == rhs.decodeWindow &&
+		epoch == rhs.epoch &&
+		AlmostEqual<double>(shortBurstRatio,rhs.shortBurstRatio) &&
+		AlmostEqual<double>(readPercentage,rhs.readPercentage) &&
+		sessionID == rhs.sessionID);
 }
 
 ostream &DRAMsimII::operator<<(ostream &os, const SystemConfiguration &this_a)

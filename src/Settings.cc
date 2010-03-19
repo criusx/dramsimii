@@ -85,7 +85,8 @@ autoPrecharge(false),
 dbReporting(false),
 clockGranularity(0),
 cachelinesPerRow(0),
-channelCount(0),
+channelCount(0U),
+dimmCount(0U),
 rankCount(0U),
 bankCount(0U),
 shortBurstRatio(2.0F),
@@ -349,6 +350,9 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			break;
 		case rank_count_token:
 			rankCount = lexical_cast<unsigned>(nodeValue);
+			break;
+		case dimm_count_token:
+			dimmCount = lexical_cast<unsigned>(nodeValue);			
 			break;
 		case channel_count_token:
 			channelCount = lexical_cast<unsigned>(nodeValue);

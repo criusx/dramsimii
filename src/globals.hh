@@ -13,8 +13,8 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#ifndef GLOBALS_HH
+#define GLOBALS_HH
 #pragma once
 //#define __STDC_LIMIT_MACROS
 
@@ -29,8 +29,6 @@
 typedef __int64 int64_t;
 typedef unsigned __int64 uint64_t;
 typedef unsigned __int8 uint8_t;
-//#include <boost/cstdint.hpp>
-//typedef boost::uint64_t uint64_t;
 #include <limits.h>
 #define TICK_MAX _I64_MAX
 #define TICK_MIN _I64_MIN
@@ -63,6 +61,8 @@ namespace DRAMsimII
 	class Rank;
 	class BusEvent;
 	class Cache;
+	class Statistics;
+	class DIMM;
 
 	void unitTests(const Settings &settings);
 	

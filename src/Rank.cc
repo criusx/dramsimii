@@ -155,6 +155,22 @@ lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(newBank)
 {}
 
+void Rank::setRankID(const unsigned channelID, const unsigned rankID)
+{
+	this->rankID = rankID;
+
+	if (systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE || systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE_AGGRESSIVE)
+	{		
+		unsigned bankID = 0;
+		for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); ++i)
+		{
+			Transaction t(Transaction::AUTO_PRECHARGE_TRANSACTION,0,timing.tBurst(), Address(channelID,rankID,bankID++, 0,0));
+			i->push(new Command(&t, 0, false, timing.tBurst(), Command::PRECHARGE));
+		}
+	}
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 /// @brief this logically issues a RAS command and updates all variables to reflect this
 //////////////////////////////////////////////////////////////////////////
@@ -347,22 +363,6 @@ void Rank::resetPrechargeTime(const tick time)
 	lastCalculationTime = time;
 	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC());
 }
-
-void Rank::setRankID(const unsigned channelID, const unsigned rankID)
-{
-	this->rankID = rankID;
-
-	if (systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE || systemConfig.getRowBufferManagementPolicy() == CLOSE_PAGE_AGGRESSIVE)
-	{		
-		unsigned bankID = 0;
-		for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); ++i)
-		{
-			Transaction t(Transaction::AUTO_PRECHARGE_TRANSACTION,0,timing.tBurst(), Address(channelID,rankID,bankID++, 0,0));
-			i->push(new Command(&t, 0, false, timing.tBurst(), Command::PRECHARGE));
-		}
-	}
-}
-
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief returns the next time this command type may be issued

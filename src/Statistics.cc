@@ -45,7 +45,7 @@ using namespace DRAMsimII;
 //////////////////////////////////////////////////////////////////////////
 Statistics::Statistics(const Settings& settings):
 channels(settings.channelCount),
-ranks(settings.rankCount),
+ranks(settings.rankCount * settings.dimmCount),
 banks(settings.bankCount),
 cacheHitLatency(settings.hitLatency),
 validTransactionCount(0),
@@ -59,8 +59,8 @@ writeCount(0),
 dimmCacheBandwidthData(settings.channelCount),
 bandwidthData(settings.channelCount),
 timePerEpoch((float)settings.epoch / settings.dataRate),
-rowBufferAccesses(settings.channelCount, vector<pair<unsigned,unsigned> >(settings.rankCount)),
-rasReduction(settings.channelCount, vector<unsigned>(settings.rankCount)),
+rowBufferAccesses(settings.channelCount, vector<pair<unsigned,unsigned> >(settings.rankCount * settings.dimmCount)),
+rasReduction(settings.channelCount, vector<unsigned>(settings.rankCount * settings.dimmCount)),
 issuedAtTFAW(0),
 commandDelay(),
 commandExecution(),
@@ -73,13 +73,13 @@ cumulativeAdjustedTransactionExecution(),
 cacheLatency(0),
 pcOccurrence(),
 workingSet(),
-aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
-bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.bankCount),
-hitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount)),
-cumulativeHitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount))
+aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount),
+bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount),
+hitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount * settings.dimmCount)),
+cumulativeHitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount * settings.dimmCount))
 {
-	bankLatencyUtilization.reserve(settings.channelCount * settings.rankCount * settings.bankCount);
-	aggregateBankUtilization.reserve(settings.channelCount * settings.rankCount * settings.bankCount);
+	bankLatencyUtilization.reserve(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount);
+	aggregateBankUtilization.reserve(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount);
 }
 
 //////////////////////////////////////////////////////////////////////////

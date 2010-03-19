@@ -145,6 +145,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "datarate", (const xmlChar *)lexical_cast<string>(dataRate).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "clockGranularity", (const xmlChar *)lexical_cast<string>(clockGranularity).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "channels", (const xmlChar *)lexical_cast<string>(channelCount).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "dimms", (const xmlChar *)lexical_cast<string>(dimmCount).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "ranks", (const xmlChar *)lexical_cast<string>(rankCount).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "banks", (const xmlChar *)lexical_cast<string>(bankCount).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "rows", (const xmlChar *)lexical_cast<string>(rowCount).c_str());

@@ -62,7 +62,7 @@ inputStream(settings, systemConfig, channel),
 time(0),
 nextStats(settings.epoch)
 {
-	Address::initialize(settings);
+	//Address::initialize(settings);
 
 	string commandLine(settings.commandLine);
 

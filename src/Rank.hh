@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef RANK_C_H
-#define RANK_C_H
+#ifndef RANK_HH
+#define RANK_HH
 #pragma once
 
 #include "globals.hh"
@@ -118,7 +118,6 @@ namespace DRAMsimII
 		unsigned getWriteCycles() const { return CASWLength; }
 		bool isEmpty() const;
 
-
 		// mutators
 		void setRankID(const unsigned channelID, const unsigned rankID);
 		void setLastBankID(const unsigned value) { lastBankID = value; }
@@ -147,7 +146,6 @@ namespace DRAMsimII
 					otherLastCASWTime & otherLastCASLength & otherLastCASWLength & nextActivateTime & nextReadTime & nextWriteTime & 
 					nextRefreshTime & lastCalculationTime;
 			}
-
 		}
 
 		template <class Archive>
