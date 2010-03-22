@@ -434,6 +434,7 @@ bool Cache::timingAccess(const Command *currentCommand, tick time)
 
 	if (!satisfied) 
 	{
+		hitsMisses.second++;
 		// MISS
 		//PacketPtr bus_pkt = getBusPacket(pkt, blk, pkt->needsExclusive());
 
@@ -495,6 +496,11 @@ bool Cache::timingAccess(const Command *currentCommand, tick time)
 		//}
 		//delete bus_pkt;
 
+	}
+	else
+	{
+		hitsMisses.first++;
+		bandwidth += currentCommand->getLength();
 	}
 
 	return satisfied;

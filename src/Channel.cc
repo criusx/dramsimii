@@ -2348,6 +2348,8 @@ void Channel::executeCommand(Command *thisCommand)
 		// precharge may be issued first because timings are based on time, not the last time at which a read command was issued		
 		assert(currentBank.isActivated());
 		currentRank.issuePRE(time, thisCommand);
+
+		currentDimm->issuePRE(time, thisCommand);
 		// lack of break is intentional
 
 	case Command::READ:
@@ -2361,6 +2363,11 @@ void Channel::executeCommand(Command *thisCommand)
 		assert(currentBank.getOpenRowID() == thisCommand->getAddress().getRow());
 		thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
+
+		for (vector<DIMM>::iterator currentDimm = dimm.begin(), end = dimm.end(); currentDimm != end; ++currentDimm)
+		{
+			currentDimm->issueCAS(time, thisCommand);
+		}		
 
 		/// @todo let each rank figure out if the command is to it or not by combining issueCAS and issueCASother
 		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
@@ -2382,7 +2389,9 @@ void Channel::executeCommand(Command *thisCommand)
 	case Command::WRITE_AND_PRECHARGE:
 
 		// precharge may be issued first because timings are based on time, not the last time at which a read command was issued
-		currentRank.issuePRE(time, thisCommand);		
+		currentRank.issuePRE(time, thisCommand);	
+
+		currentDimm->issuePRE(time, thisCommand);
 		// missing break is intentional
 
 	case Command::WRITE:
@@ -2396,6 +2405,11 @@ void Channel::executeCommand(Command *thisCommand)
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
 		//thisCommand->getHost()->setCompletionTime(time);
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
+
+		for (vector<DIMM>::iterator currentDimm = dimm.begin(), end = dimm.end(); currentDimm != end; ++currentDimm)
+		{
+			currentDimm->issueCASW(time, thisCommand);
+		}
 
 		/// @todo let each rank figure out if the command is to it or not by combining issueCAS and issueCASother
 		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)

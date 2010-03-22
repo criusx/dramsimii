@@ -155,6 +155,10 @@ namespace DRAMsimII
 		const unsigned nmruCount;				///< the number of sets tracked when using the NMRU policy
 		ReplacementPolicy replacementPolicy;	///< the policy that dictates what cache block is evicted when necessary
 
+		// statistics
+		std::pair<unsigned,unsigned> hitsMisses;	///< the number of hits and misses since the last reset to this cache
+		unsigned bandwidth;						///< bandwidth since the last reset to this cache
+
 	public:
 		/**
 		* Construct and initialize this tag store.
@@ -186,6 +190,11 @@ namespace DRAMsimII
 		BlkType *handleFill(const Command *currentCommand, BlkType *blk, tick time);
 
 		BlkType *allocateBlock(const Addr &addr, PacketList &);
+
+		void resetStats()
+		{
+			hitsMisses.first = hitsMisses.second = bandwidth = 0U;
+		}
 
 		/**
 		* Return the block size.
