@@ -1,7 +1,5 @@
 #include "pstream.h"
-#include <boost/circular_buffer.hpp>
 #include <cstdio>
-//#include <ImageMagick/Magick++.h>
 #include <string>
 #include <list>
 #include <errno.h>
@@ -15,6 +13,7 @@
 #include <map>
 #include <sstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/circular_buffer.hpp>
 #include <boost/regex.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/bzip2.hpp>
@@ -488,16 +487,6 @@ bool doneEntering = false;
 list<string> fileList;
 mutex fileListMutex;
 
-#define USE_USER_CONVERT
-
-#ifdef USE_USER_CONVERT
-#define CONVERT_COMMAND "/home/crius/ImageMagick/bin/convert"
-#define MOGRIFY_COMMAND "/home/crius/ImageMagick/bin/mogrify"
-#else
-#define CONVERT_COMMAND "convert"
-#define MOGRIFY_COMMAND "mogrify"
-#endif
-
 void thumbNailWorker()
 {
 	//using namespace Magick;
@@ -532,9 +521,9 @@ void thumbNailWorker()
 			//second.write(baseFilename + ".png");
 
 			//string commandLine0 = string(CONVERT_COMMAND) + " " + filename + "'[" + thumbnailResolution + "]' " + baseFilename + "-thumb.png";
-			string commandLine0 = string(CONVERT_COMMAND) + " " + filename
-				+ " -resize " + thumbnailResolution + " " + baseFilename
-				+ "-thumb.png";
+// 			string commandLine0 = string(CONVERT_COMMAND) + " " + filename
+// 				+ " -resize " + thumbnailResolution + " " + baseFilename
+// 				+ "-thumb.png";
 			string commandLine2 = "gzip -c -9 -f " + filename + " > "
 				+ filename + "z";
 #ifndef NDEBUG
@@ -554,9 +543,9 @@ void thumbNailWorker()
 
 			if (generatePngFiles)
 			{
-				string commandLine1 = string(MOGRIFY_COMMAND)
-					+ " -resize 3840 -format png " + filename;
-				system(commandLine1.c_str());
+// 				string commandLine1 = string(MOGRIFY_COMMAND)
+// 					+ " -resize 3840 -format png " + filename;
+// 				system(commandLine1.c_str());
 			}
 
 			bf::remove(bf::path(filename));
@@ -572,7 +561,7 @@ void powerGraph(const bf::path &outFilename, opstream &p, const string& commandL
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << totalPowerScript << endl;
 	p << "set title \"{/=18 Power vs. Time}\\n{/=14 "
-		<< commandLine << "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+		<< commandLine << "}\"  offset character 0, -1, 0 font \"Arial," << (isThumbnail ? "14" : "6") << "\" norotate\n";
 	p << "plot ";
 
 	unsigned channelCount = values.size() / 5;
@@ -590,7 +579,6 @@ void powerGraph(const bf::path &outFilename, opstream &p, const string& commandL
 	{
 		for (vector<float>::const_iterator j = i->begin(); j != i->end(); ++j)
 		{
-			//cerr << *j << " ";
 			p << *j << endl;
 		}
 		p << "e" << endl;
@@ -1544,14 +1532,13 @@ bool ensureDirectoryExists(const bf::path &outputDir)
 			return false;
 		}
 	}
+
+	return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void processPower(const bf::path &outputDir, const string &filename)
 {
-	//	cerr << "process " << filename << " to " << outputDir.native_file_string()
-	//			<< endl;
-
 	if (!fileExists(filename))
 	{
 		cerr << "cannot find " << filename << endl;
@@ -1573,8 +1560,6 @@ void processPower(const bf::path &outputDir, const string &filename)
 	vector<pair<float, float> > energyValues;
 	pair<float, float> energyValueBuffer;
 
-	//BufferAccumulator<pair<float,float> > energy;
-
 	unsigned scaleFactor = 1;
 	unsigned scaleIndex = 0;
 
@@ -1589,10 +1574,10 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 	if (!inputStream.is_complete())
 		return;
+	
+	list<pair<string, string> > graphs;
 
 	inputStream.getline(newLine, NEWLINE_LENGTH);
-
-	list<pair<string, string> > graphs;
 
 	while ((newLine[0] != 0) && (!userStop))
 	{
@@ -1627,10 +1612,6 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 					energyValueBuffer.first = atof(firstBrace + 1);
 					energyValueBuffer.second = atof(slash + 1);
-
-					//energy.push_back(pair<float,float>(atof(firstBrace + 1),atof(slash + 1)));
-
-					//cerr << energyValueBuffer.first << " " << energyValueBuffer.second << endl;
 				}
 
 				writing = (writing + 1) % values.size();
@@ -1711,7 +1692,6 @@ void processPower(const bf::path &outputDir, const string &filename)
 					vector<string> splitLine;
 					split(splitLine, line, is_any_of(":"));
 					commandLine = splitLine[1];
-					//cerr << commandLine << endl;					
 				}
 				else if (newLine[1] == '+')
 				{
@@ -3726,8 +3706,8 @@ int main(int argc, char** argv)
 
 		cerr << "Waiting for post-processing to finish." << endl;
 
-		//threadA.join();
-		//threadB.join();
+		threadA.join();
+		threadB.join();
 	}
 
 	return 0;
