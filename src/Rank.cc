@@ -256,6 +256,7 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	if (currentCommand->getAddress().getRank() == rankID)
 	{
+#if 0
 		//////////////////////////////////////////////////////////////////////////
 		bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
 		if (!satisfied)
@@ -266,7 +267,7 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 		}
 		//std::cout << (satisfied ? "|" : ".");
 		//////////////////////////////////////////////////////////////////////////
-
+#endif
 		// update the bank to reflect this change also
 		bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
 
@@ -302,11 +303,13 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
 	if (currentCommand->getAddress().getRank() == rankID)
 	{
+#if 0
 		//////////////////////////////////////////////////////////////////////////
 		bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
 		bank[currentCommand->getAddress().getBank()].setAllHits(false);
 		//std::cout << (satisfied ? "|" : ".");
 		//////////////////////////////////////////////////////////////////////////
+#endif
 
 		// update the bank to reflect this change also
 		bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);

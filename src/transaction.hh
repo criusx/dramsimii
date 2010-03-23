@@ -55,6 +55,7 @@ namespace DRAMsimII
 		PhysicalAddress PC;					///< the program counter associated with this transaction
 		int threadNum;							///< the thread number associated with this transaction
 		const unsigned originalTransaction;		///< utility counter id in the event that this transaction represents another version of a transaction
+		bool hit;								///< whether it hit in the cache or not
 
 	public:
 
@@ -68,9 +69,11 @@ namespace DRAMsimII
 		bool isRead() const { return ((type == IFETCH_TRANSACTION) || (type == READ_TRANSACTION) || (type == PREFETCH_TRANSACTION)); }
 		bool isWrite() const { return (type == WRITE_TRANSACTION); }
 		bool isRefresh() const { return (type == AUTO_REFRESH_TRANSACTION); }
+		bool isHit() const { return hit; }
 
 		// mutators
 		void setDecodeTime(const tick value) { decodeTime = value; }
+		void setHit(const bool value) { hit = value; }
 
 		static void release(const Transaction *trans) { freeTransactionPool.free((void * const)trans);}
 

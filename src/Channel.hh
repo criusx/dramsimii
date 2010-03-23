@@ -58,6 +58,7 @@ namespace DRAMsimII
 		//std::vector<DIMM> dimm;							///< represents the DIMMs attached to this channel
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
+		std::vector<Cache> cache;						///< the dimm caches
 	
 		// functions
 		void retireCommand(Command *);

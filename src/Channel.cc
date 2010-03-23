@@ -2346,6 +2346,21 @@ void Channel::executeCommand(Command *thisCommand)
 		// lack of break is intentional
 	case Command::READ:
 
+		//////////////////////////////////////////////////////////////////////////
+		{
+			bool satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
+			thisCommand->getHost()->setHit(satisfied);
+			if (!satisfied)
+				currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
+			// end of the line on reuse
+			if (currentRank->bank[thisCommand->getAddress().getBank()].isAllHits() && thisCommand->isPrecharge())
+			{
+				statistics.reportRasReduction(thisCommand);
+			}
+			std::cout << (satisfied ? "|" : ".");
+		}
+		//////////////////////////////////////////////////////////////////////////
+
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
 		//thisCommand->setCompletionTime(max(currentBank.getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
@@ -2370,7 +2385,13 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::WRITE:
 
-		//currentRank.issueCASW(time, thisCommand);
+		//////////////////////////////////////////////////////////////////////////
+		{
+			bool satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
+			currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
+			std::cout << (satisfied ? "|" : ".");
+		}
+		//////////////////////////////////////////////////////////////////////////
 
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
