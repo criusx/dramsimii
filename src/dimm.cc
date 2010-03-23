@@ -16,7 +16,9 @@ systemConfig(_systemConfig),
 statistics(_stats),
 cache(_settings),
 rank(_settings.rankCount,Rank(_settings,_timing,_systemConfig,_stats))
-{}
+{
+	assert(rank.size() >= 1);
+}
 
 DIMM::DIMM(const DIMM &rhs):
 timing(rhs.timing),
@@ -24,7 +26,9 @@ systemConfig(rhs.systemConfig),
 statistics(rhs.statistics),
 cache(rhs.cache),
 rank(rhs.rank)
-{}
+{
+	assert(rank.size() >= 1);
+}
 
 DIMM::DIMM(const DIMM &rhs, const TimingSpecification &_timing, const SystemConfiguration &_systemConfig, Statistics &_stats):
 timing(_timing),
@@ -32,13 +36,21 @@ systemConfig(_systemConfig),
 statistics(_stats),
 cache(rhs.cache),
 rank(rhs.rank)
-{}
+{
+	assert(rank.size() >= 1);
+}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief this logically issues a RAS command and updates all variables to reflect this
 //////////////////////////////////////////////////////////////////////////
 void DIMM::issueRAS(const tick currentTime, const Command *currentCommand)
 {
+	//Rank &currentRank = rank[currentCommand->getAddress().getRank()];
+
+	//currentRank.setLastBankID(currentCommand->getAddress().getBank());
+	
+	assert(currentCommand->getAddress().getDimm() == dimmId);
+	
 	(rank.begin() + (currentCommand->getAddress().getRank() - dimmId * systemConfig.getRankCount()))->issueRAS(currentTime, currentCommand);
 }
 
@@ -47,6 +59,8 @@ void DIMM::issueRAS(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void DIMM::issuePRE(const tick currentTime, const Command *currentCommand)
 {
+	//assert((rank.begin() + (currentCommand->getAddress().getRank() - dimmId * systemConfig.getRankCount()))->isActivated());
+
 	(rank.begin() + (currentCommand->getAddress().getRank() - dimmId * systemConfig.getRankCount()))->issuePRE(currentTime, currentCommand);
 }
 
@@ -55,16 +69,21 @@ void DIMM::issuePRE(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void DIMM::issueCAS(const tick currentTime, const Command *currentCommand)
 {
+	Rank &currentRank = rank[currentCommand->getAddress().getRank()];
+
+	Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
+
+	assert(currentBank.getOpenRowID() == currentCommand->getAddress().getRow());
+
 	//////////////////////////////////////////////////////////////////////////
 	bool satisfied = cache.timingAccess(currentCommand, currentCommand->getStartTime());
-#if 0
+
 	if (!satisfied)
 		bank[currentCommand->getAddress().getBank()].setAllHits(false);
 	if (bank[currentCommand->getAddress().getBank()].isAllHits() && currentCommand->isPrecharge())
 	{
 		statistics.reportRasReduction(currentCommand);
 	}
-#endif
 	//std::cout << (satisfied ? "|" : ".");
 	//////////////////////////////////////////////////////////////////////////
 	
@@ -75,24 +94,23 @@ void DIMM::issueCAS(const tick currentTime, const Command *currentCommand)
 	for (vector<Rank>::iterator i = rank.begin(), end = rank.end();
 		i != end; ++i)
 	{
-		if (thisDimm && i->getRankID() == rankId)
-		{
 			i->issueCAS(time, currentCommand);
-		}
-		else
-		{
-			i->issueCASother(time, currentCommand);
-		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief issue a CASW command to this rank
 //////////////////////////////////////////////////////////////////////////
-bool DIMM::issueCASW(const tick currentTime, const Command *currentCommand)
+void DIMM::issueCASW(const tick currentTime, const Command *currentCommand)
 {
+	Rank &currentRank = rank[currentCommand->getAddress().getRank()];
+
+	Bank &currentBank = currentRank.bank[currentCommand->getAddress().getBank()];
+
+	assert(currentBank.getOpenRowID() == currentCommand->getAddress().getRow());
+
 	//////////////////////////////////////////////////////////////////////////
-	bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
+	bool satisfied = cache.timingAccess(currentCommand, currentCommand->getStartTime());
 	bank[currentCommand->getAddress().getBank()].setAllHits(false);
 	//std::cout << (satisfied ? "|" : ".");
 	//////////////////////////////////////////////////////////////////////////
@@ -104,14 +122,7 @@ bool DIMM::issueCASW(const tick currentTime, const Command *currentCommand)
 	for (vector<Rank>::iterator i = rank.begin(), end = rank.end();
 		i != end; ++i)
 	{
-		if (thisDimm && i->getRankID() == rankId)
-		{
 			i->issueCASW(time, currentCommand);
-		}
-		else
-		{
-			i->issueCASWother(time, currentCommand);
-		}
 	}
 }
 
@@ -120,7 +131,7 @@ bool DIMM::issueCASW(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void DIMM::issueREF(const tick currentTime)
 {
-	(rank.begin() + (currentCommand->getAddress().getRank() - dimmId * systemConfig.getRankCount()))->issueREF(currentTime, currentCommand);
+	(rank.begin() + (currentCommand->getAddress().getRank() - dimmId * systemConfig.getRankCount()))->issueREF(currentTime);
 }
 
 //////////////////////////////////////////////////////////////////////////

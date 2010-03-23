@@ -82,14 +82,14 @@ namespace DRAMsimII
 		tick next(Command::CommandType nextCommandType) const;
 
 		// accessors
-		tick getLastRASTime() const { return lastRASTime; }
-		tick getLastCASTime() const { return lastCASTime; }
-		tick getLastCASWTime() const {return lastCASWTime; }
+		tick getLastRasTime() const { return lastRASTime; }
+		tick getLastCasTime() const { return lastCASTime; }
+		tick getLastCaswTime() const {return lastCASWTime; }
 
 		tick getLastPrechargeTime() const { return lastPrechargeTime; }
 
-		unsigned getLastCASLength() const { return lastCASLength; }
-		unsigned getLastCASWLength() const { return lastCASWLength; }
+		unsigned getLastCasLength() const { return lastCASLength; }
+		unsigned getLastCaswLength() const { return lastCASWLength; }
 
 		unsigned getOpenRowID() const { return openRowID; }
 		bool isActivated() const { return activated; }

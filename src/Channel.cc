@@ -56,7 +56,7 @@ systemConfig(_systemConfig),
 statistics(_stats),
 powerModel(_settings),
 channelID(UINT_MAX),
-dimm(_settings.dimmCount, DIMM(_settings,timingSpecification,_systemConfig, statistics)),
+//dimm(_settings.dimmCount, DIMM(_settings,timingSpecification,_systemConfig, statistics)),
 rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
 finishedTransactions()
 {
@@ -110,7 +110,7 @@ statistics(stats),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
 // to initialize the references
-dimm((unsigned)systemConfig.getDimmCount(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, stats)),
+//dimm((unsigned)systemConfig.getDimmCount(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, stats)),
 rank((unsigned)systemConfig.getRankCount() * systemConfig.getDimmCount(), Rank(rhs.rank[0], timingSpecification, systemConfig, stats)),
 finishedTransactions()
 {
@@ -159,13 +159,13 @@ systemConfig(rhs.systemConfig),
 statistics(rhs.statistics),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
-dimm((unsigned)rhs.rank.size(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, statistics)),
+//dimm((unsigned)rhs.rank.size(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, statistics)),
 rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0], timingSpecification, systemConfig, statistics)),
 finishedTransactions()
 {
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
-	dimm = rhs.dimm;
+	//dimm = rhs.dimm;
 	rank = rhs.rank;
 
 	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); ++i)
@@ -224,11 +224,11 @@ void Channel::setChannelID(const unsigned value)
 	 }
 	 
 	 currentId = 0;
-	 for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
-		 i != end; ++i)
-	 {
-		 i->setDimmId(value, currentId++);
-	 }
+// 	 for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
+// 		 i != end; ++i)
+// 	 {
+// 		 i->setDimmId(value, currentId++);
+// 	 }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -596,7 +596,7 @@ void Channel::doPowerCalculation(ostream& os)
 	{
 		unsigned thisRankRasCount = 1;
 		
-		//rankArray.push_back(k->getRankID());
+		//rankArray.push_back(k->getRankId());
 
 		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); ++l)
 		{
@@ -605,16 +605,16 @@ void Channel::doPowerCalculation(ostream& os)
 		}
 
 		// what if the RAS could be reduced by specific caching
-		unsigned thisRankAdjustedRasCount = thisRankRasCount - statistics.getRowReduction()[getChannelID()][k->getRankID()]; 
+		unsigned thisRankAdjustedRasCount = thisRankRasCount - statistics.getRowReduction()[getChannelID()][k->getRankId()]; 
 
-		if (thisRankRasCount < statistics.getRowReduction()[getChannelID()][k->getRankID()])
-			cerr << thisRankRasCount << " " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << endl;
+		if (thisRankRasCount < statistics.getRowReduction()[getChannelID()][k->getRankId()])
+			cerr << thisRankRasCount << " " << statistics.getRowReduction()[getChannelID()][k->getRankId()] << endl;
 #if 0
 		cerr << "!!! rasCount " << allBankRASCount << " reduxBy " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << 
 			" reducedTo " << allBankRASCount - statistics.getRowReduction()[getChannelID()][k->getRankID()] << " totalReadHits " <<
 			statistics.getHitRate()[getChannelID()][k->getRankID()].first.first << endl;
 #endif
-		totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankID()].first.first;
+		totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankId()].first.first;
 		BOOST_ASSERT(thisRankAdjustedRasCount >= 0);
 		BOOST_ASSERT(thisRankAdjustedRasCount <= thisRankRasCount);
 
@@ -671,7 +671,7 @@ void Channel::doPowerCalculation(ostream& os)
 
 		double RDschPct = k->getReadCycles() / (double)(time - powerModel.getLastCalculation());
 
-		double RDschPctAdjusted = (k->getReadCycles() - timingSpecification.tBurst() * statistics.getHitRate()[getChannelID()][k->getRankID()].first.first) / (double)(time - powerModel.getLastCalculation());
+		double RDschPctAdjusted = (k->getReadCycles() - timingSpecification.tBurst() * statistics.getHitRate()[getChannelID()][k->getRankId()].first.first) / (double)(time - powerModel.getLastCalculation());
 
 		BOOST_ASSERT(RDschPctAdjusted >= 0.0);
 
@@ -686,9 +686,9 @@ void Channel::doPowerCalculation(ostream& os)
 
 		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
 
-		os << " rk[" << k->getRankID() << "] rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
+		os << " rk[" << k->getRankId() << "] rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
 			"} duration{" << time - powerModel.getLastCalculation() << "} read{" << k->getReadCycles() << "} readHits{" <<
-			statistics.getHitRate()[getChannelID()][k->getRankID()].first.first << "} write{" << k->getWriteCycles() << "}";
+			statistics.getHitRate()[getChannelID()][k->getRankId()].first.first << "} write{" << k->getWriteCycles() << "}";
 
 		k->resetPrechargeTime(time);
 		k->resetCycleCounts();
@@ -997,11 +997,11 @@ void Channel::resetToTime(const tick time)
 		i->resetToTime(time);
 	}
 
-	for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
-		i != end; ++i)
-	{
-		i->resetToTime(time);
-	}
+// 	for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
+// 		i != end; ++i)
+// 	{
+// 		i->resetToTime(time);
+// 	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2133,7 +2133,7 @@ const Command *Channel::readNextCommand() const
 							(secondCommand->isWrite() && !readSweep) || 
 							secondCommand->isBasicPrecharge())
 						{
-							assert(currentBank->front()->getAddress().getRank() == currentRank->getRankID());
+							assert(currentBank->front()->getAddress().getRank() == currentRank->getRankId());
 							assert(currentBank->front() == potentialCommand);
 							return potentialCommand;
 						}
@@ -2307,19 +2307,21 @@ void Channel::getNextCPRHValues(unsigned &nextRank, unsigned &nextBank, const bo
 //////////////////////////////////////////////////////////////////////////
 void Channel::executeCommand(Command *thisCommand)
 {
-	Rank &currentRank = rank[thisCommand->getAddress().getRank()];
+	//Rank &currentRank = rank[thisCommand->getAddress().getRank()];
+	vector<Rank>::iterator currentRank = rank.begin() + thisCommand->getAddress().getRank();
 
-	Bank &currentBank = currentRank.bank[thisCommand->getAddress().getBank()];
+	//Bank &currentBank = currentRank.bank[thisCommand->getAddress().getBank()];
+	vector<Bank>::iterator currentBank = currentRank->bank.begin() + thisCommand->getAddress().getBank();
 
-	vector<DIMM>::iterator currentDimm = dimm.begin() + thisCommand->getAddress().getDimm();
+	//vector<DIMM>::iterator currentDimm = dimm.begin() + thisCommand->getAddress().getDimm();
 
-	currentRank.setLastBankID(thisCommand->getAddress().getBank());
+	currentRank->setLastBankID(thisCommand->getAddress().getBank());
 
 	thisCommand->setStartTime(time);
 
 	assert(canIssue(thisCommand));
 
-	bool wasActivated = currentBank.isActivated();
+	bool wasActivated = currentBank->isActivated();
 
 	lastCommandIssueTime = time;
 
@@ -2327,71 +2329,43 @@ void Channel::executeCommand(Command *thisCommand)
 	{
 	case Command::ACTIVATE:
 		{
-			assert(!currentBank.isActivated());
+			assert(!thisCommand->getHost());
 
-			// see if this was held due to tFAW (or at least tied with other restrictions)
-			if (time - currentRank.lastActivateTimes.back() == timingSpecification.tFAW())
-				statistics.reportTFawCommand();
-			
-			currentRank.issueRAS(time, thisCommand);	
-
-			currentDimm->issueRAS(time, thisCommand);
+			currentRank->issueRAS(time, thisCommand);	
 
 			// specific for RAS command
 			thisCommand->setCompletionTime(thisCommand->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRAS());
-			assert(!thisCommand->getHost());
 		}
 		break;
 
 	case Command::READ_AND_PRECHARGE:
 
 		// precharge may be issued first because timings are based on time, not the last time at which a read command was issued		
-		assert(currentBank.isActivated());
-		currentRank.issuePRE(time, thisCommand);
+		currentRank->issuePRE(time, thisCommand);
 
-		currentDimm->issuePRE(time, thisCommand);
 		// lack of break is intentional
-
 	case Command::READ:
-
-		//currentRank.issueCAS(time, thisCommand);
 
 		// specific for CAS command
 		// should account for tAL buffering the CAS command until the right moment
-		//thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
+		//thisCommand->setCompletionTime(max(currentBank.getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		assert(wasActivated);
-		assert(currentBank.getOpenRowID() == thisCommand->getAddress().getRow());
-		thisCommand->setCompletionTime(max(currentBank.getLastRASTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
+		assert(currentBank->getOpenRowID() == thisCommand->getAddress().getRow());
+		thisCommand->setCompletionTime(max(currentBank->getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
-		for (vector<DIMM>::iterator currentDimm = dimm.begin(), end = dimm.end(); currentDimm != end; ++currentDimm)
-		{
-			currentDimm->issueCAS(time, thisCommand);
-		}		
-
-		/// @todo let each rank figure out if the command is to it or not by combining issueCAS and issueCASother
 		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
 		{
-			if (&currentRank != &*i)
-			{
-				//i->setOtherLastCAS(time + timingSpecification.tAL(),thisCommand->getLength());
-				i->issueCASother(time, thisCommand);
-			}
-			else
-			{
-				const bool hit = i->issueCAS(time, thisCommand);
-				thisCommand->setHit(hit);
-				thisCommand->getHost()->setHit(hit);
-			}
+			i->issueCAS(time, thisCommand);
 		}
 		break;
 
 	case Command::WRITE_AND_PRECHARGE:
 
 		// precharge may be issued first because timings are based on time, not the last time at which a read command was issued
-		currentRank.issuePRE(time, thisCommand);	
+		currentRank->issuePRE(time, thisCommand);	
 
-		currentDimm->issuePRE(time, thisCommand);
+		//currentDimm->issuePRE(time, thisCommand);
 		// missing break is intentional
 
 	case Command::WRITE:
@@ -2401,39 +2375,21 @@ void Channel::executeCommand(Command *thisCommand)
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		assert(wasActivated);
-		assert(currentBank.getOpenRowID() == thisCommand->getAddress().getRow());
+		assert(currentBank->getOpenRowID() == thisCommand->getAddress().getRow());
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
-		//thisCommand->getHost()->setCompletionTime(time);
+
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
-		for (vector<DIMM>::iterator currentDimm = dimm.begin(), end = dimm.end(); currentDimm != end; ++currentDimm)
-		{
-			currentDimm->issueCASW(time, thisCommand);
-		}
-
-		/// @todo let each rank figure out if the command is to it or not by combining issueCAS and issueCASother
 		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
 		{
-			if (&currentRank != &*i)
-			{
-				//i->setOtherLastCASW(time + timingSpecification.tAL(),thisCommand->getLength());
-				i->issueCASWother(time, thisCommand);
-			}
-			else
-			{
-				const bool hit = i->issueCASW(time,thisCommand);
-				thisCommand->setHit(hit);
-				thisCommand->getHost()->setHit(hit);
-			}
+			i->issueCASW(time,thisCommand);
 		}
 		break;
 
 	case Command::PRECHARGE:
 
-		assert(currentBank.isActivated());
-
 		// issued to the rank which issues to banks
-		currentRank.issuePRE(time, thisCommand);
+		currentRank->issuePRE(time, thisCommand);
 
 		thisCommand->setCompletionTime(thisCommand->getStartTime() + timingSpecification.tCMD() + timingSpecification.tRP());
 
@@ -2441,44 +2397,54 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::REFRESH_ALL:
 
-		for (vector<Bank>::const_iterator i = currentRank.bank.begin(); i != currentRank.bank.end(); ++i)
+		for (vector<Bank>::const_iterator i = currentRank->bank.begin(), end = currentRank->bank.end(); i != end; ++i)
 			if (i->isActivated())
 				assert(!i->isActivated());
 
-		currentRank.issueREF(time);
+		currentRank->issueREF(time);
 
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tRFC());
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 		break;
 
 	case Command::RETIRE_COMMAND:
+		cerr << "Unimplemented command type" << endl;
 		break;	
 
 	case Command::PRECHARGE_ALL:
+		cerr << "Unimplemented command type" << endl;
 		break;
 
 	case Command::ACTIVATE_ALL:
+		cerr << "Unimplemented command type" << endl;
 		break;
 
 	case Command::DRIVE_COMMAND:
+		cerr << "Unimplemented command type" << endl;
 		break;
 
 	case Command::DATA_COMMAND:
+		cerr << "Unimplemented command type" << endl;
 		break;
 
 	case Command::CAS_WITH_DRIVE_COMMAND:
+		cerr << "Unimplemented command type" << endl;
 		break;	
 
 	case Command::SELF_REFRESH:
+		cerr << "Unimplemented command type" << endl;
 		break;
 
 	case Command::DESELECT:
+		cerr << "Unimplemented command type" << endl;
 		break;
 
 	case Command::NOOP:
+		cerr << "Unimplemented command type" << endl;
 		break;
 
 	case Command::INVALID_COMMAND:
+		cerr << "Unimplemented command type" << endl;
 		break;
 
 	default:
@@ -2514,7 +2480,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
 
 			// respect the row cycle time limitation
-			tick tRCGap = (tick)(currentBank.getLastRASTime() - time) + timingSpecification.tRC();
+			tick tRCGap = (tick)(currentBank.getLastRasTime() - time) + timingSpecification.tRC();
 
 			// respect tRRD and tRC of all other banks of same rank
 			tick tRRDGap = (tick)(currentRank.lastActivateTimes.front() - time) + timingSpecification.tRRD();
@@ -2540,7 +2506,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 	case Command::READ:
 		{
 			//respect last ras of same rank
-			int tRCDGap = ((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
+			int tRCDGap = ((currentBank.getLastRasTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
@@ -2552,17 +2518,17 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			// find the most recent cas(w) time and length
 			for (vector<Rank>::const_iterator thisRank = rank.begin(); thisRank != rank.end(); ++thisRank)
 			{
-				if (thisRank->getRankID() != currentRank.getRankID())
+				if (thisRank->getRankId() != currentRank.getRankId())
 				{
-					if (thisRank->getLastCASTime() > otherRankLastCASTime)
+					if (thisRank->getLastCasTime() > otherRankLastCASTime)
 					{
-						otherRankLastCASTime = thisRank->getLastCASTime();
-						otherRankLastCASLength = thisRank->getLastCASLength();
+						otherRankLastCASTime = thisRank->getLastCasTime();
+						otherRankLastCASLength = thisRank->getLastCasLength();
 					}
-					if (thisRank->getLastCASWTime() > otherRankLastCASWTime)
+					if (thisRank->getLastCaswTime() > otherRankLastCASWTime)
 					{
-						otherRankLastCASWTime = thisRank->getLastCASWTime();
-						otherRankLastCASWLength = thisRank->getLastCASWLength();
+						otherRankLastCASWTime = thisRank->getLastCaswTime();
+						otherRankLastCASWLength = thisRank->getLastCaswLength();
 					}
 				}
 			}			
@@ -2573,12 +2539,12 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			int t_cas_gap = ((currentRank.getLastCASTime() - time) + timingSpecification.tBurst());
+			int t_cas_gap = ((currentRank.getLastCasTime() - time) + timingSpecification.tBurst());
 
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-			t_cas_gap = max((tick)t_cas_gap,((currentRank.getLastCASWTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
+			t_cas_gap = max((tick)t_cas_gap,((currentRank.getLastCaswTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
 
 			if (rank.size() > 1)
 			{
@@ -2602,7 +2568,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 	case Command::WRITE:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = ((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
+			int t_ras_gap = ((currentBank.getLastRasTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
 
 			tick otherRankLastCASTime = time - 10000000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
@@ -2615,15 +2581,15 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			{
 				if (rank_id != currentRankID)
 				{
-					if (rank[rank_id].getLastCASTime() > otherRankLastCASTime)
+					if (rank[rank_id].getLastCasTime() > otherRankLastCASTime)
 					{
-						otherRankLastCASTime = rank[rank_id].getLastCASTime();
-						otherRankLastCASLength = rank[rank_id].getLastCASLength();
+						otherRankLastCASTime = rank[rank_id].getLastCasTime();
+						otherRankLastCASLength = rank[rank_id].getLastCasLength();
 					}
-					if (rank[rank_id].getLastCASWTime() > otherRankLastCASWTime)
+					if (rank[rank_id].getLastCaswTime() > otherRankLastCASWTime)
 					{
-						otherRankLastCASWTime = rank[rank_id].getLastCASWTime();
-						otherRankLastCASWLength = rank[rank_id].getLastCASWLength();
+						otherRankLastCASWTime = rank[rank_id].getLastCaswTime();
+						otherRankLastCASWLength = rank[rank_id].getLastCaswLength();
 					}
 				}
 			}
@@ -2634,7 +2600,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			tick t_cas_gap = (tick)(currentRank.getLastCASTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
+			tick t_cas_gap = (tick)(currentRank.getLastCasTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
 
 			// respect last cas to different ranks
 			t_cas_gap = max((tick)t_cas_gap,(otherRankLastCASTime - time) + timingSpecification.tCAS() + otherRankLastCASLength + timingSpecification.tRTRS() - timingSpecification.tCWD());
@@ -2642,7 +2608,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			// respect last cas write to same rank
 			// DW 3/9/2006 replace the line after next with the next line			
 			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
-			t_cas_gap = max((tick)t_cas_gap,(currentRank.getLastCASWTime() - time) + currentRank.getLastCASWLength());
+			t_cas_gap = max((tick)t_cas_gap,(currentRank.getLastCaswTime() - time) + currentRank.getLastCaswLength());
 
 			// respect last cas write to different ranks
 			t_cas_gap = max((tick)t_cas_gap,(otherRankLastCASWTime - time) + otherRankLastCASWLength + timingSpecification.tOST());
@@ -2657,13 +2623,13 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 	case Command::PRECHARGE:
 		{
 			// respect t_ras of same bank
-			tick t_ras_gap = (currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
+			tick t_ras_gap = (currentBank.getLastRasTime() - time) + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			tick t_cas_gap = ((tick)(currentBank.getLastCASTime() - time) + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
+			tick t_cas_gap = ((tick)(currentBank.getLastCasTime() - time) + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
 
 			// respect t_casw of same bank
-			t_cas_gap = max((tick)t_cas_gap,((currentBank.getLastCASWTime() - time) + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
+			t_cas_gap = max((tick)t_cas_gap,((currentBank.getLastCaswTime() - time) + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
 
 			min_gap = max(t_ras_gap,t_cas_gap);
 		}
@@ -2722,7 +2688,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
 
 			// respect the row cycle time limitation
-			tick tRCLimit = currentBank->getLastRASTime() + timingSpecification.tRC();
+			tick tRCLimit = currentBank->getLastRasTime() + timingSpecification.tRC();
 
 			// respect the row-to-row activation delay for different banks within a rank
 			tick tRRDLimit = currentRank->lastActivateTimes.front() + timingSpecification.tRRD();				
@@ -2751,7 +2717,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	case Command::READ:
 		{
 			//respect last RAS of same rank
-			tick tRCDLimit = currentBank->getLastRASTime() + (timingSpecification.tRCD() - timingSpecification.tAL());
+			tick tRCDLimit = currentBank->getLastRasTime() + (timingSpecification.tRCD() - timingSpecification.tAL());
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
@@ -2762,19 +2728,19 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			tick tCASLimit = currentRank->getLastCASTime() + timingSpecification.tBurst();
+			tick tCASLimit = currentRank->getLastCasTime() + timingSpecification.tBurst();
 
 			// respect last CASW of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-			tCASLimit = max(tCASLimit,currentRank->getLastCASWTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR());
+			tCASLimit = max(tCASLimit,currentRank->getLastCaswTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR());
 
 			//if (rank->size() > 1)
 			{
 				//respect most recent CAS of different rank
-				tCASLimit = max(tCASLimit, currentRank->getOtherLastCASTime() + currentRank->getOtherLastCASLength() + timingSpecification.tRTRS());
+				tCASLimit = max(tCASLimit, currentRank->getOtherLastCasTime() + currentRank->getOtherLastCasLength() + timingSpecification.tRTRS());
 				//respect timing of READ follow WRITE, different ranks
-				tCASLimit = max(tCASLimit, currentRank->getOtherLastCASWTime() + timingSpecification.tCWD() + currentRank->getOtherLastCASWLength() + timingSpecification.tRTRS() - timingSpecification.tCAS());
+				tCASLimit = max(tCASLimit, currentRank->getOtherLastCaswTime() + timingSpecification.tCWD() + currentRank->getOtherLastCaswLength() + timingSpecification.tRTRS() - timingSpecification.tCAS());
 			}
 
 			nextTime = max(tRCDLimit,tCASLimit);
@@ -2792,7 +2758,7 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	case Command::WRITE:
 		{
 			//respect last RAS of same rank
-			tick tRASLimit = currentBank->getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
+			tick tRASLimit = currentBank->getLastRasTime() + timingSpecification.tRCD() - timingSpecification.tAL();
 
 			// DW 3/9/2006 add these two lines
 			//cas_length = max(timing_specification.t_int_burst,this_r.last_cas_length);
@@ -2801,19 +2767,19 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			tick tCASLimit = currentRank->getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
+			tick tCASLimit = currentRank->getLastCasTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
 
 			// respect last cas to different ranks
-			tCASLimit = max(tCASLimit,currentRank->getOtherLastCASTime() + timingSpecification.tCAS() + currentRank->getOtherLastCASLength() + timingSpecification.tRTRS() - timingSpecification.tCWD());
+			tCASLimit = max(tCASLimit,currentRank->getOtherLastCasTime() + timingSpecification.tCAS() + currentRank->getOtherLastCasLength() + timingSpecification.tRTRS() - timingSpecification.tCWD());
 
 			// respect last cas write to same rank
 			// DW 3/9/2006 replace the line after next with the next line			
 			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
-			tCASLimit = max(tCASLimit,currentRank->getLastCASWTime() + currentRank->getLastCASWLength());
+			tCASLimit = max(tCASLimit,currentRank->getLastCaswTime() + currentRank->getLastCaswLength());
 
 			// respect last CASW to different ranks
 			// TODO: should this not also be -tAL?
-			tCASLimit = max(tCASLimit,currentRank->getOtherLastCASWTime() + currentRank->getOtherLastCASWLength() + timingSpecification.tOST());
+			tCASLimit = max(tCASLimit,currentRank->getOtherLastCaswTime() + currentRank->getOtherLastCaswLength() + timingSpecification.tOST());
 
 			nextTime = max(tRASLimit,tCASLimit);
 		}
@@ -2822,17 +2788,17 @@ tick Channel::earliestExecuteTime(const Command *currentCommand) const
 	case Command::PRECHARGE:
 		{
 			// respect t_ras of same bank
-			tick tRASLimit = currentBank->getLastRASTime() + timingSpecification.tRAS();
+			tick tRASLimit = currentBank->getLastRasTime() + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			//tick tCASLimit = max(time,currentBank->getLastCASTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
+			//tick tCASLimit = max(time,currentBank->getLastCasTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
 			// tAL is accounted for by measuring the execution time internal to the DRAM
-			tick tCASLimit = currentBank->getLastCASTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD());
+			tick tCASLimit = currentBank->getLastCasTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD());
 
 			// respect t_casw of same bank
-			//tCASLimit = max(tCASLimit,currentBank->getLastCASWTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
+			//tCASLimit = max(tCASLimit,currentBank->getLastCaswTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 			// tAL is accounted for by measuring the execution time internal to the DRAM
-			tCASLimit = max(tCASLimit,currentBank->getLastCASWTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
+			tCASLimit = max(tCASLimit,currentBank->getLastCaswTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 
 			nextTime = max(tRASLimit,tCASLimit);
 		}
@@ -2904,7 +2870,7 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 			// refer to Table 11.4 in Memory Systems: Cache, DRAM, Disk
 
 			// respect the row cycle time limitation
-			tick tRCLimit = currentBank.getLastRASTime() + timingSpecification.tRC();
+			tick tRCLimit = currentBank.getLastRasTime() + timingSpecification.tRC();
 
 			const tick lastRASTime = currentRank.lastActivateTimes.front();
 
@@ -2946,7 +2912,7 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 	case Command::READ:
 		{
 			//respect last RAS of same rank
-			tick tRCDLimit = currentBank.getLastRASTime() + (timingSpecification.tRCD() - timingSpecification.tAL());
+			tick tRCDLimit = currentBank.getLastRasTime() + (timingSpecification.tRCD() - timingSpecification.tAL());
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
@@ -2957,17 +2923,17 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			tick tCASLimit = currentRank.getLastCASTime() + timingSpecification.tBurst();
+			tick tCASLimit = currentRank.getLastCasTime() + timingSpecification.tBurst();
 
 			// respect last CASW of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-			tick tCASWLimit = currentRank.getLastCASWTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR();
+			tick tCASWLimit = currentRank.getLastCaswTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR();
 
 			//respect most recent CAS of different rank
-			tick tCASOtherLimit = currentRank.getOtherLastCASTime() + currentRank.getOtherLastCASLength() + timingSpecification.tRTRS();
+			tick tCASOtherLimit = currentRank.getOtherLastCasTime() + currentRank.getOtherLastCasLength() + timingSpecification.tRTRS();
 			//respect timing of READ follow WRITE, different ranks
-			tick tCASWOtherLimit = currentRank.getOtherLastCASWTime() + timingSpecification.tCWD() + currentRank.getOtherLastCASWLength() + timingSpecification.tRTRS() - timingSpecification.tCAS();
+			tick tCASWOtherLimit = currentRank.getOtherLastCaswTime() + timingSpecification.tCWD() + currentRank.getOtherLastCaswLength() + timingSpecification.tRTRS() - timingSpecification.tCAS();
 
 			nextTime = max(max(tRCDLimit,tCASLimit),max(max(tCASWLimit,tCASOtherLimit),tCASWOtherLimit));
 
@@ -2995,7 +2961,7 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 	case Command::WRITE:
 		{
 			//respect last RAS of same rank
-			tick tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRCD() - timingSpecification.tAL();
+			tick tRASLimit = currentBank.getLastRasTime() + timingSpecification.tRCD() - timingSpecification.tAL();
 
 			// DW 3/9/2006 add these two lines
 			//cas_length = max(timing_specification.t_int_burst,this_r.last_cas_length);
@@ -3004,19 +2970,19 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 			// respect last cas to same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			// t_cas_gap = max(0,(int)(this_r.last_cas_time + timing_specification.t_cas + cas_length + timing_specification.t_rtrs - timing_specification.t_cwd - now));
-			tick tCASLimit = max(time,currentRank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
+			tick tCASLimit = max(time,currentRank.getLastCasTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD());
 
 			// respect last cas to different ranks
-			tick tCASOtherLimit = currentRank.getOtherLastCASTime() + timingSpecification.tCAS() + currentRank.getOtherLastCASLength() + timingSpecification.tRTRS() - timingSpecification.tCWD();
+			tick tCASOtherLimit = currentRank.getOtherLastCasTime() + timingSpecification.tCAS() + currentRank.getOtherLastCasLength() + timingSpecification.tRTRS() - timingSpecification.tCWD();
 
 			// respect last cas write to same rank
 			// DW 3/9/2006 replace the line after next with the next line			
 			// t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + casw_length - now));
-			tick tCASWLimit = currentRank.getLastCASWTime() + currentRank.getLastCASWLength();
+			tick tCASWLimit = currentRank.getLastCaswTime() + currentRank.getLastCaswLength();
 
 			// respect last CASW to different ranks
 			// TODO: should this not also be -tAL?
-			tick tCASWOtherLimit = currentRank.getOtherLastCASWTime() + currentRank.getOtherLastCASWLength() + timingSpecification.tOST();
+			tick tCASWOtherLimit = currentRank.getOtherLastCaswTime() + currentRank.getOtherLastCaswLength() + timingSpecification.tOST();
 
 			nextTime = max(max(tRASLimit,tCASLimit), max(max(tCASOtherLimit,tCASWOtherLimit),tCASWLimit));
 
@@ -3036,18 +3002,18 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 	case Command::PRECHARGE:
 		{
 			// respect t_ras of same bank
-			tick tRASLimit = currentBank.getLastRASTime() + timingSpecification.tRAS();
+			tick tRASLimit = currentBank.getLastRasTime() + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
 			// TODO: do not need tAL for these
-			//tick tCASLimit = max(time,currentBank.getLastCASTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
+			//tick tCASLimit = max(time,currentBank.getLastCasTime() + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
 			// tAL is accounted for by measuring the execution time internal to the DRAM
-			tick tCASLimit = max(time,currentBank.getLastCASTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
+			tick tCASLimit = max(time,currentBank.getLastCasTime() + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD()));
 
 			// respect t_casw of same bank
-			//tCASLimit = max(tCASLimit,currentBank.getLastCASWTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
+			//tCASLimit = max(tCASLimit,currentBank.getLastCaswTime() + timingSpecification.tAL() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 			// tAL is accounted for by measuring the execution time internal to the DRAM
-			tCASLimit = max(tCASLimit,currentBank.getLastCASWTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
+			tCASLimit = max(tCASLimit,currentBank.getLastCaswTime() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 
 			nextTime = max(tRASLimit,tCASLimit);
 		}
@@ -3136,7 +3102,7 @@ Channel& Channel::operator =(const Channel &rhs)
 	refreshCounter = rhs.refreshCounter;
 	channelID = rhs.channelID;
 	rank = rhs.rank;
-	dimm = rhs.dimm;
+	//dimm = rhs.dimm;
 	powerModel = rhs.powerModel;
 	timingSpecification = rhs.timingSpecification;
 

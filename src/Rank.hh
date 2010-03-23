@@ -86,10 +86,8 @@ namespace DRAMsimII
 		Command *getCommand(const unsigned bank);
 		void issueRAS(const tick currentTime, const Command *currentCommand);
 		void issuePRE(const tick currentTime, const Command *currentCommand);
-		bool issueCAS(const tick currentTime, const Command *currentCommand);
-		void issueCASother(const tick currentTime, const Command *currentCommand);
-		bool issueCASW(const tick currentTime, const Command *currentCommand);
-		void issueCASWother(const tick currentTime, const Command *currentCommand);
+		void issueCAS(const tick currentTime, const Command *currentCommand);
+		void issueCASW(const tick currentTime, const Command *currentCommand);
 		void issueREF(const tick currentTime);
 		void resetToTime(const tick time);
 		tick next(Command::CommandType nextCommandType) const;
@@ -100,20 +98,20 @@ namespace DRAMsimII
 		Rank(const Rank &);
 
 		// accessors
-		unsigned getRankID() const { return rankID; }		
+		unsigned getRankId() const { return rankID; }		
 		tick getTotalPrechargeTime(const tick currentTime) const;  
 		tick getPrechargeTime(const tick currentTime) const;
 		tick getLastRefreshTime() const { return lastRefreshTime; }
-		tick getLastCASTime() const { return lastCASTime; }
-		tick getLastCASWTime() const { return lastCASWTime; }
-		tick getOtherLastCASTime() const { return otherLastCASTime; }
-		tick getOtherLastCASWTime() const { return otherLastCASWTime; }
+		tick getLastCasTime() const { return lastCASTime; }
+		tick getLastCaswTime() const { return lastCASWTime; }
+		tick getOtherLastCasTime() const { return otherLastCASTime; }
+		tick getOtherLastCaswTime() const { return otherLastCASWTime; }
 		tick getLastPrechargeTime() const { return lastPrechargeAnyBankTime; }
 		unsigned getLastBankID() const { return lastBankID; }
-		unsigned getLastCASLength() const { return lastCASLength; }
-		unsigned getLastCASWLength() const { return lastCASWLength; }
-		unsigned getOtherLastCASLength() const { return otherLastCASLength; }
-		unsigned getOtherLastCASWLength() const { return otherLastCASWLength; }
+		unsigned getLastCasLength() const { return lastCASLength; }
+		unsigned getLastCaswLength() const { return lastCASWLength; }
+		unsigned getOtherLastCasLength() const { return otherLastCASLength; }
+		unsigned getOtherLastCaswLength() const { return otherLastCASWLength; }
 		unsigned getReadCycles() const { return CASLength; }
 		unsigned getWriteCycles() const { return CASWLength; }
 		bool isEmpty() const;

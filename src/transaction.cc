@@ -38,8 +38,7 @@ length(0),
 decodeTime(0),
 PC(0),
 threadNum(0),
-originalTransaction(UINT_MAX),
-hit(false)
+originalTransaction(UINT_MAX)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,8 +51,7 @@ length(burstLength),
 decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
-originalTransaction(originalTrans),
-hit(false)
+originalTransaction(originalTrans)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -66,8 +64,7 @@ length(burstLength),
 decodeTime(0),
 PC(0),
 threadNum(0),
-originalTransaction(originalTrans),
-hit(false)
+originalTransaction(originalTrans)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -80,8 +77,7 @@ length(rhs.length),
 decodeTime(rhs.decodeTime),
 PC(rhs.PC),
 threadNum(rhs.threadNum),
-originalTransaction(rhs.originalTransaction),
-hit(rhs.hit)
+originalTransaction(rhs.originalTransaction)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -94,8 +90,7 @@ length(burstLength),
 decodeTime(0),
 PC(programCounter),
 threadNum(threadNumber),
-originalTransaction(originalTrans),
-hit(false)
+originalTransaction(originalTrans)
 {}
 
 //////////////////////////////////////////////////////////////////////////

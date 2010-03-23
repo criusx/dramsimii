@@ -67,7 +67,7 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 			}
 
 			// respect the row cycle time limitation
-			int tRCGap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRC();
+			int tRCGap = (int)(currentBank.getLastRasTime() - time) + timingSpecification.tRC();
 
 			// respect the t_faw value for DDR2 and beyond
 			int tFAWGap;
@@ -98,7 +98,7 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 	case Command::READ:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - t_al);
+			int t_ras_gap = (int)((currentBank.getLastRasTime() - time) + timingSpecification.tRCD() - t_al);
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
@@ -131,12 +131,12 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			int t_cas_gap = (int)((currentRank.getLastCASTime() - time) + timingSpecification.tBurst());
+			int t_cas_gap = (int)((currentRank.getLastCasTime() - time) + timingSpecification.tBurst());
 
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(t_cas_gap,(int)(this_r.last_casw_time + timing_specification.t_cwd + casw_length + timing_specification.t_wtr - now));
-			t_cas_gap = max(t_cas_gap,(int)((currentRank.getLastCASWTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
+			t_cas_gap = max(t_cas_gap,(int)((currentRank.getLastCaswTime() - time) + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWTR()));
 
 			//if (rank.size() > 1)
 			//{
@@ -160,7 +160,7 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 	case Command::WRITE:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = (int)((currentBank.getLastRASTime() - time) + timingSpecification.tRCD() - t_al);
+			int t_ras_gap = (int)((currentBank.getLastRasTime() - time) + timingSpecification.tRCD() - t_al);
 
 			/*tick other_r_last_cas_time = time - 1000;
 			int other_r_last_cas_length = timingSpecification.tBurst();
@@ -187,14 +187,14 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 			}*/
 
 			// respect last cas to same rank
-			int t_cas_gap = (int)(currentRank.getLastCASTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
+			int t_cas_gap = (int)(currentRank.getLastCasTime() - time) + timingSpecification.tCAS() + timingSpecification.tBurst() + timingSpecification.tRTRS() - timingSpecification.tCWD();
 
 			// respect last cas to different ranks
 			// not in FBD, each rank is on its own channel
 			//t_cas_gap = max(t_cas_gap,(int)(other_r_last_cas_time + timingSpecification.tCAS() + other_r_last_cas_length + timingSpecification.tRTRS() - timingSpecification.tCWD() - time));
 
 			// respect last cas write to same rank
-			t_cas_gap = max(t_cas_gap,(int)(currentRank.getLastCASWTime() - time) + timingSpecification.tBurst());
+			t_cas_gap = max(t_cas_gap,(int)(currentRank.getLastCaswTime() - time) + timingSpecification.tBurst());
 
 			// respect last cas write to different ranks
 			// not in FBD
@@ -210,13 +210,13 @@ tick fbdChannel::minProtocolGap(const Command *this_c) const
 	case Command::PRECHARGE:
 		{
 			// respect t_ras of same bank
-			int t_ras_gap = (int)(currentBank.getLastRASTime() - time) + timingSpecification.tRAS();
+			int t_ras_gap = (int)(currentBank.getLastRasTime() - time) + timingSpecification.tRAS();
 
 			// respect t_cas of same bank
-			int t_cas_gap = max(0,(int)((currentBank.getLastCASTime() - time) + t_al + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
+			int t_cas_gap = max(0,(int)((currentBank.getLastCasTime() - time) + t_al + timingSpecification.tCAS() + timingSpecification.tBurst() + max(0,timingSpecification.tRTP() - timingSpecification.tCMD())));
 
 			// respect t_casw of same bank
-			t_cas_gap = max(t_cas_gap,(int)((currentBank.getLastCASWTime() - time) + t_al + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
+			t_cas_gap = max(t_cas_gap,(int)((currentBank.getLastCaswTime() - time) + t_al + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR()));
 
 			min_gap = max(t_ras_gap,t_cas_gap);
 		}
@@ -498,7 +498,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 			for (vector<Rank>::const_iterator currentRank = rank.begin(); currentRank != rank.end(); currentRank++)
 			{
 				// do not consider ranks which have already had a command chosen from them
-				if (currentRank->getRankID() == slotARank || currentRank->getRankID() == slotBRank)
+				if (currentRank->getRankId() == slotARank || currentRank->getRankId() == slotBRank)
 					continue;
 
 				bool notAllRefresh = false;

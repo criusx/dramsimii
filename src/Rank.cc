@@ -180,6 +180,10 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 	bank[currentCommand->getAddress().getBank()].setAllHits(true);
 	//////////////////////////////////////////////////////////////////////////
 
+	// see if this was held due to tFAW (or at least tied with other restrictions)
+	if (currentTime - lastActivateTimes.back() == timing.tFAW())
+		statistics.reportTFawCommand();
+
 	// RAS time history queue, per rank
 	const tick thisRASTime = currentTime;
 	// record these for tFAW calculations
@@ -248,66 +252,89 @@ void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 // @brief issue a CAS command to this rank
 //////////////////////////////////////////////////////////////////////////
-bool Rank::issueCAS(const tick currentTime, const Command *currentCommand)
+void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
-	//////////////////////////////////////////////////////////////////////////
-	bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
-	if (!satisfied)
-		bank[currentCommand->getAddress().getBank()].setAllHits(false);
-	if (bank[currentCommand->getAddress().getBank()].isAllHits() && currentCommand->isPrecharge())
+	if (currentCommand->getAddress().getRank() == rankID)
 	{
-		statistics.reportRasReduction(currentCommand);
+		//////////////////////////////////////////////////////////////////////////
+		bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
+		if (!satisfied)
+			bank[currentCommand->getAddress().getBank()].setAllHits(false);
+		if (bank[currentCommand->getAddress().getBank()].isAllHits() && currentCommand->isPrecharge())
+		{
+			statistics.reportRasReduction(currentCommand);
+		}
+		//std::cout << (satisfied ? "|" : ".");
+		//////////////////////////////////////////////////////////////////////////
+
+		// update the bank to reflect this change also
+		bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
+
+		lastCASTime = currentTime;
+
+		lastCASLength = currentCommand->getLength();
+
+		CASLength += currentCommand->getLength();
+
+		assert(currentCommand->getAddress().getBank() == lastBankID);
+
+		// calculate when the next few commands can happen
+		nextReadTime = max(nextReadTime, currentTime + timing.tBurst());
+		nextWriteTime = max(nextWriteTime, currentTime + timing.tCAS() + timing.tBurst() + timing.tRTRS() - timing.tCWD());
 	}
-	//std::cout << (satisfied ? "|" : ".");
-	//////////////////////////////////////////////////////////////////////////
+	// was to another bank
+	else
+	{
+		assert(currentTime + timing.tAL() > otherLastCASTime); 
+		otherLastCASTime = currentTime; 
+		otherLastCASLength = currentCommand->getLength();
 
-	// update the bank to reflect this change also
-	bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
-
-	lastCASTime = currentTime;
-
-	lastCASLength = currentCommand->getLength();
-
-	CASLength += currentCommand->getLength();
-
-	assert(currentCommand->getAddress().getBank() == lastBankID);
-
-	// calculate when the next few commands can happen
-	nextReadTime = max(nextReadTime, currentTime + timing.tBurst());
-	nextWriteTime = max(nextWriteTime, currentTime + timing.tCAS() + timing.tBurst() + timing.tRTRS() - timing.tCWD());
-
-	return satisfied;
+		// calculate when the next few commands can happen
+		nextReadTime = max(nextReadTime, currentTime + timing.tBurst() + timing.tRTRS());
+		nextWriteTime = max(nextWriteTime, currentTime + timing.tCAS() + timing.tBurst() + timing.tRTRS() - timing.tCWD());
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief issue a CASW command to this rank
 //////////////////////////////////////////////////////////////////////////
-bool Rank::issueCASW(const tick currentTime, const Command *currentCommand)
+void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
-	//////////////////////////////////////////////////////////////////////////
-	bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
-	bank[currentCommand->getAddress().getBank()].setAllHits(false);
-	//std::cout << (satisfied ? "|" : ".");
-	//////////////////////////////////////////////////////////////////////////
+	if (currentCommand->getAddress().getRank() == rankID)
+	{
+		//////////////////////////////////////////////////////////////////////////
+		bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
+		bank[currentCommand->getAddress().getBank()].setAllHits(false);
+		//std::cout << (satisfied ? "|" : ".");
+		//////////////////////////////////////////////////////////////////////////
 
-	// update the bank to reflect this change also
-	bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);
+		// update the bank to reflect this change also
+		bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);
 
-	lastCASWTime = currentTime;
+		lastCASWTime = currentTime;
 
-	lastCASWLength = currentCommand->getLength();
+		lastCASWLength = currentCommand->getLength();
 
-	CASWLength += currentCommand->getLength();
+		CASWLength += currentCommand->getLength();
 
-	assert(currentCommand->getAddress().getBank() == lastBankID);
-	
-	// calculate when the next few commands can happen
-	// ensure that the next read does not happen until the write is done with the I/O drivers
-	nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tWTR());
+		assert(currentCommand->getAddress().getBank() == lastBankID);
 
-	nextWriteTime = max(nextWriteTime, currentTime + timing.tBurst());
+		// calculate when the next few commands can happen
+		// ensure that the next read does not happen until the write is done with the I/O drivers
+		nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tWTR());
 
-	return satisfied;
+		nextWriteTime = max(nextWriteTime, currentTime + timing.tBurst());
+	}
+	else
+	{
+		assert(currentTime + timing.tAL() > otherLastCASWTime);
+		otherLastCASWTime = currentTime;
+		otherLastCASWLength = currentCommand->getLength();
+
+		// calculate when the next few commands can happen
+		nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tRTRS() - timing.tCAS());
+		nextWriteTime = max(nextWriteTime, currentTime + timing.tOST() + timing.tBurst());
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -324,34 +351,6 @@ void Rank::issueREF(const tick currentTime)
 	nextRefreshTime = max(nextRefreshTime, currentTime + timing.tRFC());
 	assert (nextRefreshTime == lastPrechargeAnyBankTime + timing.tRP() || nextRefreshTime == lastRefreshTime + timing.tRFC() || currentTime < 250);
 	nextActivateTime = max(nextActivateTime, currentTime + timing.tRFC());
-}
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief issue a read command to another rank at this time
-//////////////////////////////////////////////////////////////////////////
-void Rank::issueCASother(const tick currentTime, const Command *currentCommand)
-{
-	assert(currentTime + timing.tAL() > otherLastCASTime); 
-	otherLastCASTime = currentTime; 
-	otherLastCASLength = currentCommand->getLength();
-
-	// calculate when the next few commands can happen
-	nextReadTime = max(nextReadTime, currentTime + timing.tBurst() + timing.tRTRS());
-	nextWriteTime = max(nextWriteTime, currentTime + timing.tCAS() + timing.tBurst() + timing.tRTRS() - timing.tCWD());
-}
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief issue a write command to another rank at this time
-//////////////////////////////////////////////////////////////////////////
-void Rank::issueCASWother(const tick currentTime, const Command *currentCommand)
-{
-	assert(currentTime + timing.tAL() > otherLastCASWTime);
-	otherLastCASWTime = currentTime;
-	otherLastCASWLength = currentCommand->getLength();
-
-	// calculate when the next few commands can happen
-	nextReadTime = max(nextReadTime, currentTime + timing.tCWD() + timing.tBurst() + timing.tRTRS() - timing.tCAS());
-	nextWriteTime = max(nextWriteTime, currentTime + timing.tOST() + timing.tBurst());
 }
 
 //////////////////////////////////////////////////////////////////////////

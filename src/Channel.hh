@@ -28,7 +28,6 @@
 #include "powerConfig.hh"
 #include "transaction.hh"
 #include "command.hh"
-#include "dimm.hh"
 
 #include <vector>
 #include <queue>
@@ -56,7 +55,7 @@ namespace DRAMsimII
 		Statistics &statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
-		std::vector<DIMM> dimm;							///< represents the DIMMs attached to this channel
+		//std::vector<DIMM> dimm;							///< represents the DIMMs attached to this channel
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
 	

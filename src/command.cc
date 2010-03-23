@@ -32,8 +32,7 @@ Command::Command():
 Event(),
 commandType(RETIRE_COMMAND),
 hostTransaction(NULL),
-length(0),
-hit(false)
+length(0)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -43,8 +42,7 @@ Command::Command(const Command &rhs):
 Event(rhs),
 commandType(rhs.commandType),
 hostTransaction(rhs.hostTransaction ? new Transaction(*rhs.hostTransaction) : NULL),
-length(rhs.length),
-hit(rhs.hit)
+length(rhs.length)
 {
 	assert(!hostTransaction ||
 		(commandType == WRITE_AND_PRECHARGE && hostTransaction->isWrite()) ||
@@ -62,8 +60,7 @@ hit(rhs.hit)
 Command::Command(Transaction *hostTransaction, const Address &addr, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(addr,enqueueTime),
 hostTransaction((type == READ) ? hostTransaction : 0),
-length(commandLength),
-hit(false)
+length(commandLength)
 {
 	if (type == READ)
 	{
@@ -104,8 +101,7 @@ hit(false)
 Command::Command(Transaction *hostTransaction, const tick enqueueTime, const bool autoPrecharge, const unsigned commandLength, const CommandType type):
 Event(hostTransaction->getAddress(),enqueueTime),
 hostTransaction((type == READ) ? hostTransaction : NULL),
-length(commandLength),
-hit(false)
+length(commandLength)
 {
 	if (type == READ)
 	{
@@ -245,7 +241,6 @@ Command &Command::operator =(const Command &rhs)
 	length = rhs.length;
 	hostTransaction = rhs.hostTransaction;
 	commandType = rhs.commandType;
-	hit = rhs.hit;
 	return *this;
 }
 

@@ -157,6 +157,7 @@ namespace DRAMsimII
 
 		// statistics
 		std::pair<unsigned,unsigned> hitsMisses;	///< the number of hits and misses since the last reset to this cache
+		std::pair<unsigned,unsigned> readHitsMisses;	///< the number of read hits and misses since the last reset to this cache
 		unsigned bandwidth;						///< bandwidth since the last reset to this cache
 
 	public:

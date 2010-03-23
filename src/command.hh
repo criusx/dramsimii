@@ -62,7 +62,6 @@ namespace DRAMsimII
 		mutable CommandType commandType;///< what type of command this is
 		Transaction *hostTransaction;	///< backward pointer to the original transaction
 		unsigned length;				///< the burst length
-		bool hit;						///< a hit in the DIMM cache
 
 		// assignment operator
 		Command &operator=(const Command &rhs);
@@ -87,13 +86,11 @@ namespace DRAMsimII
 		bool isBasicPrecharge() const { return commandType == PRECHARGE; }
 		bool isRefresh() const { return (commandType == REFRESH_ALL); }
 		bool isReadOrWrite() const { return isRead() || isWrite(); }
-		bool isHit() const { return hit; }
 
 		// mutators
 		Transaction *removeHost() { Transaction* host = hostTransaction; hostTransaction = NULL; return host; }
 		void setAutoPrecharge(const bool autoPrecharge) const;
-		void setHit(bool value) { hit = value; }
-
+		
 		// friends
 		friend std::ostream &DRAMsimII::operator<<(std::ostream &,const Command &);	
 
@@ -112,7 +109,7 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-				ar & boost::serialization::base_object<Event>(*this) & commandType & hostTransaction & length & hit;
+				ar & boost::serialization::base_object<Event>(*this) & commandType & hostTransaction & length;
 			}
 
 		}

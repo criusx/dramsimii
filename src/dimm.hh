@@ -48,13 +48,21 @@ namespace DRAMsimII
 		void issueRAS(const tick currentTime, const Command *currentCommand);
 		void issuePRE(const tick currentTime, const Command *currentCommand);
 		void issueCAS(const tick currentTime, const Command *currentCommand);
-		bool issueCASW(const tick currentTime, const Command *currentCommand);
+		void issueCASW(const tick currentTime, const Command *currentCommand);
 		void issueREF(const tick currentTime);
 		void resetToTime(const tick time);
 
+		tick getLastRasTime(Address &addr) { return (rank.begin() + (addr.getRank() - dimmId * systemConfig.getRankCount()))->getLastRasTime(addr); }
+
+		// accessors
+		Rank& getRank(const unsigned rankNum) { return rank[rankNum]; }								///< get a reference to this channel's rank n
+		const Rank& getRank(const unsigned rankNum) const { return rank[rankNum]; }					///< get a const reference to this channel's rank n
+		std::vector<Rank>& getRank() { return rank; }												///< get a reference to this channel's ranks
+		const std::vector<Rank>& getRank() const { return rank; }									///< get a const reference to this channel's ranks
+
+
 		// overloads
 		DIMM& operator=(const DIMM &rhs);
-
 	};
 }
 

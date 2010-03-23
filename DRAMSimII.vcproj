@@ -737,10 +737,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dimm.cc"
-				>
-			</File>
-			<File
 				RelativePath=".\src\event.cc"
 				>
 			</File>
