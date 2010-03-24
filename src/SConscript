@@ -94,7 +94,7 @@ try:
 			'-ffast-math', '-finline-functions', '-march=native','-Wno-unused-variable']
 			#,CPPDEFINES =
 			 #['M5DEBUG']
-			CPPDEFINES = ['-__STDC_LIMIT_MACROS']
+			,CPPDEFINES = ['-__STDC_LIMIT_MACROS']
 			)
 		try:
 			env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-g'))
