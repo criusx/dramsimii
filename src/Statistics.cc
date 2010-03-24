@@ -150,11 +150,20 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 					cumulativeAdjustedTransactionExecution[cacheHitLatency]++;
 					adjustedTransactionExecution[cacheHitLatency]++;
 					cacheLatency += cacheHitLatency;
+
+					hitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first.first++;
+					cumulativeHitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first.first++;
+					dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
 				}
+				// read miss
 				else
 				{
 					cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
-					adjustedTransactionExecution[currentTransaction->getLatency()]++;					
+					adjustedTransactionExecution[currentTransaction->getLatency()]++;	
+
+					hitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first.second++;
+					cumulativeHitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first.second++;
+					bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
 				}
 
 				assert(currentTransaction->getLatency() > 4);
@@ -166,9 +175,24 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				readCount++;
 				//readBytesTransferred += currentTransaction->getLength() * 8;
 				//bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
-			}
-			else
+			}			
+			else if (currentTransaction->isWrite())
 			{
+				// write hit
+				if (currentTransaction->isHit())
+				{
+					hitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second.first++;
+					cumulativeHitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second.first++;
+					//dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
+					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
+				}
+				// write miss
+				else
+				{
+					hitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second.second++;
+					cumulativeHitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second.second++;
+					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
+				}
 				cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
 				adjustedTransactionExecution[currentTransaction->getLatency()]++;
 
@@ -223,41 +247,7 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 {
 	//#pragma omp critical
 	{
-		if (currentCommand->isHit())
-		{
-			// read hit
-			if (currentCommand->isRead())
-			{
-				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].first.first++;
-				cumulativeHitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].first.first++;
-				dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].first += currentCommand->getLength() * 8;
-			}
-			// write hit
-			else if (currentCommand->isWrite())
-			{
-				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.first++;
-				cumulativeHitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.first++;
-				//dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
-				bandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
-			}
-		}
-		else
-		{
-			// read miss
-			if (currentCommand->isRead())
-			{
-				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].first.second++;
-				cumulativeHitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].first.second++;
-				bandwidthData[currentCommand->getAddress().getChannel()].first += currentCommand->getLength() * 8;
-			}
-			// write miss
-			else if (currentCommand->isWrite())
-			{
-				hitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.second++;
-				cumulativeHitRate[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()].second.second++;
-				bandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
-			}
-		}
+		
 
 		if (!currentCommand->isRefresh())
 		{

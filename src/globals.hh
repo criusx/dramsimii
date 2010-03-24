@@ -34,7 +34,7 @@ typedef unsigned __int8 uint8_t;
 #define TICK_MIN _I64_MIN
 #define PHYSICAL_ADDRESS_MAX _UI64_MAX
 #else
-#include <cstdint>
+#include <stdint.h>
 #define TICK_MAX INT64_MAX
 #define TICK_MIN INT64_MIN
 #define PHYSICAL_ADDRESS_MAX UINT64_MAX

@@ -220,8 +220,8 @@ tagShift(floorLog2((settings.cacheSize * 1024) / settings.blockSize / settings.a
 setMask((settings.cacheSize * 1024) / settings.blockSize / settings.associativity - 1),
 blkMask(settings.blockSize - 1),
 writeAllocate(false),
-replacementPolicy(settings.replacementPolicy),
-nmruCount(settings.nmruTrackingCount)
+nmruCount(settings.nmruTrackingCount),
+replacementPolicy(settings.replacementPolicy)
 {
 	if (blkSize < 4 || !isPowerOf2(blkSize)) 
 	{

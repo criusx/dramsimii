@@ -58,7 +58,8 @@ powerModel(_settings),
 channelID(UINT_MAX),
 //dimm(_settings.dimmCount, DIMM(_settings,timingSpecification,_systemConfig, statistics)),
 rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
-finishedTransactions()
+finishedTransactions(),
+cache(_settings.dimmCount, Cache(_settings))
 {
 	// assign an id to each channel (normally done with commands)
 // 	for (unsigned i = 0; i < _settings.rankCount; ++i)
@@ -112,7 +113,8 @@ channelID(rhs.channelID),
 // to initialize the references
 //dimm((unsigned)systemConfig.getDimmCount(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, stats)),
 rank((unsigned)systemConfig.getRankCount() * systemConfig.getDimmCount(), Rank(rhs.rank[0], timingSpecification, systemConfig, stats)),
-finishedTransactions()
+finishedTransactions(),
+cache(rhs.cache.size(), Cache(rhs.cache[0]))
 {
 	// to fill incomingTransaction the values
 	rank = rhs.rank;
@@ -128,7 +130,7 @@ finishedTransactions()
 /// @brief the constructor to build copies of a channel once it's been deserialized, needs further initialization before it's ready
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-Channel::Channel(const Settings& settings, const SystemConfiguration& sysConf, Statistics & stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
+Channel::Channel(const Settings& settings, const SystemConfiguration& sysConf, Statistics &stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
 time(0),
 lastCommandIssueTime(0),
 lastCommand(NULL),
@@ -140,7 +142,8 @@ statistics(stats),
 powerModel(power),
 channelID(UINT_MAX),
 rank(newRank),
-finishedTransactions()
+finishedTransactions(),
+cache()
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -161,7 +164,8 @@ powerModel(rhs.powerModel),
 channelID(rhs.channelID),
 //dimm((unsigned)rhs.rank.size(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, statistics)),
 rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0], timingSpecification, systemConfig, statistics)),
-finishedTransactions()
+finishedTransactions(),
+cache((unsigned)rhs.cache.size(), Cache(rhs.cache[0]))
 {
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
