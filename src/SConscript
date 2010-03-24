@@ -83,7 +83,7 @@ try:
 		env.Append(
 		CCFLAGS = ['-I/usr/include/libxml2', '-march=native', '-mtune=native'],
 		#CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5', 'TRACE_GENERATE'])
-		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5', '-__STDC_LIMIT_MACROS'])
+		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5', '__STDC_LIMIT_MACROS'])
 	elif 'prof' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		#print viableTargets
 		env.Append(
@@ -94,7 +94,7 @@ try:
 			'-ffast-math', '-finline-functions', '-march=native','-Wno-unused-variable']
 			#,CPPDEFINES =
 			 #['M5DEBUG']
-			,CPPDEFINES = ['-__STDC_LIMIT_MACROS']
+			,CPPDEFINES = ['__STDC_LIMIT_MACROS']
 			)
 		try:
 			env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-g'))
