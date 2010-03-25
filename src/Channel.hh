@@ -50,12 +50,12 @@ namespace DRAMsimII
 		const Command *lastCommand;						///< id of the last accessed rank of this channel
 		TimingSpecification timingSpecification;		///< the timing specs for this channel
 		Queue<Transaction> transactionQueue;			///< transaction queue for the channel
-		std::vector<Transaction *> refreshCounter;              ///< holds the next refresh command time for the rank
+		std::vector<Transaction *> refreshCounter;		///< holds the next refresh command time for the rank
 		const SystemConfiguration &systemConfig;		///< a pointer to common system config values
 		Statistics &statistics;							///< backward pointer to the stats engine
 		PowerConfig powerModel;							///< the power model for this channel, retains power stats
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
-		//std::vector<DIMM> dimm;							///< represents the DIMMs attached to this channel
+		//std::vector<DIMM> dimm;						///< represents the DIMMs attached to this channel
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
 		std::vector<Cache> cache;						///< the dimm caches
@@ -82,7 +82,7 @@ namespace DRAMsimII
 		void executeCommand(Command *thisCommand);
 		bool canIssue(const Command *thisCommand) const { return earliestExecuteTime(thisCommand) <= time; }
 		void printVerilogCommand(const Command *thisCommand);
-
+		
 		// functions that may differ for architectures that inherit this		
 		virtual const Command *readNextCommand() const;
 		virtual tick minProtocolGap(const Command *thisCommand) const;
@@ -105,6 +105,8 @@ namespace DRAMsimII
 		void resetToTime(const tick time);
 		std::queue<std::pair<unsigned,tick> >::size_type pendingTransactionCount() const { return finishedTransactions.size(); }
 		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
+		const std::vector<Cache> &getDimmCache() const { return cache; }
+		void resetStats();
 
 		virtual void moveToTime(const tick currentTime);
 

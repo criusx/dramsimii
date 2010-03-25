@@ -435,8 +435,13 @@ bool Cache::timingAccess(const Command *currentCommand, tick time)
 	if (!satisfied) 
 	{
 		hitsMisses.second++;
+		cumulativeHitsMisses.second++;
+
 		if (currentCommand->isRead())
+		{
 			readHitsMisses.second++;
+			cumulativeReadHitsMisses.second++;
+		}
 		// MISS
 		//PacketPtr bus_pkt = getBusPacket(pkt, blk, pkt->needsExclusive());
 
@@ -502,7 +507,11 @@ bool Cache::timingAccess(const Command *currentCommand, tick time)
 	else
 	{
 		if (currentCommand->isRead())
+		{
+			cumulativeReadHitsMisses.first++;
 			readHitsMisses.first++;
+		}
+		cumulativeHitsMisses.first++;
 		hitsMisses.first++;
 		bandwidth += currentCommand->getLength();
 	}

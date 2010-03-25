@@ -56,7 +56,7 @@ using namespace DRAMsimII;
 System::System(const Settings &settings):
 systemConfig(settings),
 simParameters(settings),
-statistics(settings),
+statistics(settings, channel),
 channel(systemConfig.getChannelCount(), Channel(settings, systemConfig, statistics)),
 inputStream(settings, systemConfig, channel),
 time(0),
@@ -329,6 +329,12 @@ void System::printStatistics()
 {
 	systemConfig.statsOutStream << statistics;
 	statistics.clear();
+
+	for (vector<Channel>::iterator h = channel.begin(), hEnd = channel.end();
+		h != hEnd; ++h)
+	{
+		h->resetStats();		
+	}
 }
 
 //////////////////////////////////////////////////////////////////////

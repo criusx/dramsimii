@@ -158,8 +158,11 @@ namespace DRAMsimII
 		// statistics
 		std::pair<unsigned,unsigned> hitsMisses;	///< the number of hits and misses since the last reset to this cache
 		std::pair<unsigned,unsigned> readHitsMisses;	///< the number of read hits and misses since the last reset to this cache
+		std::pair<unsigned,unsigned> cumulativeHitsMisses; ///< hits and misses since the cache was created
+		std::pair<unsigned,unsigned> cumulativeReadHitsMisses; ///< read hits and misses since the cache was created
 		unsigned bandwidth;						///< bandwidth since the last reset to this cache
 
+		
 	public:
 		/**
 		* Construct and initialize this tag store.
@@ -192,9 +195,15 @@ namespace DRAMsimII
 
 		BlkType *allocateBlock(const Addr &addr, PacketList &);
 
+		std::pair<unsigned,unsigned> getHitsMisses() const { return hitsMisses; }
+		std::pair<unsigned,unsigned> getReadHitsMisses() const { return readHitsMisses; }
+		std::pair<unsigned,unsigned> getCumulativeHitsMisses() const { return cumulativeHitsMisses; }
+		std::pair<unsigned,unsigned> getCumulativeReadHitsMisses() const { return cumulativeReadHitsMisses; }
+
 		void resetStats()
 		{
-			hitsMisses.first = hitsMisses.second = bandwidth = 0U;
+			hitsMisses.first = hitsMisses.second = bandwidth = 
+				readHitsMisses.first = readHitsMisses.second = 0U;
 		}
 
 		/**

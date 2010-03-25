@@ -140,6 +140,8 @@ namespace DRAMsimII
 
 	protected:
 
+		const std::vector<Channel> &channel;
+
 		const unsigned channels;
 		const unsigned ranks;
 		const unsigned banks;
@@ -172,13 +174,13 @@ namespace DRAMsimII
 		std::map<PhysicalAddress, unsigned> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
 		std::vector<tick> bankLatencyUtilization;	///< the latency due to each bank per unit time
-		std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > hitRate; ///< the hit rate of the commands in the per-DIMM cache
-		std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > cumulativeHitRate; ///< the hit rate of the commands in the per-DIMM cache for the entire run
+		//std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > hitRate; ///< the hit rate of the commands in the per-DIMM cache
+		//std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > cumulativeHitRate; ///< the hit rate of the commands in the per-DIMM cache for the entire run
 
 	public:
 
 		// constructors
-		explicit Statistics(const Settings& settings);
+		explicit Statistics(const Settings& settings, const std::vector<Channel> &);
 
 		// functions
 		std::pair<unsigned,unsigned> getReadWriteBytes() const { return std::pair<unsigned,unsigned>(getReadBytesTransferred(),getWriteBytesTransferred()); }
@@ -247,7 +249,7 @@ namespace DRAMsimII
 			return value;
 		}
 
-		const std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > &getHitRate() const { return hitRate; }
+		//const std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > &getHitRate() const { return hitRate; }
 		friend std::ostream &operator<<(std::ostream &, const Statistics &);
 
 		// overloads
@@ -255,7 +257,7 @@ namespace DRAMsimII
 
 	private:
 
-		explicit Statistics();
+		explicit Statistics(const std::vector<Channel> &);
 		friend class boost::serialization::access;
 
 		template<class Archive>
@@ -266,7 +268,7 @@ namespace DRAMsimII
 				ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
 					writeCount & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) & const_cast<unsigned&>(cacheHitLatency) &
 					const_cast<unsigned&>(banks) & timePerEpoch & aggregateBankUtilization & workingSet & cacheLatency &
-					bankLatencyUtilization & pcOccurrence & issuedAtTFAW & hitRate & rowBufferAccesses & dimmCacheBandwidthData;
+					bankLatencyUtilization & pcOccurrence & issuedAtTFAW & rowBufferAccesses & dimmCacheBandwidthData;
 			}
 
 		}
@@ -274,9 +276,11 @@ namespace DRAMsimII
 		template<class Archive>
 		friend inline void save_construct_data(Archive &ar, const Statistics* st, const unsigned version)
 		{
-
 			if (version == 0)
 			{
+				const std::vector<Channel>* const channel = &(t->channel);
+				ar << channel;
+
 				std::map<unsigned,unsigned> serializeMap;
 				std::tr1::unordered_map<unsigned,unsigned>::const_iterator it;
 
@@ -337,8 +341,11 @@ namespace DRAMsimII
 
 			if (version == 0)
 			{
+				std::vector<Channel> *channel;
+				ar >> channel;
+
 				Settings settings;
-				new(st)Statistics(settings);
+				new(st)Statistics(settings, *channel);
 
 				std::map<unsigned,unsigned> serializeMap;
 				std::map<unsigned,unsigned>::const_iterator it;

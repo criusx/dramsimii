@@ -15,8 +15,6 @@
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Address.hh"
-#include "globals.hh"
-
 #include "Settings.hh"
 #include "SystemConfiguration.hh"
 

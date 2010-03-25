@@ -15,6 +15,7 @@
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Statistics.hh"
+#include "Channel.hh"
 #include "globals.hh"
 #ifdef M5
 #include "base/statistics.hh"
@@ -43,7 +44,8 @@ using namespace DRAMsimII;
 //////////////////////////////////////////////////////////////////////////
 /// @brief constructor based on a given set of Settings
 //////////////////////////////////////////////////////////////////////////
-Statistics::Statistics(const Settings& settings):
+Statistics::Statistics(const Settings& settings, const vector<Channel> &_cache):
+channel(_cache),
 channels(settings.channelCount),
 ranks(settings.rankCount * settings.dimmCount),
 banks(settings.bankCount),
@@ -74,9 +76,7 @@ cacheLatency(0),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount),
-bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount),
-hitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount * settings.dimmCount)),
-cumulativeHitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pair<uint64_t,uint64_t> > >(settings.rankCount * settings.dimmCount))
+bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount)
 {
 	bankLatencyUtilization.reserve(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount);
 	aggregateBankUtilization.reserve(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount);
@@ -85,7 +85,8 @@ cumulativeHitRate(settings.channelCount, vector<pair<pair<uint64_t,uint64_t>,pai
 //////////////////////////////////////////////////////////////////////////
 /// @brief no arg constructor for deserialization, should not be called otherwise
 //////////////////////////////////////////////////////////////////////////
-Statistics::Statistics():
+Statistics::Statistics(const std::vector<Channel> &channel):
+channel(channel),
 channels(0),
 ranks(0),
 banks(0),
@@ -116,9 +117,7 @@ cacheLatency(0),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(0),
-bankLatencyUtilization(0),
-hitRate(),
-cumulativeHitRate()
+bankLatencyUtilization(0)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,8 +150,6 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 					adjustedTransactionExecution[cacheHitLatency]++;
 					cacheLatency += cacheHitLatency;
 
-					hitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first.first++;
-					cumulativeHitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first.first++;
 					dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
 				}
 				// read miss
@@ -161,8 +158,6 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 					cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
 					adjustedTransactionExecution[currentTransaction->getLatency()]++;	
 
-					hitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first.second++;
-					cumulativeHitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].first.second++;
 					bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
 				}
 
@@ -181,16 +176,12 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				// write hit
 				if (currentTransaction->isHit())
 				{
-					hitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second.first++;
-					cumulativeHitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second.first++;
 					//dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
 					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
 				}
 				// write miss
 				else
 				{
-					hitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second.second++;
-					cumulativeHitRate[currentTransaction->getAddress().getChannel()][currentTransaction->getAddress().getRank()].second.second++;
 					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
 				}
 				cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
@@ -247,8 +238,6 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 {
 	//#pragma omp critical
 	{
-		
-
 		if (!currentCommand->isRefresh())
 		{
 			commandDelay[currentCommand->getDelayTime()]++;
@@ -391,43 +380,49 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	os << "----Row Hit/Miss Counts {" << hitCount << "} {" << missCount << "}" << endl;
 
-	os << "----DIMM Cache Per-Rank Hit/Miss Counts ";
+	os << "----DIMM Cache Per-DIMM Hit/Miss Counts ";
 	currentChannel = 0;
-	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::const_iterator h = statsLog.hitRate.begin(); h != statsLog.hitRate.end(); ++h)
+	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
+		h != hEnd; ++h)
 	{
-		unsigned currentRank = 0;
-		for (vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > >::const_iterator i = h->begin(); i != h->end(); ++i)
+		unsigned currentDimm = 0;
+		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
+			i != iEnd; ++i)
 		{
-			os << "ch[" << currentChannel << "] rk[" << currentRank++ <<
-				"] RHit{" << i->first.first << "} RMiss{" << i->first.second <<
-				"} WHit{" << i->second.first << "} WMiss{" << i->second.second << "} ";
+			os << "ch[" << currentChannel++ << "] dimm[" << currentDimm++ <<
+				"] RHit{" << i->getReadHitsMisses().first << "} RMiss{" << i->getReadHitsMisses().second <<
+				"} WHit{" << i->getHitsMisses().first - i->getReadHitsMisses().first << "} WMiss{" 
+				<< i->getHitsMisses().second - i->getReadHitsMisses().second << "} ";
 		}
-		currentChannel++;
 	}
 	os << endl;
 
 
 	uint64_t hits = 0, misses = 0;
-	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::const_iterator h = statsLog.hitRate.begin(); h != statsLog.hitRate.end(); ++h)
+	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
+		h != hEnd; ++h)
 	{
-		for (vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > >::const_iterator i = h->begin(); i != h->end(); ++i)
+		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
+			i != iEnd; ++i)
 		{
-			hits += i->first.first + i->second.first;
-			misses += i->first.second + i->second.second;
+			hits += i->getHitsMisses().first;
+			misses += i->getHitsMisses().second;
 		}
 	}
 	os << "----Cache Hit/Miss Counts {" << hits << "} {" << misses << "}" << endl;
 
 	hits = 0, misses = 0;
 	uint64_t readHits = 0, readMisses = 0;
-	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::const_iterator h = statsLog.cumulativeHitRate.begin(); h != statsLog.cumulativeHitRate.end(); ++h)
+	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
+		h != hEnd; ++h)
 	{
-		for (vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > >::const_iterator i = h->begin(); i != h->end(); ++i)
+		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
+			i != iEnd; ++i)
 		{
-			readHits += i->first.first;
-			readMisses += i->first.second;
-			hits += i->first.first + i->second.first;
-			misses += i->first.second + i->second.second;
+			readHits += i->getCumulativeReadHitsMisses().first;
+			readMisses += i->getCumulativeReadHitsMisses().second;
+			hits += i->getCumulativeHitsMisses().first;
+			misses += i->getCumulativeHitsMisses().second;
 		}
 	}
 
@@ -556,12 +551,6 @@ void Statistics::clear()
 	for (vector<unsigned>::size_type i = 0; i < bankLatencyUtilization.size(); ++i)
 		bankLatencyUtilization[i] = 0;
 	pcOccurrence.clear();
-
-	for (vector<vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > > >::iterator h = hitRate.begin(), end = hitRate.end(); h != end; ++h)
-	{
-		for (vector<pair<pair<uint64_t, uint64_t>, pair<uint64_t, uint64_t> > >::iterator i = h->begin(); i != h->end(); ++i)
-			i->first.first = i->first.second = i->second.first = i->second.second = 0;
-	}
 
 	for (vector<vector<unsigned> >::iterator h = rasReduction.begin(); h != rasReduction.end(); ++h)
 	{

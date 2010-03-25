@@ -618,7 +618,8 @@ void Channel::doPowerCalculation(ostream& os)
 			" reducedTo " << allBankRASCount - statistics.getRowReduction()[getChannelID()][k->getRankID()] << " totalReadHits " <<
 			statistics.getHitRate()[getChannelID()][k->getRankID()].first.first << endl;
 #endif
-		totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankId()].first.first;
+		//totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankId()].first.first;
+		totalReadHits += cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first;
 		BOOST_ASSERT(thisRankAdjustedRasCount >= 0);
 		BOOST_ASSERT(thisRankAdjustedRasCount <= thisRankRasCount);
 
@@ -675,7 +676,9 @@ void Channel::doPowerCalculation(ostream& os)
 
 		double RDschPct = k->getReadCycles() / (double)(time - powerModel.getLastCalculation());
 
-		double RDschPctAdjusted = (k->getReadCycles() - timingSpecification.tBurst() * statistics.getHitRate()[getChannelID()][k->getRankId()].first.first) / (double)(time - powerModel.getLastCalculation());
+		double RDschPctAdjusted = (k->getReadCycles() - timingSpecification.tBurst() * 
+			cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first) /
+			(double)(time - powerModel.getLastCalculation());
 
 		BOOST_ASSERT(RDschPctAdjusted >= 0.0);
 
@@ -692,7 +695,7 @@ void Channel::doPowerCalculation(ostream& os)
 
 		os << " rk[" << k->getRankId() << "] rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
 			"} duration{" << time - powerModel.getLastCalculation() << "} read{" << k->getReadCycles() << "} readHits{" <<
-			statistics.getHitRate()[getChannelID()][k->getRankId()].first.first << "} write{" << k->getWriteCycles() << "}";
+			cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first << "} write{" << k->getWriteCycles() << "}";
 
 		k->resetPrechargeTime(time);
 		k->resetCycleCounts();
@@ -3068,6 +3071,15 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 	//return max(nextTime, time + timingSpecification.tCMD());
 	//return max(nextTime, max(time, lastCommandIssueTime + timingSpecification.tCMD()));
 	return max(nextTime, max(time , lastCommandIssueTime + timingSpecification.tCMD()));
+}
+
+void Channel::resetStats()
+{
+	for (vector<Cache>::iterator i = cache.begin(), iEnd = cache.end();
+		i != iEnd; ++i)
+	{
+		i->resetStats();
+	}
 }
 
 
