@@ -273,7 +273,10 @@ outstandingPackets(0)
 	settings.setKeyValue("cacheSize", lexical_cast<string>(p->cacheSize));
 	settings.setKeyValue("blockSize", lexical_cast<string>(p->blockSize));
 	settings.setKeyValue("hitLatency", lexical_cast<string>(p->hitLatency));
+	settings.setKeyValue("replacementPolicy", p->replacementPolicy);
+	settings.setKeyValue("nmruTrackingCount", p->nmruTrackingCount);
 	
+	// other simulation parameters
 	settings.setKeyValue("requestCount", lexical_cast<string>(p->requestCount));
 	settings.setKeyValue("epoch",lexical_cast<string>(p->epoch));
 	settings.setKeyValue("outFileType", p->outFileType);

@@ -120,8 +120,6 @@ ar & startTime & enqueueTime & completionTime & arrivalTime & const_cast<Address
 			}
 			
 		}
-
-
 	};
 }
 #endif

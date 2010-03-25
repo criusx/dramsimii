@@ -1,16 +1,13 @@
 #!/usr/bin/python
 
-import gzip
 import sys
 import os
 import string
 from threading import Thread
 import Queue
 import tempfile
-import tarfile
 import math
 import getopt
-import bz2
 import re
 from subprocess import Popen, PIPE, STDOUT
 from array import array
@@ -27,89 +24,30 @@ def submitCommand(commandLine, name):
         #os.system(commandLine)
         submitCommand = submitString % (commandLine, outputDir, outputDir, name)
         #print commandLine
+        #sys.exit(0)
         os.system(submitCommand)
 ######################################################################################
 
 # the directory where the traces are
-tracesDir = '/home/crius/benchmarks/dsTraces/8MB/16WAY'
+tracesDir = '/home/crius/benchmarks/dsTraces/8MB/16WAY/long'
 
 # the format of the traces
 traceType = 'dramsim'
 
 # the list of trace files to run
-traces = ['bzip2003-trace.gz',
-'cactusADM001-trace.gz',
-'calculix000-trace.gz',
-'dealII000-trace.gz',
-'GemsFDTD000-trace.gz',
-'lbm000-trace.gz',
-'mcf000-trace.gz',
-'milc000-trace.gz',
-'namd000-trace.gz',
-'omnetpp000-trace.gz',
-'soplex000-trace.gz']
+#traces = ['bzip2003-trace.gz',
+#'cactusADM001-trace.gz',
+#'calculix000-trace.gz',
+#'dealII000-trace.gz',
+#'GemsFDTD000-trace.gz',
+#'lbm000-trace.gz',
+#'mcf000-trace.gz',
+#'milc000-trace.gz',
+#'namd000-trace.gz',
+#'omnetpp000-trace.gz',
+#'soplex000-trace.gz']
 
-traces = ['lbm000-trace.gz', 'mcf000-trace.gz', 'milc000-trace.gz']
-#tracesDir = '/home/crius/benchmarks/addressTraces/'
-#traces = ['mase_256K_64_4G/ammp.trc.gz',
-#'mase_256K_64_4G/equake.trc.gz',
-#'mase_256K_64_4G/mgrid.trc.gz',
-#'mase_256K_64_4G/10GB_art.trc.gz',
-#'mase_256K_64_4G/vortex.trc.gz',
-#'mase_256K_64_4G/art.trc.gz',
-#'mase_256K_64_4G/gcc.trc.gz',
-#'mase_256K_64_4G/parser.trc.gz',
-#'mase_256K_64_4G/gzip.trc.gz',
-#'mase_256K_64_4G/galgel.trc.gz',
-#'mase_4M_32_2G/ammp.trc.gz',
-#'mase_4M_32_2G/equake.trc.gz',
-#'mase_4M_32_2G/mgrid.trc.gz',
-#'mase_4M_32_2G/vortex.trc.gz',
-#'mase_4M_32_2G/art.trc.gz',
-#'mase_4M_32_2G/gcc.trc.gz',
-#'mase_4M_32_2G/parser.trc.gz',
-#'mase_4M_32_2G/gzip.trc.gz',
-#'mase_4M_32_2G/galgel.trc.gz',
-#'mase_4M_64_2G/ammp.trc.gz',
-#'mase_4M_64_2G/equake.trc.gz',
-#'mase_4M_64_2G/mgrid.trc.gz',
-#'mase_4M_64_2G/vortex.trc.gz',
-#'mase_4M_64_2G/art.trc.gz',
-#'mase_4M_64_2G/gcc.trc.gz',
-#'mase_4M_64_2G/parser.trc.gz',
-#'mase_4M_64_2G/gzip.trc.gz',
-#'mase_4M_64_2G/galgel.trc.gz',
-#'mase_256K_128_2G/ammp.trc.gz',
-#'mase_256K_128_2G/equake.trc.gz',
-#'mase_256K_128_2G/mgrid.trc.gz',
-#'mase_256K_128_2G/vortex.trc.gz',
-#'mase_256K_128_2G/art.trc.gz',
-#'mase_256K_128_2G/gcc.trc.gz',
-#'mase_256K_128_2G/parser.trc.gz',
-#'mase_256K_128_2G/gzip.trc.gz',
-#'mase_256K_128_2G/galgel.trc.gz',
-#'mase_4M_128_2G/ammp.trc.gz',
-#'mase_4M_128_2G/equake.trc.gz',
-#'mase_4M_128_2G/mgrid.trc.gz',
-#'mase_4M_128_2G/vortex.trc.gz',
-#'mase_4M_128_2G/art.trc.gz',
-#'mase_4M_128_2G/gcc.trc.gz',
-#'mase_4M_128_2G/parser.trc.gz',
-#'mase_4M_128_2G/gzip.trc.gz',
-#'mase_4M_128_2G/galgel.trc.gz',
-#'mase_256K_32_2G/ammp.trc.gz',
-#'mase_256K_32_2G/equake.trc.gz',
-#'mase_256K_32_2G/gzip.trc.gz',
-#'mase_256K_32_2G/galgel.trc.gz',
-#'mase_256K_64_2G/ammp.trc.gz',
-#'mase_256K_64_2G/equake.trc.gz',
-#'mase_256K_64_2G/mgrid.trc.gz',
-#'mase_256K_64_2G/vortex.trc.gz',
-#'mase_256K_64_2G/art.trc.gz',
-#'mase_256K_64_2G/gcc.trc.gz',
-#'mase_256K_64_2G/parser.trc.gz',
-#'mase_256K_64_2G/gzip.trc.gz',
-#'mase_256K_64_2G/galgel.trc.gz']
+#traces = ['lbm000-trace.gz', 'mcf000-trace.gz', 'milc000-trace.gz']
 
 # the name of the DRAMsimII executable
 dramSimExe = 'dramSimII.opt'
@@ -133,17 +71,16 @@ m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
 m5Exe = 'm5.fast'
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/Cypress/8-16-CacheConfig'
+outputDir = '/home/crius/results/Cypress/8-16-CacheConfig2'
 
 # the file that describes the base memory settings
 memorySettings = '/home/crius/dramsimii/memoryDefinitions/DDR2-800-sg125E.xml'
 
 # the command line to pass to the DRAMsimII simulator to modify parameters
-commandLine = '%s --config-file %s --modifiers "channels %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
+commandLine = '%s --config-file %s --modifiers "channels %d dimms %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
 
 # the command line parameters for running in FS mode
 fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s rowBufferPolicy %s outfiledir %s"
-
 
 #m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -b mcf --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
 m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
@@ -151,12 +88,6 @@ m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt -
 
 # command line to setup full system runs
 m5FSCommandLine = '%s %s -b %%s -F 10000000000 --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript)
-
-# options for the run
-channels = [2]
-ranks = [4]
-banks = [16]
-tFAW = [28]
 
 addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagebaseline', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
 
@@ -178,6 +109,13 @@ requests = [5000000]
 benchmarks = ['calculix', 'milc', 'lbm', 'mcf', 'stream', 'bzip2', 'sjeng', 'xalancbmk', 'GemsFDTD']
 #benchmarks = ['bzip2', 'GemsFDTD']
 
+# options for the run
+channels = [2]
+dimms = [2,4]
+ranks = [1,2]
+banks = [16]
+tFAW = [28]
+
 # per-DIMM cache parameters
 associativity = [8, 16, 32]
 cacheSizes = [8192, 16384]
@@ -188,17 +126,26 @@ nmruTrackingCounts = [4,6]
 
 ###############################################################################
 traces = []
-traces += ['bzip2-trace.gz']
-traces += ['lbm-trace.gz']
-traces += ['mcf-trace.gz']
-traces += ['mcfLong000-trace.gz']
-traces += ['namd002-trace.gz']
-traces += ['omnetpp002-trace.gz']
-traces += ['milc001-trace.gz']
+#traces += ['bzip2-trace.gz']
+#traces += ['lbm-trace.gz']
+#traces += ['mcf-trace.gz']
+#traces += ['mcfLong000-trace.gz']
+#traces += ['namd002-trace.gz']
+#traces += ['omnetpp002-trace.gz']
+#traces += ['milc001-trace.gz']
 #traces += ['lbmLong-trace.gz']
 #traces += ['mcfLong000-trace.gz']
 #traces += ['xalancbmkLong005-trace.gz']
 #traces += ['bzip2-trace.gz']
+#traces += ['dealII-trace.gz']
+#traces += ['GemsFDTD000-trace.gz']
+#traces += ['gobmk-trace.gz']
+
+filesInTraceDir = os.listdir(tracesDir)
+
+for a in filesInTraceDir:
+    if a.endswith("trace.gz"):
+        traces += [a]
 
 def main():
     try:
@@ -233,32 +180,35 @@ def main():
     count = 0
     for opt,arg in opts:
         if opt == '-c':
-            for t in traces:
-                for blkSz in blockSize:
-                    for hitLat in hitLatency:
-                        for assoc in associativity:
-                            for size in cacheSizes:
-                                for replacementPolicy in replacementPolicies:
-
-                                    currentTrace = os.path.join(tracesDir, t)
-                                    currentCommandLine = commandLine % (ds2executable, memorySettings, channels[0], ranks[0],
-                                                                         banks[0], addressMappingPolicy[0],commandOrderingAlgorithm[0],
-                                                                          0, perBankQueueDepth[0], 135000000000000, tFAW[0],
-                                                                           rowBufferManagementPolicy[0], outputDir,
-                                                                           ("inputfiletype %s inputfile %s outfile %s blockSize %s cacheSize %s " +
-                                                                           "hitLatency %s associativity %s readPercentage .8 replacementPolicy %s " +
-                                                                           "%%s") %
-                                                                           (traceType, currentTrace, t, blkSz, size, hitLat, assoc, replacementPolicy))
-
-                                    if replacementPolicy == 'nmru':
-                                        for trackingCount in nmruTrackingCounts:
-                                            newCommandLine = currentCommandLine % ("nmruTrackingCount %d" % trackingCount)
-                                            submitCommand(newCommandLine,t+replacementPolicy+str(trackingCount))
-                                            count += 1
-                                    else:
-                                        newCommandLine = currentCommandLine % ""
-                                        submitCommand(newCommandLine, t+replacementPolicy)
-                                        count += 1
+            for channel in channels:
+                for dimm in dimms:
+                    for rank in ranks:
+                        for t in traces:
+                            for blkSz in blockSize:
+                                for hitLat in hitLatency:
+                                    for assoc in associativity:
+                                        for size in cacheSizes:
+                                            for replacementPolicy in replacementPolicies:
+            
+                                                currentTrace = os.path.join(tracesDir, t)
+                                                currentCommandLine = commandLine % (ds2executable, memorySettings, channel, dimm, rank,
+                                                                                     banks[0], addressMappingPolicy[0],commandOrderingAlgorithm[0],
+                                                                                      0, perBankQueueDepth[0], 135000000000000, tFAW[0],
+                                                                                       rowBufferManagementPolicy[0], outputDir,
+                                                                                       ("inputfiletype %s inputfile %s outfile %s blockSize %s cacheSize %s " +
+                                                                                       "hitLatency %s associativity %s readPercentage .8 replacementPolicy %s " +
+                                                                                       "%%s") %
+                                                                                       (traceType, currentTrace, t, blkSz, size, hitLat, assoc, replacementPolicy))
+            
+                                                if replacementPolicy == 'nmru':
+                                                    for trackingCount in nmruTrackingCounts:
+                                                        newCommandLine = currentCommandLine % ("nmruTrackingCount %d" % trackingCount)
+                                                        submitCommand(newCommandLine,t+replacementPolicy+str(trackingCount))
+                                                        count += 1
+                                                else:
+                                                    newCommandLine = currentCommandLine % ""
+                                                    submitCommand(newCommandLine, t+replacementPolicy)
+                                                    count += 1
             sys.exit(0)
         print count
 
@@ -280,14 +230,14 @@ def main():
                                                     if opt == '-t':
                                                         for t in traces:
                                                             currentTrace = os.path.join(tracesDir, t)
-                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
+                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimms[0], b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
 
                                                             submitCommand(currentCommandLine,t)
                                                             count += 1
 
                                                     # syscall emulation
                                                     elif opt == '-s':
-                                                        currentCommandLine = m5SECommandLine % (executable, m5SEConfigFile, memorySettings, a, b, c, d, e, g, outputDir)
+                                                        currentCommandLine = m5SECommandLine % (executable, m5SEConfigFile, memorySettings, a, dimms[0], b, c, d, e, g, outputDir)
 
                                                         submitCommand(currentCommandLine,t)
 
@@ -295,12 +245,12 @@ def main():
                                                     elif opt == '-r':
                                                         for f in interarrivalCycleCount:
                                                             for h in requests:
-                                                                currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c , d, e, f, g, h, j, l, outputDir, "")
+                                                                currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimms[0], b, c, d, e, f, g, h, j, l, outputDir, "")
                                                                 submitCommand(currentCommandLine,t)
 
                                                     # full system
                                                     elif opt == '-f':
-                                                        currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, b, c, d, e, g, k, l,  outputDir))
+                                                        currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, dimms[0], b, c, d, e, g, k, l,  outputDir))
                                                         submitCommand(currentCommandLine,t)
 
                                                     # variations of the per-DIMM cache
@@ -311,7 +261,7 @@ def main():
                                                                     for assoc in associativity:
                                                                         for numSets in numberSets:
                                                                             currentTrace = os.path.join(tracesDir, t)
-                                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
+                                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimms[0], b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
                                                                             submitCommand(currentCommandLine,t)
 
                                                 #sys.exit(2)

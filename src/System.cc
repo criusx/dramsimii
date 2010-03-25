@@ -88,8 +88,9 @@ nextStats(settings.epoch)
 
 	stringstream printCommandLine;
 
-	printCommandLine << "----Command Line: " << commandLine << " ch[" << settings.channelCount <<
-		"] rk[" << settings.rankCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
+	printCommandLine << "----Command Line: " << commandLine << " ch[" << settings.channelCount << 
+		"] dimm[" << settings.dimmCount <<
+		"] rk[" << settings.rankCount * settings.dimmCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
 		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
@@ -121,9 +122,9 @@ nextStats(settings.epoch)
 
 	systemConfig.powerOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
 
-	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;	
+	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() * systemConfig.getDimmCount() << "]+++-" << endl;	
 
-	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() << "]+++-" << endl;
+	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() * systemConfig.getDimmCount() << "]+++-" << endl;
 
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)

@@ -278,7 +278,7 @@ namespace DRAMsimII
 		{
 			if (version == 0)
 			{
-				const std::vector<Channel>* const channel = &(t->channel);
+				const std::vector<Channel>* const channel = &(st->channel);
 				ar << channel;
 
 				std::map<unsigned,unsigned> serializeMap;

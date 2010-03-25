@@ -2314,21 +2314,17 @@ void Channel::getNextCPRHValues(unsigned &nextRank, unsigned &nextBank, const bo
 //////////////////////////////////////////////////////////////////////////
 void Channel::executeCommand(Command *thisCommand)
 {
-	//Rank &currentRank = rank[thisCommand->getAddress().getRank()];
 	vector<Rank>::iterator currentRank = rank.begin() + thisCommand->getAddress().getRank();
 
-	//Bank &currentBank = currentRank.bank[thisCommand->getAddress().getBank()];
 	vector<Bank>::iterator currentBank = currentRank->bank.begin() + thisCommand->getAddress().getBank();
-
-	//vector<DIMM>::iterator currentDimm = dimm.begin() + thisCommand->getAddress().getDimm();
-
+	
 	currentRank->setLastBankID(thisCommand->getAddress().getBank());
 
 	thisCommand->setStartTime(time);
 
 	assert(canIssue(thisCommand));
 
-	bool wasActivated = currentBank->isActivated();
+	bool wasActivated;
 
 	lastCommandIssueTime = time;
 
@@ -2347,6 +2343,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::READ_AND_PRECHARGE:
 
+		wasActivated = currentBank->isActivated();
 		// precharge may be issued first because timings are based on time, not the last time at which a read command was issued		
 		currentRank->issuePRE(time, thisCommand);
 
@@ -2364,7 +2361,7 @@ void Channel::executeCommand(Command *thisCommand)
 			{
 				statistics.reportRasReduction(thisCommand);
 			}
-			std::cout << (satisfied ? "|" : ".");
+			//std::cout << (satisfied ? "|" : ".");
 		}
 		//////////////////////////////////////////////////////////////////////////
 
@@ -2372,7 +2369,7 @@ void Channel::executeCommand(Command *thisCommand)
 		// should account for tAL buffering the CAS command until the right moment
 		//thisCommand->setCompletionTime(max(currentBank.getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		assert(wasActivated);
-		assert(currentBank->getOpenRowID() == thisCommand->getAddress().getRow());
+	
 		thisCommand->setCompletionTime(max(currentBank->getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
@@ -2384,26 +2381,25 @@ void Channel::executeCommand(Command *thisCommand)
 
 	case Command::WRITE_AND_PRECHARGE:
 
+		wasActivated = currentBank->isActivated();
 		// precharge may be issued first because timings are based on time, not the last time at which a read command was issued
 		currentRank->issuePRE(time, thisCommand);	
 
-		//currentDimm->issuePRE(time, thisCommand);
 		// missing break is intentional
-
 	case Command::WRITE:
 
 		//////////////////////////////////////////////////////////////////////////
 		{
 			bool satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
 			currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
-			std::cout << (satisfied ? "|" : ".");
+			//std::cout << (satisfied ? "|" : ".");
 		}
 		//////////////////////////////////////////////////////////////////////////
 
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		assert(wasActivated);
-		assert(currentBank->getOpenRowID() == thisCommand->getAddress().getRow());
+	
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
 
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
@@ -2424,10 +2420,6 @@ void Channel::executeCommand(Command *thisCommand)
 		break;
 
 	case Command::REFRESH_ALL:
-
-		for (vector<Bank>::const_iterator i = currentRank->bank.begin(), end = currentRank->bank.end(); i != end; ++i)
-			if (i->isActivated())
-				assert(!i->isActivated());
 
 		currentRank->issueREF(time);
 

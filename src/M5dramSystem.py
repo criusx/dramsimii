@@ -52,10 +52,12 @@ class M5dramSystem(PhysicalMemory):
 	autoPrecharge = Param.String("true","");
 
 	# cache parameters
-	associativity = Param.String("16","");
+	associativity = Param.String("8","");
 	cacheSize = Param.String("8192","");
 	blockSize = Param.String("64","");
 	hitLatency = Param.String("5","");
+	replacementPolicy = Param.String("nmru","");
+	nmruTrackingCount = Param.String("4","");
 
 	# timing parameters
 	tBufferDelay = Param.Int(1,"delay from Transaction to Commands")
