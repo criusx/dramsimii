@@ -389,11 +389,12 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
 			i != iEnd; ++i)
 		{
-			os << "ch[" << currentChannel++ << "] dimm[" << currentDimm++ <<
+			os << "ch[" << currentChannel << "] dimm[" << currentDimm++ <<
 				"] RHit{" << i->getReadHitsMisses().first << "} RMiss{" << i->getReadHitsMisses().second <<
 				"} WHit{" << i->getHitsMisses().first - i->getReadHitsMisses().first << "} WMiss{" 
 				<< i->getHitsMisses().second - i->getReadHitsMisses().second << "} ";
 		}
+		currentChannel++;
 	}
 	os << endl;
 

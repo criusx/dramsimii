@@ -339,7 +339,9 @@ bool Cache::access(const Command *currentCommand, int &lat, BlkType *&blk, tick 
 		// nothing else to do; writeback doesn't expect response
 		//assert(!pkt->needsResponse());
 		//hits[pkt->cmdToIndex()][0/*currentCommand->req->threadId()*/]++;
-		return true;
+		
+		return false;
+		//return true;
 	}
 
 	// 	incMissCount(pkt);
