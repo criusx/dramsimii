@@ -92,14 +92,11 @@ m5FSCommandLine = '%s %s -b %%s -F 10000000000 --mp "%%s"' % (os.path.join(m5FSP
 addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagebaseline', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
 
 commandOrderingAlgorithm = ['bankroundrobin', 'rankroundrobin', 'firstAvailableAge', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
-#commandOrderingAlgorithm = ['commandPairRankHop', 'strict']
 
 rowBufferManagementPolicy = ['openpageaggressive', 'openpage', 'closepage','closepageaggressive']
-#rowBufferManagementPolicy = ['closepage','closepageaggressive']
 
 interarrivalCycleCount = [4]
 
-#perBankQueueDepth = range(8, 16, 4)
 perBankQueueDepth = [12]
 
 readWriteGrouping = ['true']
@@ -126,20 +123,6 @@ nmruTrackingCounts = [4,6]
 
 ###############################################################################
 traces = []
-#traces += ['bzip2-trace.gz']
-#traces += ['lbm-trace.gz']
-#traces += ['mcf-trace.gz']
-#traces += ['mcfLong000-trace.gz']
-#traces += ['namd002-trace.gz']
-#traces += ['omnetpp002-trace.gz']
-#traces += ['milc001-trace.gz']
-#traces += ['lbmLong-trace.gz']
-#traces += ['mcfLong000-trace.gz']
-#traces += ['xalancbmkLong005-trace.gz']
-#traces += ['bzip2-trace.gz']
-#traces += ['dealII-trace.gz']
-#traces += ['GemsFDTD000-trace.gz']
-#traces += ['gobmk-trace.gz']
 
 filesInTraceDir = os.listdir(tracesDir)
 
