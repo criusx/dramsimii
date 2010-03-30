@@ -74,6 +74,12 @@ sourceBase = ['cache/cache.cc',
 			'simulationParameters.cc',
 			'transaction.cc']
 
+scriptBase = ['../scripts/globals.cc',
+				'../scripts/processStats.cc',
+				'../scripts/statsScripts.cc',
+				'../scripts/powerScripts.cc',
+				'../scripts/util.cc']
+
 sourceFile = sourceBase + ['main.cc']
 sourcesTest = sourceBase + ['unitTest.cc']
 
@@ -102,13 +108,13 @@ if platform == 'script':
 	env.Append(OBJSUFFIX='.os')
 	env.Append(CCFLAGS = optFlags + ['-fopenmp'])
 	env.Append(CPPDEFINES = optDefines)
-	script = env.Program('processStats',"../scripts/processStats.cc")
+	script = env.Program('processStats',scriptBase)
 	env.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd')
 	envScriptD.Append(CCFLAGS = debugFlags + ['-fopenmp'])
 	envScriptD.Append(CPPDEFINES = debugDefines)
-	script = envScriptD.Program('processStats.debug',"../scripts/processStats.cc")
+	script = envScriptD.Program('processStats.debug',scriptBase)
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
 	env.Append(OBJSUFFIX='.og')

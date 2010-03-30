@@ -1,325 +1,447 @@
-//string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
-//string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
-// sudo apt-get install msttcorefonts
-string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Arial\" fsize 14\n";
-//string terminal = "set terminal svg size 1920,1200 enhanced\n";
+#ifndef PROCESSSTATS_HH
+#define PROCESSSTATS_HH
 
-string thumbnailTerminal = "set terminal png truecolor font \"Arial\" size 800,500 enhanced \n";
+#include <cstdio>
+#include <string>
+#include <list>
+#include <errno.h>
+#include <fcntl.h>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <sstream>
+#include <limits>
+#include <cmath>
+#include <map>
+#include <sstream>
+#include <boost/algorithm/string.hpp>
+#include <boost/circular_buffer.hpp>
+#include <boost/regex.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/bzip2.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/device/file_descriptor.hpp>
+#include <boost/iostreams/device/file.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/convenience.hpp>
+#include <boost/program_options/option.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
+#include <signal.h>
+#ifdef WIN32
+#include <unordered_map>
+#else
+#include <tr1/unordered_map>
+#endif
+#include <sys/wait.h>
 
-string extension = "svg";
+#include "pstream.h"
 
-string processedExtension = "svgz";
+namespace bf = boost::filesystem;
+namespace opt = boost::program_options;
 
-string thumbnailExtension = "png";
+using std::string;
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::pair;
+using boost::iostreams::bzip2_decompressor;
+using boost::iostreams::gzip_decompressor;
+using boost::iostreams::gzip_params;
+using boost::iostreams::file_source;
+using boost::iostreams::filtering_istream;
+using boost::iostreams::filtering_istreambuf;
+using boost::iostreams::file_source;
+using boost::split;
+using boost::starts_with;
+using boost::erase_all;
+using boost::ends_with;
+using boost::replace_all;
+using boost::replace_first;
+using boost::token_compress_on;
+using boost::trim;
+using boost::ireplace_all_copy;
+using boost::is_any_of;
+using boost::lexical_cast;
+using boost::numeric_cast;
+using boost::regex;
+using boost::cmatch;
+using boost::tuple;
+using boost::this_thread::sleep;
+using boost::mutex;
+using boost::filesystem::path;
+using std::max;
+using std::min;
+using std::numeric_limits;
+using std::vector;
+using std::endl;
+using std::map;
+using std::ofstream;
+using std::ifstream;
+using redi::opstream;
+using std::ios;
+using std::list;
+using std::stringstream;
 
-string thumbnailResolution = "800";
+#ifdef WIN32
+#include <unordered_map>
+using std::unordered_map;
+#else
+#include <tr1/unordered_map>
+using std::tr1::unordered_map;
+#endif
 
-// add export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts to .shrc
-string basicSetup = "unset border\n\
-					set size 1.0, 1.0\n\
-					set origin 0.0, 0.0\n\
-					set autoscale xfixmax\n\
-					set autoscale xfixmin\n\
-					set mxtics\n\
-					set xtics nomirror out\n\
-					set key outside center bottom horizontal reverse Left\n\
-					set style fill solid noborder\n\
-					#set boxwidth 0.95 relative\n\
-					set boxwidth 0.95 absolute\n\
-					set ytics out\n";
+// the number of points to use as a maximum in the graph
+#define MAXIMUM_VECTOR_SIZE 2 * 1024
 
-// 0
-string totalPowerScript = "unset border\n\
-						  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-						  set autoscale xfixmin\n\
-						  set autoscale xfixmax\n\
-						  set yrange [0:*] noreverse nowriteback\n\
-						  unset x2tics\n\
-						  set mxtics\n\
-						  set xrange [0:*]\n\
-						  set xlabel \"Time (s)\"\n\
-						  set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-						  set ytics out\n\
-						  set multiplot\n\
-						  set size 1.0, 0.66\n\
-						  set origin 0.0, 0.34\n\
-						  set boxwidth 0.95 relative\n\
-						  set style fill  solid 1.00 noborder\n\
-						  set style data histograms\n\
-						  #set style data filledcurves below x1\n\
-						  set style histogram rowstacked title offset 0,0,0\n";
+#define NEWLINE_LENGTH 1024*1024
 
-string averagePowerScript = "set size 1.0, 0.35\n\
-							set origin 0.0, 0.0\n\
-							set title \"Power Dissipated\"\n\
-							set boxwidth 0.95 relative\n\
-							plot '-' u 1:2 t \"Total Power\" w boxes,\
-							'-' u 1:2 t \"Cumulative Average\" w lines lw 2.00,\
-							'-' u 1:2 t \"Running Average\" w lines lw 2.00\n";
+#define WINDOW 5
 
-string energyScript = "unset border\n\
-					  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-					  set autoscale xfixmin\n\
-					  set autoscale xfixmax\n\
-					  set yrange [0:*] noreverse nowriteback\n\
-					  set title\n\
-					  set ytics out\n\
-					  set xtics out\n\
-					  set mxtics\n\
-					  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-					  unset x2tics\n\
-					  set multiplot\n\
-					  set size 1.0, 0.5\n\
-					  set origin 0.0, 0.5\n\
-					  set ylabel \"Energy\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-					  set xlabel \"Time (s)\"\n";
+// incomplete declarations
+void prepareOutputDir(const bf::path &outputDir, const string &filename,
+					  const string &commandLine, list<pair<string,
+					  string> > &graphs);
 
-string energy2Script = "set size 1.0, 0.5\n\
-					   set origin 0.0, 0.0\n\
-					   set title\n\
-					   plot '-' u 1:2 t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
-					   '-' u 1:2 t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n";
-
-string cumulPowerScript = "unset border\n\
-							   set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							   set autoscale xfixmin\n\
-							   set autoscale xfixmax\n\
-							   set yrange [0:*] noreverse nowriteback\n\
-							   unset x2tics\n\
-							   set mxtics\n\
-							   set xrange [0:*]\n\
-							   set xlabel \"Time (s)\"\n\
-							   set ylabel \"Energy (mJ)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							   set ytics out\n\
-							   set origin 0.0, 0.0\n\
-							   plot '-' u 1:2 t \"Cumulative Energy\" w lines lw 2.00,\
-							   '-' u 1:2 t \"Reduced Cumulative Energy\" w lines lw 2.00\n";
-
-string hitMissScript = "unset border\n\
-							set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							set yrange [0:*] noreverse nowriteback\n\
-							set y2range [0:*] noreverse nowriteback\n\
-							set xrange [0:*]\n\
-							set autoscale xfixmin\n\
-							set autoscale xfixmax\n\
-							set ytics out\n\
-							set y2tics out\n\
-							set xtics out\n\
-							set mxtics\n\
-							unset x2tics\n\
-							set style fill solid 1.00 noborder\n\
-							set ylabel \"Hit Rate\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							set y2label \"Access Count\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							set xlabel \"Time (s)\"\n\
-							plot '-' u 1:2 t \"Access Count\" axes x1y2 with impulses lt rgb \"#dabCbC\",\
-							'-' u 1:2 t \"Hit Rate\" axes x1y1 w lines lw 2.00\n";
-
-string hitMissPowerScript = "unset border\n\
-								 set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-								 set yrange [0:*] noreverse nowriteback\n\
-								 set xrange [0:*]\n\
-								 set autoscale xfixmin\n\
-								 set autoscale xfixmax\n\
-								 set ytics out\n\
-								 set xtics out\n\
-								 set mxtics\n\
-								 unset x2tics\n\
-								 set style fill solid 1.00 noborder\n\
-								 set ylabel \"Hit Rate\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-								 set xlabel \"Time (s)\"\n\
-								 plot '-' u 1:2 t \"SRAM Power\" axes x1y2 with lines lt rgb \"#5a3C3C\",\
-								 '-' u 1:2 t \"DRAM Power\" axes x1y1 w lines lw 2.00\n";
+bool fileExists(const string&);
 
 
-string bigPowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							 set yrange [0:*] noreverse nowriteback\n\
-							 unset x2tics\n\
-							 set mxtics\n\
-							 set xrange [0:*]\n\
-							 set yrange [0:*]\n\
-							 set xlabel \"Time (s)\"\n\
-							 set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							 set ytics out\n\
-							 set boxwidth 1.00 absolute\n\
-							 set style fill  solid 1.00 noborder\n\
-							 set style data histograms\n\
-							 #set style data filledcurves below x1\n\
-							 set style histogram rowstacked title offset 0,0,0\n";
 
-string bigEnergyScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							  set autoscale xfixmin\n\
-							  set autoscale xfixmax\n\
-							  set yrange [0:*] noreverse nowriteback\n\
-							  set ytics out\n\
-							  set xtics out\n\
-							  set mxtics\n\
-							  set yrange [0:*]\n\
-							  set y2range [0:*]\n\
-							  set ytics nomirror\n\
-							  set y2tics\n\
-							  unset x2tics\n\
-							  set boxwidth 1.00 relative\n\
-							  #set logscale y2\n\
-							  set ylabel \"Energy (mJ)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							  set y2label \"Cumulative Energy (mJ)\"\n\
-							  set xlabel \"Time (s)\"\n";
+unordered_map<string, string> &setupDecoder();
 
-string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR"};
-
-string subAddrDistroA = "unset y2tics\n\
-							 unset logscale y\n\
-							 set format x\n\
-							 set xtics\n\
-							 set xlabel 'Time (s)'\n\
-							 set xrange [0:*]\n\
-							 set autoscale xfixmax\n\
-							 set ylabel \"Access %\"\n\
-							 set yrange [0 : 1.0] noreverse nowriteback\n\
-							 set key outside center bottom horizontal reverse Left\n\
-							 set style data histograms\n\
-							 set style histogram rowstacked\n";
-
-string workingSetSetup = "set yrange [0 : *] noreverse nowriteback\n\
-							  set boxwidth 0.98 relative\n\
-							  set style fill solid 1.00 noborder\n\
-							  set xrange [0 : *] noreverse nowriteback\n\
-							  set xlabel 'Time (s)'\n\
-							  #set logscale y\n\
-							  set ylabel 'Working Set Size' offset character .05, 0, 0 font '' textcolor lt -1 rotate by 90\n\
-							  plot '-' using 1:2 t 'Working Set Size' with boxes\n";
+void processPower(const bf::path &outputDir, const string &filename);
+void processStats(const bf::path &outputDir, const string &filename);
+void sigproc(int i);
+bool ensureDirectoryExists(const bf::path &outputDir);
 
 
-string addressDistroA = "unset y2tics\n\
-							 set xtics\n\
-							 set xlabel 'Time (s)'\n\
-							 set xrange [0:*]\n\
-							 set autoscale xfixmax\n\
-							 set ylabel 'Access %'\n\
-							 set yrange [0 : 1] noreverse nowriteback\n\
-							 set key outside center bottom horizontal reverse Left\n\
-							 set style data histograms\n\
-							 set style histogram rowstacked\n\
-							 set multiplot layout 3,1\n";
+#if 0
+template <typename T1, typename T2>
+pair<T1,T2> operator/(const pair<T1,T2> &lhs, const float& right)
+{
+	return pair<T1,T2>(lhs.first / right, lhs.second / right );
+}
 
-string addressDistroB ="set title 'Rank Distribution Rate' offset character 0, -1, 0 font '' norotate\n";
+template <typename T1,typename T2>
+pair<T1,T2> operator+(pair<T1,T2> &left, const pair<T1,T2>& right)
+{
+	return pair<T1,T2>(left.first + right.first, left.second + right.second);
+}
 
-string addressDistroC = "set title 'Bank Distribution Rate' offset character 0, -1, 0 font '' norotate\n";
+template <typename T>
+class BufferAccumulator
+{
 
-string transactionGraphScript = "set logscale y\n\
-							   set format x\n\
-							   set style fill solid 1.00 noborder\n\
-							   #set autoscale xfixmax\n\
-							   set xlabel 'Execution Time (ns)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
-							   set ylabel 'Number of Transactions with this Execution Time'\n\
-							   plot '-' using 1:2 t 'Total Latency' with boxes\n";
+protected:
+	vector<T> values;
+	T buffer;
+	unsigned scaleFactor;
+	unsigned count;
 
-string bandwidthGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
-								   set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
-								   set xrange [0:*]\n\
-								   set title 'System Bandwidth'\n\
-								   set size 1.0, 0.66\n\
-								   set origin 0.0, 0.33\n\
-								   set style data histograms\n\
-								   set style histogram rowstacked title offset 0,0,0\n\
-								   set ylabel 'Bandwidth (bytes per second)'\n\
-								   plot \
-								   '-' using 1 axes x2y1 title 'Read Bytes', \
-								   '-' using 1 axes x2y1 title 'Write Bytes', \
-								   '-' using 1 axes x2y1 title 'Cache Read Bytes', \
-								   '-' using 1 axes x2y1 title 'Cache Write Bytes', \
-								   '-' using 1:2 axes x1y1 title 'Average Bandwidth' with lines\n";
+public:
+	BufferAccumulator():
+	  values(),
+		  buffer(),
+		  scaleFactor(1),
+		  count(0)
+	  {}
 
-string pcVsLatencyGraphScript = "set logscale y \n\
-							   set yrange [1 : *] noreverse nowriteback\n\
-							   set xlabel 'PC Value' offset character .05, 0,0 font 'Arial, 14' textcolor lt -1 rotate by -45\n\
-							   set ylabel 'Total Latency (ns)'\n\
-							   set style fill solid 1.00 noborder\n\
-							   set format x '0x0%x'\n";
+	  void push_back(const T& value)
+	  {
+		  buffer = value / (float)scaleFactor;
+		  count++;
+		  if (count == scaleFactor)
+		  {
+			  values.push_back(value);
 
-string avgPcVsLatencyGraphScript = "set logscale y \n\
-								  set yrange [1 : *] noreverse nowriteback\n\
-								  set xlabel 'PC Value' offset character .05, 0,0 font 'Arial, 14' textcolor lt -1 rotate by -45\n\
-								  set ylabel 'Average Latency (ns)'\n\
-								  set style fill solid 1.00 noborder\n\
-								  set format x '0x0%x'\n";
+			  if (values.size() > MAXIMUM_VECTOR_SIZE)
+			  {
+				  for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
+				  {
+					  //values[j] = T((values[2 * j] + values[2 * j + 1]) / 2.0F);
+					  values[j] = T((values[2 * j] + values[2 * j + 1]) );
+				  }
 
-string smallIPCGraphScript = "set size 1.0, 0.345\n\
-							set origin 0.0, 0.0\n\
-							set ylabel 'IPC'\n\
-							set y2label\n\
-							set title 'IPC vs. Time'  offset character 0, -1, 0 font '' norotate\n\
-							set style fill solid 1.00 noborder\n\
-							plot '-' using 1:2 title 'IPC' with impulses, '-' using 1:2 title 'Cumulative Average IPC' with lines, '-' using 1:2 title 'Moving Average IPC' with lines\n";
+				  values.resize(MAXIMUM_VECTOR_SIZE / 2);
 
-string bigIPCGraphScript = "set origin 0.0, 0.0\n\
-						  set ylabel 'IPC'\n\
-						  set y2label\n\
-						  set title 'IPC vs. Time'  offset character 0, -1, 0 font '' norotate\n\
-						  set style fill solid 1.00 noborder\n\
-						  set boxwidth 0.95 relative\n\
-						  plot '-' using 1:2 title 'IPC' with boxes lt rgb \"#007872\", '-' using 1:2 title 'Cumulative Average IPC' with lines lw 6.00 lt rgb \"#57072B\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
+				  scaleFactor *= 2;
+			  }
+		  }
+	  }
+};
+#endif
 
-string cacheGraph0 = "set y2tics\n\
-						  set format x\n";
+template<typename T>
+class WeightedAverage
+{
+	unsigned count;
+	T total;
 
-string cacheGraph1 = "unset xlabel\n\
-						  set ylabel 'Miss Rate'\n\
-						  set y2label 'Access Count'\n\
-						  set yrange [0:1] noreverse nowriteback\n\
-						  set title 'L1 ICache'\n\
-						  plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
+public:
+	WeightedAverage() :
+	  count(0), total(0)
+	  {
+	  }
 
-string cacheGraph2 = "set yrange [0 : *] noreverse nowriteback\n\
-						  unset xlabel\n\
-						  set ylabel 'Miss Rate'\n\
-						  set yrange [0:1] noreverse nowriteback\n\
-						  set y2label 'Access Count'\n\
-						  set title 'L1 DCache'  offset character 0, -1, 0 font '' norotate\n\
-						  plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
+	  void add(T value, unsigned count)
+	  {
+		  this->total += value * (T) count;
+		  this->count += count;
+	  }
 
-string cacheGraph3 = "set yrange [0 : *] noreverse nowriteback\n\
-						  set xlabel 'Time (s)' offset character .05, 0, 0 font \"\" textcolor lt -1 rotate by 90\n\
-						  set ylabel 'Miss Rate'\n\
-						  set y2label 'Access Count'\n\
-						  set yrange [0:1] noreverse nowriteback\n\
-						  set title 'L2 Cache' offset character 0, -1, 0 font '' norotate\n\
-						  plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
+	  void clear()
+	  {
+		  total = 0;
+		  count = 0;
+	  }
 
-string otherIPCGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
-							set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
-							set ylabel 'Instructions Per Cycle'\n\
-							set y2label\n\
-							unset logscale y2\n\
-							set style fill solid 1.00 noborder\n\
-							set xrange [0 : *]\n\
-							plot '-' using 1:2 title 'IPC' with impulses,\
-							'-' using 1:2 title 'Moving Average IPC' with lines\n";
+	  T average()
+	  {
+		  return total / ((count > 0) ? (T) count : (T) 1);
+	  }
+};
 
-string averageTransactionLatencyScript = "set yrange [1 : *] noreverse nowriteback\n\
-											  set xlabel 'Time (s)' offset character .05, 0,0 font ' textcolor lt -1 rotate by 90\n\
-											  set ylabel 'Latency (ns)'\n\
-											  #set logscale y\n\
-											  set logscale y2\n\
-											  set y2label 'Access Count'\n\
-											  set y2tics\n\
-											  set style fill solid 1.00 noborder\n\
-											  plot \
-											  '-' using 1:2 t 'Accesses' axes x1y2 with impulses,\
-											  '-' using 1:2 title 'Minimum Latency' with lines lw 1.25, \
-											  '-' using 1:2 title 'Average Latency' with lines lw 1.25, \
-											  '-' using 1:2 title \"Average + 2 std. dev.\" with lines lw 1.25\n";
+// using the method of Mendenhall and Sincich (1995)
+template<typename T>
+class BoxPlot
+{
+protected:
+	map<T, unsigned> values;
+	unsigned totalCount;
+public:
+	BoxPlot() :
+	  values(), totalCount(0)
+	  {
+	  }
 
+	  void clear()
+	  {
+		  values.clear();
+		  totalCount = 0;
+	  }
 
-string rowHitMissGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
-							  set y2range [1 : *] noreverse nowriteback\n\
-							  set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
-							  set ylabel 'Reuse Rate'\n\
-							  set y2label 'Accesses'\n\
-							  set y2tics\n\
-							  set my2tics\n\
-							  set logscale y2\n\
-							  plot '-' using 1:2 axes x1y1 title 'Hit Rate' with filledcurve below x1 lt rgb \"#28B95A\", '-' using 1:2 axes x1y1 title 'Cumulative Average Hit Rate' with lines lw 1.250 lt rgb \"#B8283E\", '-' using 1:2 axes x1y2 t 'Accesses' with lines lw 1.250 lt rgb \"#5B28B8\"\n";
+	  void add(const T value, const unsigned count)
+	  {
+		  // shouldn't be any duplicates
+		  if (values.find(value) != values.end())
+			  throw;
 
-const string urlString("<a href=\"%1/index.html\">%2</a>");
+		  values[value] = count;
 
-const string csvHeader("Benchmark,Channels,Ranks,Banks,Rows,Columns,DRAM Width,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Runtime,Read Hit Rate,Hit Rate,Average Latency,Average Reduced Latency\n");
+		  totalCount += count;
+	  }
+
+	  tuple<T, T, T, T, T, T> getQuartiles() const
+	  {
+		  if (totalCount > 0)
+		  {
+			  unsigned median = max(round(totalCount / 2.0), 1.0);
+			  unsigned firstQuartile = max(round((totalCount + 1.0) / 4.0), 1.0);
+			  assert(firstQuartile <= median);
+			  unsigned thirdQuartile = max(round((3.0 * totalCount + 3.0) / 4.0),
+				  1.0);
+			  if (thirdQuartile > totalCount)
+				  thirdQuartile = totalCount;
+			  assert(median <= thirdQuartile);
+
+			  T firstQuartileValue;
+			  T thirdQuartileValue;
+			  T medianValue;
+
+			  unsigned cumulativeSum = 0;
+
+			  typename map<T, unsigned>::const_iterator end = values.end();
+			  WeightedAverage<double> wa;
+
+			  // go determine which bin the quartile elements are in
+			  for (typename map<T, unsigned>::const_iterator i = values.begin(); i
+				  != end; ++i)
+			  {
+				  wa.add(i->first, i->second);
+
+				  if (firstQuartile > cumulativeSum && firstQuartile
+					  <= cumulativeSum + i->second)
+					  firstQuartileValue = i->first;
+				  if (thirdQuartile > cumulativeSum && thirdQuartile
+					  <= cumulativeSum + i->second)
+					  thirdQuartileValue = i->first;
+				  if (median > cumulativeSum && median <= cumulativeSum
+					  + i->second)
+				  {
+					  // only if it's the last element
+					  if (totalCount % 2 == 1 && (cumulativeSum + i->second
+						  == median))
+					  {
+						  typename map<T, unsigned>::const_iterator j(i);
+						  ++j;
+						  if (j == end)
+							  medianValue = i->first;
+						  else
+							  medianValue = (i->first + j->first) / 2;
+					  }
+					  else
+						  medianValue = i->first;
+
+				  }
+				  cumulativeSum += i->second;
+			  }
+
+			  assert(firstQuartileValue <= medianValue);
+			  assert(medianValue <= thirdQuartileValue);
+
+			  return tuple<T, T, T, T, T, T> (values.begin()->first,
+				  firstQuartileValue, medianValue, wa.average(),
+				  thirdQuartileValue, values.rbegin()->first);
+		  }
+		  else
+			  return tuple<T, T, T, T, T, T> ((T) 0, (T) 0, (T) 0, (T) 0, (T) 0,
+			  (T) 0);
+	  }
+};
+
+template<typename T>
+class StdDev
+{
+protected:
+	map<T, unsigned> values;
+	unsigned totalCount;
+public:
+	StdDev() :
+	  values(), totalCount(0)
+	  {
+	  }
+
+	  void clear()
+	  {
+		  values.clear();
+		  totalCount = 0;
+	  }
+
+	  void add(const T value, const unsigned count)
+	  {
+		  // shouldn't be any duplicates
+		  if (values.find(value) != values.end())
+			  throw;
+
+		  values[value] = count;
+
+		  totalCount += count;
+	  }
+
+	  tuple<T, T, T, T> getStdDev() const
+	  {
+		  if (totalCount > 0)
+		  {
+			  typename map<T, unsigned>::const_iterator end = values.end();
+			  WeightedAverage<double> wa;
+
+			  // go determine which bin the quartile elements are in
+			  for (typename map<T, unsigned>::const_iterator i = values.begin(); i
+				  != end; ++i)
+			  {
+				  wa.add(i->first, i->second);
+			  }
+
+			  double mean = wa.average();
+
+			  uint64_t sum = 0;
+
+			  for (typename map<T, unsigned>::const_iterator i = values.begin(); i
+				  != end; ++i)
+			  {
+				  sum += (uint64_t)((double) i->second * ((double) i->first
+					  - mean) * ((double) i->first - mean));
+			  }
+
+			  double stdDev = sqrt((double) sum / (double) totalCount);
+
+			  return tuple<T, T, T, T> (values.begin()->first, mean, stdDev,
+				  values.rbegin()->first);
+		  }
+		  else
+			  return tuple<T, T, T, T> ((T) 0, (T) 0, (T) 0, (T) 0);
+	  }
+};
+
+class CumulativePriorMovingAverage
+{
+	double average;
+	double totalCount;
+
+public:
+	CumulativePriorMovingAverage() :
+	  average(0.0), totalCount(0.0)
+	  {
+	  }
+
+	  void add(double count, double value)
+	  {
+		  totalCount += count;
+		  average += ((count * value - average) / totalCount);
+	  }
+
+	  double getAverage() const
+	  {
+		  return average;
+	  }
+
+	  void clear()
+	  {
+		  average = 0.0;
+		  totalCount = 0.0;
+	  }
+};
+
+class PriorMovingAverage
+{
+	boost::circular_buffer<float> data;
+	float average;
+
+public:
+	PriorMovingAverage(unsigned size) :
+	  data(size), average(0)
+	  {
+	  }
+
+	  double getAverage() const
+	  {
+		  return average;
+	  }
+
+	  void append(float x)
+	  {
+		  if (data.full())
+		  {
+			  float oldestItem = data.front();
+			  int size = data.size();
+			  average = average - (oldestItem / size) + (x / size);
+		  }
+		  else if (data.empty())
+		  {
+			  average = x;
+		  }
+		  else
+		  {
+			  float size = (float) data.size();
+			  average = average * size / (size + 1.0F) + x / (size + 1.0F);
+		  }
+		  data.push_back(x);
+	  }
+
+	  void clear()
+	  {
+		  average = 0.0;
+		  boost::circular_buffer<float>::size_type size = data.size();
+		  data.clear();
+		  data.resize(size, 0.0F);
+		  //for (boost::circular_buffer<float>::iterator i = data.begin(); i != data.end(); ++i)
+		  //	*i = 0;
+	  }
+};
+#endif
