@@ -17,6 +17,7 @@ list<string> fileList;
 
 mutex fileListMutex;
 
+bool separateOutputDir = false;
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief setup the output directory

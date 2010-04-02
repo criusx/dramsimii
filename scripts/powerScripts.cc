@@ -268,6 +268,7 @@ void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const strin
 	p << "e" << endl << "unset output" << endl;
 }
 
+#define POWER_VALUES_PER_CHANNEL 5
 
 ///////////////////////////////////////////////////////////////////////////////
 void processPower(const bf::path &outputDir, const string &filename)
@@ -329,8 +330,8 @@ void processPower(const bf::path &outputDir, const string &filename)
 				float thisPower = atof(position);
 				valueBuffer[writing] += (thisPower);
 
-				// Psys(ACT_STBY)
-				if (writing == 0)
+				// make sure to get multiple channels
+				if (starts_with(newLine,"-Psys(ACT_STBY)"))
 				{
 					char *firstBrace = strchr(position2 + 1, '{');
 					if (firstBrace == NULL) break;
@@ -343,8 +344,8 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 					*slash = *secondBrace = NULL;
 
-					energyValueBuffer.first = atof(firstBrace + 1);
-					energyValueBuffer.second = atof(slash + 1);
+					energyValueBuffer.first += atof(firstBrace + 1);
+					energyValueBuffer.second += atof(slash + 1);
 				}
 
 				writing = (writing + 1) % values.size();
@@ -367,6 +368,8 @@ void processPower(const bf::path &outputDir, const string &filename)
 						energyValues.push_back(pair<float, float> (
 							energyValueBuffer.first / scaleFactor,
 							energyValueBuffer.second / scaleFactor));
+
+						energyValueBuffer.first = energyValueBuffer.second = 0.0F;
 					}
 
 					// try to compress the array by half and double the scaleFactor
@@ -434,13 +437,13 @@ void processPower(const bf::path &outputDir, const string &filename)
 					split(splitLine,line,is_any_of("[]"));
 					channelCount = lexical_cast<unsigned>(splitLine[1]);
 
-					values.reserve(channelCount * 5);
-					energyValues.reserve(channelCount * 5);
+					values.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
+					energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
 
 					// setup the buffer to be the same size as the value array
-					valueBuffer.resize(channelCount * 5);
+					valueBuffer.resize(channelCount * POWER_VALUES_PER_CHANNEL);
 
-					for (int i = channelCount * 5; i > 0; --i)
+					for (int i = channelCount * POWER_VALUES_PER_CHANNEL; i > 0; --i)
 					{
 						values.push_back(vector<float> ());
 						values.back().reserve(MAXIMUM_VECTOR_SIZE);

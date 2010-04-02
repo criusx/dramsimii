@@ -144,7 +144,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\boost\boost_1_40&quot;;C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42&quot;;&quot;C:\Program Files\boost\boost_1_40&quot;;C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_RELEASE;_CONSOLE;NDEBUG"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -178,7 +178,7 @@
 				AdditionalDependencies="libxml2.lib"
 				ShowProgress="1"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\boost\boost_1_42\libs&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42\lib&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\lib&quot;;&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="0"
@@ -237,7 +237,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_35_0&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42&quot;;&quot;C:\Program Files\boost\boost_1_40&quot;;C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -264,7 +264,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_35_0\lib&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\boost\boost_1_42\libs&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42\lib&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\lib&quot;;&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -317,7 +317,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_35_0&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42&quot;;&quot;C:\Program Files\boost\boost_1_40&quot;;C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -330,6 +330,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\boost\boost_1_42\libs&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42\lib&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\lib&quot;;&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -382,7 +383,7 @@
 				Optimization="0"
 				FavorSizeOrSpeed="0"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_36_0&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42&quot;;&quot;C:\Program Files\boost\boost_1_40&quot;;C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -417,7 +418,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_36_0\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\boost\boost_1_42\libs&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42\lib&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\lib&quot;;&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -479,7 +480,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_39&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42&quot;;&quot;C:\Program Files\boost\boost_1_40&quot;;C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_RELEASE;_CONSOLE;DEBUG"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -513,7 +514,7 @@
 				AdditionalDependencies="libxml2.lib"
 				ShowProgress="1"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_39\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\boost\boost_1_42\libs&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42\lib&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\lib&quot;;&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="0"
@@ -576,7 +577,7 @@
 				InlineFunctionExpansion="2"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_36_0&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42&quot;;&quot;C:\Program Files\boost\boost_1_40&quot;;C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -611,7 +612,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_36_0\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\boost\boost_1_42\libs&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42\lib&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\lib&quot;;&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				RandomizedBaseAddress="1"
@@ -664,7 +665,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Program Files\boost\boost_1_36_0&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_34_1&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42&quot;;&quot;C:\Program Files\boost\boost_1_40&quot;;C:\Users\CriuS\Work\zlib;&quot;C:\Users\CriuS\Work\m5-stable\src&quot;;&quot;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto&quot;;&quot;C:\Users\CriuS\Work\iconv-1.9.2.win32\include&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;DEBUG"
 				WarningLevel="4"
 			/>
@@ -681,7 +682,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libxml2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_36_0\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\boost\boost_1_42\libs&quot;;&quot;C:\Program Files (x86)\boost\boost_1_42\lib&quot;;&quot;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\lib&quot;;&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;C:\Users\CriuS\Work\libxml2-2.6.30.win32\lib&quot;"
 				SubSystem="1"
 				TargetMachine="1"
 			/>

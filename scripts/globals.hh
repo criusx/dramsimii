@@ -17,6 +17,7 @@ const string thumbnailExtension = "png";
 
 const string thumbnailResolution = "800";
 
+// sudo apt-get install msttcorefonts
 // add export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts to .shrc
 const string basicSetup = "unset border\n\
 						  set size 1.0, 1.0\n\
@@ -336,6 +337,7 @@ extern bool generatePngFiles;
 extern bf::path executableDirectory;
 extern bool userStop;
 extern bool cypressResults;
+extern bool separateOutputDir;
 //extern const string urlString;
 //const extern string terminal;
 extern unordered_map<string, string> decoder;
