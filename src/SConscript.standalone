@@ -109,12 +109,14 @@ if platform == 'script':
 	env.Append(CCFLAGS = optFlags + ['-fopenmp'])
 	#env.Append(CPPDEFINES = optDefines + ['-D_GLIBCXX_PARALLEL'])
 	env.Append(CPPDEFINES = optDefines)
+	env.Append(LINKFLAGS = ['-fopenmp'])
 	script = env.Program('processStats',scriptBase)
 	env.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd')
 	envScriptD.Append(CCFLAGS = debugFlags + ['-fopenmp'])
 	envScriptD.Append(CPPDEFINES = debugDefines)
+	envScriptD.Append(LINKFLAGS = ['-fopenmp'])
 	script = envScriptD.Program('processStats.debug',scriptBase)
 	envScriptD.Install(os.path.abspath('../scripts'),script)
 elif platform == 'debug':
