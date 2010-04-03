@@ -335,6 +335,7 @@ extern list<string> fileList;
 extern mutex fileListMutex;
 extern bool generatePngFiles;
 extern bf::path executableDirectory;
+extern bf::path outputDir;
 extern bool userStop;
 extern bool cypressResults;
 extern bool separateOutputDir;

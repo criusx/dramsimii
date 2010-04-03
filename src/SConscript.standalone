@@ -107,6 +107,7 @@ SRCDIR = os.path.join(ROOT,'src')
 if platform == 'script':
 	env.Append(OBJSUFFIX='.os')
 	env.Append(CCFLAGS = optFlags + ['-fopenmp'])
+	#env.Append(CPPDEFINES = optDefines + ['-D_GLIBCXX_PARALLEL'])
 	env.Append(CPPDEFINES = optDefines)
 	script = env.Program('processStats',scriptBase)
 	env.Install(os.path.abspath('../scripts'),script)

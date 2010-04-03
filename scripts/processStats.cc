@@ -63,9 +63,9 @@ void thumbNailWorker()
 			//second.write(baseFilename + ".png");
 
 			//string commandLine0 = string(CONVERT_COMMAND) + " " + filename + "'[" + thumbnailResolution + "]' " + baseFilename + "-thumb.png";
-// 			string commandLine0 = string(CONVERT_COMMAND) + " " + filename
-// 				+ " -resize " + thumbnailResolution + " " + baseFilename
-// 				+ "-thumb.png";
+			// 			string commandLine0 = string(CONVERT_COMMAND) + " " + filename
+			// 				+ " -resize " + thumbnailResolution + " " + baseFilename
+			// 				+ "-thumb.png";
 			string commandLine2 = "gzip -c -9 -f " + filename + " > "
 				+ filename + "z";
 #ifndef NDEBUG
@@ -85,9 +85,9 @@ void thumbNailWorker()
 
 			if (generatePngFiles)
 			{
-// 				string commandLine1 = string(MOGRIFY_COMMAND)
-// 					+ " -resize 3840 -format png " + filename;
-// 				system(commandLine1.c_str());
+				// 				string commandLine1 = string(MOGRIFY_COMMAND)
+				// 					+ " -resize 3840 -format png " + filename;
+				// 				system(commandLine1.c_str());
 			}
 
 			bf::remove(bf::path(filename));
@@ -98,7 +98,7 @@ void thumbNailWorker()
 
 void process(const string i)
 {
-	cerr << i << endl;
+	//cerr << "+" << i << endl;
 
 	if (ends_with(i, "power.gz") || ends_with(i, "power.bz2"))
 	{
@@ -136,6 +136,8 @@ void process(const string i)
 			processStats(path, i);
 		}
 	}
+
+	//cerr << "-" << i << endl;
 }
 
 
@@ -177,8 +179,8 @@ int main(int argc, char** argv)
 		cout << "Usage: " << argv[0] << "(--help | -f | -p)" << endl;
 	}
 
-	bf::path outputDir;
-	
+
+
 	if (vm.count("output"))
 	{
 		outputDir = vm["output"].as<string> ();
@@ -202,7 +204,7 @@ int main(int argc, char** argv)
 
 	list<string> toBeProcessed;
 
-	map<string, vector<string> > results;
+	map<string, list<string> > results;
 
 	vector<string> files;
 
@@ -221,32 +223,30 @@ int main(int argc, char** argv)
 	{
 		int currentFileNumber = 0;
 		// gather stats from all the files to generate the html file
-#pragma omp parallel 
+#pragma omp parallel for shared(files) 
+		for (vector<string>::const_iterator currentFile = files.begin(); 
+			currentFile < files.end(); ++currentFile)
 		{
-			for (vector<string>::const_iterator currentFile = files.begin(); 
-				currentFile != files.end(); ++currentFile)
-//			exit(-1);
-//#pragma omp parallel for
-//			for (int i = 0; i < files.size(); i++)
+			filtering_istream inputStream;
+
+			if (ends_with(*currentFile, ".gz"))
+				inputStream.push(boost::iostreams::gzip_decompressor());
+			else if (ends_with(*currentFile, ".bz2"))
+				inputStream.push(boost::iostreams::bzip2_decompressor());
+
+			inputStream.push(file_source(*currentFile));
+
+			const string basefilename = currentFile->substr(0, currentFile->find_last_of('-'));
+			cerr << basefilename << endl;
+
+			char newLine[NEWLINE_LENGTH];
+
+			if (!inputStream.is_complete())
+				continue;
+
+			// go through the stats file
+			if (ends_with(*currentFile, "stats.gz") || ends_with(*currentFile, "stats.bz2") || ends_with(*currentFile, "stats"))
 			{
-				//string *currentFile = &files[i];
-
-				filtering_istream inputStream;
-
-				if (ends_with(*currentFile, "stats.gz"))
-					inputStream.push(boost::iostreams::gzip_decompressor());
-				else if (ends_with(*currentFile, "stats.bz2"))
-					inputStream.push(boost::iostreams::bzip2_decompressor());
-				else
-					continue;
-
-				inputStream.push(file_source(*currentFile));
-
-				char newLine[NEWLINE_LENGTH];
-
-				if (!inputStream.is_complete())
-					continue;
-
 				pair<unsigned, unsigned> readHitsMisses;
 				pair<unsigned, unsigned> hitsMisses;
 				unsigned epochCounter = 0;
@@ -254,7 +254,6 @@ int main(int argc, char** argv)
 				float averageLatency;
 				float averageAdjustedLatency;
 				vector<string> currentLine;
-				string basefilename;
 
 				bool foundCommandline = false;
 				bool foundEpoch = false;
@@ -264,9 +263,7 @@ int main(int argc, char** argv)
 				unsigned lineCounter = 0;
 
 				while ((newLine[0] != NULL) && (!userStop))
-				{
-					const string filename(*currentFile);
-
+				{						
 					if (starts_with(newLine,
 						"----Cumulative DIMM Cache Read Hits/Misses"))
 					{
@@ -357,7 +354,6 @@ int main(int argc, char** argv)
 
 						toBeProcessed.push_back(*currentFile);
 
-						basefilename = filename.substr(0, filename.find_last_of('-'));
 						//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
 						const string commandline(newLine);
 						string modUrlString = commandline.substr(commandline.find(':')
@@ -386,18 +382,6 @@ int main(int argc, char** argv)
 								benchmarkName = decoder[benchmarkName];
 
 							currentLine.push_back(benchmarkName);
-							//"<td>" + ireplace_all_copy(currentUrlString,"%2",benchmarkName) + "</td>";
-						}
-
-						// then calculate the runtime for the last column
-						if (!ends_with(*currentFile, "stats.gz") && !ends_with(
-							*currentFile, "stats.bz2"))
-						{
-							if (results.find(basefilename) == results.end())
-								results[basefilename] = currentLine;
-
-							// do not read power files all the way through
-							break;
 						}
 					}
 
@@ -417,42 +401,101 @@ int main(int argc, char** argv)
 
 					inputStream.getline(newLine, NEWLINE_LENGTH);
 				}
-				boost::iostreams::close(inputStream);
 
 				stringstream current;
-				current << std::dec << std::fixed << std::setprecision(6)
+				current << std::dec << std::fixed << std::setprecision(2)
 					<< ((double) epochCounter * epoch);
 				currentLine.push_back(current.str());
 				current.str("");
 
-				current << std::dec << std::fixed << std::setprecision(6)
+				current << std::dec << std::fixed << std::setprecision(2)
 					<< ((float) readHitsMisses.first
 					/ ((float) readHitsMisses.first + readHitsMisses.second));
 				currentLine.push_back(current.str());
 				current.str("");
 
-				current << std::dec << std::fixed << std::setprecision(4)
+				current << std::dec << std::fixed << std::setprecision(2)
 					<< ((float) hitsMisses.first / ((float) hitsMisses.first
 					+ hitsMisses.second));
 				currentLine.push_back(current.str());
 				current.str("");
 
-				current << std::dec << std::fixed << std::setprecision(4)
+				current << std::dec << std::fixed << std::setprecision(2)
 					<< averageLatency;
 				currentLine.push_back(current.str());
 				current.str("");
 
-				current << std::dec << std::fixed << std::setprecision(4)
+				current << std::dec << std::fixed << std::setprecision(2)
 					<< averageAdjustedLatency;
 				currentLine.push_back(current.str());
+				current.str("");
 
-				current << std::dec << std::fixed << std::setprecision(4)
+				current << std::dec << std::fixed << std::setprecision(2)
 					<< averageLatency - averageAdjustedLatency;
 				currentLine.push_back(current.str());
+				current.str("");
 
+				while (!currentLine.empty())
+				{
+					string element = currentLine.back();
 #pragma omp critical
-				results[basefilename] = currentLine;
+					results[basefilename].push_front(element);
+#ifndef NDEBUG
+					bool result = 
+#endif
+						currentLine.pop_back();
+					assert(result);
+				}
 			}
+			// go through the power file
+			else if (ends_with(*currentFile, "power.gz") || ends_with(*currentFile, "power.bz2") || ends_with(*currentFile, "power"))
+			{			
+				float totalEnergy = 0.0F, reducedEnergy = 0.0F;
+
+				for (inputStream.getline(newLine, NEWLINE_LENGTH);
+					(newLine[0] != NULL) && (!userStop);
+					inputStream.getline(newLine, NEWLINE_LENGTH))
+				{
+					if (starts_with(newLine,"-Psys(ACT_STBY)"))
+					{
+						char *firstBrace = strchr(newLine, '{');
+						if (firstBrace == NULL) break;
+						firstBrace = strchr(firstBrace + 1, '{');
+						if (firstBrace == NULL) break;
+						char *slash = strchr(firstBrace, '/');
+						if (slash == NULL) break;
+						char *secondBrace = strchr(slash, '}');
+						if (secondBrace == NULL) break;
+
+						*slash = *secondBrace = NULL;
+
+						totalEnergy += atof(firstBrace + 1);
+						reducedEnergy += atof(slash + 1);
+					}
+
+				}
+
+				stringstream current;
+				current << std::dec << std::fixed << std::setprecision(2)
+					<< ((double) totalEnergy);
+#pragma omp critical
+				results[basefilename].push_back(current.str());
+				current.str("");
+
+				current << std::dec << std::fixed << std::setprecision(2)
+					<< ((double) reducedEnergy);
+#pragma omp critical
+				results[basefilename].push_back(current.str());
+				current.str("");
+
+				current << std::dec << std::fixed << std::setprecision(2)
+					<< ((double) reducedEnergy / totalEnergy * 100);
+#pragma omp critical
+				results[basefilename].push_back(current.str());
+				current.str("");
+			}
+
+			boost::iostreams::close(inputStream);
 		}
 
 		// then generate result.html
@@ -471,12 +514,12 @@ int main(int argc, char** argv)
 
 		string fileList;
 		string csvOutput;
-		for (map<string, vector<string> >::const_iterator x = results.begin(); x
+		for (map<string, list<string> >::const_iterator x = results.begin(); x
 			!= results.end(); ++x)
 		{
 			fileList += "<tr>";
 
-			for (vector<string>::const_iterator i = x->second.begin(), end =
+			for (list<string>::const_iterator i = x->second.begin(), end =
 				x->second.end(); i != end;)
 			{
 				csvOutput += *i;
@@ -514,7 +557,9 @@ int main(int argc, char** argv)
 	bf::path jsDirectory((separateOutputDir ? outputDir : ".") / "js");	
 
 	if (!exists(jsDirectory))
+	{
 		bf::create_directories(jsDirectory);
+	}
 	else if (!is_directory(jsDirectory))
 	{
 		cerr << "error: 'js' exists but is not a directory" << endl;
@@ -541,8 +586,12 @@ int main(int argc, char** argv)
 		boost::thread threadA(thumbNailWorker);
 
 		// TODO: make this parallel?
-		for_each(files.begin(), files.end(), process);
-		
+#pragma omp parallel for shared(files)
+		for (vector<string>::const_iterator currentFile = files.begin(); currentFile < files.end(); ++currentFile)
+			process(*currentFile);
+		//for_each(files.begin(), files.end(), process, __gnu_parallel::parallel_balanced);
+		//__gnu_parallel::for_each(files.begin(), files.end(), process);
+
 		doneEntering = true;
 
 		boost::thread threadB(thumbNailWorker);

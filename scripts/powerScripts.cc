@@ -168,7 +168,7 @@ void bigEnergyGraph(const bf::path &outFilename, opstream &p, const string& comm
 		p << i * epochTime << " " << cumulativeEnergy << endl;
 	}
 
-	p << "e" << endl << "0 0" << endl << values.front().size() * epochTime << endl << "e" << endl
+	p << "e" << endl << "0 0" << endl << values.front().size() * epochTime << " 1E-5" << endl << "e" << endl
 		<< "unset output" << endl;
 }
 

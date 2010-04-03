@@ -1,6 +1,7 @@
 #ifndef PROCESSSTATS_HH
 #define PROCESSSTATS_HH
 
+#include <parallel/algorithm>
 #include <cstdio>
 #include <string>
 #include <list>
