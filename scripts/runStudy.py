@@ -21,15 +21,15 @@ queueName = 'default'
 submitString = '''echo 'time %%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queueName)
 
 def submitCommand(commandLine, name):
-        #os.system(commandLine)
+        os.system(commandLine)
         submitCommand = submitString % (commandLine, outputDir, outputDir, name)
         #print commandLine
         #sys.exit(0)
-        os.system(submitCommand)
+        #os.system(submitCommand)
 ######################################################################################
 
 # the directory where the traces are
-tracesDir = '/home/crius/benchmarks/dsTraces/8MB/16WAY/long'
+tracesDir = os.path.join(os.path.expanduser("~"),'benchmarks/dsTraces/8MB/16WAY/long')
 
 # the format of the traces
 traceType = 'dramsim'
@@ -53,41 +53,41 @@ traceType = 'dramsim'
 dramSimExe = 'dramSimII.opt'
 
 # the path to the DRAMsimII executable
-dramSimPath = '/home/crius/dramsimii/bin'
+dramSimPath = os.path.join(os.path.expanduser("~"),'dramsimii/bin')
 
 # the path to M5/SE executable
-m5Path = '/home/crius/m5/build/ALPHA_SE/'
+m5Path = os.path.join(os.path.expanduser("~"),'m5/build/ALPHA_SE/')
 
 # the config file for the M5/SE executable
-m5SEConfigFile = '/home/crius/m5/configs/example/dramsim.py'
+m5SEConfigFile = os.path.join(os.path.expanduser("~"),'m5/configs/example/dramsim.py')
 
 # the path to the M5/FS executable
-m5FSPath = '/home/crius/m5/build/ALPHA_FS/'
+m5FSPath = os.path.join(os.path.expanduser("~"),'m5/build/ALPHA_FS/')
 
 # the config file for the M5/FS executable
-m5FSScript = '/home/crius/m5/configs/example/dramsimfs.py'
+m5FSScript = os.path.join(os.path.expanduser("~"),'m5/configs/example/dramsimfs.py')
 
 # the executable for M5/(FS|SE)
-m5Exe = 'm5.fast'
+m5Exe = os.path.join(m5FSPath,'m5.fast')
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/Cypress/8-16-CacheConfig2'
+outputDir = os.path.join(os.path.expanduser("~"),'results/test')
 
 # the file that describes the base memory settings
-memorySettings = '/home/crius/dramsimii/memoryDefinitions/DDR2-800-sg125E.xml'
+memorySettings = os.path.join(os.path.expanduser("~"),'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
 
 # the command line to pass to the DRAMsimII simulator to modify parameters
 commandLine = '%s --config-file %s --modifiers "channels %d dimms %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
 
 # the command line parameters for running in FS mode
-fScommandParameters = "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s rowBufferPolicy %s outfiledir %s"
+fScommandParameters = "channels %s dimms %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s readwritegrouping %s rowBufferPolicy %s outfiledir %s"
 
 #m5CommandLine = '%s /home/crius/m5-stable/configs/example/dramsim.py -f %s -b mcf --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s requestcount %s outfiledir %s"'
 m5SECommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
 m5CommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %s ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %s perbankqueuedepth %s outfiledir %s"'
 
 # command line to setup full system runs
-m5FSCommandLine = '%s %s -b %%s -F 10000000000 --mp "%%s"' % (os.path.join(m5FSPath, m5Exe), m5FSScript)
+m5FSCommandLine = '%s %s -b %%s -F 10000000000 --mp "%%s"' % (m5Exe, m5FSScript)
 
 addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagebaseline', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
 
@@ -122,13 +122,6 @@ replacementPolicies = ['nmru','lru','mru']
 nmruTrackingCounts = [4,6]
 
 ###############################################################################
-traces = []
-
-filesInTraceDir = os.listdir(tracesDir)
-
-for a in filesInTraceDir:
-    if a.endswith("trace.gz"):
-        traces += [a]
 
 def main():
     try:
@@ -149,6 +142,13 @@ def main():
             if not os.access(ds2executable, os.X_OK):
                 print "cannot execute DRAMsimII executable: " + ds2executable
                 sys.exit(-3)
+        elif opt == '-f':
+            if not os.path.exists(m5Exe):
+                print "cannot find m5 executable: " + m5Exe
+                sys.exit(-3)
+            if not os.access(m5Exe, os.X_OK):
+                print "cannot execute m5 executable: " + m5Exe
+                sys.exit(-3)
 
     counting = False
     count = 0
@@ -163,6 +163,11 @@ def main():
     count = 0
     for opt,arg in opts:
         if opt == '-c':
+            traces = []
+            for a in os.listdir(tracesDir):
+                if a.endswith("trace.gz"):
+                    traces += [a]
+
             for channel in channels:
                 for dimm in dimms:
                     for rank in ranks:
@@ -172,7 +177,7 @@ def main():
                                     for assoc in associativity:
                                         for size in cacheSizes:
                                             for replacementPolicy in replacementPolicies:
-            
+
                                                 currentTrace = os.path.join(tracesDir, t)
                                                 currentCommandLine = commandLine % (ds2executable, memorySettings, channel, dimm, rank,
                                                                                      banks[0], addressMappingPolicy[0],commandOrderingAlgorithm[0],
@@ -182,7 +187,7 @@ def main():
                                                                                        "hitLatency %s associativity %s readPercentage .8 replacementPolicy %s " +
                                                                                        "%%s") %
                                                                                        (traceType, currentTrace, t, blkSz, size, hitLat, assoc, replacementPolicy))
-            
+
                                                 if replacementPolicy == 'nmru':
                                                     for trackingCount in nmruTrackingCounts:
                                                         newCommandLine = currentCommandLine % ("nmruTrackingCount %d" % trackingCount)
@@ -222,19 +227,19 @@ def main():
                                                     elif opt == '-s':
                                                         currentCommandLine = m5SECommandLine % (executable, m5SEConfigFile, memorySettings, a, dimms[0], b, c, d, e, g, outputDir)
 
-                                                        submitCommand(currentCommandLine,t)
+                                                        submitCommand(currentCommandLine,i)
 
                                                     # random input
                                                     elif opt == '-r':
                                                         for f in interarrivalCycleCount:
                                                             for h in requests:
                                                                 currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimms[0], b, c, d, e, f, g, h, j, l, outputDir, "")
-                                                                submitCommand(currentCommandLine,t)
+                                                                submitCommand(currentCommandLine,"%d%s%d" % (f,i,h))
 
                                                     # full system
                                                     elif opt == '-f':
                                                         currentCommandLine = m5FSCommandLine % (i, fScommandParameters % (a, dimms[0], b, c, d, e, g, k, l,  outputDir))
-                                                        submitCommand(currentCommandLine,t)
+                                                        submitCommand(currentCommandLine,i)
 
                                                     # variations of the per-DIMM cache
                                                     elif opt == '-c':
