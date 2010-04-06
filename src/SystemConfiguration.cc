@@ -144,7 +144,7 @@ outType(settings.outFileType)
 
 		if (!bf::exists(outDir))
 		{
-			if (!bf::create_directory(outDir))
+			if (!bf::create_directories(outDir))
 			{
 				cerr << "Could not create dir " << outDir.leaf() << " and dir does not exist." << endl;
 				exit(-1);
