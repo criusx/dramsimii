@@ -41,6 +41,7 @@ using boost::iostreams::gzip_params;
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/device/file.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/convenience.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
@@ -144,7 +145,7 @@ outType(settings.outFileType)
 
 		if (!bf::exists(outDir))
 		{
-			if (!bf::create_directory(outDir))
+			if (!bf::create_directories(outDir))
 			{
 				cerr << "Could not create dir " << outDir.leaf() << " and dir does not exist." << endl;
 				exit(-1);

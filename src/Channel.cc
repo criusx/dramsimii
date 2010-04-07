@@ -659,7 +659,9 @@ void Channel::doPowerCalculation(ostream& os)
 		// calculate PsysACT
 		double tRRDsch = ((double)(time - powerModel.getLastCalculation())) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
 	
+#ifndef NDEBUG
 		cerr << "rrd " << tRRDsch << " " << powerModel.gettRC() << endl;
+#endif
 		double PschACT = powerModel.getPdsACT() * powerModel.gettRC() / tRRDsch;
 
 

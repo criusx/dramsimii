@@ -149,15 +149,15 @@ void M5dramSystem::moveToTime(const tick now)
 				static tick returnCount;
 
 
-				if (++returnCount % 10000 == 0)
+				if (++returnCount % 100000 == 0)
 				{
 					time_t rawtime;
 					time(&rawtime);
 					struct tm *timeinfo = localtime(&rawtime);		
-					char *timeString = asctime(timeinfo);
-					char *pos = strchr(timeString,'\n');
-					*(pos-1) = NULL;
-					cerr << std::dec << returnCount / 10000 << " " << asctime(timeinfo) << "\r";
+					//char *timeString = asctime(timeinfo);
+					//char *pos = strchr(timeString,'\n');
+					//*(pos-1) = NULL;
+					cerr << "\r" << std::dec << returnCount / 100000 << " " << asctime(timeinfo) << "\r";
 				}
 #endif
 			}
