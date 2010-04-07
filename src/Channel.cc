@@ -2390,9 +2390,14 @@ void Channel::executeCommand(Command *thisCommand)
 
 		//////////////////////////////////////////////////////////////////////////
 		{
-			bool satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
+#ifndef NDEBUG
+			bool satisfied = 
+#endif
+				cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
 			currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
-			//std::cout << (satisfied ? "|" : ".");
+#ifndef NDEBUG
+			std::cout << (satisfied ? "|" : ".");
+#endif
 		}
 		//////////////////////////////////////////////////////////////////////////
 
