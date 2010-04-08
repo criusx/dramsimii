@@ -29,7 +29,7 @@ def submitCommand(commandLine, name):
 ######################################################################################
 
 # the directory where the traces are
-tracesDir = '/home/crius/benchmarks/dsTraces/8MB/16WAY/long'
+tracesDir = os.path.join(os.path.expanduser("~"),'benchmarks/dsTraces/8MB/16WAY/long')
 
 # the format of the traces
 traceType = 'dramsim'
@@ -53,7 +53,7 @@ traceType = 'dramsim'
 dramSimExe = 'dramSimII.opt'
 
 # the path to the DRAMsimII executable
-dramSimPath = '/home/crius/dramsimii/bin'
+dramSimPath = os.path.join(os.path.expanduser("~"),'dramsimii/bin')
 
 # the path to M5/SE executable
 m5Path = os.path.join(os.path.expanduser("~"),'m5/build/ALPHA_SE/')
@@ -71,10 +71,10 @@ m5FSScript = os.path.join(os.path.expanduser("~"),'m5/configs/example/dramsimfs.
 m5Exe = os.path.join(m5FSPath,'m5.fast')
 
 # the directory where the simulation outputs should be written
-outputDir = '/home/crius/results/Cypress/8-16-CacheConfig2'
+outputDir = os.path.join(os.path.expanduser("~"),'results/test')
 
 # the file that describes the base memory settings
-memorySettings = '/home/crius/dramsimii/memoryDefinitions/DDR2-800-sg125E.xml'
+memorySettings = os.path.join(os.path.expanduser("~"),'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
 
 # the command line to pass to the DRAMsimII simulator to modify parameters
 commandLine = '%s --config-file %s --modifiers "channels %d dimms %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
