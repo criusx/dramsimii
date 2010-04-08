@@ -638,9 +638,7 @@ void Channel::doPowerCalculation(ostream& os)
 		double PschACT_STBY = powerModel.getPdsACT_STBY() * percentActive * (1 - CKE_LO_ACT);
 		PsysACT_STBY += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() *
 			powerModel.getFrequencyScaleFactor() * PschACT_STBY;
-
-		//PsysACTSTBYArray.push_back(PsysACT_STBY);
-
+	
 		// calculate PsysPRE-STBY
 		double PschPRE_STBY = powerModel.getPdsPRE_STBY() * (1.0 - percentActive) * (1 - CKE_LO_PRE);
 		PsysPRE_STBY += powerModel.getDevicesPerRank() * powerModel.getFrequencyScaleFactor() *
@@ -663,7 +661,6 @@ void Channel::doPowerCalculation(ostream& os)
 		cerr << "rrd " << tRRDsch << " " << powerModel.gettRC() << endl;
 #endif
 		double PschACT = powerModel.getPdsACT() * powerModel.gettRC() / tRRDsch;
-
 
 		tRRDschAdjusted = ((float)(time - powerModel.getLastCalculation()) / thisRankAdjustedRasCount);
 #if 0
@@ -695,7 +692,7 @@ void Channel::doPowerCalculation(ostream& os)
 
 		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
 
-		os << " rk[" << k->getRankId() << "] rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
+		os << " rk[" << k->getRankId() << "] prechargeTime{" << k->getPrechargeTime(time) << "} rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
 			"} duration{" << time - powerModel.getLastCalculation() << "} read{" << k->getReadCycles() << "} readHits{" <<
 			cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first << "} write{" << k->getWriteCycles() << "}";
 

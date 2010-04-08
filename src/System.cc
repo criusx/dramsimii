@@ -106,8 +106,7 @@ nextStats(settings.epoch)
 	systemConfig.powerOutStream << printCommandLine.str() <<
 		"IDD0[" << settings.IDD0 << "] IDD1[" << settings.IDD1 << "] IDD2N[" << settings.IDD2N << "] IDD2P[" << settings.IDD2P << "] IDD3N[" << settings.IDD3N <<
 		"] IDD3P[" << settings.IDD3P << "] IDD4R[" << settings.IDD4R << "] IDD4W[" << settings.IDD4W << "] VDD[" << settings.VDD << "] VDDmax[" << settings.maxVCC <<
-		"] spedFreq[" << settings.frequencySpec << "]" <<
-		endl;
+		"] spedFreq[" << settings.frequencySpec << "] ChannelWidth[" << settings.channelWidth * 8 << "] DQPerDRAM[" << settings.DQperDRAM << "] tBurst[" << settings.tBurst << "]" << endl;
 
 #ifndef NDEBUG 
 	systemConfig.timingOutStream << printCommandLine.str() << endl;

@@ -38,8 +38,6 @@
 
 namespace DRAMsimII
 {
-	//template <typename A, typename B>
-	//bool operator==(const std::tr1::unordered_map<A, B> &, const std::tr1::unordered_map<A, B> &);
 	template <typename A, typename B>
 	bool operator==(const std::tr1::unordered_map<A, B> &first, const std::tr1::unordered_map<A, B> &second)
 	{

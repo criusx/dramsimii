@@ -121,6 +121,25 @@ void processStats(const bf::path &outputDir, const string &filename);
 void sigproc(int i);
 bool ensureDirectoryExists(const bf::path &outputDir);
 
+template <typename T>
+T regexMatch(const char *input, const char *regex)
+{
+	boost::regex currentRegex(regex);
+	boost::cmatch match;
+	if (!boost::regex_search(input, match, currentRegex))
+	{
+		cerr << "did not find " << regex << " in " << input;
+	}
+	else
+	{
+		//cerr << regex << " " << match[1] << endl;
+		return boost::lexical_cast<T>(match[1]);
+	}
+
+	return (T)0;
+}
+
+
 
 #if 0
 template <typename T1, typename T2>

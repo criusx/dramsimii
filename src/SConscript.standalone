@@ -84,9 +84,9 @@ sourceFile = sourceBase + ['main.cc']
 sourcesTest = sourceBase + ['unitTest.cc']
 
 
-if platform == 'script' or platform == 'scriptDebug':
-	if not conf.CheckLib('Magick++'):
-		print 'Magick++ libraries to do graphics editing, please install.'
+#if platform == 'script' or platform == 'scriptDebug':
+#	if not conf.CheckLib('Magick++'):
+#		print 'Magick++ libraries to do graphics editing, please install.'
 		#Exit(1)
 
 env = conf.Finish()

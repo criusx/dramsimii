@@ -1,6 +1,8 @@
 #include "processStats.hh"
 #include "globals.hh"
 
+#include <boost/algorithm/string/regex.hpp>
+
 void powerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 				const vector<vector<float> > &values,
 				float epochTime, bool isThumbnail)
@@ -303,17 +305,34 @@ void processPower(const bf::path &outputDir, const string &filename)
 	inputStream.push(boost::iostreams::gzip_decompressor());
 	inputStream.push(file_source(filename));
 
+	// power values
+	float pDsAct = 0.0F;
+	float pDsActStby = 0.0F;
+	float pDsActPdn = 0.0F;
+	float pDsPreStby = 0.0F;
+	float pDsPrePdn = 0.0F;
+	double pDsRd = 0.0;
+	double pDsWr = 0.0;
+	float voltageScaleFactor = 0.0F;
+	float frequencyScaleFactor = 0.0F;
+	double tRc = 0.0;
+	double tBurst = 0.0;
+	double CKE_LO_PRE = 0.95F;
+	double CKE_LO_ACT = 0.01F;
+
+	/// @TODO make this generic
+	float devicesPerRank = 8.0F;
+
 	char newLine[NEWLINE_LENGTH];
-	boost::regex powerRegex("\\{([0-9.e\\-\\+]+)\\}");
 
 	if (!inputStream.is_complete())
 		return;
 
-	list<pair<string, string> > graphs;
+	list<pair<string, string> > graphs;	
 
-	inputStream.getline(newLine, NEWLINE_LENGTH);
-
-	while ((newLine[0] != 0) && (!userStop))
+	for (inputStream.getline(newLine, NEWLINE_LENGTH);
+		(newLine[0] != 0) && (!userStop);
+		inputStream.getline(newLine, NEWLINE_LENGTH))
 	{
 		if (newLine[0] == '-')
 		{
@@ -423,6 +442,51 @@ void processPower(const bf::path &outputDir, const string &filename)
 				}
 				else if (starts_with(newLine, "----Command Line"))
 				{
+					tRc = regexMatch<double>(newLine, "\\{RC\\}\\[([0-9]+)\\]");
+
+					tBurst = regexMatch<double>(newLine, "tBurst\\[([0-9]+)\\]");
+
+					float idd0 = regexMatch<float>(newLine,"IDD0\\[([0-9]+)\\]");
+
+					float idd3n = regexMatch<float>(newLine,"IDD3N\\[([0-9]+)\\]");
+
+					float tRas = regexMatch<float>(newLine,"\\{RAS\\}\\[([0-9]+)\\]");
+
+					float idd2n = regexMatch<float>(newLine,"IDD2N\\[([0-9]+)\\]");
+
+					float vdd = regexMatch<float>(newLine,"VDD\\[([0-9.]+)\\]");
+
+					float vddMax = regexMatch<float>(newLine,"VDDmax\\[([0-9.]+)\\]");
+
+					float idd3p = regexMatch<float>(newLine,"IDD3P\\[([0-9]+)\\]");
+
+					float idd2p = regexMatch<float>(newLine,"IDD2P\\[([0-9]+)\\]");
+
+					float idd4r = regexMatch<float>(newLine,"IDD4R\\[([0-9]+)\\]");
+
+					float idd4w = regexMatch<float>(newLine,"IDD4W\\[([0-9]+)\\]");
+
+					float specFreq = regexMatch<float>(newLine,"spedFreq\\[([0-9]+)\\]");
+
+					float freq = regexMatch<float>(newLine,"DR\\[([0-9]+)M\\]") * 1E6;
+
+					int channelWidth = regexMatch<int>(newLine,"ChannelWidth\\[([0-9]+)\\]");
+
+					int dqPerDram = regexMatch<int>(newLine,"DQPerDRAM\\[([0-9]+)\\]");
+
+					devicesPerRank = channelWidth / dqPerDram;
+
+					// update power values
+					pDsAct = (idd0 - ((idd3n * tRas + idd2n * (tRc - tRas))/tRc)) * vdd;
+					pDsActStby = idd3n * vdd;
+					pDsActPdn = idd3p * vdd;
+					pDsPreStby = idd2n * vdd;
+					pDsPrePdn = idd2p * vdd;
+					frequencyScaleFactor= freq / specFreq;
+					voltageScaleFactor = (vdd / vddMax) * (vdd / vddMax);
+					pDsRd = (idd4r - idd3n) * vdd;
+					pDsWr = (idd4w - idd3n) * vdd;
+
 					string line(newLine);
 					trim(line);
 					vector<string> splitLine;
@@ -450,8 +514,76 @@ void processPower(const bf::path &outputDir, const string &filename)
 					}
 				}
 			}
+		}		
+		else if (newLine[0] == '+')
+		{
+			string line(newLine);
+			trim(line);
+			vector<string> splitLine;
+			boost::split_regex(splitLine, line, regex(" rk"));
+
+			// per channel power numbers
+			double PsysRD = 0.0;
+			double PsysRdAdjusted = 0.0;
+			double PsysWR = 0.0;
+			double PsysACT_STBY = 0.0;
+			double PsysPRE_STBY = 0.0;
+			double PsysPRE_PDN = 0.0;
+			double PsysACT_PDN = 0.0;
+			double PsysACT = 0.0;
+			double PsysACTAdjusted = 0.0;
+
+			vector<string>::const_iterator currentRank = splitLine.begin(), end = splitLine.end();
+			currentRank++;
+
+			for (;currentRank != end; ++currentRank)
+			{
+				//cerr << *currentRank << endl;
+
+				double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
+				double thisRankRasCount = regexMatch<float>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
+				double thisRankAdjustedRasCount = regexMatch<float>(currentRank->c_str(),"adjRasCount\\{([0-9]+)\\}");
+				double readCycles = regexMatch<float>(currentRank->c_str(),"read\\{([0-9]+)\\}");
+				double writeCycles = regexMatch<float>(currentRank->c_str(),"write\\{([0-9]+)\\}");
+				double readHits = regexMatch<float>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
+				double prechargeTime = regexMatch<float>(currentRank->c_str(),"prechargeTime\\{([0-9]+)\\}");
+				double percentActive = 1.0 - (prechargeTime / max((double)(duration), 0.00000001));
+				assert(percentActive >= 0.0F && percentActive <= 1.0F);
+				
+				// background power analysis
+				double PschACT_STBY = pDsActStby * percentActive * (1 - CKE_LO_ACT);
+				PsysACT_STBY += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY;
+
+				double PschPRE_STBY = pDsPreStby * (1.0 - percentActive) * (1 - CKE_LO_PRE);
+				PsysPRE_STBY += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_STBY;
+
+				double PschPRE_PDN = pDsPrePdn * (1.0 - percentActive) * (CKE_LO_PRE);
+				PsysPRE_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_PDN;
+
+				double PschACT_PDN = pDsActPdn * percentActive * CKE_LO_ACT;
+				PsysACT_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN;
+
+				// activate power analysis
+				double tRRDsch = ((double)duration) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
+				double PschACT = pDsAct * tRc / tRRDsch;
+				PsysACT += devicesPerRank * voltageScaleFactor * PschACT;
+
+				// read power analysis
+				double RDschPct = readCycles / duration;
+				PsysRD += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPct;
+
+				// write power analysis
+				double WRschPct = writeCycles / duration;
+				PsysWR += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsWr * WRschPct;
+
+				// accounting for cache effects
+				double RDschPctAdjusted = (readCycles - tBurst * readHits) / duration;
+				PsysRdAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPctAdjusted;
+
+				double tRRDschAdjusted = duration / thisRankAdjustedRasCount;
+				PsysACTAdjusted += devicesPerRank * (tRc / tRRDschAdjusted) * voltageScaleFactor * pDsAct;
+			}			
 		}
-		inputStream.getline(newLine, NEWLINE_LENGTH);
 	}
 
 	userStop = false;
