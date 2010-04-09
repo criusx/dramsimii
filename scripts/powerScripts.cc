@@ -3,6 +3,8 @@
 
 #include <boost/algorithm/string/regex.hpp>
 
+#define POWER_VALUES_PER_CHANNEL 7
+
 void powerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 				const vector<vector<float> > &values,
 				float epochTime, bool isThumbnail)
@@ -14,10 +16,10 @@ void powerGraph(const bf::path &outFilename, opstream &p, const string& commandL
 		<< commandLine << "}\"  offset character 0, -1, 0 font \"Arial," << (isThumbnail ? "14" : "6") << "\" norotate\n";
 	p << "plot ";
 
-	unsigned channelCount = values.size() / 5;
+	unsigned channelCount = values.size() / POWER_VALUES_PER_CHANNEL;
 	for (unsigned a = 0; a < channelCount; a++)
 	{
-		for (unsigned b = 0; b < 5; b++)
+		for (unsigned b = 0; b < POWER_VALUES_PER_CHANNEL; b++)
 		{
 			p << "'-' using 1 axes x2y1 title \"P_{sys}("
 				<< powerTypes[b] << ") ch[" << a << "]\",";
@@ -187,11 +189,11 @@ void bigPowerGraph(const bf::path &outFilename, opstream &p, const string& comma
 	p << bigPowerScript << endl;
 	p << "plot ";
 
-	unsigned channelCount = values.size() / 5;
+	unsigned channelCount = values.size() / POWER_VALUES_PER_CHANNEL;
 
 	for (unsigned a = 0; a < channelCount; a++)
 	{
-		for (unsigned b = 0; b < 5; b++)
+		for (unsigned b = 0; b < POWER_VALUES_PER_CHANNEL; b++)
 		{
 			p << "'-' using 1 axes x2y1 title \"P_{sys}("
 				<< powerTypes[b] << ") ch[" << a << "]\",";
@@ -211,6 +213,60 @@ void bigPowerGraph(const bf::path &outFilename, opstream &p, const string& comma
 		}
 		p << "e" << endl;
 	}
+	CumulativePriorMovingAverage cumulativePower;
+
+	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
+	{
+		float total = 0;
+
+		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
+			total += values[j][i];
+		cumulativePower.add(1.0, total);
+		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
+	}
+	p << "e" << endl;
+	p << "0 0" << endl << values.front().size() * epochTime << " 1e-5" << endl << "e" << endl
+		<< "unset output" << endl;
+}
+
+void bigPowerGraph2(const bf::path &outFilename, opstream &p, const string& commandLine,
+				   const vector<vector<float> > &values,
+				   float epochTime, bool isThumbnail)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"{ Power vs. Time}\\n{ "
+		<< commandLine
+		<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
+
+	p << bigPowerScript << endl;
+	p << "plot ";
+
+	unsigned channelCount = values.size() / POWER_VALUES_PER_CHANNEL;
+
+	for (unsigned b = 0; b < POWER_VALUES_PER_CHANNEL; b++)
+	{
+		p << "'-' using 1 axes x2y1 title \"P_{sys}("
+			<< powerTypes[b] << ")\",";
+	}
+
+	//p << "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
+	p << "'-' u 1:2 axes x1y1 t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
+	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
+
+	for (int i = 0; i < POWER_VALUES_PER_CHANNEL; i++)
+	{
+		for (int j = 0; j < values.front().size(); j++)
+		{
+			double value = 0.0;
+			for (int k = 0; k < channelCount; k++)
+				value += values[i + POWER_VALUES_PER_CHANNEL * k][j];
+
+			p << value << endl;
+		}
+		p << "e" << endl;
+	}
+
 	CumulativePriorMovingAverage cumulativePower;
 
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
@@ -270,10 +326,10 @@ void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const strin
 	p << "e" << endl << "unset output" << endl;
 }
 
-#define POWER_VALUES_PER_CHANNEL 5
+
 
 ///////////////////////////////////////////////////////////////////////////////
-void processPower(const bf::path &outputDir, const string &filename)
+void processPower(const bf::path &outputDir, const string &filename, const list<pair<string,string> > &powerParams)
 {
 	if (!fileExists(filename))
 	{
@@ -283,6 +339,10 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 	if (!ensureDirectoryExists(outputDir))
 		exit(-1);
+
+	filtering_istream inputStream;
+	inputStream.push(boost::iostreams::gzip_decompressor());
+	inputStream.push(file_source(filename));
 
 	unsigned writing = 0;
 
@@ -301,27 +361,26 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 	string commandLine;
 
-	filtering_istream inputStream;
-	inputStream.push(boost::iostreams::gzip_decompressor());
-	inputStream.push(file_source(filename));
-
 	// power values
-	float pDsAct = 0.0F;
-	float pDsActStby = 0.0F;
-	float pDsActPdn = 0.0F;
-	float pDsPreStby = 0.0F;
-	float pDsPrePdn = 0.0F;
+	double pDsAct = 0.0;
+	double pDsActStby = 0.0;
+	double pDsActPdn = 0.0;
+	double pDsPreStby = 0.0;
+	double pDsPrePdn = 0.0;
 	double pDsRd = 0.0;
 	double pDsWr = 0.0;
-	float voltageScaleFactor = 0.0F;
-	float frequencyScaleFactor = 0.0F;
+	double voltageScaleFactor = 0.0;
+	double frequencyScaleFactor = 0.0;
 	double tRc = 0.0;
 	double tBurst = 0.0;
-	double CKE_LO_PRE = 0.95F;
-	double CKE_LO_ACT = 0.01F;
+	double CKE_LO_PRE = 0.95;
+	double CKE_LO_ACT = 0.01;
+	double freq = 0.0;
+	double idd1 = 0.0;
+	double vdd = 0.0;
 
 	/// @TODO make this generic
-	float devicesPerRank = 8.0F;
+	double devicesPerRank = 8.0F;
 
 	char newLine[NEWLINE_LENGTH];
 
@@ -338,6 +397,8 @@ void processPower(const bf::path &outputDir, const string &filename)
 		{
 			if (newLine[1] == 'P')
 			{
+				continue;
+
 				string backup(newLine);
 				char *position = strchr(newLine, '{');
 				char *position2 = strchr(newLine, '}');
@@ -427,7 +488,6 @@ void processPower(const bf::path &outputDir, const string &filename)
 						epochTime *= 2;
 						cerr << "scaleFactor at " << scaleFactor << endl;
 					}
-
 				}
 			}
 			else
@@ -446,6 +506,8 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 					tBurst = regexMatch<double>(newLine, "tBurst\\[([0-9]+)\\]");
 
+					idd1 = regexMatch<float>(newLine,"IDD1\\[([0-9]+)\\]");
+
 					float idd0 = regexMatch<float>(newLine,"IDD0\\[([0-9]+)\\]");
 
 					float idd3n = regexMatch<float>(newLine,"IDD3N\\[([0-9]+)\\]");
@@ -454,7 +516,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 					float idd2n = regexMatch<float>(newLine,"IDD2N\\[([0-9]+)\\]");
 
-					float vdd = regexMatch<float>(newLine,"VDD\\[([0-9.]+)\\]");
+					vdd = regexMatch<double>(newLine,"VDD\\[([0-9.]+)\\]");
 
 					float vddMax = regexMatch<float>(newLine,"VDDmax\\[([0-9.]+)\\]");
 
@@ -468,15 +530,109 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 					float specFreq = regexMatch<float>(newLine,"spedFreq\\[([0-9]+)\\]");
 
-					float freq = regexMatch<float>(newLine,"DR\\[([0-9]+)M\\]") * 1E6;
+					freq = regexMatch<double>(newLine,"DR\\[([0-9]+)M\\]") * 1E6;
 
 					int channelWidth = regexMatch<int>(newLine,"ChannelWidth\\[([0-9]+)\\]");
 
 					int dqPerDram = regexMatch<int>(newLine,"DQPerDRAM\\[([0-9]+)\\]");
 
-					devicesPerRank = channelWidth / dqPerDram;
+					// read power params to see what the requested changes are
+					for (list<pair<string,string> >::const_iterator currentPair = powerParams.begin(), end = powerParams.end();
+						currentPair != end; ++currentPair)
+					{
+						string parameter(currentPair->first);
+						string value(currentPair->second);
+						boost::algorithm::to_lower(parameter);
+
+						if (parameter == "idd0")
+						{
+							cerr << "note: idd0 updated to " << value << endl;
+							idd0 = lexical_cast<double>(value);
+						}
+						else if (parameter == "idd3n")
+						{
+							cerr << "note: idd3n updated to " << value << endl;
+							idd3n = lexical_cast<double>(value);
+						}
+						else if (parameter == "tras")
+						{
+							cerr << "note: tras updated to " << value << endl;
+							tRas = lexical_cast<double>(value);
+						}
+						else if (parameter == "idd2n")
+						{
+							cerr << "note: idd2n updated to " << value << endl;
+							idd2n = lexical_cast<double>(value);
+						}
+						else if (parameter == "vdd")
+						{
+							cerr << "note: vdd updated to " << value << endl;
+							vdd = lexical_cast<double>(value);
+						}
+						else if (parameter == "idd3n")
+						{
+							cerr << "note: idd3n updated to " << value << endl;
+							idd3n = lexical_cast<double>(value);
+						}
+						else if (parameter == "vddmax")
+						{
+							cerr << "note: vddmax updated to " << value << endl;
+							vddMax = lexical_cast<double>(value);
+						}
+						else if (parameter == "idd3p")
+						{
+							cerr << "note: idd3p updated to " << value << endl;
+							idd3p = lexical_cast<double>(value);
+						}
+						else if (parameter == "idd2p")
+						{
+							cerr << "note: idd2p updated to " << value << endl;
+							idd2p = lexical_cast<double>(value);
+						}
+						else if (parameter == "idd4r")
+						{
+							cerr << "note: idd4r updated to " << value << endl;
+							idd4r = lexical_cast<double>(value);
+						}
+						else if (parameter == "idd4w")
+						{
+							cerr << "note: idd4w updated to " << value << endl;
+							idd4w = lexical_cast<double>(value);
+						}
+						else if (parameter == "specfreq")
+						{
+							cerr << "note: specFreq updated to " << value << endl;
+							specFreq = lexical_cast<double>(value);
+						}
+						else if (parameter == "freq")
+						{
+							cerr << "note: freq updated to " << value << endl;
+							freq = lexical_cast<double>(value);
+						}
+						else if (parameter == "channelwidth")
+						{
+							cerr << "note: channelWidth updated to " << value << endl;
+							channelWidth = lexical_cast<double>(value);
+						}
+						else if (parameter == "dqperdram")
+						{
+							cerr << "note: dqPerDram updated to " << value << endl;
+							dqPerDram = lexical_cast<double>(value);
+						}
+						else if (parameter == "cke_lo_pre")
+						{
+							cerr << "note: CKE_LO_PRE updated to " << value << endl;
+							CKE_LO_PRE = lexical_cast<double>(value);
+						}
+						else if (parameter == "cke_lo_act")
+						{
+							cerr << "note: CKE_LO_ACT updated to " << value << endl;
+							CKE_LO_ACT = lexical_cast<double>(value);
+						}
+					}
 
 					// update power values
+					devicesPerRank = channelWidth / dqPerDram;
 					pDsAct = (idd0 - ((idd3n * tRas + idd2n * (tRc - tRas))/tRc)) * vdd;
 					pDsActStby = idd3n * vdd;
 					pDsActPdn = idd3p * vdd;
@@ -493,6 +649,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 					split(splitLine, line, is_any_of(":"));
 					commandLine = splitLine[1];
 				}
+				// the channel/rank specification line
 				else if (newLine[1] == '+')
 				{
 					string line(newLine);
@@ -515,14 +672,18 @@ void processPower(const bf::path &outputDir, const string &filename)
 				}
 			}
 		}		
+		// a line with all the power components for one channel
 		else if (newLine[0] == '+')
 		{
 			string line(newLine);
 			trim(line);
+			unsigned currentChannel = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
+
 			vector<string> splitLine;
 			boost::split_regex(splitLine, line, regex(" rk"));
 
 			// per channel power numbers
+			double totalReadHits = 0.0;
 			double PsysRD = 0.0;
 			double PsysRdAdjusted = 0.0;
 			double PsysWR = 0.0;
@@ -546,6 +707,7 @@ void processPower(const bf::path &outputDir, const string &filename)
 				double readCycles = regexMatch<float>(currentRank->c_str(),"read\\{([0-9]+)\\}");
 				double writeCycles = regexMatch<float>(currentRank->c_str(),"write\\{([0-9]+)\\}");
 				double readHits = regexMatch<float>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
+				totalReadHits += readHits;
 				double prechargeTime = regexMatch<float>(currentRank->c_str(),"prechargeTime\\{([0-9]+)\\}");
 				double percentActive = 1.0 - (prechargeTime / max((double)(duration), 0.00000001));
 				assert(percentActive >= 0.0F && percentActive <= 1.0F);
@@ -582,7 +744,89 @@ void processPower(const bf::path &outputDir, const string &filename)
 
 				double tRRDschAdjusted = duration / thisRankAdjustedRasCount;
 				PsysACTAdjusted += devicesPerRank * (tRc / tRRDschAdjusted) * voltageScaleFactor * pDsAct;
-			}			
+			}	
+
+			//cerr << PsysACT_STBY <<endl;
+			//cerr << PsysACT <<endl;
+			//cerr << PsysPRE_STBY <<endl;
+			//cerr << PsysRD <<endl;
+			//cerr << PsysWR <<endl;
+
+			//cerr << PsysRdAdjusted <<endl;
+			//cerr << PsysPRE_PDN <<endl;
+			//cerr << PsysACT_PDN <<endl;
+			//cerr << PsysACTAdjusted <<endl;
+
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += PsysACT_STBY;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += PsysACT;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += PsysPRE_STBY;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += PsysRD;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += PsysWR;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += PsysACT_PDN;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += PsysPRE_PDN;
+
+			energyValueBuffer.first += (PsysACT_STBY + PsysACT + PsysPRE_STBY + PsysRD + PsysWR + PsysACT_PDN + PsysPRE_PDN) * epochTime / freq;
+			energyValueBuffer.second += idd1 * devicesPerRank * tRc / freq * vdd * totalReadHits;
+
+			if (currentChannel + 1 == channelCount)
+			{
+				// look to dump the buffer into the array
+				scaleIndex = (scaleIndex + 1) % scaleFactor;
+
+				// when the scale buffer is full
+				if (scaleIndex == 0)
+				{
+					vector<float>::size_type limit = valueBuffer.size();
+					for (vector<float>::size_type i = 0; i < limit; ++i)
+					{
+						values[i].push_back(valueBuffer[i] / scaleFactor);
+						valueBuffer[i] = 0;
+					}
+
+					energyValues.push_back(pair<float, float> (
+						energyValueBuffer.first / scaleFactor,
+						energyValueBuffer.second / scaleFactor));
+
+					energyValueBuffer.first = energyValueBuffer.second = 0.0F;
+				}
+
+				// try to compress the array by half and double the scaleFactor
+				if (values.front().size() >= MAXIMUM_VECTOR_SIZE)
+				{
+					// scale the array back by half
+					for (vector<vector<float> >::iterator i =
+						values.begin(); i != values.end(); ++i)
+					{
+						for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
+						{
+							(*i)[j] = ((*i)[2 * j] + (*i)[2 * j + 1]) / 2;
+						}
+						i->resize(MAXIMUM_VECTOR_SIZE / 2);
+
+						assert(i->size() == MAXIMUM_VECTOR_SIZE / 2);
+					}
+
+					// scale the alternate array back by half
+					for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
+					{
+						energyValues[j] = pair<float, float> (
+							(energyValues[2 * j].first + energyValues[2
+							* j + 1].first) / 2.0F,
+							(energyValues[2 * j].second
+							+ energyValues[2 * j + 1].second)
+							/ 2.0F);
+					}
+
+					energyValues.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+					assert(energyValues.size() == MAXIMUM_VECTOR_SIZE / 2);
+
+					// double scaleFactor since each entry now represents twice what it did before
+					scaleFactor *= 2;
+					epochTime *= 2;
+					cerr << "scaleFactor at " << scaleFactor << endl;
+				}
+			}
 		}
 	}
 
@@ -619,6 +863,16 @@ void processPower(const bf::path &outputDir, const string &filename)
 	graphs.push_back(pair<string, string> ("bigPower","Power"));
 	outFilename = outputDir / ("bigPower-thumb." + thumbnailExtension);
 	bigPowerGraph(outFilename,p3,commandLine,values,epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////
+	// make the other big power graph
+	outFilename = outputDir / ("bigPower2." + extension);
+	bigPowerGraph2(outFilename,p3,commandLine,values,epochTime,false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string, string> ("bigPower2","Combined Power"));
+	outFilename = outputDir / ("bigPower2-thumb." + thumbnailExtension);
+	bigPowerGraph2(outFilename,p3,commandLine,values,epochTime,true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////

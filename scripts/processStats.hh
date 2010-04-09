@@ -107,16 +107,13 @@ using std::tr1::unordered_map;
 
 // incomplete declarations
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
-					  const string &commandLine, list<pair<string,
-					  string> > &graphs);
+					  const string &commandLine, list<pair<string,string> > &graphs);
 
 bool fileExists(const string&);
 
-
-
 unordered_map<string, string> &setupDecoder();
 
-void processPower(const bf::path &outputDir, const string &filename);
+void processPower(const bf::path &outputDir, const string &filename, const list<pair<string,string> > &powerParams);
 void processStats(const bf::path &outputDir, const string &filename);
 void sigproc(int i);
 bool ensureDirectoryExists(const bf::path &outputDir);

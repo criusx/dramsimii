@@ -96,7 +96,7 @@ void thumbNailWorker()
 }
 
 
-void process(const string i)
+void process(const string i, const list<pair<string,string> > &powerParams)
 {
 	//cerr << "+" << i << endl;
 
@@ -107,7 +107,7 @@ void process(const string i)
 			bf::path filepath(i.substr(0, i.find("-power")));
 			bf::path path = outputDir / filepath.filename();
 			bf::path filename(i);
-			processPower(path, filename.native_file_string());
+			processPower(path, filename.native_file_string(), powerParams);
 		}
 		else
 		{
@@ -115,7 +115,7 @@ void process(const string i)
 			bf::path path = filepath.branch_path()
 				/ filepath.leaf().substr(0, filepath.leaf().find(
 				"-power"));
-			processPower(path, i);
+			processPower(path, i, powerParams);
 		}
 	}
 	else if (ends_with(i, "stats.gz") || ends_with(i, "stats.bz2"))
@@ -156,6 +156,8 @@ int main(int argc, char** argv)
 		("help", "help message")
 		("create,f","Force creation of the index file only")
 		("png,p","Generate PNG versions of the files")
+		("power-params,r",opt::value<string>(),
+		"Update power parameters to different values than what are in the power files")
 		("cypress,c","Generate only select graphs for Cypress study")
 		("process,r","Only process the files, do not regenerate the html file")
 		("output,o",opt::value<string>(),		
@@ -166,7 +168,8 @@ int main(int argc, char** argv)
 	try
 	{
 		opt::store(opt::parse_command_line(argc, argv, desc), vm);
-	} catch (opt::unknown_option uo)
+	} 
+	catch (opt::unknown_option uo)
 	{
 		cerr << uo.what() << endl;
 		exit(-1);
@@ -179,7 +182,20 @@ int main(int argc, char** argv)
 		cout << "Usage: " << argv[0] << "(--help | -f | -p)" << endl;
 	}
 
-
+	list<pair<string,string> > powerParams;
+	if (vm.count("power-params"))
+	{
+		string params = vm["power-params"].as<string>();
+		vector<string> splitLine;
+		split(splitLine,params,is_any_of(","));
+		for (vector<string>::const_iterator i = splitLine.begin(), end = splitLine.end();
+			i != end; ++i)
+		{
+			vector<string> splitParam;
+			split(splitParam, *i, is_any_of("="));
+			powerParams.push_back(pair<string,string>(splitParam[0],splitParam[1]));
+		}
+	}
 
 	if (vm.count("output"))
 	{
@@ -440,11 +456,7 @@ int main(int argc, char** argv)
 					string element = currentLine.back();
 #pragma omp critical
 					results[basefilename].push_front(element);
-#ifndef NDEBUG
-					bool result = 
-#endif
-						currentLine.pop_back();
-					assert(result);
+					currentLine.pop_back();
 				}
 			}
 			// go through the power file
@@ -588,7 +600,7 @@ int main(int argc, char** argv)
 		// TODO: make this parallel?
 #pragma omp parallel for shared(files)
 		for (vector<string>::const_iterator currentFile = files.begin(); currentFile < files.end(); ++currentFile)
-			process(*currentFile);
+			process(*currentFile, powerParams);
 		//for_each(files.begin(), files.end(), process, __gnu_parallel::parallel_balanced);
 		//__gnu_parallel::for_each(files.begin(), files.end(), process);
 
