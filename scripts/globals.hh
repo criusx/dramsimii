@@ -4,10 +4,10 @@
 //string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
 //string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
 // sudo apt-get install msttcorefonts
-const string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Arial\" fsize 14\n";
+const string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Consolas\" fsize 14\n";
 //string terminal = "set terminal svg size 1920,1200 enhanced\n";
 
-const string thumbnailTerminal = "set terminal png truecolor font \"Arial\" size 800,500 enhanced \n";
+const string thumbnailTerminal = "set terminal png truecolor font \"Consolas\" size 1200,800 enhanced \n";
 
 const string extension = "svg";
 
@@ -217,13 +217,14 @@ const string transactionGraphScript = "set logscale y\n\
 									  set ylabel 'Number of Transactions with this Execution Time'\n\
 									  plot '-' using 1:2 t 'Total Latency' with boxes\n";
 
-const string cumulativeTransactionGraphScript = "set logscale y\n\
-									  set format x\n\
-									  set style fill solid 1.00 noborder\n\
-									  #set autoscale xfixmax\n\
-									  set xlabel 'Execution Time (ns)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
-									  set ylabel 'Percent of Transactions with At Most this Latency'\n\
-									  plot '-' using 1:2 t 'Cumulative Latency Distribution' with lines lw 2.00\n";
+const string cumulativeTransactionGraphScript = "set yrange [0:1]\n\
+												#set logscale y\n\
+												set format x\n\
+												set style fill solid 1.00 noborder\n\
+												#set autoscale xfixmax\n\
+												set xlabel 'Execution Time (ns)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+												set ylabel 'Percent of Transactions with At Most this Latency'\n\
+												plot '-' using 1:2 t 'Cumulative Latency Distribution' with lines lw 2.00\n";
 
 
 const string bandwidthGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
@@ -348,41 +349,7 @@ extern bf::path outputDir;
 extern bool userStop;
 extern bool cypressResults;
 extern bool separateOutputDir;
-//extern const string urlString;
-//const extern string terminal;
+
 extern unordered_map<string, string> decoder;
-//extern const string thumbnailTerminal;
-//extern const string extension;
-//extern const string processedExtension;
-//extern const string thumbnailExtension;
-//extern const string thumbnailResolution;
-//extern const string basicSetup;
-// extern const string totalPowerScript;
-// extern const string averagePowerScript;
-// extern const string energyScript;
-// extern const string energy2Script;
-// extern const string cumulPowerScript;
-// extern const string hitMissScript;
-// extern const string hitMissPowerScript;
-// extern const string bigPowerScript;
-// extern const string bigEnergyScript;
-// extern const string powerTypes[];
-// extern const string subAddrDistroA;
-// extern const string workingSetSetup;
-// extern const string addressDistroA;
-// extern const string addressDistroB;
-// extern const string addressDistroC;
-// extern const string transactionGraphScript;
-// extern const string bandwidthGraphScript;
-// extern const string pcVsLatencyGraphScript;
-// extern const string avgPcVsLatencyGraphScript;
-// extern const string smallIPCGraphScript;
-// extern const string bigIPCGraphScript;
-// extern const string cacheGraph0;
-// extern const string cacheGraph1;
-// extern const string cacheGraph2;
-// extern const string cacheGraph3;
-// extern const string otherIPCGraphScript;
-// extern const string averageTransactionLatencyScript;
-// extern const string rowHitMissGraphScript;
+
 #endif

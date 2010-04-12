@@ -244,7 +244,7 @@ int main(int argc, char** argv)
 			currentFile < files.end(); ++currentFile)
 		{
 			filtering_istream inputStream;
-
+			
 			if (ends_with(*currentFile, ".gz"))
 				inputStream.push(boost::iostreams::gzip_decompressor());
 			else if (ends_with(*currentFile, ".bz2"))
@@ -363,8 +363,7 @@ int main(int argc, char** argv)
 							break;
 						epoch = atof(position + 1);
 					}
-					else if (!foundCommandline && starts_with(newLine,
-						"----Command Line:"))
+					else if (!foundCommandline && starts_with(newLine, "----Command Line:"))
 					{
 						foundCommandline = true;
 
@@ -451,12 +450,15 @@ int main(int argc, char** argv)
 				currentLine.push_back(current.str());
 				current.str("");
 
-				while (!currentLine.empty())
+				if (foundCommandline && foundEpoch)
 				{
-					string element = currentLine.back();
+					while (!currentLine.empty())
+					{
+						string element = currentLine.back();
 #pragma omp critical
-					results[basefilename].push_front(element);
-					currentLine.pop_back();
+						results[basefilename].push_front(element);
+						currentLine.pop_back();
+					}
 				}
 			}
 			// go through the power file

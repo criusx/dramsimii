@@ -287,7 +287,7 @@ void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, const str
 
 void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 										 const std::tr1::unordered_map<unsigned, unsigned> &distTransactionLatency, float period,
-										 bool isThumbnail, StdDev<float> &latencyDeviation)
+										 bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -296,7 +296,6 @@ void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
 	{
-		latencyDeviation.add(i->first * period, i->second);
 		p << i->first * period << " " << i->second << endl;
 	}
 	p << "e" << endl << "unset output" << endl;
@@ -304,8 +303,9 @@ void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &
 
 void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 											   const std::tr1::unordered_map<unsigned,unsigned> & distTransactionLatency, float period,
-											   bool isThumbnail, const StdDev<float> &latencyDeviation)
+											   bool isThumbnail)
 {
+	StdDev<float> latencyDeviation;
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << "set title \"" << commandLine << "\\nRead Transaction Latency\""
@@ -313,6 +313,11 @@ void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opst
 		<< latencyDeviation.getStdDev().get<1> () + 8
 		* latencyDeviation.getStdDev().get<2> () << "]" << endl
 		<< transactionGraphScript << endl;
+
+	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
+		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
+			latencyDeviation.add(i->first * period, i->second);
+
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
 	{
@@ -323,7 +328,7 @@ void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opst
 
 void adjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 												 const std::tr1::unordered_map<unsigned,unsigned> & distAdjustedTransactionLatency, float period,
-												 bool isThumbnail, StdDev<float> &latencyDeviation)
+												 bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -334,7 +339,6 @@ void adjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, op
 		distAdjustedTransactionLatency.begin(), end =
 		distAdjustedTransactionLatency.end(); i != end; ++i)
 	{
-		latencyDeviation.add(i->first * period, i->second);
 		p << i->first * period << " " << i->second << endl;
 	}
 	p << "e" << endl << "unset output" << endl;
@@ -342,8 +346,9 @@ void adjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, op
 
 void zoomedAdjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 													   const std::tr1::unordered_map<unsigned,unsigned> & distAdjustedTransactionLatency, float period,
-													   bool isThumbnail, const StdDev<float> &latencyDeviation)
+													   bool isThumbnail)
 {
+	StdDev<float> latencyDeviation;
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << "set title \"" << commandLine
@@ -351,6 +356,11 @@ void zoomedAdjustedTransactionLatencyDistributionGraph(const bf::path &outFilena
 		<< "set xrange [0:" << latencyDeviation.getStdDev().get<1> () + 8
 		* latencyDeviation.getStdDev().get<2> () << "]" << endl
 		<< transactionGraphScript << endl;
+	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
+		distAdjustedTransactionLatency.begin(), end =
+		distAdjustedTransactionLatency.end(); i != end; ++i)
+		latencyDeviation.add(i->first * period, i->second);
+
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distAdjustedTransactionLatency.begin(), end =
 		distAdjustedTransactionLatency.end(); i != end; ++i)
@@ -1836,12 +1846,12 @@ void processStats(const bf::path &outputDir, const string &filename)
 	{
 		//////////////////////////////////////////////////////////////////////////
 		// make the transaction latency distribution graph
-		StdDev<float> latencyDeviation, latencyDeviation2;
+		//StdDev<float> latencyDeviation, latencyDeviation2;
 		outFilename = outputDir / ("transactionLatencyDistribution." + extension);
-		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,false, latencyDeviation);
+		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("transactionLatencyDistribution-thumb." + thumbnailExtension);
-		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,true, latencyDeviation2);
+		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,true);
 		graphs.push_back(pair<string, string> ("transactionLatencyDistribution",
 			"Transaction Latency Distribution"));
 		//////////////////////////////////////////////////////////////////////////
@@ -1849,10 +1859,10 @@ void processStats(const bf::path &outputDir, const string &filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the zoomed transaction latency distribution graph
 		outFilename = outputDir / ("zoomedTransactionLatencyDistribution." + extension);
-		zoomedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distTransactionLatency,period,false, latencyDeviation);
+		zoomedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distTransactionLatency,period,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("zoomedTransactionLatencyDistribution-thumb." + thumbnailExtension);
-		zoomedTransactionLatencyDistributionGraph(outFilename, p0, commandLine, distTransactionLatency, period,true, latencyDeviation2);	
+		zoomedTransactionLatencyDistributionGraph(outFilename, p0, commandLine, distTransactionLatency, period,true);	
 		graphs.push_back(pair<string, string> (
 			"zoomedTransactionLatencyDistribution",
 			"Zoomed Transaction Latency"));
@@ -1862,24 +1872,24 @@ void processStats(const bf::path &outputDir, const string &filename)
 	{
 		//////////////////////////////////////////////////////////////////////////
 		// make the adjusted transaction latency distribution graph
-		StdDev<float> latencyDeviation, latencyDeviation2;
+		//StdDev<float> latencyDeviation, latencyDeviation2;
 		outFilename = outputDir / ("adjustedTransactionLatencyDistribution." + extension);
-		adjustedTransactionLatencyDistributionGraph(outFilename,p0,commandLine, distAdjustedTransactionLatency,period,false, latencyDeviation);
+		adjustedTransactionLatencyDistributionGraph(outFilename,p0,commandLine, distAdjustedTransactionLatency,period,false);
 		graphs.push_back(pair<string, string> (
 			"adjustedTransactionLatencyDistribution",
 			"Adjusted Transaction Latency"));
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("adjustedTransactionLatencyDistribution-thumb." + thumbnailExtension);
-		adjustedTransactionLatencyDistributionGraph(outFilename, p1, commandLine, distAdjustedTransactionLatency, period,true, latencyDeviation2);		
+		adjustedTransactionLatencyDistributionGraph(outFilename, p1, commandLine, distAdjustedTransactionLatency, period,true);		
 		//////////////////////////////////////////////////////////////////////////
 
 		//////////////////////////////////////////////////////////////////////////
 		// make the zoomed adjusted transaction latency distribution graph
 		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution." + extension);
-		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, period,false, latencyDeviation);
+		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, period,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution-thumb." + thumbnailExtension);
-		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distAdjustedTransactionLatency, period,true, latencyDeviation2);	
+		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distAdjustedTransactionLatency, period,true);	
 		graphs.push_back(pair<string, string> (
 			"zoomedAdjustedTransactionLatencyDistribution",
 			"Zoomed Adjusted Transaction Latency"));	
