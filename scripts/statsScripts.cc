@@ -1,6 +1,9 @@
 #include "processStats.hh"
 #include "globals.hh"
 
+using std::map;
+using std::tr1::unordered_map;
+
 void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 											   vector<vector<vector<vector<unsigned> > > > &channelLatencyDistribution,
 											   float epochTime, unsigned channelID, bool isThumbnail)
@@ -691,6 +694,40 @@ void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const string& c
 		time += epochTime;
 	}
 
+	p << "e" << endl << "unset output" << endl;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+void transactionLatencyCumulativeDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+										 const unordered_map<unsigned, unsigned> &distTransactionLatency, float period,
+										 bool isThumbnail)
+{
+	map<unsigned,unsigned> orderedTransactionLatency;
+	uint64_t sum = 0;
+	
+	for (unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(), end = distTransactionLatency.end();
+		i != end; ++i)
+	{
+		sum += i->second;
+		orderedTransactionLatency[i->first] = i->second;
+	}
+
+	uint64_t countSoFar = 0;
+
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	p << "set title \"" << commandLine << "\\nRead Transaction Latency Cumulative Distribution\""
+		<< endl << cumulativeTransactionGraphScript << endl;
+	for (map<unsigned, unsigned>::const_iterator i = orderedTransactionLatency.begin(), end = orderedTransactionLatency.end();
+		i != end; ++i)
+	{		
+		countSoFar += i->second;
+		p << i->first * period << " " << (double)countSoFar / (double)sum << endl;
+		if ((double)countSoFar / (double)sum > .99)
+			break;
+
+	}
 	p << "e" << endl << "unset output" << endl;
 }
 
@@ -1846,6 +1883,19 @@ void processStats(const bf::path &outputDir, const string &filename)
 		graphs.push_back(pair<string, string> (
 			"zoomedAdjustedTransactionLatencyDistribution",
 			"Zoomed Adjusted Transaction Latency"));	
+		//////////////////////////////////////////////////////////////////////////
+	}
+
+	{
+		//////////////////////////////////////////////////////////////////////////
+		// make the transaction latency cumulative distribution graph
+		outFilename = outputDir / ("transactionLatencyCumulativeDistribution." + extension);
+		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,false);
+		filesGenerated.push_back(outFilename.native_directory_string());
+		outFilename = outputDir / ("transactionLatencyCumulativeDistribution-thumb." + thumbnailExtension);
+		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,true);
+		graphs.push_back(pair<string, string> ("transactionLatencyCumulativeDistribution",
+			"Transaction Latency Cumulative Distribution"));
 		//////////////////////////////////////////////////////////////////////////
 	}
 

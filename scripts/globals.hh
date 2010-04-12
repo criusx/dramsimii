@@ -217,6 +217,15 @@ const string transactionGraphScript = "set logscale y\n\
 									  set ylabel 'Number of Transactions with this Execution Time'\n\
 									  plot '-' using 1:2 t 'Total Latency' with boxes\n";
 
+const string cumulativeTransactionGraphScript = "set logscale y\n\
+									  set format x\n\
+									  set style fill solid 1.00 noborder\n\
+									  #set autoscale xfixmax\n\
+									  set xlabel 'Execution Time (ns)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+									  set ylabel 'Percent of Transactions with At Most this Latency'\n\
+									  plot '-' using 1:2 t 'Cumulative Latency Distribution' with lines lw 2.00\n";
+
+
 const string bandwidthGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
 									set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 									set xrange [0:*]\n\
