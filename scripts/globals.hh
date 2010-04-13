@@ -15,7 +15,7 @@ const string processedExtension = "svgz";
 
 const string thumbnailExtension = "png";
 
-const string thumbnailResolution = "800";
+//const string thumbnailResolution = "800";
 
 // sudo apt-get install msttcorefonts
 // add export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts to .shrc

@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -93,7 +93,7 @@ nextStats(settings.epoch)
 		"] rk[" << settings.rankCount * settings.dimmCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
+		"] PC[" << (settings.postedCAS ? "T" : "F") << "] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
 		"cache[" << cacheSize << "] " <<

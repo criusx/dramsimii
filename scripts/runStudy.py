@@ -63,7 +63,7 @@ outputDir = os.path.join(os.path.expanduser("~"),'results/Cypress/studyA')
 memorySettings = os.path.join(os.path.expanduser("~"),'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
 
 # the command line to pass to the DRAMsimII simulator to modify parameters
-commandLine = '%s --config-file %s --modifiers "channels %d dimms %d ranks %d banks %d physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
+commandLine = '%s --config-file %s --modifiers "channels %d dimms %d ranks %d banks %d postedCAS %s physicaladdressmappingpolicy %s commandorderingalgorithm %s averageinterarrivalcyclecount %d perbankqueuedepth %d requestcount %d tfaw %d rowBufferPolicy %s outfiledir %s %s"'
 
 m5SeCommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
 
@@ -71,7 +71,7 @@ m5SeCommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt
 m5FsCommandLine = Template(m5FsExecutable + " " + m5FsScript + ' -b $benchmark -F 10000000000')
 
 # the command line parameters for running in FS mode
-fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks banks $banks physicaladdressmappingpolicy $amp commandorderingalgorithm $coa perbankqueuedepth $pbqd readwritegrouping $rwg rowBufferPolicy $rbmp outfiledir $output')
+fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks banks $banks postedCAS $postedCas physicaladdressmappingpolicy $amp commandorderingalgorithm $coa perbankqueuedepth $pbqd readwritegrouping $rwg rowBufferPolicy $rbmp outfiledir $output')
 
 addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagebaseline', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
 
@@ -84,6 +84,8 @@ interarrivalCycleCount = [4]
 perBankQueueDepth = [12]
 
 readWriteGrouping = ['true']
+
+postedCas = ['true','false']
 
 requests = [5000000]
 
@@ -177,26 +179,27 @@ def main():
                                     for assoc in associativity:
                                         for size in cacheSizes:
                                             for replacementPolicy in replacementPolicies:
+                                                for pc in postedCas:
 
-                                                currentTrace = os.path.join(tracesDir, t)
-                                                currentCommandLine = commandLine % (ds2executable, memorySettings, channel, dimm, rank,
-                                                                                     banks[0], addressMappingPolicy[0], commandOrderingAlgorithm[0],
-                                                                                      0, perBankQueueDepth[0], 135000000000000, tFAW[0],
-                                                                                       rowBufferManagementPolicy[0], outputDir,
-                                                                                       ("inputfiletype %s inputfile %s outfile %s blockSize %s cacheSize %s " +
-                                                                                       "hitLatency %s associativity %s readPercentage .8 replacementPolicy %s " +
-                                                                                       "%%s") %
-                                                                                       (traceType, currentTrace, t, blkSz, size, hitLat, assoc, replacementPolicy))
-
-                                                if replacementPolicy == 'nmru':
-                                                    for trackingCount in nmruTrackingCounts:
-                                                        newCommandLine = currentCommandLine % ("nmruTrackingCount %d" % trackingCount)
-                                                        submitCommand(newCommandLine, t + replacementPolicy + str(trackingCount))
+                                                    currentTrace = os.path.join(tracesDir, t)
+                                                    currentCommandLine = commandLine % (ds2executable, memorySettings, channel, dimm, rank,
+                                                                                         banks[0], pc, addressMappingPolicy[0], commandOrderingAlgorithm[0],
+                                                                                          0, perBankQueueDepth[0], 135000000000000, tFAW[0],
+                                                                                           rowBufferManagementPolicy[0], outputDir,
+                                                                                           ("inputfiletype %s inputfile %s outfile %s blockSize %s cacheSize %s " +
+                                                                                           "hitLatency %s associativity %s readPercentage .8 replacementPolicy %s " +
+                                                                                           "%%s") %
+                                                                                           (traceType, currentTrace, t, blkSz, size, hitLat, assoc, replacementPolicy))
+    
+                                                    if replacementPolicy == 'nmru':
+                                                        for trackingCount in nmruTrackingCounts:
+                                                            newCommandLine = currentCommandLine % ("nmruTrackingCount %d" % trackingCount)
+                                                            submitCommand(newCommandLine, t + replacementPolicy + str(trackingCount))
+                                                            count += 1
+                                                    else:
+                                                        newCommandLine = currentCommandLine % ""
+                                                        submitCommand(newCommandLine, t + replacementPolicy)
                                                         count += 1
-                                                else:
-                                                    newCommandLine = currentCommandLine % ""
-                                                    submitCommand(newCommandLine, t + replacementPolicy)
-                                                    count += 1
 
             print str(count) + " simulations to be run."
 
@@ -211,55 +214,56 @@ def main():
                                         for j in tFAW:
                                             for rwg in readWriteGrouping:
                                                 for rbmp in rowBufferManagementPolicy:
-                                                    for benchmark in benchmarks:
-                                                        for opt, arg in opts:
-
-                                                            # trace file
-                                                            if opt == '-t':
-                                                                for t in traces:
-                                                                    currentTrace = os.path.join(tracesDir, t)
-                                                                    currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimm, b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
-
-                                                                    submitCommand(currentCommandLine, t)
-                                                                    count += 1
-
-                                                            # syscall emulation
-                                                            elif opt == '-s':
-                                                                currentCommandLine = m5SECommandLine % (executable, m5SEConfigFile, memorySettings, a, dimm, b, c, d, e, g, outputDir)
-
-                                                                submitCommand(currentCommandLine, i)
-
-                                                            # random input
-                                                            elif opt == '-r':
-                                                                for f in interarrivalCycleCount:
-                                                                    for h in requests:
-                                                                        currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimm, b, c, d, e, f, g, h, j, l, outputDir, "")
-                                                                        submitCommand(currentCommandLine, "%d%s%d" % (f, i, h))
-
-                                                            # full system
-                                                            elif opt == '-f':
-                                                                currentCommandLine = \
-                                                                m5FsCommandLine.substitute(benchmark=benchmark) + ' --mp "' + fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
-                                                                                                                              amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
-                                                                                                                              output=outputDir, benchmark=benchmark) + '"'
-                                                                #                                (i, fScommandParameters % (channel, dimm, rank, bank, amp, coa, pbqd, rwg, rbmp, outputDir))
-                                                                submitCommand(currentCommandLine, benchmark)
-
-                                                            # variations of the per-DIMM cache
-                                                            elif opt == '-c':
-                                                                for t in traces:
-                                                                    for blkSz in blockSize:
-                                                                        for hitLat in hitLatency:
-                                                                            for assoc in associativity:
-                                                                                for numSets in numberSets:
-                                                                                    currentTrace = os.path.join(tracesDir, t)
-                                                                                    currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimms[0], b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
-                                                                                    submitCommand(currentCommandLine, t)
-
-                                                        #sys.exit(2)
-
-
-                                                        #print submitCommandLine
+                                                    for pc in postedCas:
+                                                        for benchmark in benchmarks:
+                                                            for opt, arg in opts:
+    
+                                                                # trace file
+                                                                if opt == '-t':
+                                                                    for t in traces:
+                                                                        currentTrace = os.path.join(tracesDir, t)
+                                                                        currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimm, b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s" % (traceType, currentTrace, t))
+    
+                                                                        submitCommand(currentCommandLine, t)
+                                                                        count += 1
+    
+                                                                # syscall emulation
+                                                                elif opt == '-s':
+                                                                    currentCommandLine = m5SECommandLine % (executable, m5SEConfigFile, memorySettings, a, dimm, b, c, d, e, g, outputDir)
+    
+                                                                    submitCommand(currentCommandLine, i)
+    
+                                                                # random input
+                                                                elif opt == '-r':
+                                                                    for f in interarrivalCycleCount:
+                                                                        for h in requests:
+                                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimm, b, c, d, e, f, g, h, j, l, outputDir, "")
+                                                                            submitCommand(currentCommandLine, "%d%s%d" % (f, i, h))
+    
+                                                                # full system
+                                                                elif opt == '-f':
+                                                                    currentCommandLine = \
+                                                                    m5FsCommandLine.substitute(benchmark=benchmark) + ' --mp "' + fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
+                                                                                                                                  amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
+                                                                                                                                  output=outputDir, benchmark=benchmark, postedCas=pc) + '"'
+                                                                    #                                (i, fScommandParameters % (channel, dimm, rank, bank, amp, coa, pbqd, rwg, rbmp, outputDir))
+                                                                    submitCommand(currentCommandLine, benchmark)
+    
+                                                                # variations of the per-DIMM cache
+                                                                elif opt == '-c':
+                                                                    for t in traces:
+                                                                        for blkSz in blockSize:
+                                                                            for hitLat in hitLatency:
+                                                                                for assoc in associativity:
+                                                                                    for numSets in numberSets:
+                                                                                        currentTrace = os.path.join(tracesDir, t)
+                                                                                        currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimms[0], b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
+                                                                                        submitCommand(currentCommandLine, t)
+    
+                                                            #sys.exit(2)
+    
+    
+                                                            #print submitCommandLine
 
 
 
