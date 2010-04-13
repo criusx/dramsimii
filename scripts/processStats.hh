@@ -27,6 +27,7 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/program_options/option.hpp>
 #include <boost/program_options/options_description.hpp>
+#include <boost/algorithm/string/regex.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/lexical_cast.hpp>
@@ -460,5 +461,271 @@ public:
 		  //for (boost::circular_buffer<float>::iterator i = data.begin(); i != data.end(); ++i)
 		  //	*i = 0;
 	  }
+};
+
+class PowerCalculations
+{
+public:
+	double PsysACT_STBY, PsysPRE_STBY, PsysPRE_PDN, PsysACT_PDN, PsysACT, PsysRD, PsysWR, PsysRdAdjusted, PsysACTAdjusted;
+	double energy, reducedEnergy;
+	PowerCalculations():
+	PsysACT_STBY(0.0),
+	PsysPRE_STBY(0.0),
+	PsysPRE_PDN(0.0),
+	PsysACT_PDN(0.0),
+	PsysACT(0.0),
+	PsysRD(0.0),
+	PsysWR(0.0), 
+	PsysRdAdjusted(0.0),
+	PsysACTAdjusted(0.0),
+	energy(0.0),
+	reducedEnergy(0.0)
+	{};
+};
+
+template <typename T>
+class PowerParameters
+{
+public:
+	// power values
+	T pDsAct;
+	T pDsActStby;
+	T pDsActPdn;
+	T pDsPreStby;
+	T pDsPrePdn;
+	T pDsRd;
+	T pDsWr;
+	T voltageScaleFactor;
+	T frequencyScaleFactor;
+	T tRc;
+	T tBurst;
+	T CKE_LO_PRE;
+	T CKE_LO_ACT;
+	T freq;
+	T idd1;
+	T vdd;
+	T devicesPerRank;
+
+	PowerParameters():
+	CKE_LO_ACT(0.01),
+		CKE_LO_PRE(0.95),
+		devicesPerRank(8.0)
+	{}
+
+	void setParameters(const char* commandLine, const list<pair<string,string> > &updatedPowerParams)
+	{
+		tRc = regexMatch<T>(commandLine, "\\{RC\\}\\[([0-9]+)\\]");
+
+		tBurst = regexMatch<T>(commandLine, "tBurst\\[([0-9]+)\\]");
+
+		idd1 = regexMatch<T>(commandLine,"IDD1\\[([0-9]+)\\]");
+
+		T idd0 = regexMatch<T>(commandLine,"IDD0\\[([0-9]+)\\]");
+
+		T idd3n = regexMatch<T>(commandLine,"IDD3N\\[([0-9]+)\\]");
+
+		T tRas = regexMatch<T>(commandLine,"\\{RAS\\}\\[([0-9]+)\\]");
+
+		T idd2n = regexMatch<T>(commandLine,"IDD2N\\[([0-9]+)\\]");
+
+		vdd = regexMatch<T>(commandLine,"VDD\\[([0-9.]+)\\]");
+
+		T vddMax = regexMatch<T>(commandLine,"VDDmax\\[([0-9.]+)\\]");
+
+		T idd3p = regexMatch<T>(commandLine,"IDD3P\\[([0-9]+)\\]");
+
+		T idd2p = regexMatch<T>(commandLine,"IDD2P\\[([0-9]+)\\]");
+
+		T idd4r = regexMatch<T>(commandLine,"IDD4R\\[([0-9]+)\\]");
+
+		T idd4w = regexMatch<T>(commandLine,"IDD4W\\[([0-9]+)\\]");
+
+		T specFreq = regexMatch<T>(commandLine,"spedFreq\\[([0-9]+)\\]");
+
+		freq = regexMatch<T>(commandLine,"DR\\[([0-9]+)M\\]") * 1E6;
+
+		int channelWidth = regexMatch<int>(commandLine,"ChannelWidth\\[([0-9]+)\\]");
+
+		int dqPerDram = regexMatch<int>(commandLine,"DQPerDRAM\\[([0-9]+)\\]");
+
+
+		// read power params to see what the requested changes are
+		for (list<pair<string,string> >::const_iterator currentPair = updatedPowerParams.begin(), end = updatedPowerParams.end();
+			currentPair != end; ++currentPair)
+		{
+			string parameter(currentPair->first);
+			string value(currentPair->second);
+			boost::algorithm::to_lower(parameter);
+
+			if (parameter == "idd0")
+			{
+				cerr << "note: idd0 updated to " << value << endl;
+				idd0 = lexical_cast<T>(value);
+			}
+			else if (parameter == "idd3n")
+			{
+				cerr << "note: idd3n updated to " << value << endl;
+				idd3n = lexical_cast<T>(value);
+			}
+			else if (parameter == "tras")
+			{
+				cerr << "note: tras updated to " << value << endl;
+				tRas = lexical_cast<T>(value);
+			}
+			else if (parameter == "idd2n")
+			{
+				cerr << "note: idd2n updated to " << value << endl;
+				idd2n = lexical_cast<T>(value);
+			}
+			else if (parameter == "vdd")
+			{
+				cerr << "note: vdd updated to " << value << endl;
+				vdd = lexical_cast<T>(value);
+			}
+			else if (parameter == "idd3n")
+			{
+				cerr << "note: idd3n updated to " << value << endl;
+				idd3n = lexical_cast<T>(value);
+			}
+			else if (parameter == "vddmax")
+			{
+				cerr << "note: vddmax updated to " << value << endl;
+				vddMax = lexical_cast<T>(value);
+			}
+			else if (parameter == "idd3p")
+			{
+				cerr << "note: idd3p updated to " << value << endl;
+				idd3p = lexical_cast<T>(value);
+			}
+			else if (parameter == "idd2p")
+			{
+				cerr << "note: idd2p updated to " << value << endl;
+				idd2p = lexical_cast<T>(value);
+			}
+			else if (parameter == "idd4r")
+			{
+				cerr << "note: idd4r updated to " << value << endl;
+				idd4r = lexical_cast<T>(value);
+			}
+			else if (parameter == "idd4w")
+			{
+				cerr << "note: idd4w updated to " << value << endl;
+				idd4w = lexical_cast<T>(value);
+			}
+			else if (parameter == "specfreq")
+			{
+				cerr << "note: specFreq updated to " << value << endl;
+				specFreq = lexical_cast<T>(value);
+			}
+			else if (parameter == "freq")
+			{
+				cerr << "note: freq updated to " << value << endl;
+				freq = lexical_cast<T>(value);
+			}
+			else if (parameter == "channelwidth")
+			{
+				cerr << "note: channelWidth updated to " << value << endl;
+				channelWidth = lexical_cast<T>(value);
+			}
+			else if (parameter == "dqperdram")
+			{
+				cerr << "note: dqPerDram updated to " << value << endl;
+				dqPerDram = lexical_cast<T>(value);
+			}
+			else if (parameter == "cke_lo_pre")
+			{
+				cerr << "note: CKE_LO_PRE updated to " << value << endl;
+				CKE_LO_PRE = lexical_cast<T>(value);
+			}
+			else if (parameter == "cke_lo_act")
+			{
+				cerr << "note: CKE_LO_ACT updated to " << value << endl;
+				CKE_LO_ACT = lexical_cast<T>(value);
+			}
+		}
+
+		// update power values
+		devicesPerRank = channelWidth / dqPerDram;
+		pDsAct = (idd0 - ((idd3n * tRas + idd2n * (tRc - tRas))/tRc)) * vdd;
+		pDsActStby = idd3n * vdd;
+		pDsActPdn = idd3p * vdd;
+		pDsPreStby = idd2n * vdd;
+		pDsPrePdn = idd2p * vdd;
+		frequencyScaleFactor= freq / specFreq;
+		voltageScaleFactor = (vdd / vddMax) * (vdd / vddMax);
+		pDsRd = (idd4r - idd3n) * vdd;
+		pDsWr = (idd4w - idd3n) * vdd;
+	}
+
+	PowerCalculations calculateSystemPower(const char* newLine, const T epochTime)
+	{
+		string line(newLine);
+		trim(line);
+		vector<string> splitLine;
+		boost::split_regex(splitLine, line, regex(" rk"));
+
+		vector<string>::const_iterator currentRank = splitLine.begin(), end = splitLine.end();
+		currentRank++;
+
+		PowerCalculations pc;
+
+		double totalReadHits = 0.0;
+
+		for (;currentRank != end; ++currentRank)
+		{
+			//cerr << *currentRank << endl;
+
+			double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
+			double thisRankRasCount = regexMatch<float>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
+			double thisRankAdjustedRasCount = regexMatch<float>(currentRank->c_str(),"adjRasCount\\{([0-9]+)\\}");
+			double readCycles = regexMatch<float>(currentRank->c_str(),"read\\{([0-9]+)\\}");
+			double writeCycles = regexMatch<float>(currentRank->c_str(),"write\\{([0-9]+)\\}");
+			double readHits = regexMatch<float>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
+			totalReadHits += readHits;
+			double prechargeTime = regexMatch<float>(currentRank->c_str(),"prechargeTime\\{([0-9]+)\\}");
+			double percentActive = 1.0 - (prechargeTime / max((double)(duration), 0.00000001));
+			assert(percentActive >= 0.0F && percentActive <= 1.0F);
+
+			// background power analysis
+			double PschACT_STBY = pDsActStby * percentActive * (1 - CKE_LO_ACT);
+			pc.PsysACT_STBY += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY;
+
+			double PschPRE_STBY = pDsPreStby * (1.0 - percentActive) * (1 - CKE_LO_PRE);
+			pc.PsysPRE_STBY += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_STBY;
+
+			double PschPRE_PDN = pDsPrePdn * (1.0 - percentActive) * (CKE_LO_PRE);
+			pc.PsysPRE_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_PDN;
+
+			double PschACT_PDN = pDsActPdn * percentActive * CKE_LO_ACT;
+			pc.PsysACT_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN;
+
+			// activate power analysis
+			double tRRDsch = ((double)duration) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
+			double PschACT = pDsAct * tRc / tRRDsch;
+			pc.PsysACT += devicesPerRank * voltageScaleFactor * PschACT;
+
+			// read power analysis
+			double RDschPct = readCycles / duration;
+			pc.PsysRD += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPct;
+
+			// write power analysis
+			double WRschPct = writeCycles / duration;
+			pc.PsysWR += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsWr * WRschPct;
+
+			// accounting for cache effects
+			double RDschPctAdjusted = (readCycles - tBurst * readHits) / duration;
+			pc.PsysRdAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPctAdjusted;
+
+			double tRRDschAdjusted = duration / thisRankAdjustedRasCount;
+			pc.PsysACTAdjusted += devicesPerRank * (tRc / tRRDschAdjusted) * voltageScaleFactor * pDsAct;
+		}	
+
+		pc.energy = (pc.PsysACT_STBY + pc.PsysACT + pc.PsysPRE_STBY + pc.PsysRD + pc.PsysWR + pc.PsysACT_PDN + pc.PsysPRE_PDN) * epochTime;
+		//cerr << epochTime << " " << freq << endl;
+		pc.reducedEnergy = idd1 * devicesPerRank * tRc / freq * vdd * totalReadHits;
+
+
+		return pc;
+	}
 };
 #endif

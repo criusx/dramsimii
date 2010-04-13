@@ -4,10 +4,10 @@
 //string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
 //string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
 // sudo apt-get install msttcorefonts
-const string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Consolas\" fsize 14\n";
+const string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Trebuchet_MS\" fsize 14\n";
 //string terminal = "set terminal svg size 1920,1200 enhanced\n";
 
-const string thumbnailTerminal = "set terminal png truecolor font \"Consolas\" size 1200,800 enhanced \n";
+const string thumbnailTerminal = "set terminal png truecolor font \"Trebuchet_MS\" size 1200,800 enhanced \n";
 
 const string extension = "svg";
 

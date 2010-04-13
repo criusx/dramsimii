@@ -465,48 +465,59 @@ int main(int argc, char** argv)
 			else if (ends_with(*currentFile, "power.gz") || ends_with(*currentFile, "power.bz2") || ends_with(*currentFile, "power"))
 			{			
 				float totalEnergy = 0.0F, reducedEnergy = 0.0F;
+				bool foundCommandLine = false, foundEpoch = false;
+				float epochTime;
 
 				for (inputStream.getline(newLine, NEWLINE_LENGTH);
 					(newLine[0] != NULL) && (!userStop);
 					inputStream.getline(newLine, NEWLINE_LENGTH))
 				{
-					if (starts_with(newLine,"-Psys(ACT_STBY)"))
+					PowerParameters<double> params;
+
+					if (starts_with(newLine,"+ch"))
 					{
-						char *firstBrace = strchr(newLine, '{');
-						if (firstBrace == NULL) break;
-						firstBrace = strchr(firstBrace + 1, '{');
-						if (firstBrace == NULL) break;
-						char *slash = strchr(firstBrace, '/');
-						if (slash == NULL) break;
-						char *secondBrace = strchr(slash, '}');
-						if (secondBrace == NULL) break;
-
-						*slash = *secondBrace = NULL;
-
-						totalEnergy += atof(firstBrace + 1);
-						reducedEnergy += atof(slash + 1);
+						PowerCalculations pc = params.calculateSystemPower(newLine,epochTime);
+						totalEnergy += pc.energy;
+						reducedEnergy += pc.reducedEnergy;
+						//cerr << pc.energy << " " << pc.reducedEnergy << endl;
 					}
+					else if (!foundCommandLine && starts_with(newLine, "----Command Line:"))
+					{
+						foundCommandLine = true;
+						params.setParameters(newLine, powerParams);
+					}
+					else if (!foundEpoch && starts_with(newLine, "----Epoch"))
+					{
+						foundEpoch = true;
 
+						char *position = strchr(newLine, ' ');
+						if (position == NULL)
+							break;
+						epochTime = atof(position + 1);
+					}
 				}
 
-				stringstream current;
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< ((double) totalEnergy);
+				if (foundCommandLine && foundEpoch)
+				{
+					stringstream current;
+					current << std::dec << std::fixed << std::setprecision(2)
+						<< ((double) totalEnergy);
 #pragma omp critical
-				results[basefilename].push_back(current.str());
-				current.str("");
+					results[basefilename].push_back(current.str());
+					current.str("");
 
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< ((double) reducedEnergy);
+					current << std::dec << std::fixed << std::setprecision(2)
+						<< ((double) reducedEnergy);
 #pragma omp critical
-				results[basefilename].push_back(current.str());
-				current.str("");
+					results[basefilename].push_back(current.str());
+					current.str("");
 
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< ((double) reducedEnergy / totalEnergy * 100);
+					current << std::dec << std::fixed << std::setprecision(2)
+						<< ((double) reducedEnergy / totalEnergy * 100);
 #pragma omp critical
-				results[basefilename].push_back(current.str());
-				current.str("");
+					results[basefilename].push_back(current.str());
+					current.str("");
+				}
 			}
 
 			boost::iostreams::close(inputStream);

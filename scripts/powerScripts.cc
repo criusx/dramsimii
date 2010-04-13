@@ -329,7 +329,7 @@ void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const strin
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void processPower(const bf::path &outputDir, const string &filename, const list<pair<string,string> > &powerParams)
+void processPower(const bf::path &outputDir, const string &filename, const list<pair<string,string> > &updatedPowerParams)
 {
 	if (!fileExists(filename))
 	{
@@ -362,6 +362,7 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 	string commandLine;
 
 	// power values
+#if 0
 	double pDsAct = 0.0;
 	double pDsActStby = 0.0;
 	double pDsActPdn = 0.0;
@@ -378,9 +379,10 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 	double freq = 0.0;
 	double idd1 = 0.0;
 	double vdd = 0.0;
-
 	/// @TODO make this generic
 	double devicesPerRank = 8.0F;
+#endif
+	PowerParameters<double> powerParams;	
 
 	char newLine[NEWLINE_LENGTH];
 
@@ -502,146 +504,7 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 				}
 				else if (starts_with(newLine, "----Command Line"))
 				{
-					tRc = regexMatch<double>(newLine, "\\{RC\\}\\[([0-9]+)\\]");
-
-					tBurst = regexMatch<double>(newLine, "tBurst\\[([0-9]+)\\]");
-
-					idd1 = regexMatch<float>(newLine,"IDD1\\[([0-9]+)\\]");
-
-					float idd0 = regexMatch<float>(newLine,"IDD0\\[([0-9]+)\\]");
-
-					float idd3n = regexMatch<float>(newLine,"IDD3N\\[([0-9]+)\\]");
-
-					float tRas = regexMatch<float>(newLine,"\\{RAS\\}\\[([0-9]+)\\]");
-
-					float idd2n = regexMatch<float>(newLine,"IDD2N\\[([0-9]+)\\]");
-
-					vdd = regexMatch<double>(newLine,"VDD\\[([0-9.]+)\\]");
-
-					float vddMax = regexMatch<float>(newLine,"VDDmax\\[([0-9.]+)\\]");
-
-					float idd3p = regexMatch<float>(newLine,"IDD3P\\[([0-9]+)\\]");
-
-					float idd2p = regexMatch<float>(newLine,"IDD2P\\[([0-9]+)\\]");
-
-					float idd4r = regexMatch<float>(newLine,"IDD4R\\[([0-9]+)\\]");
-
-					float idd4w = regexMatch<float>(newLine,"IDD4W\\[([0-9]+)\\]");
-
-					float specFreq = regexMatch<float>(newLine,"spedFreq\\[([0-9]+)\\]");
-
-					freq = regexMatch<double>(newLine,"DR\\[([0-9]+)M\\]") * 1E6;
-
-					int channelWidth = regexMatch<int>(newLine,"ChannelWidth\\[([0-9]+)\\]");
-
-					int dqPerDram = regexMatch<int>(newLine,"DQPerDRAM\\[([0-9]+)\\]");
-
-					// read power params to see what the requested changes are
-					for (list<pair<string,string> >::const_iterator currentPair = powerParams.begin(), end = powerParams.end();
-						currentPair != end; ++currentPair)
-					{
-						string parameter(currentPair->first);
-						string value(currentPair->second);
-						boost::algorithm::to_lower(parameter);
-
-						if (parameter == "idd0")
-						{
-							cerr << "note: idd0 updated to " << value << endl;
-							idd0 = lexical_cast<double>(value);
-						}
-						else if (parameter == "idd3n")
-						{
-							cerr << "note: idd3n updated to " << value << endl;
-							idd3n = lexical_cast<double>(value);
-						}
-						else if (parameter == "tras")
-						{
-							cerr << "note: tras updated to " << value << endl;
-							tRas = lexical_cast<double>(value);
-						}
-						else if (parameter == "idd2n")
-						{
-							cerr << "note: idd2n updated to " << value << endl;
-							idd2n = lexical_cast<double>(value);
-						}
-						else if (parameter == "vdd")
-						{
-							cerr << "note: vdd updated to " << value << endl;
-							vdd = lexical_cast<double>(value);
-						}
-						else if (parameter == "idd3n")
-						{
-							cerr << "note: idd3n updated to " << value << endl;
-							idd3n = lexical_cast<double>(value);
-						}
-						else if (parameter == "vddmax")
-						{
-							cerr << "note: vddmax updated to " << value << endl;
-							vddMax = lexical_cast<double>(value);
-						}
-						else if (parameter == "idd3p")
-						{
-							cerr << "note: idd3p updated to " << value << endl;
-							idd3p = lexical_cast<double>(value);
-						}
-						else if (parameter == "idd2p")
-						{
-							cerr << "note: idd2p updated to " << value << endl;
-							idd2p = lexical_cast<double>(value);
-						}
-						else if (parameter == "idd4r")
-						{
-							cerr << "note: idd4r updated to " << value << endl;
-							idd4r = lexical_cast<double>(value);
-						}
-						else if (parameter == "idd4w")
-						{
-							cerr << "note: idd4w updated to " << value << endl;
-							idd4w = lexical_cast<double>(value);
-						}
-						else if (parameter == "specfreq")
-						{
-							cerr << "note: specFreq updated to " << value << endl;
-							specFreq = lexical_cast<double>(value);
-						}
-						else if (parameter == "freq")
-						{
-							cerr << "note: freq updated to " << value << endl;
-							freq = lexical_cast<double>(value);
-						}
-						else if (parameter == "channelwidth")
-						{
-							cerr << "note: channelWidth updated to " << value << endl;
-							channelWidth = lexical_cast<double>(value);
-						}
-						else if (parameter == "dqperdram")
-						{
-							cerr << "note: dqPerDram updated to " << value << endl;
-							dqPerDram = lexical_cast<double>(value);
-						}
-						else if (parameter == "cke_lo_pre")
-						{
-							cerr << "note: CKE_LO_PRE updated to " << value << endl;
-							CKE_LO_PRE = lexical_cast<double>(value);
-						}
-						else if (parameter == "cke_lo_act")
-						{
-							cerr << "note: CKE_LO_ACT updated to " << value << endl;
-							CKE_LO_ACT = lexical_cast<double>(value);
-						}
-					}
-
-					// update power values
-					devicesPerRank = channelWidth / dqPerDram;
-					pDsAct = (idd0 - ((idd3n * tRas + idd2n * (tRc - tRas))/tRc)) * vdd;
-					pDsActStby = idd3n * vdd;
-					pDsActPdn = idd3p * vdd;
-					pDsPreStby = idd2n * vdd;
-					pDsPrePdn = idd2p * vdd;
-					frequencyScaleFactor= freq / specFreq;
-					voltageScaleFactor = (vdd / vddMax) * (vdd / vddMax);
-					pDsRd = (idd4r - idd3n) * vdd;
-					pDsWr = (idd4w - idd3n) * vdd;
+					powerParams.setParameters(newLine, updatedPowerParams);				
 
 					string line(newLine);
 					trim(line);
@@ -674,77 +537,10 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 		}		
 		// a line with all the power components for one channel
 		else if (newLine[0] == '+')
-		{
-			string line(newLine);
-			trim(line);
-			unsigned currentChannel = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
-
-			vector<string> splitLine;
-			boost::split_regex(splitLine, line, regex(" rk"));
-
+		{	
 			// per channel power numbers
-			double totalReadHits = 0.0;
-			double PsysRD = 0.0;
-			double PsysRdAdjusted = 0.0;
-			double PsysWR = 0.0;
-			double PsysACT_STBY = 0.0;
-			double PsysPRE_STBY = 0.0;
-			double PsysPRE_PDN = 0.0;
-			double PsysACT_PDN = 0.0;
-			double PsysACT = 0.0;
-			double PsysACTAdjusted = 0.0;
 
-			vector<string>::const_iterator currentRank = splitLine.begin(), end = splitLine.end();
-			currentRank++;
-
-			for (;currentRank != end; ++currentRank)
-			{
-				//cerr << *currentRank << endl;
-
-				double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
-				double thisRankRasCount = regexMatch<float>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
-				double thisRankAdjustedRasCount = regexMatch<float>(currentRank->c_str(),"adjRasCount\\{([0-9]+)\\}");
-				double readCycles = regexMatch<float>(currentRank->c_str(),"read\\{([0-9]+)\\}");
-				double writeCycles = regexMatch<float>(currentRank->c_str(),"write\\{([0-9]+)\\}");
-				double readHits = regexMatch<float>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
-				totalReadHits += readHits;
-				double prechargeTime = regexMatch<float>(currentRank->c_str(),"prechargeTime\\{([0-9]+)\\}");
-				double percentActive = 1.0 - (prechargeTime / max((double)(duration), 0.00000001));
-				assert(percentActive >= 0.0F && percentActive <= 1.0F);
-				
-				// background power analysis
-				double PschACT_STBY = pDsActStby * percentActive * (1 - CKE_LO_ACT);
-				PsysACT_STBY += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY;
-
-				double PschPRE_STBY = pDsPreStby * (1.0 - percentActive) * (1 - CKE_LO_PRE);
-				PsysPRE_STBY += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_STBY;
-
-				double PschPRE_PDN = pDsPrePdn * (1.0 - percentActive) * (CKE_LO_PRE);
-				PsysPRE_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_PDN;
-
-				double PschACT_PDN = pDsActPdn * percentActive * CKE_LO_ACT;
-				PsysACT_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN;
-
-				// activate power analysis
-				double tRRDsch = ((double)duration) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
-				double PschACT = pDsAct * tRc / tRRDsch;
-				PsysACT += devicesPerRank * voltageScaleFactor * PschACT;
-
-				// read power analysis
-				double RDschPct = readCycles / duration;
-				PsysRD += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPct;
-
-				// write power analysis
-				double WRschPct = writeCycles / duration;
-				PsysWR += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsWr * WRschPct;
-
-				// accounting for cache effects
-				double RDschPctAdjusted = (readCycles - tBurst * readHits) / duration;
-				PsysRdAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPctAdjusted;
-
-				double tRRDschAdjusted = duration / thisRankAdjustedRasCount;
-				PsysACTAdjusted += devicesPerRank * (tRc / tRRDschAdjusted) * voltageScaleFactor * pDsAct;
-			}	
+			PowerCalculations pc = powerParams.calculateSystemPower(newLine, (double)epochTime);
 
 			//cerr << PsysACT_STBY <<endl;
 			//cerr << PsysACT <<endl;
@@ -756,17 +552,18 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 			//cerr << PsysPRE_PDN <<endl;
 			//cerr << PsysACT_PDN <<endl;
 			//cerr << PsysACTAdjusted <<endl;
+			unsigned currentChannel = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
 
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += PsysACT_STBY;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += PsysACT;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += PsysPRE_STBY;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += PsysRD;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += PsysWR;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += PsysACT_PDN;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += PsysPRE_PDN;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBY;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += pc.PsysACT;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += pc.PsysPRE_STBY;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRD;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
 
-			energyValueBuffer.first += (PsysACT_STBY + PsysACT + PsysPRE_STBY + PsysRD + PsysWR + PsysACT_PDN + PsysPRE_PDN) * epochTime / freq;
-			energyValueBuffer.second += idd1 * devicesPerRank * tRc / freq * vdd * totalReadHits;
+			energyValueBuffer.first += pc.energy;
+			energyValueBuffer.second += pc.reducedEnergy;
 
 			if (currentChannel + 1 == channelCount)
 			{
