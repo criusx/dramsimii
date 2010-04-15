@@ -230,8 +230,8 @@ void bigPowerGraph(const bf::path &outFilename, opstream &p, const string& comma
 }
 
 void bigPowerGraph2(const bf::path &outFilename, opstream &p, const string& commandLine,
-				   const vector<vector<float> > &values,
-				   float epochTime, bool isThumbnail)
+					const vector<vector<float> > &values,
+					float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;

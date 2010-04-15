@@ -470,16 +470,16 @@ public:
 	double energy, reducedEnergy;
 	PowerCalculations():
 	PsysACT_STBY(0.0),
-	PsysPRE_STBY(0.0),
-	PsysPRE_PDN(0.0),
-	PsysACT_PDN(0.0),
-	PsysACT(0.0),
-	PsysRD(0.0),
-	PsysWR(0.0), 
-	PsysRdAdjusted(0.0),
-	PsysACTAdjusted(0.0),
-	energy(0.0),
-	reducedEnergy(0.0)
+		PsysPRE_STBY(0.0),
+		PsysPRE_PDN(0.0),
+		PsysACT_PDN(0.0),
+		PsysACT(0.0),
+		PsysRD(0.0),
+		PsysWR(0.0), 
+		PsysRdAdjusted(0.0),
+		PsysACTAdjusted(0.0),
+		energy(0.0),
+		reducedEnergy(0.0)
 	{};
 };
 
@@ -687,15 +687,19 @@ public:
 			assert(percentActive >= 0.0F && percentActive <= 1.0F);
 
 			// background power analysis
+			// activate-standby
 			double PschACT_STBY = pDsActStby * percentActive * (1 - CKE_LO_ACT);
 			pc.PsysACT_STBY += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY;
 
+			// precharge-standby
 			double PschPRE_STBY = pDsPreStby * (1.0 - percentActive) * (1 - CKE_LO_PRE);
 			pc.PsysPRE_STBY += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_STBY;
 
+			// precharge-powerdown
 			double PschPRE_PDN = pDsPrePdn * (1.0 - percentActive) * (CKE_LO_PRE);
 			pc.PsysPRE_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_PDN;
 
+			// activate-powerdown
 			double PschACT_PDN = pDsActPdn * percentActive * CKE_LO_ACT;
 			pc.PsysACT_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN;
 

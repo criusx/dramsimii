@@ -62,19 +62,19 @@ finishedTransactions(),
 cache(_settings.dimmCount, Cache(_settings))
 {
 	// assign an id to each channel (normally done with commands)
-// 	for (unsigned i = 0; i < _settings.rankCount; ++i)
-// 	{
-// 		rank[i].setRankID(i);
-// 	}
+	// 	for (unsigned i = 0; i < _settings.rankCount; ++i)
+	// 	{
+	// 		rank[i].setRankID(i);
+	// 	}
 
 	// initialize the refresh counters per rank
-	
+
 	if (_settings.refreshPolicy != NO_REFRESH)
 	{
 		// stagger the times that each rank will be refreshed so they don't all arrive incomingTransaction a burst
 		unsigned step = _settings.tREFI / _settings.rankCount;
 		Address addr(0,0,0,0,0);
-		
+
 		for (unsigned j = 0; j < refreshCounter.size(); ++j)
 		{
 			addr.setRank(j);
@@ -118,7 +118,7 @@ cache(rhs.cache.size(), Cache(rhs.cache[0]))
 {
 	// to fill incomingTransaction the values
 	rank = rhs.rank;
-	
+
 	for (vector<Transaction *>::size_type i = 0; i < refreshCounter.size(); ++i)
 	{
 		refreshCounter[i] = new Transaction(*rhs.refreshCounter[i]);
@@ -220,19 +220,19 @@ Channel::~Channel()
 
 void Channel::setChannelID(const unsigned value)
 {
-	 channelID = value;
-	 unsigned currentId = 0;
-	 for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
-	 {
-		 i->setRankID(value, currentId++);
-	 }
-	 
-	 currentId = 0;
-// 	 for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
-// 		 i != end; ++i)
-// 	 {
-// 		 i->setDimmId(value, currentId++);
-// 	 }
+	channelID = value;
+	unsigned currentId = 0;
+	for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
+	{
+		i->setRankID(value, currentId++);
+	}
+
+	currentId = 0;
+	// 	 for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
+	// 		 i != end; ++i)
+	// 	 {
+	// 		 i->setDimmId(value, currentId++);
+	// 	 }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -595,11 +595,11 @@ void Channel::doPowerCalculation(ostream& os)
 	uint64_t totalReadHits = 0;
 
 	os << "+ch[" << channelID << "]";
-	
+
 	for (vector<Rank>::iterator k = rank.begin(); k != rank.end(); ++k)
 	{
 		unsigned thisRankRasCount = 1;
-		
+
 		//rankArray.push_back(k->getRankId());
 
 		for (vector<Bank>::iterator l = k->bank.begin(); l != k->bank.end(); ++l)
@@ -638,7 +638,7 @@ void Channel::doPowerCalculation(ostream& os)
 		double PschACT_STBY = powerModel.getPdsACT_STBY() * percentActive * (1 - CKE_LO_ACT);
 		PsysACT_STBY += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() *
 			powerModel.getFrequencyScaleFactor() * PschACT_STBY;
-	
+
 		// calculate PsysPRE-STBY
 		double PschPRE_STBY = powerModel.getPdsPRE_STBY() * (1.0 - percentActive) * (1 - CKE_LO_PRE);
 		PsysPRE_STBY += powerModel.getDevicesPerRank() * powerModel.getFrequencyScaleFactor() *
@@ -656,7 +656,7 @@ void Channel::doPowerCalculation(ostream& os)
 
 		// calculate PsysACT
 		double tRRDsch = ((double)(time - powerModel.getLastCalculation())) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
-	
+
 #ifndef NDEBUG
 		cerr << "rrd " << tRRDsch << " " << powerModel.gettRC() << endl;
 #endif
@@ -709,7 +709,7 @@ void Channel::doPowerCalculation(ostream& os)
 
 	os << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) << PsysACT << "} mW" << endl;
 	//tRRD[" << tRRDsch << "]" <<
-		//<<Psys(ACT)adjusted {" << setprecision(5) << PsysACTAdjusted << "} mW" << 
+	//<<Psys(ACT)adjusted {" << setprecision(5) << PsysACTAdjusted << "} mW" << 
 	//	endl;
 
 	os << "-Psys(PRE_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysPRE_STBY << "} mW" << endl;
@@ -717,12 +717,12 @@ void Channel::doPowerCalculation(ostream& os)
 
 	os << "-Psys(RD) ch[" << channelID << "] {" << setprecision(5) << PsysRD << "} mW Psys(RD)adjusted {" << 
 		setprecision(5) << PsysRdAdjusted << "} mW " << endl;
-// 	cerr << PsysRD * systemConfig.getEpoch() / systemConfig.getDatarate() << " " <<
-// 		powerModel.getIDD1() << " " <<  ((float)timingSpecification.tRC() / systemConfig.getDatarate()) << " " << powerModel.getVDD() << " " << totalReadHits << endl;
+	// 	cerr << PsysRD * systemConfig.getEpoch() / systemConfig.getDatarate() << " " <<
+	// 		powerModel.getIDD1() << " " <<  ((float)timingSpecification.tRC() / systemConfig.getDatarate()) << " " << powerModel.getVDD() << " " << totalReadHits << endl;
 
 	os << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << PsysWR << "} mW" << endl;
 
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// do speculative power calcs that leave out cache hits
 
@@ -835,7 +835,7 @@ unsigned Channel::readAvailableTransaction(const bool bufferDelay) const
 	{
 		const Transaction *currentTrans = transactionQueue[i];
 		tick enqueueTime = currentTrans->getEnqueueTime();
-		
+
 		// if it's ready to decode
 		if ((enqueueTime + delay <= time) &&
 			checkForAvailableCommandSlots(currentTrans))
@@ -963,7 +963,7 @@ Transaction *Channel::createNextRefresh()
 const Transaction *Channel::readNextRefresh() const
 {
 	assert(rank.size() >= 1);
-	
+
 	vector<Transaction *>::const_iterator i = refreshCounter.begin();
 	Transaction *earliestRefresh = *i;
 	++i;
@@ -1003,11 +1003,11 @@ void Channel::resetToTime(const tick time)
 		i->resetToTime(time);
 	}
 
-// 	for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
-// 		i != end; ++i)
-// 	{
-// 		i->resetToTime(time);
-// 	}
+	// 	for (vector<DIMM>::iterator i = dimm.begin(), end = dimm.end();
+	// 		i != end; ++i)
+	// 	{
+	// 		i->resetToTime(time);
+	// 	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1336,7 +1336,7 @@ bool Channel::transaction2commands(Transaction *incomingTransaction)
 					else 
 						assert(i->back()->isRefresh());
 				}
-				
+
 #ifndef NDEBUG
 				bool result =
 #endif // NDEBUG
@@ -2316,7 +2316,7 @@ void Channel::executeCommand(Command *thisCommand)
 	vector<Rank>::iterator currentRank = rank.begin() + thisCommand->getAddress().getRank();
 
 	vector<Bank>::iterator currentBank = currentRank->bank.begin() + thisCommand->getAddress().getBank();
-	
+
 	currentRank->setLastBankID(thisCommand->getAddress().getBank());
 
 	thisCommand->setStartTime(time);
@@ -2368,7 +2368,7 @@ void Channel::executeCommand(Command *thisCommand)
 		// should account for tAL buffering the CAS command until the right moment
 		//thisCommand->setCompletionTime(max(currentBank.getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		assert(wasActivated);
-	
+
 		thisCommand->setCompletionTime(max(currentBank->getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
@@ -2403,7 +2403,7 @@ void Channel::executeCommand(Command *thisCommand)
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		assert(wasActivated);
-	
+
 		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
 
 		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());

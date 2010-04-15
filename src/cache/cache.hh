@@ -83,14 +83,14 @@ namespace DRAMsimII
 
 		CacheSet(unsigned associativity):
 		assoc(associativity),
-		blks(associativity)
+			blks(associativity)
 		{
 			//assoc = associativity;
 
-// 			for (unsigned j = 0; j < associativity; ++j)
-// 			{
-// 
-// 			}
+			// 			for (unsigned j = 0; j < associativity; ++j)
+			// 			{
+			// 
+			// 			}
 		}
 
 		/**
@@ -142,7 +142,7 @@ namespace DRAMsimII
 		const unsigned blkSize;					///< the block size of the cache
 		const unsigned assoc;					///< the associativity of the cache
 		const unsigned hitLatency;				///< the hit latency
-		
+
 		std::vector<CacheSet> sets;				///< The cache sets.
 		std::vector<LRUBlk> blks;				///< The cache blocks.
 		std::vector<uint8_t> dataBlks;			///< The data blocks, 1 per cache block.
@@ -162,7 +162,7 @@ namespace DRAMsimII
 		std::pair<unsigned,unsigned> cumulativeReadHitsMisses; ///< read hits and misses since the cache was created
 		unsigned bandwidth;						///< bandwidth since the last reset to this cache
 
-		
+
 	public:
 		/**
 		* Construct and initialize this tag store.

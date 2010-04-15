@@ -204,7 +204,7 @@ replacementPolicy(rhs.replacementPolicy)
 			blk->set = i;
 		}
 	}
-	
+
 }
 
 Cache::Cache(const DRAMsimII::Settings &settings):
@@ -339,7 +339,7 @@ bool Cache::access(const Command *currentCommand, int &lat, BlkType *&blk, tick 
 		// nothing else to do; writeback doesn't expect response
 		//assert(!pkt->needsResponse());
 		//hits[pkt->cmdToIndex()][0/*currentCommand->req->threadId()*/]++;
-		
+
 		return false;
 		//return true;
 	}
@@ -668,7 +668,7 @@ LRUBlk *Cache::findVictim(Addr addr, PacketList &writebacks)
 	case Cache::LRU:
 		// grab a replacement candidate
 		blk = sets[set].blks[assoc-1];
-		
+
 		break;
 
 	case Cache::NMRU:
@@ -702,7 +702,7 @@ LRUBlk *Cache::findVictim(Addr addr, PacketList &writebacks)
 	case Cache::RAND:
 		blk = sets[set].blks[rand() % assoc];
 		break;
-		
+
 	default:
 		cerr << "Not implemented yet" << endl;
 		exit(-3);
