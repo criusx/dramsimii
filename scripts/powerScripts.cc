@@ -362,26 +362,7 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 	string commandLine;
 
 	// power values
-#if 0
-	double pDsAct = 0.0;
-	double pDsActStby = 0.0;
-	double pDsActPdn = 0.0;
-	double pDsPreStby = 0.0;
-	double pDsPrePdn = 0.0;
-	double pDsRd = 0.0;
-	double pDsWr = 0.0;
-	double voltageScaleFactor = 0.0;
-	double frequencyScaleFactor = 0.0;
-	double tRc = 0.0;
-	double tBurst = 0.0;
-	double CKE_LO_PRE = 0.95;
-	double CKE_LO_ACT = 0.01;
-	double freq = 0.0;
-	double idd1 = 0.0;
-	double vdd = 0.0;
-	/// @TODO make this generic
-	double devicesPerRank = 8.0F;
-#endif
+
 	PowerParameters<double> powerParams;	
 
 	char newLine[NEWLINE_LENGTH];
@@ -396,144 +377,36 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 		inputStream.getline(newLine, NEWLINE_LENGTH))
 	{
 		if (newLine[0] == '-')
-		{
-			if (newLine[1] == 'P')
+		{				
+			if (boost::starts_with(newLine, "----Epoch"))
 			{
-				continue;
-
-				string backup(newLine);
-				char *position = strchr(newLine, '{');
-				char *position2 = strchr(newLine, '}');
-				if (position == NULL || position2 == NULL)
+				char *position = strchr(newLine, ' ');
+				if (position == NULL)
 					break;
 				position++;
-				*position2 = 0;
-
-				float thisPower = atof(position);
-				valueBuffer[writing] += (thisPower);
-
-				// make sure to get multiple channels
-				if (starts_with(newLine,"-Psys(ACT_STBY)"))
-				{
-					char *firstBrace = strchr(position2 + 1, '{');
-					if (firstBrace == NULL) break;
-
-					char *slash = strchr(firstBrace, '/');
-					if (slash == NULL) break;
-
-					char *secondBrace = strchr(firstBrace, '}');
-					if (secondBrace == NULL) break;
-
-					*slash = *secondBrace = NULL;
-
-					energyValueBuffer.first += atof(firstBrace + 1);
-					energyValueBuffer.second += atof(slash + 1);
-				}
-
-				writing = (writing + 1) % values.size();
-
-				if (writing == 0)
-				{
-					// look to dump the buffer into the array
-					scaleIndex = (scaleIndex + 1) % scaleFactor;
-
-					// when the scale buffer is full
-					if (scaleIndex == 0)
-					{
-						vector<float>::size_type limit = valueBuffer.size();
-						for (vector<float>::size_type i = 0; i < limit; ++i)
-						{
-							values[i].push_back(valueBuffer[i] / scaleFactor);
-							valueBuffer[i] = 0;
-						}
-
-						energyValues.push_back(pair<float, float> (
-							energyValueBuffer.first / scaleFactor,
-							energyValueBuffer.second / scaleFactor));
-
-						energyValueBuffer.first = energyValueBuffer.second = 0.0F;
-					}
-
-					// try to compress the array by half and double the scaleFactor
-					if (values.front().size() >= MAXIMUM_VECTOR_SIZE)
-					{
-						// scale the array back by half
-						for (vector<vector<float> >::iterator i =
-							values.begin(); i != values.end(); ++i)
-						{
-							for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
-							{
-								(*i)[j] = ((*i)[2 * j] + (*i)[2 * j + 1]) / 2;
-							}
-							i->resize(MAXIMUM_VECTOR_SIZE / 2);
-
-							assert(i->size() == MAXIMUM_VECTOR_SIZE / 2);
-						}
-
-						// scale the alternate array back by half
-						for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
-						{
-							energyValues[j] = pair<float, float> (
-								(energyValues[2 * j].first + energyValues[2
-								* j + 1].first) / 2.0F,
-								(energyValues[2 * j].second
-								+ energyValues[2 * j + 1].second)
-								/ 2.0F);
-						}
-
-						energyValues.resize(MAXIMUM_VECTOR_SIZE / 2);
-
-						assert(energyValues.size() == MAXIMUM_VECTOR_SIZE / 2);
-
-						// double scaleFactor since each entry now represents twice what it did before
-						scaleFactor *= 2;
-						epochTime *= 2;
-						cerr << "scaleFactor at " << scaleFactor << endl;
-					}
-				}
+				epochTime = lexical_cast<float> (position);
 			}
-			else
+			else if (starts_with(newLine, "----Command Line"))
 			{
-				if (boost::starts_with(newLine, "----Epoch"))
+				powerParams.setParameters(newLine, updatedPowerParams);		
+
+				unsigned channelCount = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
+				values.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
+				energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
+
+				// setup the buffer to be the same size as the value array
+				valueBuffer.resize(channelCount * POWER_VALUES_PER_CHANNEL);
+
+				for (int i = channelCount * POWER_VALUES_PER_CHANNEL; i > 0; --i)
 				{
-					char *position = strchr(newLine, ' ');
-					if (position == NULL)
-						break;
-					position++;
-					epochTime = lexical_cast<float> (position);
+					values.push_back(vector<float> ());
+					values.back().reserve(MAXIMUM_VECTOR_SIZE);
 				}
-				else if (starts_with(newLine, "----Command Line"))
-				{
-					powerParams.setParameters(newLine, updatedPowerParams);				
 
-					string line(newLine);
-					trim(line);
-					vector<string> splitLine;
-					split(splitLine, line, is_any_of(":"));
-					commandLine = splitLine[1];
-				}
-				// the channel/rank specification line
-				else if (newLine[1] == '+')
-				{
-					string line(newLine);
-
-					vector<string> splitLine;
-					split(splitLine,line,is_any_of("[]"));
-					channelCount = lexical_cast<unsigned>(splitLine[1]);
-
-					values.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
-					energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
-
-					// setup the buffer to be the same size as the value array
-					valueBuffer.resize(channelCount * POWER_VALUES_PER_CHANNEL);
-
-					for (int i = channelCount * POWER_VALUES_PER_CHANNEL; i > 0; --i)
-					{
-						values.push_back(vector<float> ());
-						values.back().reserve(MAXIMUM_VECTOR_SIZE);
-					}
-				}
-			}
+				// determine the commandline name
+				char *position = strchr(newLine, ':');
+				commandLine = position + 2;
+			}		
 		}		
 		// a line with all the power components for one channel
 		else if (newLine[0] == '+')

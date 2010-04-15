@@ -693,8 +693,12 @@ void Channel::doPowerCalculation(ostream& os)
 		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
 
 		os << " rk[" << k->getRankId() << "] prechargeTime{" << k->getPrechargeTime(time) << "} rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
-			"} duration{" << time - powerModel.getLastCalculation() << "} read{" << k->getReadCycles() << "} readHits{" <<
-			cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first << "} write{" << k->getWriteCycles() << "}";
+			"} duration{" << time - powerModel.getLastCalculation() << "} read{" << k->getReadCycles() << 
+			"} readHits{" << cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first <<
+			"} readMisses{" << cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().second <<
+			"} writeHits{" << cache[k->getRankId() / systemConfig.getRankCount()].getWriteHitsMisses().first <<
+			"} writeMisses{" << cache[k->getRankId() / systemConfig.getRankCount()].getWriteHitsMisses().second <<
+			"} write{" << k->getWriteCycles() << "}";
 
 		k->resetPrechargeTime(time);
 		k->resetCycleCounts();
@@ -2323,7 +2327,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 	assert(canIssue(thisCommand));
 
-	bool wasActivated;
+	bool wasActivated = currentBank->isActivated();
 
 	lastCommandIssueTime = time;
 

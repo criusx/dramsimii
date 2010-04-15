@@ -467,7 +467,9 @@ class PowerCalculations
 {
 public:
 	double PsysACT_STBY, PsysPRE_STBY, PsysPRE_PDN, PsysACT_PDN, PsysACT, PsysRD, PsysWR, PsysRdAdjusted, PsysACTAdjusted;
+	double sramActivePower, sramIdlePower;
 	double energy, reducedEnergy;
+
 	PowerCalculations():
 	PsysACT_STBY(0.0),
 		PsysPRE_STBY(0.0),
@@ -478,6 +480,8 @@ public:
 		PsysWR(0.0), 
 		PsysRdAdjusted(0.0),
 		PsysACTAdjusted(0.0),
+		sramActivePower(0.0),
+		sramIdlePower(0.0),
 		energy(0.0),
 		reducedEnergy(0.0)
 	{};
@@ -505,6 +509,9 @@ public:
 	T idd1;
 	T vdd;
 	T devicesPerRank;
+
+	// system information
+	unsigned ranksPerDimm;
 
 	PowerParameters():
 	CKE_LO_ACT(0.01),
@@ -547,6 +554,8 @@ public:
 		int channelWidth = regexMatch<int>(commandLine,"ChannelWidth\\[([0-9]+)\\]");
 
 		int dqPerDram = regexMatch<int>(commandLine,"DQPerDRAM\\[([0-9]+)\\]");
+
+		ranksPerDimm = regexMatch<unsigned>(commandLine,"rk\\[([0-9]+)\\]");
 
 
 		// read power params to see what the requested changes are
@@ -674,6 +683,26 @@ public:
 		for (;currentRank != end; ++currentRank)
 		{
 			//cerr << *currentRank << endl;
+
+			unsigned currentRank = regexMatch<unsigned>(currentRank->c_str(),"rk\\[([0-9]+)\\]");
+
+			double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
+
+			// because each rank on any dimm will report the same hit and miss counts
+			if ((currentRank % ranksPerDimm) == 0)
+			{
+				unsigned readHits = regexMatch<unsigned>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
+				unsigned readMisses = regexMatch<unsigned>(currentRank->c_str(),"readMisses\\{([0-9]+)\\}");
+				unsigned writeHits = regexMatch<unsigned>(currentRank->c_str(),"writeHits\\{([0-9]+)\\}");
+				unsigned writeMisses = regexMatch<unsigned>(currentRank->c_str(),"writeMisses\\{([0-9]+)\\}");
+
+				// number of accesses * duration of access gives the time that this DIMM cache spent in Idd
+				unsigned accesses = readHits + readMisses + writeHits + writeMisses;
+
+				// the remaining time was spent in idle mode
+				double idleTime = duration - (double)accesses * accessTime;
+
+			}
 
 			double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
 			double thisRankRasCount = regexMatch<float>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");

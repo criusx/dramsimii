@@ -116,11 +116,7 @@ nextStats(settings.epoch)
 	systemConfig.statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 
 	systemConfig.powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
-
-	systemConfig.statsOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
-
-	systemConfig.powerOutStream << "----Datarate " << setprecision(5) << (float)settings.dataRate << endl;
-
+	
 	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() * systemConfig.getDimmCount() << "]+++-" << endl;	
 
 	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() * systemConfig.getDimmCount() << "]+++-" << endl;
