@@ -694,10 +694,7 @@ void Channel::doPowerCalculation(ostream& os)
 
 		os << " rk[" << k->getRankId() << "] prechargeTime{" << k->getPrechargeTime(time) << "} rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
 			"} duration{" << time - powerModel.getLastCalculation() << "} read{" << k->getReadCycles() << 
-			"} readHits{" << cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first <<
-			"} readMisses{" << cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().second <<
-			"} writeHits{" << cache[k->getRankId() / systemConfig.getRankCount()].getWriteHitsMisses().first <<
-			"} writeMisses{" << cache[k->getRankId() / systemConfig.getRankCount()].getWriteHitsMisses().second <<
+			"} readHits{" << k->getReadHits() <<
 			"} write{" << k->getWriteCycles() << "}";
 
 		k->resetPrechargeTime(time);

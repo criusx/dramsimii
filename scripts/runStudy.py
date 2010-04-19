@@ -57,7 +57,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'm5/configs/example/dramsimfs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/postedCasOpenClosePage')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyC')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -110,7 +110,7 @@ dimms = []
 dimms += [2]
 #dimms += [4]
 ranks = []
-ranks += [1]
+#ranks += [1]
 ranks += [2]
 banks = [16]
 tFAW = [28]
@@ -118,16 +118,16 @@ tFAW = [28]
 # per-DIMM cache parameters
 associativity = []
 associativity += [8]
-associativity += [24]
+#associativity += [24]
 #associativity += [16]
-associativity += [32]
+#associativity += [32]
 cacheSizes = []
 cacheSizes += [8192]
 cacheSizes += [16384]
-cacheSizes += [24576]
+#cacheSizes += [24576]
 blockSize = []
 blockSize += [64]
-blockSize += [128]
+#blockSize += [128]
 blockSize += [256]
 hitLatency = [5]
 replacementPolicies = []

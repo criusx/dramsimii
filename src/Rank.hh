@@ -74,6 +74,8 @@ namespace DRAMsimII
 		unsigned lastBankID;				///< id of the last accessed bank of this rank
 		unsigned banksPrecharged;			///< the number of banks in the precharge state
 
+		std::pair<unsigned,unsigned> hits;		///< the number of read and write hits to this rank
+
 		Cache tags;							///< the tagstore of the emulated cache
 
 	public:
@@ -114,13 +116,15 @@ namespace DRAMsimII
 		unsigned getOtherLastCaswLength() const { return otherLastCASWLength; }
 		unsigned getReadCycles() const { return CASLength; }
 		unsigned getWriteCycles() const { return CASWLength; }
+		unsigned getReadHits() const { return hits.first; }
+		unsigned getWriteHits() const { return hits.second; }
 		bool isEmpty() const;
 
 		// mutators
 		void setRankID(const unsigned channelID, const unsigned rankID);
 		void setLastBankID(const unsigned value) { lastBankID = value; }
 		void resetPrechargeTime(const tick time); 
-		void resetCycleCounts() { CASLength = CASWLength = 0; }
+		void resetCycleCounts() { hits.first = hits.second = CASLength = CASWLength = 0; }
 
 		// overloads
 		Rank& operator=(const Rank &rs);

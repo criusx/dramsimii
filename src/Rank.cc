@@ -256,6 +256,9 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	if (currentCommand->getAddress().getRank() == rankID)
 	{
+		if (currentCommand->getHost()->isHit())
+			hits.first++;
+
 #if 0
 		//////////////////////////////////////////////////////////////////////////
 		bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
@@ -303,6 +306,9 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
 	if (currentCommand->getAddress().getRank() == rankID)
 	{
+		if (currentCommand->getHost()->isHit())
+			hits.second++;
+
 #if 0
 		//////////////////////////////////////////////////////////////////////////
 		bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());

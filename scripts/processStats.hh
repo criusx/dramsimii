@@ -120,13 +120,20 @@ void sigproc(int i);
 bool ensureDirectoryExists(const bf::path &outputDir);
 
 template <typename T>
+T regexMatch(const string &input, const char *regex)
+{
+	return regexMatch<T>(input.c_str(),regex);
+}
+
+template <typename T>
 T regexMatch(const char *input, const char *regex)
 {
 	boost::regex currentRegex(regex);
 	boost::cmatch match;
 	if (!boost::regex_search(input, match, currentRegex))
 	{
-		cerr << "did not find " << regex << " in " << input;
+		//cerr << "did not find " << regex << " in " << input;
+		throw std::exception();
 	}
 	else
 	{
@@ -509,6 +516,9 @@ public:
 	T idd1;
 	T vdd;
 	T devicesPerRank;
+	T hitLatency;
+	T idd;
+	T isb1;
 
 	// system information
 	unsigned ranksPerDimm;
@@ -551,12 +561,40 @@ public:
 
 		freq = regexMatch<T>(commandLine,"DR\\[([0-9]+)M\\]") * 1E6;
 
+		/// @TODO fix this to read the value from the simulation
+		devicesPerRank = 8;
+
 		int channelWidth = regexMatch<int>(commandLine,"ChannelWidth\\[([0-9]+)\\]");
 
 		int dqPerDram = regexMatch<int>(commandLine,"DQPerDRAM\\[([0-9]+)\\]");
 
 		ranksPerDimm = regexMatch<unsigned>(commandLine,"rk\\[([0-9]+)\\]");
 
+		unsigned associativity = regexMatch<unsigned>(commandLine,"assoc\\[([0-9]+)\\]");
+
+		/// @TODO get this value from the simulation
+		idd = 500; // in mA
+
+		/// @TODO get this from the simulation results
+		isb1 = 340; // in mA
+
+		if (associativity == 2)
+			hitLatency = 2.0;
+		else if (associativity == 4)
+			hitLatency = 3.0;
+		else if (associativity == 8)
+			hitLatency = 4.0;
+		else if (associativity == 16)
+			hitLatency = 5.0;
+		else if (associativity == 24)
+			hitLatency = 6.0;
+		else if (associativity == 32)
+			hitLatency = 7.0;
+		else
+		{
+			cerr << "error: unknown associativity, cannot set hit latency accordingly" << endl;
+			exit(-1);
+		}
 
 		// read power params to see what the requested changes are
 		for (list<pair<string,string> >::const_iterator currentPair = updatedPowerParams.begin(), end = updatedPowerParams.end();
@@ -570,6 +608,21 @@ public:
 			{
 				cerr << "note: idd0 updated to " << value << endl;
 				idd0 = lexical_cast<T>(value);
+			}
+			else if (parameter == "devicesperrank")
+			{
+				cerr << "note: devicesPerRank updated to " << value << endl;
+				devicesPerRank = lexical_cast<T>(value);
+			}
+			else if (parameter == "idd")
+			{
+				cerr << "note: IDD (DIMM cache) updated to " << value << endl;
+				idd = lexical_cast<T>(value);
+			}
+			else if (parameter == "isb1")
+			{
+				cerr << "note: ISB1 updated to " << value << endl;
+				isb1 = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd3n")
 			{
@@ -683,33 +736,50 @@ public:
 		for (;currentRank != end; ++currentRank)
 		{
 			//cerr << *currentRank << endl;
-
-			unsigned currentRank = regexMatch<unsigned>(currentRank->c_str(),"rk\\[([0-9]+)\\]");
+			unsigned currentRankID = regexMatch<unsigned>(currentRank->c_str(),"^\\[([0-9]+)\\]");
 
 			double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
 
 			// because each rank on any dimm will report the same hit and miss counts
-			if ((currentRank % ranksPerDimm) == 0)
+			if ((currentRankID % ranksPerDimm) == 0)
 			{
-				unsigned readHits = regexMatch<unsigned>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
-				unsigned readMisses = regexMatch<unsigned>(currentRank->c_str(),"readMisses\\{([0-9]+)\\}");
-				unsigned writeHits = regexMatch<unsigned>(currentRank->c_str(),"writeHits\\{([0-9]+)\\}");
-				unsigned writeMisses = regexMatch<unsigned>(currentRank->c_str(),"writeMisses\\{([0-9]+)\\}");
+				unsigned accesses;
 
-				// number of accesses * duration of access gives the time that this DIMM cache spent in Idd
-				unsigned accesses = readHits + readMisses + writeHits + writeMisses;
+				try
+				{
+					unsigned readHits = regexMatch<unsigned>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
+					unsigned readMisses = regexMatch<unsigned>(currentRank->c_str(),"readMisses\\{([0-9]+)\\}");
+					unsigned writeHits = regexMatch<unsigned>(currentRank->c_str(),"writeHits\\{([0-9]+)\\}");
+					unsigned writeMisses = regexMatch<unsigned>(currentRank->c_str(),"writeMisses\\{([0-9]+)\\}");
+
+					// number of accesses * duration of access gives the time that this DIMM cache spent in Idd
+					accesses = readHits + readMisses + writeHits + writeMisses;
+				}
+				catch (std::exception& e)
+				{
+					unsigned reads = regexMatch<unsigned>(currentRank->c_str(),"read\\{([0-9]+)\\}") / 8;
+					unsigned writes = regexMatch<unsigned>(currentRank->c_str(),"write\\{([0-9]+)\\}") / 8;
+
+					accesses = reads + writes;
+				}
+
+				unsigned inUseTime = accesses * hitLatency;
+				assert(inUseTime >= 0);
 
 				// the remaining time was spent in idle mode
-				double idleTime = duration - (double)accesses * accessTime;
-
+				double idleTime = duration - (double)inUseTime;
+				assert(idleTime >= 0);
+				
+				pc.sramActivePower += (double)inUseTime / duration * idd;
+				pc.sramIdlePower += (double)idleTime / duration * isb1;
 			}
 
-			double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
-			double thisRankRasCount = regexMatch<float>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
-			double thisRankAdjustedRasCount = regexMatch<float>(currentRank->c_str(),"adjRasCount\\{([0-9]+)\\}");
-			double readCycles = regexMatch<float>(currentRank->c_str(),"read\\{([0-9]+)\\}");
-			double writeCycles = regexMatch<float>(currentRank->c_str(),"write\\{([0-9]+)\\}");
-			double readHits = regexMatch<float>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
+			//double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
+			double thisRankRasCount = regexMatch<double>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
+			double thisRankAdjustedRasCount = regexMatch<double>(currentRank->c_str(),"adjRasCount\\{([0-9]+)\\}");
+			double readCycles = regexMatch<double>(currentRank->c_str(),"read\\{([0-9]+)\\}");
+			double writeCycles = regexMatch<double>(currentRank->c_str(),"write\\{([0-9]+)\\}");
+			double readHits = regexMatch<double>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
 			totalReadHits += readHits;
 			double prechargeTime = regexMatch<float>(currentRank->c_str(),"prechargeTime\\{([0-9]+)\\}");
 			double percentActive = 1.0 - (prechargeTime / max((double)(duration), 0.00000001));
@@ -739,6 +809,9 @@ public:
 
 			// read power analysis
 			double RDschPct = readCycles / duration;
+			double RDschPctAdj = (readCycles - readHits * 8) / duration;
+			assert(RDschPctAdj > 0.0);
+			pc.PsysRdAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPctAdj;
 			pc.PsysRD += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPct;
 
 			// write power analysis
@@ -755,7 +828,8 @@ public:
 
 		pc.energy = (pc.PsysACT_STBY + pc.PsysACT + pc.PsysPRE_STBY + pc.PsysRD + pc.PsysWR + pc.PsysACT_PDN + pc.PsysPRE_PDN) * epochTime;
 		//cerr << epochTime << " " << freq << endl;
-		pc.reducedEnergy = idd1 * devicesPerRank * tRc / freq * vdd * totalReadHits;
+		//pc.reducedEnergy = idd1 * devicesPerRank * tRc / freq * vdd * totalReadHits;
+		pc.reducedEnergy = (pc.PsysACT_STBY + pc.PsysACT + pc.PsysPRE_STBY + pc.PsysRdAdjusted + pc.PsysWR + pc.PsysACT_PDN + pc.PsysPRE_PDN + pc.sramActivePower + pc.sramIdlePower) * epochTime;
 
 
 		return pc;
