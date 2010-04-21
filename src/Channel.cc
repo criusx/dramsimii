@@ -700,6 +700,18 @@ void Channel::doPowerCalculation(ostream& os)
 		k->resetPrechargeTime(time);
 		k->resetCycleCounts();
 	}
+	
+	unsigned dimmId = 0;
+	for (vector<Cache>::iterator currentDimm = cache.begin(), end = cache.end();
+		currentDimm < end; ++currentDimm)
+	{
+		os << " dimm[" << dimmId++ << "]" <<
+			" dimmReadHits{" << currentDimm->getReadHits() <<
+			"} dimmReadMisses{" << currentDimm->getReadMisses() <<
+			"} dimmWriteHits{" << currentDimm->getWriteHits() <<
+			"} dimmWriteMisses{" << currentDimm->getWriteMisses() << "}";
+	}
+
 	os << endl;
 
 	os << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysACT_STBY << "} mW EsysAdjusted {" << setprecision(5) <<

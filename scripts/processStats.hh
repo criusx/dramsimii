@@ -132,7 +132,7 @@ T regexMatch(const char *input, const char *regex)
 	boost::cmatch match;
 	if (!boost::regex_search(input, match, currentRegex))
 	{
-		//cerr << "did not find " << regex << " in " << input;
+		cerr << "did not find " << regex << " in " << input;
 		throw std::exception();
 	}
 	else
@@ -741,7 +741,7 @@ public:
 			double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
 
 			// because each rank on any dimm will report the same hit and miss counts
-			if ((currentRankID % ranksPerDimm) == 0)
+			//if ((currentRankID % ranksPerDimm) == 0)
 			{
 				unsigned accesses;
 

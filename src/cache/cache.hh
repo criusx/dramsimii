@@ -199,6 +199,10 @@ namespace DRAMsimII
 		std::pair<unsigned,unsigned> getReadHitsMisses() const { return readHitsMisses; }
 		std::pair<unsigned,unsigned> getCumulativeHitsMisses() const { return cumulativeHitsMisses; }
 		std::pair<unsigned,unsigned> getCumulativeReadHitsMisses() const { return cumulativeReadHitsMisses; }
+		unsigned getReadHits() const { return readHitsMisses.first; }
+		unsigned getWriteHits() const { return hitsMisses.first - readHitsMisses.first; }
+		unsigned getReadMisses() const { return readHitsMisses.second; }
+		unsigned getWriteMisses() const { return hitsMisses.second - readHitsMisses.second; }
 
 		void resetStats()
 		{
