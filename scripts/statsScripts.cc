@@ -876,7 +876,7 @@ void processStats(const bf::path &outputDir, const string &filename)
 	bool started = false;
 	unsigned ipcLinesWritten = 0;
 	float epochTime = 0.0F;
-	float period = 0.0F;
+	float periodInNs = 0.0F;
 
 	unsigned tRC = 0;
 	unsigned tRAS = 0;
@@ -916,62 +916,23 @@ void processStats(const bf::path &outputDir, const string &filename)
 				started = true;
 
 				// get the number of channels
-				regex channelSearch("ch\\[([0-9]+)\\]");
-				cmatch what;
-
-				if (regex_search(newLine, what, channelSearch))
-				{
-					string value(what[1].first, what[1].second);
-					channelCount = lexical_cast<unsigned> (value);
-				}
-				else
-					exit(-1);
+				channelCount = regexMatch<unsigned>(newLine, "ch\\[([0-9]+)\\]");
 
 				// get the number of ranks
-				regex rankSearch("rk\\[([0-9]+)\\]");
-				if (regex_search(newLine, what, rankSearch))
-				{
-					string value(what[1].first, what[1].second);
-					rankCount = lexical_cast<unsigned> (value);
-				}
-				else
-					exit(-1);
+				rankCount = regexMatch<unsigned>(newLine, "rk\\[([0-9]+)\\]");
 
 				// get the number of banks
-				regex bankSearch("bk\\[([0-9]+)\\]");
-				if (regex_search(newLine, what, bankSearch))
-				{
-					string value(what[1].first, what[1].second);
-					bankCount = lexical_cast<unsigned> (value);
-				}
-				else
-					exit(-1);
+				bankCount = regexMatch<unsigned>(newLine, "bk\\[([0-9]+)\\]");
 
 				// get the value of tRC
-				regex trcSearch("t_\\{RC\\}\\[([0-9]+)\\]");
-				if (regex_search(newLine, what, trcSearch))
-				{
-					string value(what[1].first, what[1].second);
-					tRC = lexical_cast<unsigned> (value);
-#ifndef NDEBUG
-					cerr << "got tRC as " << tRC << endl;
-#endif
-				}
-				else
-					exit(-1);
+				tRC = regexMatch<unsigned>(newLine, "t_\\{RC\\}\\[([0-9]+)\\]");
 
-				// get the value of tRC
-				regex trasSearch("t_\\{RAS\\}\\[([0-9]+)\\]");
-				if (regex_search(newLine, what, trasSearch))
-				{
-					string value(what[1].first, what[1].second);
-					tRAS = lexical_cast<unsigned> (value);
-#ifndef NDEBUG
-					cerr << "got tRAS as " << tRAS << endl;
-#endif
-				}
-				else
-					exit(-1);
+				// get the value of tRAS
+				tRAS = regexMatch<unsigned>(newLine, "t_\\{RAS\\}\\[([0-9]+)\\]");
+
+				// determine the period from the datarate
+				double freq = regexMatch<double>(newLine,"DR\\[([0-9]+)M\\]") * 1.0E6;
+				periodInNs = 1 / freq / 1.0E-9;
 
 				channelLatencyDistribution.reserve(channelCount);
 
@@ -1028,7 +989,6 @@ void processStats(const bf::path &outputDir, const string &filename)
 						}
 					}
 				}
-
 			}
 		}
 		else if (starts_with(newLine, "----M5 Stat:"))
@@ -1086,8 +1046,8 @@ void processStats(const bf::path &outputDir, const string &filename)
 		}
 		else if (starts_with(newLine, "----Datarate"))
 		{
-			period = 1 / lexical_cast<float> (strchr(newLine, ' ') + 1)
-				/ 0.000000001F;
+			//period = 1 / lexical_cast<float> (strchr(newLine, ' ') + 1)
+			//	/ 0.000000001F;
 		}
 		else
 		{
@@ -1829,11 +1789,11 @@ void processStats(const bf::path &outputDir, const string &filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the PC vs latency graph
 		outFilename = outputDir / ("latencyVsPc." + extension);
-		pcVsLatencyGraph(outFilename,p0,commandLine,latencyVsPcLow,latencyVsPcHigh,period,false);
+		pcVsLatencyGraph(outFilename,p0,commandLine,latencyVsPcLow,latencyVsPcHigh,periodInNs,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("latencyVsPc", "PC vs. Latency"));
 		outFilename = outputDir / ("latencyVsPc-thumb." + thumbnailExtension);
-		pcVsLatencyGraph(outFilename,p0,commandLine,latencyVsPcLow,latencyVsPcHigh,period,true);
+		pcVsLatencyGraph(outFilename,p0,commandLine,latencyVsPcLow,latencyVsPcHigh,periodInNs,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
@@ -1842,12 +1802,12 @@ void processStats(const bf::path &outputDir, const string &filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the PC vs average latency graph
 		outFilename = outputDir / ("avgLatencyVsPc." + extension);
-		pcVsAverageLatencyGraph(outFilename,p1,commandLine,latencyVsPcLow,latencyVsPcHigh,period,false);
+		pcVsAverageLatencyGraph(outFilename,p1,commandLine,latencyVsPcLow,latencyVsPcHigh,periodInNs,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("avgLatencyVsPc",
 			"PC vs. Average Latency"));
 		outFilename = outputDir / ("avgLatencyVsPc-thumb." + thumbnailExtension);
-		pcVsAverageLatencyGraph(outFilename,p1,commandLine,latencyVsPcLow,latencyVsPcHigh,period,true);
+		pcVsAverageLatencyGraph(outFilename,p1,commandLine,latencyVsPcLow,latencyVsPcHigh,periodInNs,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
@@ -1856,10 +1816,10 @@ void processStats(const bf::path &outputDir, const string &filename)
 		// make the transaction latency distribution graph
 		//StdDev<float> latencyDeviation, latencyDeviation2;
 		outFilename = outputDir / ("transactionLatencyDistribution." + extension);
-		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,false);
+		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, periodInNs,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("transactionLatencyDistribution-thumb." + thumbnailExtension);
-		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period,true);
+		transactionLatencyDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, periodInNs,true);
 		graphs.push_back(pair<string, string> ("transactionLatencyDistribution",
 			"Transaction Latency Distribution"));
 		//////////////////////////////////////////////////////////////////////////
@@ -1867,10 +1827,10 @@ void processStats(const bf::path &outputDir, const string &filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the zoomed transaction latency distribution graph
 		outFilename = outputDir / ("zoomedTransactionLatencyDistribution." + extension);
-		zoomedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distTransactionLatency,period,false);
+		zoomedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distTransactionLatency, periodInNs,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("zoomedTransactionLatencyDistribution-thumb." + thumbnailExtension);
-		zoomedTransactionLatencyDistributionGraph(outFilename, p0, commandLine, distTransactionLatency, period,true);	
+		zoomedTransactionLatencyDistributionGraph(outFilename, p0, commandLine, distTransactionLatency, periodInNs,true);	
 		graphs.push_back(pair<string, string> (
 			"zoomedTransactionLatencyDistribution",
 			"Zoomed Transaction Latency"));
@@ -1882,22 +1842,22 @@ void processStats(const bf::path &outputDir, const string &filename)
 		// make the adjusted transaction latency distribution graph
 		//StdDev<float> latencyDeviation, latencyDeviation2;
 		outFilename = outputDir / ("adjustedTransactionLatencyDistribution." + extension);
-		adjustedTransactionLatencyDistributionGraph(outFilename,p0,commandLine, distAdjustedTransactionLatency,period,false);
+		adjustedTransactionLatencyDistributionGraph(outFilename,p0,commandLine, distAdjustedTransactionLatency,periodInNs,false);
 		graphs.push_back(pair<string, string> (
 			"adjustedTransactionLatencyDistribution",
 			"Adjusted Transaction Latency"));
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("adjustedTransactionLatencyDistribution-thumb." + thumbnailExtension);
-		adjustedTransactionLatencyDistributionGraph(outFilename, p1, commandLine, distAdjustedTransactionLatency, period,true);		
+		adjustedTransactionLatencyDistributionGraph(outFilename, p1, commandLine, distAdjustedTransactionLatency, periodInNs,true);		
 		//////////////////////////////////////////////////////////////////////////
 
 		//////////////////////////////////////////////////////////////////////////
 		// make the zoomed adjusted transaction latency distribution graph
 		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution." + extension);
-		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, period,false);
+		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, periodInNs,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("zoomedAdjustedTransactionLatencyDistribution-thumb." + thumbnailExtension);
-		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distAdjustedTransactionLatency, period,true);	
+		zoomedAdjustedTransactionLatencyDistributionGraph(outFilename, p3, commandLine, distAdjustedTransactionLatency, periodInNs,true);	
 		graphs.push_back(pair<string, string> (
 			"zoomedAdjustedTransactionLatencyDistribution",
 			"Zoomed Adjusted Transaction Latency"));	
@@ -1908,10 +1868,10 @@ void processStats(const bf::path &outputDir, const string &filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the transaction latency cumulative distribution graph
 		outFilename = outputDir / ("transactionLatencyCumulativeDistribution." + extension);
-		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period, "Read Transaction Latency Cumulative Distribution", false);
+		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, periodInNs, "Read Transaction Latency Cumulative Distribution", false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("transactionLatencyCumulativeDistribution-thumb." + thumbnailExtension);
-		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, period, "Read Transaction Latency Cumulative Distribution", true);
+		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distTransactionLatency, periodInNs, "Read Transaction Latency Cumulative Distribution", true);
 		graphs.push_back(pair<string, string> ("transactionLatencyCumulativeDistribution",
 			"Transaction Latency Cumulative Distribution"));
 		//////////////////////////////////////////////////////////////////////////
@@ -1919,10 +1879,10 @@ void processStats(const bf::path &outputDir, const string &filename)
 		//////////////////////////////////////////////////////////////////////////
 		// make the adjusted transaction latency cumulative distribution graph
 		outFilename = outputDir / ("adjustedTransactionLatencyCumulativeDistribution." + extension);
-		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, period, "Adjusted Transaction Latency Cumulative Distribution", false);
+		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, periodInNs, "Adjusted Transaction Latency Cumulative Distribution", false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		outFilename = outputDir / ("adjustedTransactionLatencyCumulativeDistribution-thumb." + thumbnailExtension);
-		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, period, "Adjusted Transaction Latency Cumulative Distribution", true);
+		transactionLatencyCumulativeDistributionGraph(outFilename, p2, commandLine, distAdjustedTransactionLatency, periodInNs, "Adjusted Transaction Latency Cumulative Distribution", true);
 		graphs.push_back(pair<string, string> ("adjustedTransactionLatencyCumulativeDistribution",
 			"Adjusted Transaction Latency Cumulative Distribution"));
 		//////////////////////////////////////////////////////////////////////////
@@ -1955,12 +1915,12 @@ void processStats(const bf::path &outputDir, const string &filename)
 	//////////////////////////////////////////////////////////////////////////
 	// make the other IPC graph
 	outFilename = outputDir / ("averageIPCandLatency." + extension);
-	averageIpcAndLatencyGraph(outFilename, p0, commandLine, transactionCount, transactionLatency,ipcValues, epochTime, period,false);
+	averageIpcAndLatencyGraph(outFilename, p0, commandLine, transactionCount, transactionLatency,ipcValues, epochTime, periodInNs,false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("averageIPCandLatency",
 		"IPC and Latency"));
 	outFilename = outputDir / ("averageIPCandLatency-thumb." + thumbnailExtension);
-	averageIpcAndLatencyGraph(outFilename, p0, commandLine, transactionCount, transactionLatency,ipcValues, epochTime, period,true);
+	averageIpcAndLatencyGraph(outFilename, p0, commandLine, transactionCount, transactionLatency,ipcValues, epochTime, periodInNs,true);
 	//////////////////////////////////////////////////////////////////////////
 
 	if (!cypressResults)
@@ -2014,8 +1974,8 @@ void processStats(const bf::path &outputDir, const string &filename)
 	//////////////////////////////////////////////////////////////////////////
 
 #ifndef NDEBUG
-	cerr << "Period: " << period << endl;
-	cerr << "tRC: " << tRC * period << "ns" << endl;
+	cerr << "Period: " << periodInNs << endl;
+	cerr << "tRC: " << tRC * periodInNs << "ns" << endl;
 	cerr << "Epoch Time: " << epochTime;
 #endif
 

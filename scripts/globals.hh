@@ -168,7 +168,7 @@ const string bigEnergyScript = "set key outside center bottom horizontal Left re
 							   set y2label \"Cumulative Energy (mJ)\"\n\
 							   set xlabel \"Time (s)\"\n";
 
-const string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR","ACT-PDN","PRE-PDN"};
+const string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR","ACT-PDN","PRE-PDN", "DIMM Cache"};
 
 const string subAddrDistroA = "unset y2tics\n\
 							  unset logscale y\n\

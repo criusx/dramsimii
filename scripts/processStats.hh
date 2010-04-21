@@ -132,7 +132,7 @@ T regexMatch(const char *input, const char *regex)
 	boost::cmatch match;
 	if (!boost::regex_search(input, match, currentRegex))
 	{
-		cerr << "did not find " << regex << " in " << input;
+		cerr << "did not find " << regex << " in " << input << endl;
 		throw std::exception();
 	}
 	else
@@ -352,7 +352,8 @@ public:
 	  {
 		  // shouldn't be any duplicates
 		  if (values.find(value) != values.end())
-			  throw;
+			  cerr << "error: " << value << " exists more than once" << endl;
+			  //throw;
 
 		  values[value] = count;
 
@@ -722,7 +723,6 @@ public:
 	PowerCalculations calculateSystemPower(const char* newLine, const T epochTime)
 	{
 		string line(newLine);
-		trim(line);
 		vector<string> splitLine;
 		boost::split_regex(splitLine, line, regex(" rk"));
 
@@ -733,46 +733,58 @@ public:
 
 		double totalReadHits = 0.0;
 
+		const double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
+
+		// calculate SRAM power from the DIMM caches
+		string &lastRank = splitLine.back();
+		vector<string> splitDimmLine;
+		boost::split_regex(splitDimmLine, lastRank, regex(" dimm\\["));
+
+		vector<string>::const_iterator currentDimm = splitDimmLine.begin(), dimmEnd = splitDimmLine.end();
+		currentDimm++;
+
+		for (;currentDimm != dimmEnd; ++currentDimm)
+		{
+			unsigned accesses;
+
+			try
+			{
+				unsigned readHits = regexMatch<unsigned>(currentDimm->c_str(),"dimmReadHits\\{([0-9]+)\\}");
+				unsigned readMisses = regexMatch<unsigned>(currentDimm->c_str(),"dimmReadMisses\\{([0-9]+)\\}");
+				unsigned writeHits = regexMatch<unsigned>(currentDimm->c_str(),"dimmWriteHits\\{([0-9]+)\\}");
+				unsigned writeMisses = regexMatch<unsigned>(currentDimm->c_str(),"dimmWriteMisses\\{([0-9]+)\\}");
+
+				// number of accesses * duration of access gives the time that this DIMM cache spent in Idd
+				accesses = readHits + readMisses + writeHits + writeMisses;
+			}
+			catch (std::exception& e)
+			{
+				unsigned reads = regexMatch<unsigned>(currentDimm->c_str(),"read\\{([0-9]+)\\}") / 8;
+				unsigned writes = regexMatch<unsigned>(currentDimm->c_str(),"write\\{([0-9]+)\\}") / 8;
+
+				accesses = reads + writes;
+			}
+
+			unsigned inUseTime = accesses * hitLatency;
+			assert(inUseTime >= 0);
+
+			// the remaining time was spent in idle mode
+			double idleTime = duration - (double)inUseTime;
+			assert(idleTime >= 0);
+
+			pc.sramActivePower += (double)inUseTime / duration * idd;
+			pc.sramIdlePower += (double)idleTime / duration * isb1;
+		}
+
 		for (;currentRank != end; ++currentRank)
 		{
 			//cerr << *currentRank << endl;
 			unsigned currentRankID = regexMatch<unsigned>(currentRank->c_str(),"^\\[([0-9]+)\\]");
 
-			double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
-
+			
 			// because each rank on any dimm will report the same hit and miss counts
 			//if ((currentRankID % ranksPerDimm) == 0)
-			{
-				unsigned accesses;
-
-				try
-				{
-					unsigned readHits = regexMatch<unsigned>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
-					unsigned readMisses = regexMatch<unsigned>(currentRank->c_str(),"readMisses\\{([0-9]+)\\}");
-					unsigned writeHits = regexMatch<unsigned>(currentRank->c_str(),"writeHits\\{([0-9]+)\\}");
-					unsigned writeMisses = regexMatch<unsigned>(currentRank->c_str(),"writeMisses\\{([0-9]+)\\}");
-
-					// number of accesses * duration of access gives the time that this DIMM cache spent in Idd
-					accesses = readHits + readMisses + writeHits + writeMisses;
-				}
-				catch (std::exception& e)
-				{
-					unsigned reads = regexMatch<unsigned>(currentRank->c_str(),"read\\{([0-9]+)\\}") / 8;
-					unsigned writes = regexMatch<unsigned>(currentRank->c_str(),"write\\{([0-9]+)\\}") / 8;
-
-					accesses = reads + writes;
-				}
-
-				unsigned inUseTime = accesses * hitLatency;
-				assert(inUseTime >= 0);
-
-				// the remaining time was spent in idle mode
-				double idleTime = duration - (double)inUseTime;
-				assert(idleTime >= 0);
-				
-				pc.sramActivePower += (double)inUseTime / duration * idd;
-				pc.sramIdlePower += (double)idleTime / duration * isb1;
-			}
+			
 
 			//double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
 			double thisRankRasCount = regexMatch<double>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");

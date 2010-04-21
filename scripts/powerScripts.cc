@@ -3,7 +3,7 @@
 
 #include <boost/algorithm/string/regex.hpp>
 
-#define POWER_VALUES_PER_CHANNEL 7
+#define POWER_VALUES_PER_CHANNEL 8
 
 void powerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
 				const vector<vector<float> > &values,
@@ -26,9 +26,11 @@ void powerGraph(const bf::path &outFilename, opstream &p, const string& commandL
 		}
 	}
 	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
+	assert(values.size() > 0);
 	for (vector<vector<float> >::const_iterator i = values.begin(); i
 		!= values.end(); ++i)
 	{
+		assert(i->size() > 0);
 		for (vector<float>::const_iterator j = i->begin(); j != i->end(); ++j)
 		{
 			p << *j << endl;
@@ -326,7 +328,7 @@ void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const strin
 	p << "e" << endl << "unset output" << endl;
 }
 
-
+#define LINE_LENGTH 158
 
 ///////////////////////////////////////////////////////////////////////////////
 void processPower(const bf::path &outputDir, const string &filename, const list<pair<string,string> > &updatedPowerParams)
@@ -390,7 +392,8 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 			{
 				powerParams.setParameters(newLine, updatedPowerParams);		
 
-				unsigned channelCount = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
+				channelCount = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
+
 				values.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
 				energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
 
@@ -406,6 +409,39 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 				// determine the commandline name
 				char *position = strchr(newLine, ':');
 				commandLine = position + 2;
+
+				if (commandLine.length() > LINE_LENGTH)
+				{
+					for (unsigned i = 0; i < min((int)commandLine.length() - LINE_LENGTH, LINE_LENGTH); i++)
+					{
+						if (commandLine[LINE_LENGTH + i] == ' ')
+						{
+							commandLine.insert(LINE_LENGTH + i, "\\n");
+							break;
+						}
+						else if (commandLine[LINE_LENGTH - i] == ' ')
+						{
+							commandLine.insert(LINE_LENGTH - i, "\\n");
+							break;
+						}
+					}
+				}
+				if (commandLine.length() > 2 * LINE_LENGTH)
+				{
+					for (unsigned i = 0; i < min((int)commandLine.length() - 2 * LINE_LENGTH, 2 * LINE_LENGTH); i++)
+					{
+						if (commandLine[2 * LINE_LENGTH + i] == ' ')
+						{
+							commandLine.insert(2 * LINE_LENGTH + i, "\\n");
+							break;
+						}
+						else if (commandLine[2 * LINE_LENGTH - i] == ' ')
+						{
+							commandLine.insert(2 * LINE_LENGTH - i, "\\n");
+							break;
+						}
+					}
+				}
 			}		
 		}		
 		// a line with all the power components for one channel
@@ -434,7 +470,8 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
-
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
+ 
 			energyValueBuffer.first += pc.energy;
 			energyValueBuffer.second += pc.reducedEnergy;
 
@@ -514,6 +551,8 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 	p3 << basicSetup << terminal;
 	opstream p4("gnuplot");
 	p4 << basicSetup << terminal;
+
+	assert(values.size() > 0);
 
 	//////////////////////////////////////////////////////////////////////////
 	// make the power graph
