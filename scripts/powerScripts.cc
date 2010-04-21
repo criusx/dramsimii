@@ -312,16 +312,11 @@ void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const strin
 	totalPower = 0.0F;
 	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(); i
 		!= energyValues.end(); ++i)
-		//for (vector<unsigned>::size_type i = 0; i < energyValues.back().size(); ++i)
 	{
-		//for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
-		//	totalPower += alternateValues[j][i];
-		totalPower += i->first - i->second;
+		totalPower += i->second;
 
 		p << time << " " << totalPower << endl;
-		//cerr << time << " " << totalPower << endl;
-
-		//cerr << time << " " << i->first + i->second << endl;
+		
 		time += epochTime;
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -466,7 +461,7 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBY;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += pc.PsysACT;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += pc.PsysPRE_STBY;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRD;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRdAdjusted;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;

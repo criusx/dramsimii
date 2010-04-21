@@ -97,7 +97,7 @@ const string cumulPowerScript = "unset border\n\
 								set ytics out\n\
 								set origin 0.0, 0.0\n\
 								plot '-' u 1:2 t \"Cumulative Energy\" w lines lw 2.00,\
-								'-' u 1:2 t \"Reduced Cumulative Energy\" w lines lw 2.00\n";
+								'-' u 1:2 t \"Theoretical Cumulative Energy\" w lines lw 2.00\n";
 
 const string hitMissScript = "unset border\n\
 							 set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
