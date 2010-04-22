@@ -4,16 +4,27 @@
 using std::map;
 using std::tr1::unordered_map;
 
-void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 											   vector<vector<vector<vector<unsigned> > > > &channelLatencyDistribution,
 											   float epochTime, unsigned channelID, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	p << subAddrDistroA;
-	p << "set multiplot layout "
-		<< channelLatencyDistribution[channelID].size()
-		<< ", 1 title \"{/=18" << commandLine << "\"" << endl;
+#if 0	
+	p << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"";
+
+	
+	for (vector<string>::const_iterator i = commandLine.begin(), end = commandLine.end();
+		i < end; ++i)
+	{
+		p << "{/*1.5" << i << "};";
+	}
+		
+#endif
+		p << subAddrDistroA;
+
+		printTitle("", commandLine, p, channelLatencyDistribution[channelID].size());
+
 
 	for (unsigned rankID = 0; rankID
 		< channelLatencyDistribution[channelID].size(); rankID++)
@@ -61,16 +72,19 @@ void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opst
 }
 
 
-void addressDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void addressDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 										const vector<vector<vector<vector<unsigned> > > > &channelDistribution,
 										float epochTime, unsigned channelID, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << subAddrDistroA;
+#if 0
 	p << "set multiplot layout "
 		<< channelDistribution[channelID].size()
 		<< ", 1 title \"" << commandLine << "\"" << endl;
+#endif
+	printTitle("", commandLine, p, channelDistribution[channelID].size());
 
 	for (unsigned rankID = 0; rankID
 		< channelDistribution[channelID].size(); rankID++)
@@ -115,15 +129,20 @@ void addressDistributionPerChannelGraph(const bf::path &outFilename, opstream &p
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
 
-void overallAddressDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void overallAddressDistributionGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 									 unsigned channelCount,const vector<vector<vector<vector<unsigned> > > > &channelDistribution,
 									 unsigned rankCount, unsigned bankCount,
 									 float epochTime, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
+#if 0
 	p << "set title \"" << commandLine << "\\nChannel Distribution Rate\""
-		<< endl << addressDistroA;
+		<< endl;
+#endif
+	printTitle("Channel Distribution Rate", commandLine, p);
+
+	p << addressDistroA;
 	p << "plot ";
 	for (unsigned i = 0; i < channelCount; ++i)
 		p << "'-' using 1 axes x2y1 t 'ch[" << i << "]',";
@@ -219,7 +238,7 @@ void overallAddressDistributionGraph(const bf::path &outFilename, opstream &p, c
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
 
-void pcVsLatencyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void pcVsLatencyGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 					  const std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> > &latencyVsPcLow,
 					  const std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> > &latencyVsPcHigh,
 					  float period, bool isThumbnail)
@@ -227,8 +246,8 @@ void pcVsLatencyGraph(const bf::path &outFilename, opstream &p, const string& co
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << pcVsLatencyGraphScript << endl;
-	p << "set multiplot layout 1, 2 title \"" << commandLine
-		<< "\\nTotal Latency Due to Reads vs. PC Value\"" << endl;
+	p << "set multiplot layout 1, 2 title \"" << commandLine[0]
+		<< "\\n{/*1.5Total Latency Due to Reads vs. PC Value}\"" << endl;
 	p << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
@@ -251,7 +270,7 @@ void pcVsLatencyGraph(const bf::path &outFilename, opstream &p, const string& co
 		<< endl;
 }
 
-void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 							 const std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> > &latencyVsPcLow,
 							 const std::tr1::unordered_map<uint64_t, pair<uint64_t, uint64_t> > &latencyVsPcHigh,
 							 float period, bool isThumbnail)
@@ -259,8 +278,8 @@ void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, const str
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << avgPcVsLatencyGraphScript << endl;
-	p << "set multiplot layout 1, 2 title \"" << commandLine
-		<< "\\nAverage Latency Due to Reads vs. PC Value\"" << endl;
+	p << "set multiplot layout 1, 2 title \"" << commandLine[0]
+		<< "\\n{/*1.5Average Latency Due to Reads vs. PC Value}\"" << endl;
 	p << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
@@ -285,15 +304,19 @@ void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, const str
 		<< endl;
 }
 
-void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 										 const std::tr1::unordered_map<unsigned, unsigned> &distTransactionLatency, float period,
 										 bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-
+#if 0
 	p << "set title \"" << commandLine << "\\nRead Transaction Latency\""
-		<< endl << transactionGraphScript << endl;
+		<< endl;
+#endif
+printTitle("Read Transaction Latency", commandLine, p);
+		
+		p << transactionGraphScript << endl;
 
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
@@ -304,7 +327,7 @@ void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &
 	p << "e" << endl << "unset output" << endl;
 }
 
-void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 											   const std::tr1::unordered_map<unsigned,unsigned> & distTransactionLatency, float period,
 											   bool isThumbnail)
 {
@@ -316,9 +339,13 @@ void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opst
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
 		latencyDeviation.add(i->first * period, i->second);
-
+#if 0
 	p << "set title \"" << commandLine << "\\nRead Transaction Latency\""
-		<< endl << "set xrange [0:"
+		<< endl ;
+#endif
+	printTitle("Read Transaction Latency", commandLine, p);
+
+	p << "set xrange [0:"
 		<< latencyDeviation.getStdDev().get<1> () + 8
 		* latencyDeviation.getStdDev().get<2> () << "]" << endl
 		<< transactionGraphScript << endl;
@@ -331,15 +358,19 @@ void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opst
 	p << "e" << endl << "unset output" << endl;
 }
 
-void adjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void adjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 												 const std::tr1::unordered_map<unsigned,unsigned> & distAdjustedTransactionLatency, float period,
 												 bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
+#if 0
 	p << "set title \"" << commandLine
-		<< "\\nAdjusted Read Transaction Latency\"" << endl
-		<< transactionGraphScript << endl;
+		<< "\\nAdjusted Read Transaction Latency\"" << endl;
+#endif
+	printTitle("Adjusted Read Transaction Latency", commandLine, p);
+
+		p << transactionGraphScript << endl;
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distAdjustedTransactionLatency.begin(), end =
 		distAdjustedTransactionLatency.end(); i != end; ++i)
@@ -349,7 +380,7 @@ void adjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, op
 	p << "e" << endl << "unset output" << endl;
 }
 
-void zoomedAdjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void zoomedAdjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 													   const std::tr1::unordered_map<unsigned,unsigned> & distAdjustedTransactionLatency, float period,
 													   bool isThumbnail)
 {
@@ -361,10 +392,12 @@ void zoomedAdjustedTransactionLatencyDistributionGraph(const bf::path &outFilena
 		distAdjustedTransactionLatency.begin(), end =
 		distAdjustedTransactionLatency.end(); i != end; ++i)
 		latencyDeviation.add(i->first * period, i->second);
-
+#if 0
 	p << "set title \"" << commandLine
-		<< "\\nZoomed Adjusted Read Transaction Latency\"" << endl
-		<< "set xrange [0:" << latencyDeviation.getStdDev().get<1> () + 8
+		<< "\\nZoomed Adjusted Read Transaction Latency\"" << endl;
+#endif
+	printTitle("Zoomed Adjusted Read Transaction Latency", commandLine, p);
+		p << "set xrange [0:" << latencyDeviation.getStdDev().get<1> () + 8
 		* latencyDeviation.getStdDev().get<2> () << "]" << endl
 		<< transactionGraphScript << endl;
 
@@ -382,13 +415,16 @@ void zoomedAdjustedTransactionLatencyDistributionGraph(const bf::path &outFilena
 	p << "e" << endl << "unset output" << endl;
 }
 
-void bandwidthGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void bandwidthGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 					const vector<pair<uint64_t, uint64_t> > & bandwidthValues,const vector<float> &ipcValues,vector<pair<uint64_t, uint64_t> > &cacheBandwidthValues,
 					float epochTime, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
+#if 0
 	p << "set multiplot title \"" << commandLine << "\"" << endl;
+#endif
+	printTitle("", commandLine, p, 2);
 	p << bandwidthGraphScript << endl;
 
 	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
@@ -459,7 +495,7 @@ void bandwidthGraph(const bf::path &outFilename, opstream &p, const string& comm
 		<< endl;
 }
 
-void cacheGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void cacheGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 				const vector<unsigned> & iCacheMisses,const vector<unsigned> &iCacheHits,
 				const vector<unsigned> & dCacheMisses,const vector<unsigned> &dCacheHits,
 				const vector<unsigned> & l2CacheMisses,const vector<unsigned> &l2CacheHits,
@@ -467,8 +503,12 @@ void cacheGraph(const bf::path &outFilename, opstream &p, const string& commandL
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
+#if 0
 	p << "set multiplot layout 3, 1 title \"" << commandLine << "\""
 		<< endl;
+#endif
+	printTitle("", commandLine, p, 3);
+
 	p << cacheGraph1 << endl;
 
 	for (vector<unsigned>::size_type i = 0; i < iCacheMisses.size(); ++i)
@@ -505,14 +545,17 @@ void cacheGraph(const bf::path &outFilename, opstream &p, const string& commandL
 		<< endl;
 }
 
-void averageIpcAndLatencyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void averageIpcAndLatencyGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 							   vector<unsigned> & transactionCount, vector<tuple<unsigned, unsigned, double, unsigned> > &transactionLatency,
 							   vector<float> &ipcValues,
 							   float epochTime, float period, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
+#if 0
 	p << "set multiplot layout 2,1 title \"" << commandLine << "\"" << endl;
+#endif
+	printTitle("", commandLine, p, 2);
 
 	// make the transaction latency graph
 	p << "set title 'Transaction Latency'" << endl
@@ -597,13 +640,17 @@ void averageIpcAndLatencyGraph(const bf::path &outFilename, opstream &p, const s
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
 
-void hitMissGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void hitMissGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 				  const vector<float> & hitMissValues,const vector<unsigned> &hitMissTotals, float epochTime, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
+#if 0
 	p << "set title \"" << "Reuse Rate of Open Rows vs. Time\\n"
-		<< commandLine << "\"" << endl << rowHitMissGraphScript << endl;
+		<< commandLine << "\"" << endl;
+#endif
+	printTitle("Reuse Rate of Open Rows vs. Time", commandLine, p);
+	p << rowHitMissGraphScript << endl;
 
 	float time = 0.0F;
 	for (vector<float>::const_iterator i = hitMissValues.begin(); i
@@ -636,15 +683,17 @@ void hitMissGraph(const bf::path &outFilename, opstream &p, const string& comman
 	p << "e" << endl << "unset output" << endl;
 }
 
-void workingSetGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void workingSetGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 					 const vector<unsigned> & workingSetSize, float epochTime, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-
+#if 0
 	p << "set title \"" << commandLine
 		<< "\\nWorking Set Size vs Time\" offset character 0, -1, 0 font '' norotate"
 		<< endl;	
+#endif
+	printTitle("Working Set Size vs. Time", commandLine, p);
 	p << workingSetSetup << endl;
 	float time = 0.0F;
 	for (vector<unsigned>::const_iterator i = workingSetSize.begin(); i
@@ -656,7 +705,7 @@ void workingSetGraph(const bf::path &outFilename, opstream &p, const string& com
 	p << "e" << endl << "unset output" << endl;
 }
 
-void bigIpcGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void bigIpcGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 				 const vector<float> & ipcValues, float epochTime, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
@@ -684,13 +733,17 @@ void bigIpcGraph(const bf::path &outFilename, opstream &p, const string& command
 		<< endl << "unset output" << endl;
 }
 
-void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 					   const vector<pair<unsigned,unsigned> > & cacheHitMiss, float epochTime, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
+#if 0
 	p << "set title \"" << "Per-DIMM Cache Hit Rate\\n" << commandLine << "\""
-		<< endl << hitMissScript << endl;
+		<< endl;
+#endif
+	printTitle("Per-DIMM Cache Hit Rate",commandLine, p);
+	p << hitMissScript << endl;
 
 	float time = 0.0F;
 	for (vector<pair<unsigned, unsigned> >::const_iterator i =
@@ -717,7 +770,7 @@ void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const string& c
 
 
 //////////////////////////////////////////////////////////////////////////
-void transactionLatencyCumulativeDistributionGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void transactionLatencyCumulativeDistributionGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 										 const unordered_map<unsigned, unsigned> &distTransactionLatency, float period, const char* title,
 										 bool isThumbnail)
 {
@@ -735,8 +788,11 @@ void transactionLatencyCumulativeDistributionGraph(const bf::path &outFilename, 
 
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	p << "set title \"" << commandLine << "\\n" << title << "\""
-		<< endl << cumulativeTransactionGraphScript << endl;
+
+	printTitle(title, commandLine, p);
+	//printTitle(title, commandLine, cerr);
+
+	p << cumulativeTransactionGraphScript << endl;
 	for (map<unsigned, unsigned>::const_iterator i = orderedTransactionLatency.begin(), end = orderedTransactionLatency.end();
 		i != end; ++i)
 	{		
@@ -885,7 +941,7 @@ void processStats(const bf::path &outputDir, const string &filename)
 	unsigned rankCount = 0;
 	unsigned bankCount = 0;
 
-	string commandLine;
+	vector<string> commandLine;
 
 	filtering_istream inputStream;
 	if (ends_with(filename, "gz"))
@@ -905,14 +961,9 @@ void processStats(const bf::path &outputDir, const string &filename)
 		{
 			if (starts_with(newLine, "----Command Line"))
 			{
-				string line(newLine);
-				trim(line);
-				vector<string> splitLine;
-				split(splitLine, line, is_any_of(":"));
-				commandLine = splitLine[1];
-				trim(commandLine);
-				cerr << commandLine << endl;
-
+				char *position = strchr(newLine, ':');
+				commandLine = getCommandLine(string(position + 2));	
+				
 				started = true;
 
 				// get the number of channels

@@ -5,15 +5,16 @@
 
 #define POWER_VALUES_PER_CHANNEL 8
 
-void powerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void powerGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 				const vector<vector<float> > &values,
 				float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << totalPowerScript << endl;
-	p << "set title \"{/=18 Power vs. Time}\\n{/=14 "
-		<< commandLine << "}\"  offset character 0, -1, 0 font \"Arial," << (isThumbnail ? "14" : "6") << "\" norotate\n";
+
+	printTitle("Power vs. Time", commandLine, p);
+	
 	p << "plot ";
 
 	unsigned channelCount = values.size() / POWER_VALUES_PER_CHANNEL;
@@ -81,15 +82,17 @@ void powerGraph(const bf::path &outFilename, opstream &p, const string& commandL
 	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 }
 
-void energyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void energyGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 				 const vector<vector<float> > &values,
 				 float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << energyScript << endl;
-	p << "set title \"{/=18 Energy vs. Time}\\n{/=14 " << commandLine
-		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	//p << "set title \"{/=18 Energy vs. Time}\\n{/=14 " << commandLine
+	//	<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	printTitle("Energy vs. Time", commandLine, p);
+
 	p << "plot '-' u 1:2 sm csp t \"Energy (P t)\" w lines lw 2.00, '-' u 1:2 sm csp t \"IBM Energy (P^{2} t^{2})\" w lines lw 2.00\n";
 
 	// various energy graphs
@@ -140,16 +143,18 @@ void energyGraph(const bf::path &outFilename, opstream &p, const string& command
 	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
 }
 
-void bigEnergyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void bigEnergyGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 					const vector<vector<float> > &values,
 					float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << bigEnergyScript << endl;
-	p << "set title \"{/=24 Energy vs. Time}\\n{/=18 "
-		<< commandLine
-		<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	//p << "set title \"{/=24 Energy vs. Time}\\n{/=18 "
+	//	<< commandLine
+	//	<< "}\"  offset character 0, -1, 0 font \"Arial,14\" norotate\n";
+	printTitle("Energy vs. Time", commandLine, p);
+
 	p << "plot '-' u 1:2 axes x1y1 t \"Energy (P t)\" w boxes lt rgb \"#66CF03\" , '-' u 1:2 axes x1y2 t \"Cumulative Energy\" w lines lw 6.00 lt rgb \"#387400\", '-' u 1:2 axes x1y1 notitle with points pointsize 0.01"
 		<< endl;
 	// various energy graphs
@@ -178,15 +183,16 @@ void bigEnergyGraph(const bf::path &outFilename, opstream &p, const string& comm
 		<< "unset output" << endl;
 }
 
-void bigPowerGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 				   const vector<vector<float> > &values,
 				   float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	p << "set title \"{/=24 Power vs. Time}\\n{/=18 "
-		<< commandLine
-		<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
+	//p << "set title \"{/=24 Power vs. Time}\\n{/=18 "
+	//	<< commandLine
+	//	<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
+	printTitle("Power vs. Time", commandLine, p);
 
 	p << bigPowerScript << endl;
 	p << "plot ";
@@ -231,15 +237,16 @@ void bigPowerGraph(const bf::path &outFilename, opstream &p, const string& comma
 		<< "unset output" << endl;
 }
 
-void bigPowerGraph2(const bf::path &outFilename, opstream &p, const string& commandLine,
+void bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 					const vector<vector<float> > &values,
 					float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	p << "set title \"{ Power vs. Time}\\n{ "
-		<< commandLine
-		<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
+	//p << "set title \"{ Power vs. Time}\\n{ "
+	//	<< commandLine
+	//	<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
+	printTitle("Power vs. Time", commandLine, p);
 
 	p << bigPowerScript << endl;
 	p << "plot ";
@@ -285,14 +292,17 @@ void bigPowerGraph2(const bf::path &outFilename, opstream &p, const string& comm
 		<< "unset output" << endl;
 }
 
-void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const string& commandLine,
+void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 						   vector<pair<float, float> > &energyValues,
 						   float epochTime, bool isThumbnail)
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	p << "set title \"" << "Cumulative Energy\\n" << commandLine << "\""
-		<< endl << cumulPowerScript;
+	//p << "set title \"" << "Cumulative Energy\\n" << commandLine << "\""
+	//	<< endl << cumulPowerScript;
+	printTitle("Cumulative Energy", commandLine, p);
+
+	p << cumulPowerScript;
 
 	float time = 0.0F;
 	float totalPower = 0.0F;
@@ -322,8 +332,6 @@ void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const strin
 	//////////////////////////////////////////////////////////////////////////
 	p << "e" << endl << "unset output" << endl;
 }
-
-#define LINE_LENGTH 158
 
 ///////////////////////////////////////////////////////////////////////////////
 void processPower(const bf::path &outputDir, const string &filename, const list<pair<string,string> > &updatedPowerParams)
@@ -356,7 +364,7 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 	unsigned scaleFactor = 1;
 	unsigned scaleIndex = 0;
 
-	string commandLine;
+	vector<string> commandLine;
 
 	// power values
 
@@ -403,40 +411,9 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 
 				// determine the commandline name
 				char *position = strchr(newLine, ':');
-				commandLine = position + 2;
-
-				if (commandLine.length() > LINE_LENGTH)
-				{
-					for (unsigned i = 0; i < min((int)commandLine.length() - LINE_LENGTH, LINE_LENGTH); i++)
-					{
-						if (commandLine[LINE_LENGTH + i] == ' ')
-						{
-							commandLine.insert(LINE_LENGTH + i, "\\n");
-							break;
-						}
-						else if (commandLine[LINE_LENGTH - i] == ' ')
-						{
-							commandLine.insert(LINE_LENGTH - i, "\\n");
-							break;
-						}
-					}
-				}
-				if (commandLine.length() > 2 * LINE_LENGTH)
-				{
-					for (unsigned i = 0; i < min((int)commandLine.length() - 2 * LINE_LENGTH, 2 * LINE_LENGTH); i++)
-					{
-						if (commandLine[2 * LINE_LENGTH + i] == ' ')
-						{
-							commandLine.insert(2 * LINE_LENGTH + i, "\\n");
-							break;
-						}
-						else if (commandLine[2 * LINE_LENGTH - i] == ' ')
-						{
-							commandLine.insert(2 * LINE_LENGTH - i, "\\n");
-							break;
-						}
-					}
-				}
+				//commandLine = position + 2;
+				//commandLine = getCommandLine(commandLine);				
+				commandLine = getCommandLine(string(position + 2));				
 			}		
 		}		
 		// a line with all the power components for one channel
@@ -628,7 +605,7 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 	}
 
 	bf::path givenfilename(filename);
-	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine,
-		graphs);
+
+	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, graphs);
 }
 

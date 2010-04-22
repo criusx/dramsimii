@@ -25,7 +25,7 @@ bf::path outputDir;
 /// @brief setup the output directory
 //////////////////////////////////////////////////////////////////////////
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
-					  const string &commandLine, list<pair<string,
+					  const vector<string> &commandLine, list<pair<string,
 					  string> > &graphs)
 {
 	bf::path templateFile = executableDirectory / "template.html";
@@ -82,8 +82,12 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 	{
 		string find("@@@");
 		// update the title 
+		string cmdLine;
+		for (vector<string>::const_iterator i = commandLine.begin(), end = commandLine.end();
+			i < end; ++i)
+			cmdLine.append(*i);
 		outputContent = outputContent.replace(outputContent.find(find),
-			find.length(), commandLine);
+			find.length(), cmdLine);
 		changesMade = true;
 	}
 

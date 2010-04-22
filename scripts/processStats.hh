@@ -108,17 +108,17 @@ using std::tr1::unordered_map;
 
 // incomplete declarations
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
-					  const string &commandLine, list<pair<string,string> > &graphs);
+					  const vector<string> &commandLine, list<pair<string,string> > &graphs);
 
 bool fileExists(const string&);
 
 unordered_map<string, string> &setupDecoder();
-
+vector<string> getCommandLine(const string &inputLine);
 void processPower(const bf::path &outputDir, const string &filename, const list<pair<string,string> > &powerParams);
 void processStats(const bf::path &outputDir, const string &filename);
 void sigproc(int i);
 bool ensureDirectoryExists(const bf::path &outputDir);
-
+void printTitle(const char *title, const vector<string> &commandLine, std::ostream &p, const unsigned numPlots = 0);
 template <typename T>
 T regexMatch(const string &input, const char *regex)
 {
@@ -353,7 +353,7 @@ public:
 		  // shouldn't be any duplicates
 		  if (values.find(value) != values.end())
 			  cerr << "error: " << value << " exists more than once" << endl;
-			  //throw;
+		  //throw;
 
 		  values[value] = count;
 
@@ -607,102 +607,142 @@ public:
 
 			if (parameter == "idd0")
 			{
+#ifndef NDEBUG
 				cerr << "note: idd0 updated to " << value << endl;
+#endif
 				idd0 = lexical_cast<T>(value);
 			}
 			else if (parameter == "devicesperrank")
 			{
+#ifndef NDEBUG
 				cerr << "note: devicesPerRank updated to " << value << endl;
+#endif // NDEBUG
 				devicesPerRank = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd")
 			{
+#ifndef NDEBUG
 				cerr << "note: IDD (DIMM cache) updated to " << value << endl;
+#endif
 				idd = lexical_cast<T>(value);
 			}
 			else if (parameter == "isb1")
 			{
+#ifndef NDEBUG
 				cerr << "note: ISB1 updated to " << value << endl;
+#endif
 				isb1 = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd3n")
 			{
+#ifndef NDEBUG
 				cerr << "note: idd3n updated to " << value << endl;
+#endif
 				idd3n = lexical_cast<T>(value);
 			}
 			else if (parameter == "tras")
 			{
+#ifndef NDEBUG
 				cerr << "note: tras updated to " << value << endl;
+#endif
 				tRas = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd2n")
 			{
+#ifndef NDEBUG
 				cerr << "note: idd2n updated to " << value << endl;
+#endif
 				idd2n = lexical_cast<T>(value);
 			}
 			else if (parameter == "vdd")
 			{
+#ifndef NDEBUG
 				cerr << "note: vdd updated to " << value << endl;
+#endif
 				vdd = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd3n")
 			{
+#ifndef NDEBUG
 				cerr << "note: idd3n updated to " << value << endl;
+#endif
 				idd3n = lexical_cast<T>(value);
 			}
 			else if (parameter == "vddmax")
 			{
+#ifndef NDEBUG
 				cerr << "note: vddmax updated to " << value << endl;
+#endif
 				vddMax = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd3p")
 			{
+#ifndef NDEBUG
 				cerr << "note: idd3p updated to " << value << endl;
+#endif
 				idd3p = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd2p")
 			{
+#ifndef NDEBUG
 				cerr << "note: idd2p updated to " << value << endl;
+#endif
 				idd2p = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd4r")
 			{
+#ifndef NDEBUG
 				cerr << "note: idd4r updated to " << value << endl;
+#endif
 				idd4r = lexical_cast<T>(value);
 			}
 			else if (parameter == "idd4w")
 			{
+#ifndef NDEBUG
 				cerr << "note: idd4w updated to " << value << endl;
+#endif
 				idd4w = lexical_cast<T>(value);
 			}
 			else if (parameter == "specfreq")
 			{
+#ifndef NDEBUG
 				cerr << "note: specFreq updated to " << value << endl;
+#endif
 				specFreq = lexical_cast<T>(value);
 			}
 			else if (parameter == "freq")
 			{
+#ifndef NDEBUG
 				cerr << "note: freq updated to " << value << endl;
+#endif
 				freq = lexical_cast<T>(value);
 			}
 			else if (parameter == "channelwidth")
 			{
+#ifndef NDEBUG
 				cerr << "note: channelWidth updated to " << value << endl;
+#endif
 				channelWidth = lexical_cast<T>(value);
 			}
 			else if (parameter == "dqperdram")
 			{
+#ifndef NDEBUG
 				cerr << "note: dqPerDram updated to " << value << endl;
+#endif
 				dqPerDram = lexical_cast<T>(value);
 			}
 			else if (parameter == "cke_lo_pre")
 			{
+#ifndef NDEBUG
 				cerr << "note: CKE_LO_PRE updated to " << value << endl;
+#endif
 				CKE_LO_PRE = lexical_cast<T>(value);
 			}
 			else if (parameter == "cke_lo_act")
 			{
+#ifndef NDEBUG
 				cerr << "note: CKE_LO_ACT updated to " << value << endl;
+#endif
 				CKE_LO_ACT = lexical_cast<T>(value);
 			}
 		}
@@ -781,10 +821,10 @@ public:
 			//cerr << *currentRank << endl;
 			unsigned currentRankID = regexMatch<unsigned>(currentRank->c_str(),"^\\[([0-9]+)\\]");
 
-			
+
 			// because each rank on any dimm will report the same hit and miss counts
 			//if ((currentRankID % ranksPerDimm) == 0)
-			
+
 
 			//double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
 			double thisRankRasCount = regexMatch<double>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
