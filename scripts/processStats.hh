@@ -474,7 +474,8 @@ public:
 class PowerCalculations
 {
 public:
-	double PsysACT_STBY, PsysPRE_STBY, PsysPRE_PDN, PsysACT_PDN, PsysACT, PsysRD, PsysWR, PsysRdAdjusted, PsysACTAdjusted;
+	double PsysACT_STBY, PsysPRE_STBY, PsysPRE_PDN, PsysACT_PDN, PsysACT, PsysRD, PsysWR;
+	double PsysACTAdjusted, PsysRdAdjusted, PsysACT_STBYAdjusted, PsysACT_PDNAdjusted;
 	double sramActivePower, sramIdlePower;
 	double energy, reducedEnergy;
 
@@ -486,8 +487,10 @@ public:
 		PsysACT(0.0),
 		PsysRD(0.0),
 		PsysWR(0.0), 
-		PsysRdAdjusted(0.0),
 		PsysACTAdjusted(0.0),
+		PsysRdAdjusted(0.0),
+		PsysACT_STBYAdjusted(0.0),
+		PsysACT_PDNAdjusted(0.0),
 		sramActivePower(0.0),
 		sramIdlePower(0.0),
 		energy(0.0),
@@ -841,11 +844,14 @@ public:
 			// activate-standby
 			double PschACT_STBY = pDsActStby * percentActive * (1 - CKE_LO_ACT);
 			pc.PsysACT_STBY += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY;
+			assert(readHits < readCycles / 8);
+			pc.PsysACT_STBYAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY * (readHits / (readCycles / 8));
+			//cerr << pc.PsysACT_STBYAdjusted << " " << pc.PsysACT_STBY << endl;
 
 			// precharge-standby
 			double PschPRE_STBY = pDsPreStby * (1.0 - percentActive) * (1 - CKE_LO_PRE);
 			pc.PsysPRE_STBY += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_STBY;
-
+			
 			// precharge-powerdown
 			double PschPRE_PDN = pDsPrePdn * (1.0 - percentActive) * (CKE_LO_PRE);
 			pc.PsysPRE_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_PDN;
@@ -853,35 +859,34 @@ public:
 			// activate-powerdown
 			double PschACT_PDN = pDsActPdn * percentActive * CKE_LO_ACT;
 			pc.PsysACT_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN;
+			pc.PsysACT_PDNAdjusted += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN * (1 + readHits / (readCycles / 8));
+			//cerr << pc.PsysACT_PDN << " " << pc.PsysACT_PDNAdjusted << endl;
 
 			// activate power analysis
 			double tRRDsch = ((double)duration) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
 			double PschACT = pDsAct * tRc / tRRDsch;
 			pc.PsysACT += devicesPerRank * voltageScaleFactor * PschACT;
+			double tRRDschAdj = ((double)duration) / (thisRankAdjustedRasCount > 0 ? thisRankAdjustedRasCount : 0.00000001);
+			double PschACTAdjusted = pDsAct * tRc / tRRDsch;
+			pc.PsysACTAdjusted += devicesPerRank * voltageScaleFactor * PschACTAdjusted;
 
 			// read power analysis
 			double RDschPct = readCycles / duration;
-			double RDschPctAdj = (readCycles - readHits * 8) / duration;
+			pc.PsysRD += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPct;
+			// changed due to cache
+			double RDschPctAdj = (readCycles - readHits * tBurst) / duration;
 			assert(RDschPctAdj > 0.0);
 			pc.PsysRdAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPctAdj;
-			pc.PsysRD += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPct;
 
 			// write power analysis
 			double WRschPct = writeCycles / duration;
 			pc.PsysWR += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsWr * WRschPct;
-
-			// accounting for cache effects
-			double RDschPctAdjusted = (readCycles - tBurst * readHits) / duration;
-			pc.PsysRdAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPctAdjusted;
-
-			double tRRDschAdjusted = duration / thisRankAdjustedRasCount;
-			pc.PsysACTAdjusted += devicesPerRank * (tRc / tRRDschAdjusted) * voltageScaleFactor * pDsAct;
 		}	
 
 		pc.energy = (pc.PsysACT_STBY + pc.PsysACT + pc.PsysPRE_STBY + pc.PsysRD + pc.PsysWR + pc.PsysACT_PDN + pc.PsysPRE_PDN) * epochTime;
 		//cerr << epochTime << " " << freq << endl;
 		//pc.reducedEnergy = idd1 * devicesPerRank * tRc / freq * vdd * totalReadHits;
-		pc.reducedEnergy = (pc.PsysACT_STBY + pc.PsysACT + pc.PsysPRE_STBY + pc.PsysRdAdjusted + pc.PsysWR + pc.PsysACT_PDN + pc.PsysPRE_PDN + pc.sramActivePower + pc.sramIdlePower) * epochTime;
+		pc.reducedEnergy = (pc.PsysACT_STBYAdjusted + pc.PsysACTAdjusted + pc.PsysPRE_STBY + pc.PsysRdAdjusted + pc.PsysWR + pc.PsysACT_PDNAdjusted + pc.PsysPRE_PDN + pc.sramActivePower + pc.sramIdlePower) * epochTime;
 
 
 		return pc;

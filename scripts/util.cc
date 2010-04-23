@@ -86,7 +86,7 @@ void printTitle(const char *title, const vector<string> &commandLine, std::ostre
 	for (vector<string>::const_iterator i = commandLine.begin(), end = commandLine.end();
 		i < end; ++i)
 	{
-		p << "{/*0.75 " << *i << "}\\n";
+		p << "{/*0.9 " << *i << "}\\n";
 	}
 	p << "\"";
 	
