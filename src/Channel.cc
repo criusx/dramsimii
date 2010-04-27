@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -310,9 +310,7 @@ void Channel::moveToTime(const tick currentTime)
 			assert(earliestExecuteTimeLog(nextCommand) <= time);
 
 			executeCommand(executingCommand);	
-
-			DEBUG_COMMAND_LOG("C " << *executingCommand);
-
+			
 #ifndef NDEBUG
 			printVerilogCommand(executingCommand);
 #endif
@@ -2326,6 +2324,10 @@ void Channel::getNextCPRHValues(unsigned &nextRank, unsigned &nextBank, const bo
 //////////////////////////////////////////////////////////////////////////
 void Channel::executeCommand(Command *thisCommand)
 {
+	DEBUG_COMMAND_LOG("C " << *thisCommand);
+
+	vector<Command *> commandsExecuted;
+
 	vector<Rank>::iterator currentRank = rank.begin() + thisCommand->getAddress().getRank();
 
 	vector<Bank>::iterator currentBank = currentRank->bank.begin() + thisCommand->getAddress().getBank();
@@ -2345,6 +2347,56 @@ void Channel::executeCommand(Command *thisCommand)
 	case Command::ACTIVATE:
 		{
 			assert(!thisCommand->getHost());
+
+			if (systemConfig.isUsingDimmCache())
+			{
+				unsigned i = 0;
+				;
+				bool allHits = true;
+
+				while (const Command *followingCommand = currentBank->read(i++))
+				{
+					assert(followingCommand && (followingCommand->isReadOrWrite() || followingCommand->isPrecharge()));
+
+					if ((followingCommand->isRead() && cache[followingCommand->getAddress().getDimm()].isHit(followingCommand)) || followingCommand->isBasicPrecharge())
+					{
+						if (followingCommand->isPrecharge())
+							break;
+					}
+					else
+					{
+						allHits = false;
+						break;
+					}
+				}
+
+				if (allHits)
+				{
+					while (Command *readCommand = currentBank->pop())
+					{
+						if (!readCommand->isBasicPrecharge())
+						{
+							bool success = cache[readCommand->getAddress().getDimm()].timingAccess(readCommand,time);
+							assert(success);
+#ifndef NDEBUG
+							std::cout << (success ? "|" : ".");
+#endif
+							readCommand->setStartTime(time);
+
+							readCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCacheAccess() + timingSpecification.tBurst());
+							readCommand->getHost()->setCompletionTime(readCommand->getCompletionTime());
+						}
+
+						retireCommand(readCommand);
+						
+						assert(readCommand->isRead() || readCommand->isBasicPrecharge());
+						if (readCommand->isPrecharge())
+							break;
+					}	
+
+					break;
+				}
+			}
 
 			currentRank->issueRAS(time, thisCommand);	
 
@@ -2373,7 +2425,9 @@ void Channel::executeCommand(Command *thisCommand)
 			{
 				statistics.reportRasReduction(thisCommand);
 			}
-			//std::cout << (satisfied ? "|" : ".");
+#ifndef NDEBUG
+			std::cout << (satisfied ? "|" : ".");
+#endif
 		}
 		//////////////////////////////////////////////////////////////////////////
 

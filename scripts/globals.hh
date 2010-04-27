@@ -150,6 +150,18 @@ const string bigPowerScript = "set key outside center bottom horizontal Left rev
 							  #set style data filledcurves below x1\n\
 							  set style histogram rowstacked title offset 0,0,0\n";
 
+const string comparativePowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+									  set yrange [0:*] noreverse nowriteback\n\
+									  unset x2tics\n\
+									  set mxtics\n\
+									  set xrange [0:*]\n\
+									  set yrange [0:*]\n\
+									  set xlabel \"Time (s)\"\n\
+									  set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+									  set ytics out\n\
+									  set boxwidth 1.00 absolute\n\
+									  set style fill  solid 1.00 noborder\n";
+
 const string bigEnergyScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
 							   set autoscale xfixmin\n\
 							   set autoscale xfixmax\n\

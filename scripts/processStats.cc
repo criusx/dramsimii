@@ -467,18 +467,21 @@ int main(int argc, char** argv)
 				float totalEnergy = 0.0F, reducedEnergy = 0.0F;
 				bool foundCommandLine = false, foundEpoch = false;
 				float epochTime;
+				CumulativePriorMovingAverage average;
 
 				for (inputStream.getline(newLine, NEWLINE_LENGTH);
 					(newLine[0] != NULL) && (!userStop);
 					inputStream.getline(newLine, NEWLINE_LENGTH))
 				{
 					PowerParameters<double> params;
-
+					
 					if (starts_with(newLine,"+ch"))
 					{
 						PowerCalculations pc = params.calculateSystemPower(newLine,epochTime);
 						totalEnergy += pc.energy;
 						reducedEnergy += pc.reducedEnergy;
+						average.add(1, pc.inUseTime);
+						//cerr << pc.inUseTime << endl;
 						//cerr << pc.energy << " " << pc.reducedEnergy << endl;
 					}
 					else if (!foundCommandLine && starts_with(newLine, "----Command Line:"))
@@ -517,6 +520,12 @@ int main(int argc, char** argv)
 #pragma omp critical
 					results[basefilename].push_back(current.str());
 					current.str("");
+
+					current << std::dec << std::fixed << std::setprecision(2)
+						<< ((double) average.getAverage() * 100);
+#pragma omp critical
+					results[basefilename].push_back(current.str());
+					//current.str("");
 				}
 			}
 

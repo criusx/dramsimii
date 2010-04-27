@@ -478,6 +478,7 @@ public:
 	double PsysACTAdjusted, PsysRdAdjusted, PsysACT_STBYAdjusted, PsysACT_PDNAdjusted;
 	double sramActivePower, sramIdlePower;
 	double energy, reducedEnergy;
+	double inUseTime;
 
 	PowerCalculations():
 	PsysACT_STBY(0.0),
@@ -494,7 +495,8 @@ public:
 		sramActivePower(0.0),
 		sramIdlePower(0.0),
 		energy(0.0),
-		reducedEnergy(0.0)
+		reducedEnergy(0.0),
+		inUseTime(0.0)
 	{};
 };
 
@@ -809,6 +811,9 @@ public:
 			}
 
 			unsigned inUseTime = accesses * hitLatency;
+
+			pc.inUseTime = inUseTime / duration;
+
 			assert(inUseTime >= 0);
 
 			// the remaining time was spent in idle mode
@@ -837,15 +842,20 @@ public:
 			double readHits = regexMatch<double>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
 			totalReadHits += readHits;
 			double prechargeTime = regexMatch<float>(currentRank->c_str(),"prechargeTime\\{([0-9]+)\\}");
+
 			double percentActive = 1.0 - (prechargeTime / max((double)(duration), 0.00000001));
-			assert(percentActive >= 0.0F && percentActive <= 1.0F);
+			double percentActiveAdjusted = percentActive * (1 - readHits / (readCycles / tBurst));
+			
+			assert(percentActive >= 0.0 && percentActive <= 1.0);
+			assert(percentActiveAdjusted >= 0.0 && percentActiveAdjusted <= 1.0);
 
 			// background power analysis
 			// activate-standby
 			double PschACT_STBY = pDsActStby * percentActive * (1 - CKE_LO_ACT);
 			pc.PsysACT_STBY += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY;
 			assert(readHits < readCycles / 8);
-			pc.PsysACT_STBYAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY * (readHits / (readCycles / 8));
+			double PschACT_SBTYAdjusted = pDsActStby * percentActiveAdjusted * (1 - CKE_LO_ACT);
+			pc.PsysACT_STBYAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_SBTYAdjusted;
 			//cerr << pc.PsysACT_STBYAdjusted << " " << pc.PsysACT_STBY << endl;
 
 			// precharge-standby
@@ -859,7 +869,8 @@ public:
 			// activate-powerdown
 			double PschACT_PDN = pDsActPdn * percentActive * CKE_LO_ACT;
 			pc.PsysACT_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN;
-			pc.PsysACT_PDNAdjusted += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN * (1 + readHits / (readCycles / 8));
+			double PschACT_PDNAdjusted = pDsActPdn * percentActiveAdjusted * CKE_LO_ACT;
+			pc.PsysACT_PDNAdjusted += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDNAdjusted;
 			//cerr << pc.PsysACT_PDN << " " << pc.PsysACT_PDNAdjusted << endl;
 
 			// activate power analysis
@@ -867,7 +878,7 @@ public:
 			double PschACT = pDsAct * tRc / tRRDsch;
 			pc.PsysACT += devicesPerRank * voltageScaleFactor * PschACT;
 			double tRRDschAdj = ((double)duration) / (thisRankAdjustedRasCount > 0 ? thisRankAdjustedRasCount : 0.00000001);
-			double PschACTAdjusted = pDsAct * tRc / tRRDsch;
+			double PschACTAdjusted = pDsAct * tRc / tRRDschAdj;
 			pc.PsysACTAdjusted += devicesPerRank * voltageScaleFactor * PschACTAdjusted;
 
 			// read power analysis

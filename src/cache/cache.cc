@@ -521,6 +521,15 @@ bool Cache::timingAccess(const Command *currentCommand, tick time)
 	return satisfied;
 }
 
+bool Cache::isHit(const Command *currentCommand) const
+{
+	BlkType *blk = NULL;
+	PacketList writebacks;
+	tick latency = 0;
+
+	return accessBlock(currentCommand->getAddress().getPhysicalAddress()) != NULL;
+}
+
 Cache::BlkType *Cache::handleFill(const Command *currentCommand, BlkType *blk, tick time)
 {
 	Addr addr = currentCommand->getAddress().getPhysicalAddress();
@@ -621,7 +630,12 @@ Cache::BlkType *Cache::allocateBlock(const Addr &addr, PacketList &writebacks)
 	return blk;
 }
 
-LRUBlk *Cache::accessBlock(Addr addr, int &lat, int context_src, tick curTick)
+LRUBlk *Cache::accessBlock(const Addr addr) const
+{
+	return sets[extractSet(addr)].findBlk(extractTag(addr));
+}
+
+LRUBlk *Cache::accessBlock(const Addr addr, int &lat, int context_src, tick curTick)
 {
 	Addr tag = extractTag(addr);
 

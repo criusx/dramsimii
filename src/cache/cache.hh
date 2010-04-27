@@ -189,12 +189,14 @@ namespace DRAMsimII
 
 		bool timingAccess(const Command *, tick);
 
+		bool isHit(const Command *) const;
+
 		Addr blockAlign(Addr addr) const { return (addr & ~(Addr(blkSize - 1))); }
 
 		BlkType *handleFill(const Command *currentCommand, BlkType *blk, tick time);
 
 		BlkType *allocateBlock(const Addr &addr, PacketList &);
-
+		
 		std::pair<unsigned,unsigned> getHitsMisses() const { return hitsMisses; }
 		std::pair<unsigned,unsigned> getReadHitsMisses() const { return readHitsMisses; }
 		std::pair<unsigned,unsigned> getCumulativeHitsMisses() const { return cumulativeHitsMisses; }
@@ -214,8 +216,7 @@ namespace DRAMsimII
 		* Return the block size.
 		* @return the block size.
 		*/
-		unsigned
-			getBlockSize() const
+		unsigned getBlockSize() const
 		{
 			return blkSize;
 		}
@@ -225,8 +226,7 @@ namespace DRAMsimII
 		* size.
 		* @return The block size.
 		*/
-		unsigned
-			getSubBlockSize() const
+		unsigned getSubBlockSize() const
 		{
 			return blkSize;
 		}
@@ -246,7 +246,9 @@ namespace DRAMsimII
 		* @param lat The access latency.
 		* @return Pointer to the cache block if found.
 		*/
-		LRUBlk* accessBlock(Addr addr, int &lat, int context_src, tick curTick);
+		LRUBlk* accessBlock(const Addr addr, int &lat, int context_src, tick curTick);
+
+		LRUBlk* accessBlock(const Addr addr) const;
 
 		/**
 		* Finds the given address in the cache, do not update replacement data.

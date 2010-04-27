@@ -101,7 +101,8 @@ epoch(settings.epoch),
 shortBurstRatio(settings.shortBurstRatio),
 readPercentage(settings.readPercentage),
 sessionID(settings.sessionID),
-outType(settings.outFileType)
+outType(settings.outFileType),
+usingDimmCache(settings.cacheSize > 0)
 {
 	Address::initialize(settings);
 
@@ -270,7 +271,8 @@ sessionID(rhs.sessionID),
 timingFile(rhs.timingFile),
 powerFile(rhs.powerFile),
 statsFile(rhs.statsFile),
-outType(rhs.outType)
+outType(rhs.outType),
+usingDimmCache(rhs.usingDimmCache)
 {
 	setupStreams();
 }

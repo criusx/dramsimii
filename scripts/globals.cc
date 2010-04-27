@@ -1,6 +1,8 @@
 #include "processStats.hh"
 #include "globals.hh"
 
+using boost::ireplace_first;
+
 bf::path executableDirectory;
 
 bool generatePngFiles = false;
@@ -62,8 +64,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 	}
 	else
 	{
-		instream.open(templateFile.directory_string().c_str(), ios::in
-			| ios::ate);
+		instream.open(templateFile.directory_string().c_str(), ios::in | ios::ate);
 	}
 
 	ifstream::pos_type entireFileLength = instream.tellg();
@@ -80,14 +81,12 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 
 	if (!alreadyExists)
 	{
-		string find("@@@");
 		// update the title 
 		string cmdLine;
 		for (vector<string>::const_iterator i = commandLine.begin(), end = commandLine.end();
 			i < end; ++i)
 			cmdLine.append(*i);
-		outputContent = outputContent.replace(outputContent.find(find),
-			find.length(), cmdLine);
+		ireplace_first(outputContent, "@@@", cmdLine);
 		changesMade = true;
 	}
 
@@ -106,12 +105,12 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 				currentImageLink);
 		}
 	}
-
+//#pragma omp critical
 	if (changesMade)
 	{
 		cerr << endl << printFile.native_directory_string() << endl;
 		std::ofstream out(printFile.native_directory_string().c_str());
-		out << outputContent;
+		out.write(outputContent.c_str(), outputContent.length());
 		out.close();
 	}
 

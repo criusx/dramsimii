@@ -77,6 +77,7 @@ namespace DRAMsimII
 		std::string statsFile;		
 		std::string verilogFile;
 		OutputFileType outType;
+		bool usingDimmCache;
 
 
 	public:
@@ -116,6 +117,7 @@ namespace DRAMsimII
 		bool fileExists(std::stringstream& fileName) const;
 		bool createNewFile(const std::string& fileName) const;
 		bool setupStreams() const;
+		bool isUsingDimmCache() const { return usingDimmCache; }
 		
 		// operator overloads
 		SystemConfiguration& operator =(const SystemConfiguration &rs);

@@ -47,13 +47,15 @@ t_wtr(-1),
 t_ost(0),
 t_int_burst(-1),
 t_buffer_delay(-1),
-t_refi(-1)
+t_refi(-1),
+t_cache_access(-1)
 {}
 
 
 TimingSpecification::TimingSpecification(const Settings& settings):
 t_buffer_delay(settings.tBufferDelay),
-t_refi(settings.tREFI)
+t_refi(settings.tREFI),
+t_cache_access(settings.hitLatency)
 {
 	switch(settings.dramType)
 	{
@@ -191,7 +193,7 @@ bool TimingSpecification::operator==(const TimingSpecification &right) const
 		t_cwd == right.t_cwd && t_faw == right.t_faw && t_ras == right.t_ras && t_rc == right.t_rc && t_rcd == right.t_rcd &&
 		t_rfc == right.t_rfc && t_rp == right.t_rp && t_rrd == right.t_rrd && t_rtp == right.t_rtp && t_rtrs == right.t_rtrs &&
 		t_wr == right.t_wr && t_wtr == right.t_wtr && t_int_burst == right.t_int_burst && t_buffer_delay == right.t_buffer_delay &&
-		t_refi == right.t_refi && t_ost == right.t_ost);
+		t_refi == right.t_refi && t_ost == right.t_ost && t_cache_access == t_cache_access);
 
 }
 ostream &DRAMsimII::operator<<(ostream &os, const TimingSpecification &this_a)

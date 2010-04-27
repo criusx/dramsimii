@@ -292,6 +292,64 @@ void bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<strin
 		<< "unset output" << endl;
 }
 
+//////////////////////////////////////////////////////////////////////////
+void comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
+						   const vector<vector<float> > &values, const vector<vector<float> > &alternateValues,
+						   float epochTime, bool isThumbnail)
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+	printTitle("Power vs. Time", commandLine, p);
+
+	p << bigPowerScript << endl;
+	
+	unsigned channelCount = values.size() / POWER_VALUES_PER_CHANNEL;
+
+	p << "plot '-' u 1:2 w lines lw 2.00 t \"Normal System\",'-' u 1:2 w lines lw 2.00 t \"Theoretical System\"" << endl;
+
+	double time = 0.0;
+
+	vector<vector<float> >::size_type columns = values.size();
+	vector<float>::size_type epochs = values.front().size();
+	
+	for (vector<float>::size_type i = 0; i < epochs; ++i)
+	{
+		double total = 0.0;
+
+		for (vector<vector<float> >::size_type j = 0; j < columns; ++j)
+		{
+			total += values[j][i];
+		}
+
+		p << time << " " << total << endl;
+		
+		time += epochTime;
+	}
+
+	p << "e" << endl;
+	time = 0.0;
+
+	for (vector<float>::size_type i = 0; i < epochs; ++i)
+	{
+		double total = 0.0;
+
+		for (vector<vector<float> >::size_type j = 0; j < columns; ++j)
+		{
+			total += alternateValues[j][i];
+		}
+
+		p << time << " " << total << endl;
+
+		time += epochTime;
+	}
+
+	p << "e" << endl;
+	
+	p << "unset output" << endl;
+}
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
 void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
 						   vector<pair<float, float> > &energyValues,
 						   float epochTime, bool isThumbnail)
@@ -358,6 +416,10 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 
 	vector<vector<float> > values;
 	vector<float> valueBuffer;
+
+	vector<vector<float> > alternateValues;
+	vector<float> alternateValueBuffer;
+
 	vector<pair<float, float> > energyValues;
 	pair<float, float> energyValueBuffer;
 
@@ -398,15 +460,20 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 				channelCount = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
 
 				values.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
+				alternateValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
+
 				energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
 
 				// setup the buffer to be the same size as the value array
 				valueBuffer.resize(channelCount * POWER_VALUES_PER_CHANNEL);
+				alternateValueBuffer.resize(channelCount * POWER_VALUES_PER_CHANNEL);
 
 				for (int i = channelCount * POWER_VALUES_PER_CHANNEL; i > 0; --i)
 				{
-					values.push_back(vector<float> ());
+					values.push_back(vector<float>());
+					alternateValues.push_back(vector<float>());
 					values.back().reserve(MAXIMUM_VECTOR_SIZE);
+					alternateValues.back().reserve(MAXIMUM_VECTOR_SIZE);
 				}
 
 				// determine the commandline name
@@ -438,11 +505,20 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBY;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += pc.PsysACT;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += pc.PsysPRE_STBY;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRdAdjusted;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRD;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += 0; //pc.sramActivePower + pc.sramIdlePower;
+
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBYAdjusted;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += pc.PsysACTAdjusted;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += pc.PsysPRE_STBY;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRdAdjusted;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDNAdjusted;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
  
 			energyValueBuffer.first += pc.energy;
 			energyValueBuffer.second += pc.reducedEnergy;
@@ -456,10 +532,13 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 				if (scaleIndex == 0)
 				{
 					vector<float>::size_type limit = valueBuffer.size();
+
 					for (vector<float>::size_type i = 0; i < limit; ++i)
 					{
 						values[i].push_back(valueBuffer[i] / scaleFactor);
 						valueBuffer[i] = 0;
+						alternateValues[i].push_back(alternateValueBuffer[i] / scaleFactor);
+						alternateValueBuffer[i] = 0;
 					}
 
 					energyValues.push_back(pair<float, float> (
@@ -473,8 +552,20 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 				if (values.front().size() >= MAXIMUM_VECTOR_SIZE)
 				{
 					// scale the array back by half
-					for (vector<vector<float> >::iterator i =
-						values.begin(); i != values.end(); ++i)
+					for (vector<vector<float> >::iterator i = values.begin(), end = values.end();
+						i < end; ++i)
+					{
+						for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
+						{
+							(*i)[j] = ((*i)[2 * j] + (*i)[2 * j + 1]) / 2;
+						}
+						i->resize(MAXIMUM_VECTOR_SIZE / 2);
+
+						assert(i->size() == MAXIMUM_VECTOR_SIZE / 2);
+					}
+
+					for (vector<vector<float> >::iterator i = alternateValues.begin(), end = alternateValues.end();
+						i < end; ++i)
 					{
 						for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
 						{
@@ -547,6 +638,16 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
+	// make the big power graph
+	outFilename = outputDir / ("bigAlternatePower." + extension);
+	bigPowerGraph(outFilename,p3,commandLine,alternateValues,epochTime,false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string, string> ("bigAlternatePower","Theoretical Power"));
+	outFilename = outputDir / ("bigAlternatePower-thumb." + thumbnailExtension);
+	bigPowerGraph(outFilename,p3,commandLine,values,epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////
 	// make the other big power graph
 	outFilename = outputDir / ("bigPower2." + extension);
 	bigPowerGraph2(outFilename,p3,commandLine,values,epochTime,false);
@@ -554,6 +655,26 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 	graphs.push_back(pair<string, string> ("bigPower2","Combined Power"));
 	outFilename = outputDir / ("bigPower2-thumb." + thumbnailExtension);
 	bigPowerGraph2(outFilename,p3,commandLine,values,epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////
+	// make the other big power graph
+	outFilename = outputDir / ("comparativePower." + extension);
+	comparativePowerGraph(outFilename,p3,commandLine,values, alternateValues, epochTime,false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string, string> ("comparativePower","Comparative Power"));
+	outFilename = outputDir / ("comparativePower-thumb." + thumbnailExtension);
+	comparativePowerGraph(outFilename,p3,commandLine,values, alternateValues, epochTime,true);
+	//////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////
+	// make the other big power graph
+	outFilename = outputDir / ("bigTheoreticalPower2." + extension);
+	bigPowerGraph2(outFilename,p3,commandLine,alternateValues,epochTime,false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string, string> ("bigTheoreticalPower2","Combined Theoretical Power"));
+	outFilename = outputDir / ("bigTheoreticalPower2-thumb." + thumbnailExtension);
+	bigPowerGraph2(outFilename,p3,commandLine,alternateValues,epochTime,true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
