@@ -102,7 +102,7 @@ shortBurstRatio(settings.shortBurstRatio),
 readPercentage(settings.readPercentage),
 sessionID(settings.sessionID),
 outType(settings.outFileType),
-usingDimmCache(settings.cacheSize > 0)
+usingDimmCache(settings.usingCache)
 {
 	Address::initialize(settings);
 
@@ -191,6 +191,11 @@ usingDimmCache(settings.cacheSize > 0)
 
 			stringstream settingsFilename;
 
+			if (settings.usingCache)
+				suffix = "C" + suffix;
+			else
+				suffix = "N" + suffix;
+
 			do
 			{
 				stringstream timingFilename;
@@ -225,6 +230,8 @@ usingDimmCache(settings.cacheSize > 0)
 
 
 			} while (!createNewFile(timingFile) || !createNewFile(powerFile) || !createNewFile(statsFile) || !createNewFile(settingsFilename.str()) || !createNewFile(verilogFile));
+
+			cerr << "note: setting output file base to " << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << endl;
 
 			if (setupStreams())
 			{

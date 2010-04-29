@@ -19,8 +19,7 @@ import shutil
 queueName = 'b_1cpu'
 
 # the string that sends this command to the queue
-#submitString = '''echo 'time %%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queueName)
-submitString2 = '''qsub -z -q %s -o %%s -e %%s -N "%%s" %%s''' % (queueName)
+submitString = '''qsub -z -q %s -o %%s -e %%s -N "%%s" %%s''' % (queueName)
 
 getJobId = 'qmgr -c "print server next_job_number"'
 
@@ -29,30 +28,32 @@ def submitCommand(commandLine, name):
         submitCommand = submitString % (commandLine, outputDir, outputDir, name)
         #print commandLine
         #sys.exit(0)
-        #os.system(submitCommand)        
+        #os.system(submitCommand)
         p = Popen(getJobId, shell=True, stdout=PIPE)
         pstdout = p.stdout
         nextId = "0"
         for line in pstdout:
             if line.startswith("set server"):
                 m = re.search('next_job_number = ([0-9]+)', line)
-                #print m.group(1)
                 nextId = m.group(1)
         scriptName = nextId + ".sh"
         if not os.path.exists(outputDir):
             os.makedirs(outputDir)
-        f = open(os.path.join(outputDir, scriptName), 'w')
+        scriptToRun = os.path.join(outputDir, scriptName)
+        f = open(scriptToRun, 'w')
         f.write("#!/bin/sh\n")
-        
+
         for command in commandLine:
-            f.write("#" + commandLine + "\n")
-            f.write("ls -lah\n")
-            f.write("cd /\n")
-            f.write("ls -lah\n")
-        
+            #f.write("#" + command + "\n")
+            f.write(command + "\n")
+
+        #f.write("ls -lah\n")
+        #f.write("cd /\n")
+        #f.write("ls -lah\n")
+
             #f.write(commandLine + "\n")
         f.close()
-        submitCommand = submitString % (outputDir, outputDir, name, scriptName)
+        submitCommand = submitString % (outputDir, outputDir, name, scriptToRun)
         os.system(submitCommand)
         #sts = os.waitpid(p.pid, 0)[1]
         #print "'" + pstdout
@@ -85,7 +86,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'm5/configs/example/dramsimfs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyDtest')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyD')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -216,6 +217,8 @@ def main():
                                                 for pc in postedCas:
                                                     for rbmp in rowBufferManagementPolicy:
 
+                                                        newCommandLine = []
+
                                                         currentTrace = os.path.join(tracesDir, t)
                                                         currentCommandLine = commandLine % (ds2executable, memorySettings, channel, dimm, rank,
                                                                                              banks[0], pc, addressMappingPolicy[0], commandOrderingAlgorithm[0],
@@ -228,11 +231,15 @@ def main():
 
                                                         if replacementPolicy == 'nmru':
                                                             for trackingCount in nmruTrackingCounts:
-                                                                newCommandLine = currentCommandLine % ("nmruTrackingCount %d" % trackingCount)
-                                                                submitCommand(newCommandLine, t + replacementPolicy + str(trackingCount))                                                                
+                                                                newCommandLine.append(currentCommandLine % ("nmruTrackingCount %d usingCache true" % trackingCount))
+                                                                newCommandLine.append(currentCommandLine % ("nmruTrackingCount %d usingCache false" % trackingCount))
+                                                                submitCommand(newCommandLine, t + replacementPolicy + str(trackingCount))
                                                                 count += 1
                                                         else:
-                                                            newCommandLine = currentCommandLine % ""
+                                                            newCommandLine.append(currentCommandLine % ("usingCache true" % trackingCount))
+                                                            newCommandLine.append(currentCommandLine % ("usingCache false" % trackingCount))
+
+                                                            #newCommandLine = currentCommandLine % ""
                                                             submitCommand(newCommandLine, t + replacementPolicy)
                                                             count += 1
 

@@ -14,7 +14,7 @@
 <!ELEMENT averageInterarrivalCycleCount (#PCDATA)>
 <!ELEMENT banks (#PCDATA)>
 <!ELEMENT blockSize (#PCDATA)>
-<!ELEMENT cache (associativity, cacheSize, blockSize, hitLatency, replacementPolicy, nmruTrackingCount) >
+<!ELEMENT cache (usingCache, associativity, cacheSize, blockSize, hitLatency, replacementPolicy, nmruTrackingCount) >
 <!ELEMENT cacheLineSize (#PCDATA)>
 <!ELEMENT channelWidth (#PCDATA)>
 <!ELEMENT channels (#PCDATA)>
@@ -104,3 +104,4 @@ cacheLineSize, historyQueueDepth, completionQueueDepth, transactionQueueDepth,
 decodeWindow, eventQueueDepth, refreshQueueDepth, readWriteGrouping, autoPrecharge, cache)>
 <!ELEMENT transactionOrderingAlgorithm (#PCDATA)>
 <!ELEMENT transactionQueueDepth (#PCDATA)>
+<!ELEMENT usingCache (#PCDATA)>

@@ -47,6 +47,7 @@
 		<!--able to issue CAS+Pre commands, effective with close page, unavailable in open page RBMP -->
 		<autoPrecharge>true</autoPrecharge>
 		<cache>
+			<usingCache>true</usingCache>
 			<associativity>8</associativity>
 			<!-- size is given in kiB and determines the number of sets -->
 			<cacheSize>8192</cacheSize>

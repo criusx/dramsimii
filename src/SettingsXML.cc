@@ -179,8 +179,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "hitLatency", (const xmlChar *)lexical_cast<string>(hitLatency).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "replacementPolicy", (const xmlChar *)lexical_cast<string>(replacementPolicy).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "hitLatency", (const xmlChar *)lexical_cast<string>(nmruTrackingCount).c_str());
-
-
+	xmlNewChild(node, NULL, BAD_CAST "usingCache", (const xmlChar *)(usingCache ? "true" : "false"));
 
 	// create the timing parameter section
 	node = xmlNewChild(rootNode, NULL, BAD_CAST "timing", NULL);

@@ -146,6 +146,7 @@ namespace DRAMsimII
 		unsigned hitLatency;
 		Cache::ReplacementPolicy replacementPolicy;
 		unsigned nmruTrackingCount;
+		bool usingCache;
 	
 		bool setKeyValue(const std::string &nodeName, const std::string &nodeValue);
 		bool setKeyValue(const char* nodeName, const std::string &nodeValue) { std::string name(nodeName); return setKeyValue(name, nodeValue); }
@@ -176,6 +177,7 @@ namespace DRAMsimII
 			theMap[cache_hitlatency_token] = "hitLatency";
 			theMap[cache_replacementpolicy_token] = "replacementPolicy";
 			theMap[cache_nmrutrackingcount_token] = "nmruTrackingCount";
+			theMap[using_cache_token] = "usingCache";
 
 			theMap[clock_granularity_token] = "clockGranularity";
 			theMap[channel_count_token] = "channels";
@@ -275,6 +277,7 @@ namespace DRAMsimII
 			theMap["cachesize"] = cache_size_token;
 			theMap["replacementpolicy"] = cache_replacementpolicy_token;
 			theMap["nmrutrackingcount"] = cache_nmrutrackingcount_token;
+			theMap["usingcache"] = using_cache_token;
 
 			theMap["type"]=dram_type_token;
 			theMap["dbreporting"]=dbreporting_token;

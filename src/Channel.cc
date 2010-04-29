@@ -310,7 +310,7 @@ void Channel::moveToTime(const tick currentTime)
 			assert(earliestExecuteTimeLog(nextCommand) <= time);
 
 			executeCommand(executingCommand);	
-			
+
 #ifndef NDEBUG
 			printVerilogCommand(executingCommand);
 #endif
@@ -698,7 +698,7 @@ void Channel::doPowerCalculation(ostream& os)
 		k->resetPrechargeTime(time);
 		k->resetCycleCounts();
 	}
-	
+
 	unsigned dimmId = 0;
 	for (vector<Cache>::iterator currentDimm = cache.begin(), end = cache.end();
 		currentDimm < end; ++currentDimm)
@@ -2351,7 +2351,7 @@ void Channel::executeCommand(Command *thisCommand)
 			if (systemConfig.isUsingDimmCache())
 			{
 				unsigned i = 0;
-				;
+
 				bool allHits = true;
 
 				while (const Command *followingCommand = currentBank->read(i++))
@@ -2371,7 +2371,7 @@ void Channel::executeCommand(Command *thisCommand)
 				}
 
 				if (allHits)
-				{
+				{					
 					while (Command *readCommand = currentBank->pop())
 					{
 						if (!readCommand->isBasicPrecharge())
@@ -2385,10 +2385,12 @@ void Channel::executeCommand(Command *thisCommand)
 
 							readCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCacheAccess() + timingSpecification.tBurst());
 							readCommand->getHost()->setCompletionTime(readCommand->getCompletionTime());
+
+							time += timingSpecification.tCacheAccess();
 						}
 
 						retireCommand(readCommand);
-						
+
 						assert(readCommand->isRead() || readCommand->isBasicPrecharge());
 						if (readCommand->isPrecharge())
 							break;
@@ -2413,10 +2415,10 @@ void Channel::executeCommand(Command *thisCommand)
 
 		// lack of break is intentional
 	case Command::READ:
-
-		//////////////////////////////////////////////////////////////////////////
 		{
+			//////////////////////////////////////////////////////////////////////////
 			bool satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
+
 			thisCommand->getHost()->setHit(satisfied);
 			if (!satisfied)
 				currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
@@ -2428,20 +2430,27 @@ void Channel::executeCommand(Command *thisCommand)
 #ifndef NDEBUG
 			std::cout << (satisfied ? "|" : ".");
 #endif
-		}
-		//////////////////////////////////////////////////////////////////////////
+			//////////////////////////////////////////////////////////////////////////
 
-		// specific for CAS command
-		// should account for tAL buffering the CAS command until the right moment
-		//thisCommand->setCompletionTime(max(currentBank.getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
-		assert(wasActivated);
+			// specific for CAS command
+			// should account for tAL buffering the CAS command until the right moment
+			//thisCommand->setCompletionTime(max(currentBank.getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
+			assert(wasActivated);
+			if (satisfied && systemConfig.isUsingDimmCache())
+			{
+				thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCacheAccess() + timingSpecification.tBurst());
+				thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
+			}
+			else
+			{			
+				thisCommand->setCompletionTime(max(currentBank->getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
+				thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
-		thisCommand->setCompletionTime(max(currentBank->getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
-		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
-
-		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
-		{
-			i->issueCAS(time, thisCommand);
+				for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
+				{
+					i->issueCAS(time, thisCommand);
+				}
+			}
 		}
 		break;
 
@@ -2456,9 +2465,7 @@ void Channel::executeCommand(Command *thisCommand)
 
 		//////////////////////////////////////////////////////////////////////////
 		{
-#ifndef NDEBUG
 			bool satisfied = 
-#endif
 				cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
 			currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
 #ifndef NDEBUG
@@ -2470,14 +2477,24 @@ void Channel::executeCommand(Command *thisCommand)
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		assert(wasActivated);
-
-		thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
-
-		thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
-
-		for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
+		/// @TODO is currently write-through, so writes hitting in the cache don't matter
+#if 0
+		if (satisfied && systemConfig.isUsingDimmCache() && 0)
 		{
-			i->issueCASW(time,thisCommand);
+			thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCacheAccess() + timingSpecification.tBurst());
+			thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
+		}
+		else
+#endif
+		{
+			thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
+
+			thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
+
+			for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
+			{
+				i->issueCASW(time,thisCommand);
+			}
 		}
 		break;
 

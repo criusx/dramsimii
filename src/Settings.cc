@@ -135,7 +135,8 @@ cacheSize(0),
 blockSize(0),
 hitLatency(0),
 replacementPolicy(Cache::LRU),
-nmruTrackingCount(UINT_MAX)
+nmruTrackingCount(UINT_MAX),
+usingCache(false)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -181,6 +182,12 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				exit(-1);
 			}
 
+			break;
+		case using_cache_token:
+			if (nodeValue == "true" || nodeValue == "t" || nodeValue == "1")
+				usingCache = true;
+			else
+				usingCache = false;
 			break;
 		case cache_hitlatency_token:			
 			if (associativity == 0)

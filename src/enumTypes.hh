@@ -186,6 +186,7 @@ namespace DRAMsimII
 		transaction_queue_depth_token,
 		trace_file_token,
 		unknown_token,
+		using_cache_token,
 		// power config tokens
 		vdd_token,
 		max_vcc_token,
