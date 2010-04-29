@@ -20,14 +20,42 @@ queueName = 'b_1cpu'
 
 # the string that sends this command to the queue
 #submitString = '''echo 'time %%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queueName)
-submitString = '''echo '%%s' | qsub -q %s -o %%s -e %%s -N "%%s"''' % (queueName)
+submitString2 = '''qsub -z -q %s -o %%s -e %%s -N "%%s" %%s''' % (queueName)
+
+getJobId = 'qmgr -c "print server next_job_number"'
 
 def submitCommand(commandLine, name):
         #os.system(commandLine)
         submitCommand = submitString % (commandLine, outputDir, outputDir, name)
         #print commandLine
         #sys.exit(0)
+        #os.system(submitCommand)        
+        p = Popen(getJobId, shell=True, stdout=PIPE)
+        pstdout = p.stdout
+        nextId = "0"
+        for line in pstdout:
+            if line.startswith("set server"):
+                m = re.search('next_job_number = ([0-9]+)', line)
+                #print m.group(1)
+                nextId = m.group(1)
+        scriptName = nextId + ".sh"
+        if not os.path.exists(outputDir):
+            os.makedirs(outputDir)
+        f = open(os.path.join(outputDir, scriptName), 'w')
+        f.write("#!/bin/sh\n")
+        
+        for command in commandLine:
+            f.write("#" + commandLine + "\n")
+            f.write("ls -lah\n")
+            f.write("cd /\n")
+            f.write("ls -lah\n")
+        
+            #f.write(commandLine + "\n")
+        f.close()
+        submitCommand = submitString % (outputDir, outputDir, name, scriptName)
         os.system(submitCommand)
+        #sts = os.waitpid(p.pid, 0)[1]
+        #print "'" + pstdout
 ######################################################################################
 
 # the directory where the traces are
@@ -57,7 +85,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'm5/configs/example/dramsimfs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyC')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyDtest')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -201,7 +229,7 @@ def main():
                                                         if replacementPolicy == 'nmru':
                                                             for trackingCount in nmruTrackingCounts:
                                                                 newCommandLine = currentCommandLine % ("nmruTrackingCount %d" % trackingCount)
-                                                                submitCommand(newCommandLine, t + replacementPolicy + str(trackingCount))
+                                                                submitCommand(newCommandLine, t + replacementPolicy + str(trackingCount))                                                                
                                                                 count += 1
                                                         else:
                                                             newCommandLine = currentCommandLine % ""
