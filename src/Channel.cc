@@ -421,7 +421,7 @@ tick Channel::nextRefreshTime() const
 /// @details this allows other groups to view a recent history of commands that were issued to decide what to execute next
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////////
-void Channel::retireCommand(Command *newestCommand)
+void Channel::retireCommand(Command *newestCommand, const bool isHit)
 {
 	statistics.collectCommandStats(newestCommand);
 
@@ -458,10 +458,12 @@ void Channel::retireCommand(Command *newestCommand)
 
 	}
 	assert(!newestCommand->getHost());
+	if (!isHit)
+	{
+		delete lastCommand;
 
-	delete lastCommand;
-
-	lastCommand = newestCommand;
+		lastCommand = newestCommand;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1906,7 +1908,7 @@ const Command *Channel::readNextCommand() const
 					else
 					{
 						cerr << "error: Found a row activate not followed by a column command." << endl;
-						exit(2);
+						exit(-2);
 					}
 				}
 				break;
@@ -2069,7 +2071,7 @@ const Command *Channel::readNextCommand() const
 					else
 					{
 						cerr << "error: row activate command not followed by a column command." << endl;
-						exit(2);
+						exit(-2);
 					}
 				}
 				break;
@@ -2336,6 +2338,8 @@ void Channel::executeCommand(Command *thisCommand)
 
 	thisCommand->setStartTime(time);
 
+	bool commandHit = false;
+
 	assert(canIssue(thisCommand));
 
 	bool wasActivated = currentBank->isActivated();
@@ -2371,7 +2375,10 @@ void Channel::executeCommand(Command *thisCommand)
 				}
 
 				if (allHits)
-				{					
+				{	
+					thisCommand->setCompletionTime(time);
+					commandHit = true;
+
 					while (Command *readCommand = currentBank->pop())
 					{
 						if (!readCommand->isBasicPrecharge())
@@ -2385,17 +2392,19 @@ void Channel::executeCommand(Command *thisCommand)
 
 							readCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCacheAccess() + timingSpecification.tBurst());
 							readCommand->getHost()->setCompletionTime(readCommand->getCompletionTime());
+							readCommand->getHost()->setHit(true);
 
 							time += timingSpecification.tCacheAccess();
+							lastCommandIssueTime = time;
 						}
 
-						retireCommand(readCommand);
+						retireCommand(readCommand, true);
 
 						assert(readCommand->isRead() || readCommand->isBasicPrecharge());
 						if (readCommand->isPrecharge())
 							break;
 					}	
-
+					
 					break;
 				}
 			}
@@ -2561,9 +2570,8 @@ void Channel::executeCommand(Command *thisCommand)
 	}	
 
 	// inserts into a queue which dequeues into the command pool
-	retireCommand(thisCommand);
+	retireCommand(thisCommand, commandHit);
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief find the protocol gap between a command and current system state

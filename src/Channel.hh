@@ -60,7 +60,7 @@ namespace DRAMsimII
 		std::vector<Cache> cache;						///< the dimm caches
 	
 		// functions
-		void retireCommand(Command *);
+		void retireCommand(Command *, const bool isHit);
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
 		bool transaction2commands(Transaction *);
 		Command *getNextCommand(const Command *useThisCommand = NULL);

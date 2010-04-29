@@ -69,9 +69,9 @@ commandExecution(),
 commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
-adjustedTransactionExecution(),
-cumulativeTransactionExecution(),
-cumulativeAdjustedTransactionExecution(),
+//adjustedTransactionExecution(),
+//cumulativeTransactionExecution(),
+//cumulativeAdjustedTransactionExecution(),
 cacheLatency(0),
 pcOccurrence(),
 workingSet(),
@@ -110,9 +110,9 @@ commandExecution(),
 commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
-adjustedTransactionExecution(),
-cumulativeTransactionExecution(),
-cumulativeAdjustedTransactionExecution(),
+//adjustedTransactionExecution(),
+//cumulativeTransactionExecution(),
+//cumulativeAdjustedTransactionExecution(),
 cacheLatency(0),
 pcOccurrence(),
 workingSet(),
@@ -139,15 +139,15 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 			}
 
 			transactionExecution[currentTransaction->getLatency()]++;
-			cumulativeTransactionExecution[currentTransaction->getLatency()]++;
+			//cumulativeTransactionExecution[currentTransaction->getLatency()]++;
 
 			if (currentTransaction->isRead())
 			{
 				// read hit
 				if (currentTransaction->isHit())
 				{
-					cumulativeAdjustedTransactionExecution[cacheHitLatency]++;
-					adjustedTransactionExecution[cacheHitLatency]++;
+					//cumulativeAdjustedTransactionExecution[cacheHitLatency]++;
+					//adjustedTransactionExecution[cacheHitLatency]++;
 					cacheLatency += cacheHitLatency;
 
 					dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
@@ -155,8 +155,8 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				// read miss
 				else
 				{
-					cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
-					adjustedTransactionExecution[currentTransaction->getLatency()]++;	
+					//cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
+					//adjustedTransactionExecution[currentTransaction->getLatency()]++;	
 
 					bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
 				}
@@ -184,8 +184,8 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				{
 					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
 				}
-				cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
-				adjustedTransactionExecution[currentTransaction->getLatency()]++;
+				//cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
+				//adjustedTransactionExecution[currentTransaction->getLatency()]++;
 
 				// 64bit bus for most DDRx architectures
 				/// @todo use #DQ * length to calculate bytes Tx, Rx
@@ -240,6 +240,7 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 	{
 		if (!currentCommand->isRefresh())
 		{
+			assert(currentCommand->getLatency() < 2147483648);
 			commandDelay[currentCommand->getDelayTime()]++;
 			commandExecution[currentCommand->getExecuteTime()]++;
 			commandTurnaround[currentCommand->getLatency()]++;		
@@ -273,39 +274,39 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	os << "----Average Transaction Latency {" << averageLatency.average() << "}" << endl;
 
+	//averageLatency.clear();
+
+// 	os << "----Adjusted Transaction Latency";
+// 	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.adjustedTransactionExecution.begin(); currentValue != statsLog.adjustedTransactionExecution.end(); ++currentValue)
+// 	{
+// 		averageLatency.add(currentValue->first,currentValue->second);
+// 		os << " {" << currentValue->first << "," << currentValue->second << "}";
+// 	}
+// 	os << endl;
+// 
+// 	os << "----Average Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
+
+// 	averageLatency.clear();
+// 	os << "----Cumulative Transaction Latency";
+// 	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeTransactionExecution.begin(); currentValue != statsLog.cumulativeTransactionExecution.end(); ++currentValue)
+// 	{
+// 		averageLatency.add(currentValue->first,currentValue->second);
+// 		os << " {" << currentValue->first << "," << currentValue->second << "}";
+// 	}
+// 	os << endl;
+// 	
+// 	os << "----Average Cumulative Transaction Latency {" << averageLatency.average() << "}" << endl;
+
 	averageLatency.clear();
-
-	os << "----Adjusted Transaction Latency";
-	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.adjustedTransactionExecution.begin(); currentValue != statsLog.adjustedTransactionExecution.end(); ++currentValue)
+	//os << "----Cumulative Adjusted Transaction Latency";
+	//for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeAdjustedTransactionExecution.begin(); currentValue != statsLog.cumulativeAdjustedTransactionExecution.end(); ++currentValue)
 	{
-		averageLatency.add(currentValue->first,currentValue->second);
-		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	//	averageLatency.add(currentValue->first,currentValue->second);
+	//	os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
-	os << endl;
+	//os << endl;
 
-	os << "----Average Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
-
-	averageLatency.clear();
-	os << "----Cumulative Transaction Latency";
-	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeTransactionExecution.begin(); currentValue != statsLog.cumulativeTransactionExecution.end(); ++currentValue)
-	{
-		averageLatency.add(currentValue->first,currentValue->second);
-		os << " {" << currentValue->first << "," << currentValue->second << "}";
-	}
-	os << endl;
-	
-	os << "----Average Cumulative Transaction Latency {" << averageLatency.average() << "}" << endl;
-
-	averageLatency.clear();
-	os << "----Cumulative Adjusted Transaction Latency";
-	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeAdjustedTransactionExecution.begin(); currentValue != statsLog.cumulativeAdjustedTransactionExecution.end(); ++currentValue)
-	{
-		averageLatency.add(currentValue->first,currentValue->second);
-		os << " {" << currentValue->first << "," << currentValue->second << "}";
-	}
-	os << endl;
-
-	os << "----Average Cumulative Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
+	//os << "----Average Cumulative Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
 
 	// transaction delay
 	os << "----Transaction Delay";
@@ -315,6 +316,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	os << endl; 
 
+#if 0
 	// command time
 	os << "----Command Turnaround";
 	for (unordered_map<unsigned,unsigned>::const_iterator currentValue = statsLog.commandTurnaround.begin(); currentValue != statsLog.commandTurnaround.end(); ++currentValue)
@@ -336,6 +338,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
 	os << endl;
+#endif
 	
 	os << "----DIMM Cache Latency {" << statsLog.cacheLatency << "}" << endl;
 
@@ -524,7 +527,7 @@ void Statistics::clear()
 	commandDelay.clear();	
 	commandExecution.clear();
 	transactionExecution.clear();
-	adjustedTransactionExecution.clear();
+	//adjustedTransactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
 	issuedAtTFAW = /*readBytesTransferred = writeBytesTransferred =*/ readCount = writeCount = 0;

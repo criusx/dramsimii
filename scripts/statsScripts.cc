@@ -839,19 +839,19 @@ void processStats(const bf::path &outputDir, const string &filename)
 
 	vector<tuple<unsigned, unsigned, double, unsigned> > transactionLatency;
 	StdDev<float> averageTransactionLatency;
-	StdDev<float> averageAdjustedTransactionLatency;
+	//StdDev<float> averageAdjustedTransactionLatency;
 
 	vector<unsigned> transactionCount;
 	transactionCount.reserve(MAXIMUM_VECTOR_SIZE);
 	uint64_t transactionCountBuffer = 0ULL;
 
-	vector<unsigned> adjustedTransactionCount;
-	adjustedTransactionCount.reserve(MAXIMUM_VECTOR_SIZE);
-	uint64_t adjustedTransactionCountBuffer = 0ULL;
+	//vector<unsigned> adjustedTransactionCount;
+	//adjustedTransactionCount.reserve(MAXIMUM_VECTOR_SIZE);
+	//uint64_t adjustedTransactionCountBuffer = 0ULL;
 
 	unordered_map<unsigned, unsigned> distTransactionLatency;
 
-	unordered_map<unsigned, unsigned> distAdjustedTransactionLatency;
+	//unordered_map<unsigned, unsigned> distAdjustedTransactionLatency;
 
 	vector<float> hitMissValues;
 	hitMissValues.reserve(MAXIMUM_VECTOR_SIZE);
@@ -1434,6 +1434,7 @@ void processStats(const bf::path &outputDir, const string &filename)
 					throughOnce = true;
 				}
 
+				// aggregate all the transaction latencies
 				averageTransactionLatency.clear();
 				char *position = newLine;
 				while (position != NULL)
@@ -1462,6 +1463,7 @@ void processStats(const bf::path &outputDir, const string &filename)
 					position = secondBracket + 1;
 				}
 			}
+#if 0
 			else if (starts_with(newLine, "----Adjusted Transaction Latency"))
 			{
 				averageAdjustedTransactionLatency.clear();
@@ -1493,6 +1495,7 @@ void processStats(const bf::path &outputDir, const string &filename)
 					position = secondBracket + 1;
 				}
 			}
+#endif
 			else if (starts_with(newLine, "----Working Set"))
 			{
 				char *firstBracket = strchr(newLine, '{');
