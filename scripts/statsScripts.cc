@@ -13,17 +13,17 @@ void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opst
 #if 0	
 	p << "set multiplot layout " << channelLatencyDistribution[channelID].size() << ", 1 title \"";
 
-	
+
 	for (vector<string>::const_iterator i = commandLine.begin(), end = commandLine.end();
 		i < end; ++i)
 	{
 		p << "{/*1.5" << i << "};";
 	}
-		
-#endif
-		p << subAddrDistroA;
 
-		printTitle("", commandLine, p, channelLatencyDistribution[channelID].size());
+#endif
+	p << subAddrDistroA;
+
+	printTitle("", commandLine, p, channelLatencyDistribution[channelID].size());
 
 
 	for (unsigned rankID = 0; rankID
@@ -247,7 +247,7 @@ void pcVsLatencyGraph(const bf::path &outFilename, opstream &p, const vector<str
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << pcVsLatencyGraphScript << endl;
 	p << "set multiplot layout 1, 2 title \"" << commandLine[0]
-		<< "\\n{/*1.5Total Latency Due to Reads vs. PC Value}\"" << endl;
+	<< "\\n{/*1.5Total Latency Due to Reads vs. PC Value}\"" << endl;
 	p << "plot '-' using 1:2 t 'Total Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
@@ -279,7 +279,7 @@ void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, const vec
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << avgPcVsLatencyGraphScript << endl;
 	p << "set multiplot layout 1, 2 title \"" << commandLine[0]
-		<< "\\n{/*1.5Average Latency Due to Reads vs. PC Value}\"" << endl;
+	<< "\\n{/*1.5Average Latency Due to Reads vs. PC Value}\"" << endl;
 	p << "plot '-' using 1:2 t 'Average Latency' with boxes" << endl;
 
 	if (latencyVsPcLow.size() > 0)
@@ -314,9 +314,9 @@ void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &
 	p << "set title \"" << commandLine << "\\nRead Transaction Latency\""
 		<< endl;
 #endif
-printTitle("Read Transaction Latency", commandLine, p);
-		
-		p << transactionGraphScript << endl;
+	printTitle("Read Transaction Latency", commandLine, p);
+
+	p << transactionGraphScript << endl;
 
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
@@ -349,7 +349,7 @@ void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opst
 		<< latencyDeviation.getStdDev().get<1> () + 8
 		* latencyDeviation.getStdDev().get<2> () << "]" << endl
 		<< transactionGraphScript << endl;
-	
+
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
 	{
@@ -370,7 +370,7 @@ void adjustedTransactionLatencyDistributionGraph(const bf::path &outFilename, op
 #endif
 	printTitle("Adjusted Read Transaction Latency", commandLine, p);
 
-		p << transactionGraphScript << endl;
+	p << transactionGraphScript << endl;
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distAdjustedTransactionLatency.begin(), end =
 		distAdjustedTransactionLatency.end(); i != end; ++i)
@@ -397,7 +397,7 @@ void zoomedAdjustedTransactionLatencyDistributionGraph(const bf::path &outFilena
 		<< "\\nZoomed Adjusted Read Transaction Latency\"" << endl;
 #endif
 	printTitle("Zoomed Adjusted Read Transaction Latency", commandLine, p);
-		p << "set xrange [0:" << latencyDeviation.getStdDev().get<1> () + 8
+	p << "set xrange [0:" << latencyDeviation.getStdDev().get<1> () + 8
 		* latencyDeviation.getStdDev().get<2> () << "]" << endl
 		<< transactionGraphScript << endl;
 
@@ -771,12 +771,12 @@ void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const vector<st
 
 //////////////////////////////////////////////////////////////////////////
 void transactionLatencyCumulativeDistributionGraph(const bf::path &outFilename, opstream &p, const vector<string>& commandLine,
-										 const unordered_map<unsigned, unsigned> &distTransactionLatency, float period, const char* title,
-										 bool isThumbnail)
+												   const unordered_map<unsigned, unsigned> &distTransactionLatency, float period, const char* title,
+												   bool isThumbnail)
 {
 	map<unsigned,unsigned> orderedTransactionLatency;
 	uint64_t sum = 0;
-	
+
 	for (unordered_map<unsigned,unsigned>::const_iterator i = distTransactionLatency.begin(), end = distTransactionLatency.end();
 		i != end; ++i)
 	{
@@ -963,7 +963,7 @@ void processStats(const bf::path &outputDir, const string &filename)
 			{
 				char *position = strchr(newLine, ':');
 				commandLine = getCommandLine(string(position + 2));	
-				
+
 				started = true;
 
 				// get the number of channels
@@ -1142,10 +1142,11 @@ void processStats(const bf::path &outputDir, const string &filename)
 						transactionCount.push_back(transactionCountBuffer
 							/ scaleFactor);
 						transactionCountBuffer = 0;
-
+#if 0
 						adjustedTransactionCount.push_back(
 							adjustedTransactionCountBuffer / scaleFactor);
 						adjustedTransactionCountBuffer = 0;
+#endif
 
 						hitMissValues.push_back(hitMissValueBuffer
 							/ scaleFactor);
@@ -1282,10 +1283,12 @@ void processStats(const bf::path &outputDir, const string &filename)
 									* epoch] + transactionCount[2 * epoch
 									+ 1]) / 2;
 
+#if 0
 								adjustedTransactionCount[epoch]
 								= (adjustedTransactionCount[2 * epoch]
 								+ adjustedTransactionCount[2
 									* epoch + 1]) / 2;
+#endif
 
 								hitMissValues[epoch]
 								= (hitMissValues[2 * epoch]
@@ -1387,9 +1390,9 @@ void processStats(const bf::path &outputDir, const string &filename)
 							transactionLatency.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 							transactionCount.resize(MAXIMUM_VECTOR_SIZE / 2);
-
-							adjustedTransactionCount.resize(MAXIMUM_VECTOR_SIZE
-								/ 2);
+#if 0
+							adjustedTransactionCount.resize(MAXIMUM_VECTOR_SIZE / 2);
+#endif
 
 							hitMissValues.resize(MAXIMUM_VECTOR_SIZE / 2);
 
@@ -1891,6 +1894,7 @@ void processStats(const bf::path &outputDir, const string &filename)
 		//////////////////////////////////////////////////////////////////////////
 	}
 
+#if 0
 	{
 		//////////////////////////////////////////////////////////////////////////
 		// make the adjusted transaction latency distribution graph
@@ -1917,7 +1921,9 @@ void processStats(const bf::path &outputDir, const string &filename)
 			"Zoomed Adjusted Transaction Latency"));	
 		//////////////////////////////////////////////////////////////////////////
 	}
+#endif
 
+#if 0
 	{
 		//////////////////////////////////////////////////////////////////////////
 		// make the transaction latency cumulative distribution graph
@@ -1941,6 +1947,7 @@ void processStats(const bf::path &outputDir, const string &filename)
 			"Adjusted Transaction Latency Cumulative Distribution"));
 		//////////////////////////////////////////////////////////////////////////
 	}
+#endif
 
 	//////////////////////////////////////////////////////////////////////////
 	// make the bandwidth graph

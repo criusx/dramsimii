@@ -191,6 +191,8 @@ usingDimmCache(settings.usingCache)
 
 			stringstream settingsFilename;
 
+			string settingsSuffix = settings.usingCache ? "C.xml" : "N.xml";
+
 			if (settings.usingCache)
 				suffix = "C" + suffix;
 			else
@@ -212,7 +214,7 @@ usingDimmCache(settings.usingCache)
 				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-power" << suffix;
 				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-stats" << suffix;
 				verilogFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-verilog" << suffix;
-				settingsFilename << outDir.native_directory_string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-settings.xml";	
+				settingsFilename << outDir.native_directory_string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-settings" << settingsSuffix;	
 				timingFile = timingFilename.str();
 				powerFile = powerFilename.str();
 				statsFile = statsFilename.str();

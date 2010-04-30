@@ -273,30 +273,31 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << endl;
 
 	os << "----Average Transaction Latency {" << averageLatency.average() << "}" << endl;
+#if 0
+	averageLatency.clear();
 
-	//averageLatency.clear();
+	os << "----Adjusted Transaction Latency";
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.adjustedTransactionExecution.begin(); currentValue != statsLog.adjustedTransactionExecution.end(); ++currentValue)
+	{
+		averageLatency.add(currentValue->first,currentValue->second);
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	}
+	os << endl;
 
-// 	os << "----Adjusted Transaction Latency";
-// 	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.adjustedTransactionExecution.begin(); currentValue != statsLog.adjustedTransactionExecution.end(); ++currentValue)
-// 	{
-// 		averageLatency.add(currentValue->first,currentValue->second);
-// 		os << " {" << currentValue->first << "," << currentValue->second << "}";
-// 	}
-// 	os << endl;
-// 
-// 	os << "----Average Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
-
-// 	averageLatency.clear();
-// 	os << "----Cumulative Transaction Latency";
-// 	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeTransactionExecution.begin(); currentValue != statsLog.cumulativeTransactionExecution.end(); ++currentValue)
-// 	{
-// 		averageLatency.add(currentValue->first,currentValue->second);
-// 		os << " {" << currentValue->first << "," << currentValue->second << "}";
-// 	}
-// 	os << endl;
-// 	
-// 	os << "----Average Cumulative Transaction Latency {" << averageLatency.average() << "}" << endl;
-
+	os << "----Average Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
+#endif
+#if 0
+	averageLatency.clear();
+	os << "----Cumulative Transaction Latency";
+	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeTransactionExecution.begin(); currentValue != statsLog.cumulativeTransactionExecution.end(); ++currentValue)
+	{
+		averageLatency.add(currentValue->first,currentValue->second);
+		os << " {" << currentValue->first << "," << currentValue->second << "}";
+	}
+	os << endl;
+	
+	os << "----Average Cumulative Transaction Latency {" << averageLatency.average() << "}" << endl;
+#endif
 	averageLatency.clear();
 	//os << "----Cumulative Adjusted Transaction Latency";
 	//for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeAdjustedTransactionExecution.begin(); currentValue != statsLog.cumulativeAdjustedTransactionExecution.end(); ++currentValue)

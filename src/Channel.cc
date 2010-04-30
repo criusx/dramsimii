@@ -2426,19 +2426,22 @@ void Channel::executeCommand(Command *thisCommand)
 	case Command::READ:
 		{
 			//////////////////////////////////////////////////////////////////////////
-			bool satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
-
-			thisCommand->getHost()->setHit(satisfied);
-			if (!satisfied)
-				currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
-			// end of the line on reuse
-			if (currentRank->bank[thisCommand->getAddress().getBank()].isAllHits() && thisCommand->isPrecharge())
+			if (systemConfig.usingDimmCache())
 			{
-				statistics.reportRasReduction(thisCommand);
-			}
+				bool satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
+
+				thisCommand->getHost()->setHit(satisfied);
+				if (!satisfied)
+					currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
+				// end of the line on reuse
+				if (currentRank->bank[thisCommand->getAddress().getBank()].isAllHits() && thisCommand->isPrecharge())
+				{
+					statistics.reportRasReduction(thisCommand);
+				}
 #ifndef NDEBUG
-			std::cout << (satisfied ? "|" : ".");
+				std::cout << (satisfied ? "|" : ".");
 #endif
+			}
 			//////////////////////////////////////////////////////////////////////////
 
 			// specific for CAS command
@@ -2473,6 +2476,7 @@ void Channel::executeCommand(Command *thisCommand)
 	case Command::WRITE:
 
 		//////////////////////////////////////////////////////////////////////////
+		if (systemConfig.isUsingDimmCache())
 		{
 			bool satisfied = 
 				cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());

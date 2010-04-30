@@ -511,17 +511,19 @@ void processPower(const bf::path &outputDir, const string &filename, const list<
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += 0; //pc.sramActivePower + pc.sramIdlePower;
 
-			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBYAdjusted;
-			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += pc.PsysACTAdjusted;
+			/// @TODO fix this
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBY;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += pc.PsysACT;
 			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += pc.PsysPRE_STBY;
-			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRdAdjusted;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRD;
 			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
-			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDNAdjusted;
+			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
 			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
 			alternateValueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
  
+			/// @TODO fix this too
 			energyValueBuffer.first += pc.energy;
-			energyValueBuffer.second += pc.reducedEnergy;
+			energyValueBuffer.second += pc.dimmEnergy;
 
 			if (currentChannel + 1 == channelCount)
 			{

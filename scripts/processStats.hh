@@ -110,6 +110,11 @@ using std::tr1::unordered_map;
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
 					  const vector<string> &commandLine, list<pair<string,string> > &graphs);
 
+bool processPowerForFile(const string file, list<pair<string, string> > &powerParams, unsigned &epochCounter, double &epochTime, pair<double,double>  &totalEnergy, double &averageInUseTime);
+void processPowerForPair(const pair<string, string> &filePair, map<string, list<string> > &results, list<pair<string, string> > &powerParams);
+bool processStatsForFile(string file, unsigned &epochCounter, double &epoch, double &averageLatency, pair<unsigned, unsigned> &readHitsMisses, pair<unsigned, unsigned> &hitsMisses, string &commandLine);
+void processStatsForPair(const pair<string, string> &filePair, map<string, list<string> > &results);
+
 bool fileExists(const string&);
 
 unordered_map<string, string> &setupDecoder();
@@ -475,9 +480,8 @@ class PowerCalculations
 {
 public:
 	double PsysACT_STBY, PsysPRE_STBY, PsysPRE_PDN, PsysACT_PDN, PsysACT, PsysRD, PsysWR;
-	double PsysACTAdjusted, PsysRdAdjusted, PsysACT_STBYAdjusted, PsysACT_PDNAdjusted;
 	double sramActivePower, sramIdlePower;
-	double energy, reducedEnergy;
+	double energy, dimmEnergy;
 	double inUseTime;
 
 	PowerCalculations():
@@ -488,14 +492,10 @@ public:
 		PsysACT(0.0),
 		PsysRD(0.0),
 		PsysWR(0.0), 
-		PsysACTAdjusted(0.0),
-		PsysRdAdjusted(0.0),
-		PsysACT_STBYAdjusted(0.0),
-		PsysACT_PDNAdjusted(0.0),
 		sramActivePower(0.0),
 		sramIdlePower(0.0),
 		energy(0.0),
-		reducedEnergy(0.0),
+		dimmEnergy(0.0),
 		inUseTime(0.0)
 	{};
 };
@@ -788,6 +788,8 @@ public:
 		vector<string>::const_iterator currentDimm = splitDimmLine.begin(), dimmEnd = splitDimmLine.end();
 		currentDimm++;
 
+		double sramPower = 0.0;
+
 		for (;currentDimm != dimmEnd; ++currentDimm)
 		{
 			unsigned accesses;
@@ -822,7 +824,10 @@ public:
 
 			pc.sramActivePower += (double)inUseTime / duration * idd;
 			pc.sramIdlePower += (double)idleTime / duration * isb1;
+			sramPower += (inUseTime / duration * idd + idleTime / duration * isb1) * 1.8;
 		}
+
+		pc.dimmEnergy = sramPower * epochTime;
 
 		for (;currentRank != end; ++currentRank)
 		{
@@ -854,8 +859,6 @@ public:
 			double PschACT_STBY = pDsActStby * percentActive * (1 - CKE_LO_ACT);
 			pc.PsysACT_STBY += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY;
 			assert(readHits < readCycles / 8);
-			double PschACT_SBTYAdjusted = pDsActStby * percentActiveAdjusted * (1 - CKE_LO_ACT);
-			pc.PsysACT_STBYAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_SBTYAdjusted;
 			//cerr << pc.PsysACT_STBYAdjusted << " " << pc.PsysACT_STBY << endl;
 
 			// precharge-standby
@@ -869,37 +872,24 @@ public:
 			// activate-powerdown
 			double PschACT_PDN = pDsActPdn * percentActive * CKE_LO_ACT;
 			pc.PsysACT_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN;
-			double PschACT_PDNAdjusted = pDsActPdn * percentActiveAdjusted * CKE_LO_ACT;
-			pc.PsysACT_PDNAdjusted += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDNAdjusted;
 			//cerr << pc.PsysACT_PDN << " " << pc.PsysACT_PDNAdjusted << endl;
 
 			// activate power analysis
 			double tRRDsch = ((double)duration) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
 			double PschACT = pDsAct * tRc / tRRDsch;
 			pc.PsysACT += devicesPerRank * voltageScaleFactor * PschACT;
-			double tRRDschAdj = ((double)duration) / (thisRankAdjustedRasCount > 0 ? thisRankAdjustedRasCount : 0.00000001);
-			double PschACTAdjusted = pDsAct * tRc / tRRDschAdj;
-			pc.PsysACTAdjusted += devicesPerRank * voltageScaleFactor * PschACTAdjusted;
-
+			
 			// read power analysis
 			double RDschPct = readCycles / duration;
 			pc.PsysRD += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPct;
-			// changed due to cache
-			double RDschPctAdj = (readCycles - readHits * tBurst) / duration;
-			assert(RDschPctAdj > 0.0);
-			pc.PsysRdAdjusted += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsRd * RDschPctAdj;
-
+			
 			// write power analysis
 			double WRschPct = writeCycles / duration;
 			pc.PsysWR += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * pDsWr * WRschPct;
 		}	
 
 		pc.energy = (pc.PsysACT_STBY + pc.PsysACT + pc.PsysPRE_STBY + pc.PsysRD + pc.PsysWR + pc.PsysACT_PDN + pc.PsysPRE_PDN) * epochTime;
-		//cerr << epochTime << " " << freq << endl;
-		//pc.reducedEnergy = idd1 * devicesPerRank * tRc / freq * vdd * totalReadHits;
-		pc.reducedEnergy = (pc.PsysACT_STBYAdjusted + pc.PsysACTAdjusted + pc.PsysPRE_STBY + pc.PsysRdAdjusted + pc.PsysWR + pc.PsysACT_PDNAdjusted + pc.PsysPRE_PDN + pc.sramActivePower + pc.sramIdlePower) * epochTime;
-
-
+		
 		return pc;
 	}
 };

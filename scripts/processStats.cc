@@ -155,13 +155,13 @@ int main(int argc, char** argv)
 	desc.add_options()
 		("help", "help message")
 		("create,f","Force creation of the index file only")
-		("png,p","Generate PNG versions of the files")
 		("power-params,r",opt::value<string>(),
 		"Update power parameters to different values than what are in the power files")
 		("cypress,c","Generate only select graphs for Cypress study")
 		("process,r","Only process the files, do not regenerate the html file")
 		("output,o",opt::value<string>(),		
-		"Choose an output directory different from the current directory");
+		"Choose an output directory different from the current directory")
+		("pairs,p","Results for DIMM and non-DIMM are generated as pairs and should be processed accordingly");
 
 	opt::variables_map vm;
 
@@ -174,6 +174,8 @@ int main(int argc, char** argv)
 		cerr << uo.what() << endl;
 		exit(-1);
 	}
+
+
 
 	opt::notify(vm);
 
@@ -227,11 +229,37 @@ int main(int argc, char** argv)
 	// figure out which in the command line are viable files to analyze
 	for (int i = 0; i < argc; ++i)
 	{
-		if (ends_with(argv[i], "power.gz") || ends_with(argv[i], "power.bz2")
-			|| ends_with(argv[i], "stats.gz") || ends_with(argv[i],
-			"stats.bz2"))
+		if (ends_with(argv[i], "power.gz") || ends_with(argv[i], "power.bz2") ||
+			ends_with(argv[i], "powerC.gz") || ends_with(argv[i], "powerC.bz2") ||
+			ends_with(argv[i], "powerN.gz") || ends_with(argv[i], "powerN.bz2") ||
+			ends_with(argv[i], "stats.gz") || ends_with(argv[i],"stats.bz2") ||
+			ends_with(argv[i], "statsC.gz") || ends_with(argv[i],"statsC.bz2") ||
+			ends_with(argv[i], "statsN.gz") || ends_with(argv[i],"statsN.bz2"))
 		{
 			files.push_back(string(argv[i]));
+		}
+	}
+
+	vector<pair<string,string> > filePairs;
+
+	if (vm.count("pairs"))
+	{
+		for (vector<string>::const_iterator currentFile = files.begin(); 
+			currentFile < files.end(); ++currentFile)
+		{
+			if (ends_with(*currentFile,"C.gz") || ends_with(*currentFile,"C.bz2"))
+			{
+				for (vector<string>::const_iterator currentFile2 = files.begin(); 
+					currentFile2 < files.end(); ++currentFile2)
+				{
+					if (starts_with(*currentFile2, currentFile->substr(0,currentFile->length() - 4)) &&
+						ends_with(*currentFile2,"N.gz"))
+					{
+						filePairs.push_back(pair<string,string>(*currentFile,*currentFile2));
+						//cerr << *currentFile << " " << *currentFile2 << endl;
+					}
+				}
+			}
 		}
 	}
 
@@ -240,296 +268,29 @@ int main(int argc, char** argv)
 		int currentFileNumber = 0;
 		// gather stats from all the files to generate the html file
 #pragma omp parallel for shared(files) 
-		for (vector<string>::const_iterator currentFile = files.begin(); 
-			currentFile < files.end(); ++currentFile)
+		for (vector<pair<string, string> >::const_iterator currentFile = filePairs.begin(); 
+			currentFile < filePairs.end(); ++currentFile)
 		{
-			filtering_istream inputStream;
-			
-			if (ends_with(*currentFile, ".gz"))
-				inputStream.push(boost::iostreams::gzip_decompressor());
-			else if (ends_with(*currentFile, ".bz2"))
-				inputStream.push(boost::iostreams::bzip2_decompressor());
-
-			inputStream.push(file_source(*currentFile));
-
-			const string basefilename = currentFile->substr(0, currentFile->find_last_of('-'));
-			cerr << basefilename << endl;
-
-			char newLine[NEWLINE_LENGTH];
-
-			if (!inputStream.is_complete())
-				continue;
-
 			// go through the stats file
-			if (ends_with(*currentFile, "stats.gz") || ends_with(*currentFile, "stats.bz2") || ends_with(*currentFile, "stats"))
+			if (ends_with(currentFile->first, "stats.gz") ||
+				ends_with(currentFile->first, "stats.bz2") ||
+				ends_with(currentFile->first, "stats") ||
+				ends_with(currentFile->first, "statsC.gz") ||
+				ends_with(currentFile->first, "statsC.bz2") ||
+				ends_with(currentFile->first, "statsC"))
 			{
-				pair<unsigned, unsigned> readHitsMisses;
-				pair<unsigned, unsigned> hitsMisses;
-				unsigned epochCounter = 0;
-				double epoch = 0.0;
-				float averageLatency;
-				float averageAdjustedLatency;
-				vector<string> currentLine;
-
-				bool foundCommandline = false;
-				bool foundEpoch = false;
-
-				inputStream.getline(newLine, NEWLINE_LENGTH);
-
-				unsigned lineCounter = 0;
-
-				while ((newLine[0] != NULL) && (!userStop))
-				{						
-					if (starts_with(newLine,
-						"----Cumulative DIMM Cache Read Hits/Misses"))
-					{
-						epochCounter++;
-
-						char *firstBracket = strchr(newLine, '{');
-						if (firstBracket == NULL)
-							break;
-
-						char *secondBracket = strchr(newLine, '}');
-						if (secondBracket == NULL)
-							break;
-						*secondBracket = (char) NULL;
-						readHitsMisses.first = max(atoi(firstBracket + 1), 1);
-
-						firstBracket = strchr(secondBracket + 1, '{');
-						if (firstBracket == NULL)
-							break;
-
-						secondBracket = strchr(secondBracket + 1, '}');
-						if (secondBracket == NULL)
-							break;
-						*secondBracket = (char) NULL;
-						readHitsMisses.second = max(atoi(firstBracket + 1), 1);
-					}
-					else if (starts_with(newLine,
-						"----Cumulative DIMM Cache Hits/Misses"))
-					{
-						char *firstBracket = strchr(newLine, '{');
-						if (firstBracket == NULL)
-							break;
-
-						char *secondBracket = strchr(newLine, '}');
-						if (secondBracket == NULL)
-							break;
-						*secondBracket = (char) NULL;
-						hitsMisses.first = max(atoi(firstBracket + 1), 1);
-
-						firstBracket = strchr(secondBracket + 1, '{');
-						if (firstBracket == NULL)
-							break;
-
-						secondBracket = strchr(secondBracket + 1, '}');
-						if (secondBracket == NULL)
-							break;
-						*secondBracket = (char) NULL;
-						hitsMisses.second = max(atoi(firstBracket + 1), 1);
-					}
-					else if (starts_with(newLine,
-						"----Average Cumulative Transaction Latency"))
-					{
-						char *firstBracket = strchr(newLine, '{');
-						if (firstBracket == NULL)
-							break;
-
-						char *secondBracket = strchr(newLine, '}');
-						if (secondBracket == NULL)
-							break;
-						*secondBracket = (char) NULL;
-						averageLatency = atof(firstBracket + 1);
-					}
-					else if (starts_with(newLine,
-						"----Average Cumulative Adjusted Transaction Latency"))
-					{
-						char *firstBracket = strchr(newLine, '{');
-						if (firstBracket == NULL)
-							break;
-
-						char *secondBracket = strchr(newLine, '}');
-						if (secondBracket == NULL)
-							break;
-						*secondBracket = (char) NULL;
-						averageAdjustedLatency = atof(firstBracket + 1);
-					}
-					else if (!foundEpoch && starts_with(newLine, "----Epoch"))
-					{
-						foundEpoch = true;
-
-						char *position = strchr(newLine, ' ');
-						if (position == NULL)
-							break;
-						epoch = atof(position + 1);
-					}
-					else if (!foundCommandline && starts_with(newLine, "----Command Line:"))
-					{
-						foundCommandline = true;
-
-						toBeProcessed.push_back(*currentFile);
-
-						//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
-						const string commandline(newLine);
-						string modUrlString = commandline.substr(commandline.find(':')
-							+ 2, commandline.length());
-						vector<string> splitLine;
-						erase_all(modUrlString, "_");
-						erase_all(modUrlString, "{");
-						erase_all(modUrlString, "}");
-						replace_first(modUrlString,"  ]","]");
-						split(splitLine, modUrlString, is_any_of(" "),
-							token_compress_on);
-
-						for (vector<string>::const_iterator x = splitLine.begin(); x
-							!= splitLine.end(); ++x)
-						{
-							string::size_type start = x->find("[");
-							string::size_type end = x->find("]");
-							string benchmarkName;
-
-							if (start == string::npos || end == string::npos)
-								benchmarkName = *x;
-							else
-								benchmarkName = x->substr(start + 1, end - start - 1);
-
-							if (decoder.find(benchmarkName) != decoder.end())
-								benchmarkName = decoder[benchmarkName];
-
-							currentLine.push_back(benchmarkName);
-						}
-					}
-
-					if ((++lineCounter % 7500) == 0)
-					{
-						char *position = strchr(newLine, '\n');
-						if (position != NULL)
-							*position = (char) NULL;
-						newLine[50] = NULL;
-
-						cerr << "\r" << setiosflags(ios::right) << std::setw(4)
-							<< ++currentFileNumber << "/"
-							<< setiosflags(ios::left) << std::setw(4)
-							<< files.size() << " " << std::setw(9)
-							<< lineCounter << " " << newLine << "\r";
-					}
-
-					inputStream.getline(newLine, NEWLINE_LENGTH);
-				}
-
-				stringstream current;
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< ((double) epochCounter * epoch);
-				currentLine.push_back(current.str());
-				current.str("");
-
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< ((float) readHitsMisses.first
-					/ ((float) readHitsMisses.first + readHitsMisses.second));
-				currentLine.push_back(current.str());
-				current.str("");
-
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< ((float) hitsMisses.first / ((float) hitsMisses.first
-					+ hitsMisses.second));
-				currentLine.push_back(current.str());
-				current.str("");
-
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< averageLatency;
-				currentLine.push_back(current.str());
-				current.str("");
-
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< averageAdjustedLatency;
-				currentLine.push_back(current.str());
-				current.str("");
-
-				current << std::dec << std::fixed << std::setprecision(2)
-					<< averageLatency - averageAdjustedLatency;
-				currentLine.push_back(current.str());
-				current.str("");
-
-				if (foundCommandline && foundEpoch)
-				{
-					while (!currentLine.empty())
-					{
-						string element = currentLine.back();
-#pragma omp critical
-						results[basefilename].push_front(element);
-						currentLine.pop_back();
-					}
-				}
+				processStatsForPair(*currentFile, results);		
 			}
 			// go through the power file
-			else if (ends_with(*currentFile, "power.gz") || ends_with(*currentFile, "power.bz2") || ends_with(*currentFile, "power"))
-			{			
-				float totalEnergy = 0.0F, reducedEnergy = 0.0F;
-				bool foundCommandLine = false, foundEpoch = false;
-				float epochTime;
-				CumulativePriorMovingAverage average;
-
-				for (inputStream.getline(newLine, NEWLINE_LENGTH);
-					(newLine[0] != NULL) && (!userStop);
-					inputStream.getline(newLine, NEWLINE_LENGTH))
-				{
-					PowerParameters<double> params;
-					
-					if (starts_with(newLine,"+ch"))
-					{
-						PowerCalculations pc = params.calculateSystemPower(newLine,epochTime);
-						totalEnergy += pc.energy;
-						reducedEnergy += pc.reducedEnergy;
-						average.add(1, pc.inUseTime);
-						//cerr << pc.inUseTime << endl;
-						//cerr << pc.energy << " " << pc.reducedEnergy << endl;
-					}
-					else if (!foundCommandLine && starts_with(newLine, "----Command Line:"))
-					{
-						foundCommandLine = true;
-						params.setParameters(newLine, powerParams);
-					}
-					else if (!foundEpoch && starts_with(newLine, "----Epoch"))
-					{
-						foundEpoch = true;
-
-						char *position = strchr(newLine, ' ');
-						if (position == NULL)
-							break;
-						epochTime = atof(position + 1);
-					}
-				}
-
-				if (foundCommandLine && foundEpoch)
-				{
-					stringstream current;
-					current << std::dec << std::fixed << std::setprecision(2)
-						<< ((double) totalEnergy);
-#pragma omp critical
-					results[basefilename].push_back(current.str());
-					current.str("");
-
-					current << std::dec << std::fixed << std::setprecision(2)
-						<< ((double) reducedEnergy);
-#pragma omp critical
-					results[basefilename].push_back(current.str());
-					current.str("");
-
-					current << std::dec << std::fixed << std::setprecision(2)
-						<< ((double) reducedEnergy / totalEnergy * 100);
-#pragma omp critical
-					results[basefilename].push_back(current.str());
-					current.str("");
-
-					current << std::dec << std::fixed << std::setprecision(2)
-						<< ((double) average.getAverage() * 100);
-#pragma omp critical
-					results[basefilename].push_back(current.str());
-					//current.str("");
-				}
+			else if (ends_with(currentFile->first, "power.gz") ||
+				ends_with(currentFile->first, "power.bz2") ||
+				ends_with(currentFile->first, "power") ||
+				ends_with(currentFile->first, "powerC.gz") ||
+				ends_with(currentFile->first, "powerC.bz2") ||
+				ends_with(currentFile->first, "powerC"))
+			{		
+				processPowerForPair(*currentFile, results, powerParams);
 			}
-
-			boost::iostreams::close(inputStream);
 		}
 
 		// then generate result.html
