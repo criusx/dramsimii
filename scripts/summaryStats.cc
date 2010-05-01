@@ -1,24 +1,20 @@
 #include "processStats.hh"
 #include "globals.hh"
+#include "statsScripts.hh"
 
 void processStatsForPair(const pair<string, string> &filePair, map<string, list<string> > &results)
 {
 	const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 	cerr << basefilename << endl;
 
-	unsigned epochCounter0 = 0, epochCounter1 = 0;
-	double epoch0 = 0.0, epoch1 = 0.0;
-	pair<unsigned, unsigned> readHitsMisses0, readHitsMisses1;
-	pair<unsigned, unsigned> hitsMisses0, hitsMisses1;
-	double averageLatency, averageAdjustedLatency;
+	StatsScripts ssCache, ssNoCache;
+
 	bool found0, found1;
-	string commandLine0, commandLine1;
 
 	// with the DIMM cache
-	found0 = processStatsForFile(filePair.first, epochCounter0, epoch0, averageAdjustedLatency, readHitsMisses0, hitsMisses0, commandLine0);
+	found0 = ssCache.processStatsForFile(filePair.first);
 	// without the DIMM cache
-	found1 = processStatsForFile(filePair.second, epochCounter1, epoch1, averageLatency, readHitsMisses1, hitsMisses1, commandLine1);
-
+	found1 = ssNoCache.processStatsForFile(filePair.second);
 	if (found0 && found1)
 	{
 		vector<string> currentLine;
@@ -27,7 +23,7 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, list<
 		//toBeProcessed.push_back(filePair->first);
 
 		//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
-		string modUrlString = commandLine0.substr(commandLine0.find(':') + 2, commandLine0.length());
+		string modUrlString = ssCache.getRawCommandLine().substr(ssCache.getRawCommandLine().find(':') + 2, ssCache.getRawCommandLine().length());
 		vector<string> splitLine;
 		erase_all(modUrlString, "_");
 		erase_all(modUrlString, "{");
@@ -55,33 +51,33 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, list<
 
 		stringstream current;
 
-		current << std::dec << std::fixed << std::setprecision(2) << ((double) epochCounter1 * epoch1);
+		current << std::dec << std::fixed << std::setprecision(2) << ((double) ssCache.getEpochCounter() * ssCache.getEpochTime());
 		currentLine.push_back(current.str());
 		current.str("");
 
-		current << std::dec << std::fixed << std::setprecision(2) << ((float) readHitsMisses1.first
-			/ ((float) readHitsMisses1.first + readHitsMisses1.second));
-		currentLine.push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2)
-			<< ((float) hitsMisses0.first / ((float) hitsMisses0.first
-			+ hitsMisses0.second));
+		current << std::dec << std::fixed << std::setprecision(2) << ((double) ssNoCache.getReadHitsMisses().first
+			/ ((double) ssNoCache.getReadHitsMisses().first + ssNoCache.getReadHitsMisses().second));
 		currentLine.push_back(current.str());
 		current.str("");
 
 		current << std::dec << std::fixed << std::setprecision(2)
-			<< averageLatency;
+			<< ((float) ssNoCache.getHitsMisses().first / ((float) ssNoCache.getHitsMisses().first
+			+ ssNoCache.getHitsMisses().second));
 		currentLine.push_back(current.str());
 		current.str("");
 
 		current << std::dec << std::fixed << std::setprecision(2)
-			<< averageAdjustedLatency;
+			<< ssNoCache.getAverageLatency();
 		currentLine.push_back(current.str());
 		current.str("");
 
 		current << std::dec << std::fixed << std::setprecision(2)
-			<< averageLatency - averageAdjustedLatency;
+			<< ssCache.getAverageLatency();
+		currentLine.push_back(current.str());
+		current.str("");
+
+		current << std::dec << std::fixed << std::setprecision(2)
+			<< ssNoCache.getAverageLatency() - ssCache.getAverageLatency();
 		currentLine.push_back(current.str());
 		current.str("");
 
@@ -93,160 +89,6 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, list<
 			currentLine.pop_back();
 		}
 	}
-}
-
-bool processStatsForFile(string file, unsigned &epochCounter, double &epoch, double &averageLatency, pair<unsigned, unsigned> &readHitsMisses, pair<unsigned, unsigned> &hitsMisses, string &commandLine)
-{
-	filtering_istream inputStream;
-
-	if (ends_with(file, ".gz"))
-		inputStream.push(boost::iostreams::gzip_decompressor());
-	else if (ends_with(file, ".bz2"))
-		inputStream.push(boost::iostreams::bzip2_decompressor());
-
-	inputStream.push(file_source(file));
-
-
-	char newLine[NEWLINE_LENGTH];
-
-	if (!inputStream.is_complete())
-		return false;
-
-	bool foundCommandline = false;
-	bool foundEpoch = false;
-
-	unsigned lineCounter = 0;
-
-	WeightedAverage<double> averageTransactionLatency;
-
-	for (inputStream.getline(newLine, NEWLINE_LENGTH);
-	(newLine[0] != NULL) && (!userStop);
-	inputStream.getline(newLine, NEWLINE_LENGTH))
-	{						
-		if (starts_with(newLine,
-			"----Cumulative DIMM Cache Read Hits/Misses"))
-		{
-			epochCounter++;
-
-			char *firstBracket = strchr(newLine, '{');
-			if (firstBracket == NULL)
-				break;
-
-			char *secondBracket = strchr(newLine, '}');
-			if (secondBracket == NULL)
-				break;
-			*secondBracket = (char) NULL;
-			readHitsMisses.first = max(atoi(firstBracket + 1), 1);
-
-			firstBracket = strchr(secondBracket + 1, '{');
-			if (firstBracket == NULL)
-				break;
-
-			secondBracket = strchr(secondBracket + 1, '}');
-			if (secondBracket == NULL)
-				break;
-			*secondBracket = (char) NULL;
-			readHitsMisses.second = max(atoi(firstBracket + 1), 1);
-		}
-		else if (starts_with(newLine,
-			"----Cumulative DIMM Cache Hits/Misses"))
-		{
-			char *firstBracket = strchr(newLine, '{');
-			if (firstBracket == NULL)
-				break;
-
-			char *secondBracket = strchr(newLine, '}');
-			if (secondBracket == NULL)
-				break;
-			*secondBracket = (char) NULL;
-			hitsMisses.first = max(atoi(firstBracket + 1), 1);
-
-			firstBracket = strchr(secondBracket + 1, '{');
-			if (firstBracket == NULL)
-				break;
-
-			secondBracket = strchr(secondBracket + 1, '}');
-			if (secondBracket == NULL)
-				break;
-			*secondBracket = (char) NULL;
-			hitsMisses.second = max(atoi(firstBracket + 1), 1);
-		}
-		else if (starts_with(newLine, "----Transaction Latency"))
-		{
-			// continue adding to the StdDev object to get a cumulative value
-			char *position = newLine;
-
-			while (position != NULL)
-			{
-				char *firstBracket = strchr(position, '{');
-				if (firstBracket == NULL) break;
-
-				char *secondBracket = strchr(position, '}');
-				if (secondBracket == NULL) break;
-
-				char *comma = strchr(position, ',');
-				if (comma == NULL) break;
-
-				*comma = *secondBracket = NULL;
-
-				unsigned latency = atoi(firstBracket + 1);
-				unsigned count = atoi(comma + 1);
-
-				averageTransactionLatency.add(latency, count);
-
-				position = secondBracket + 1;
-			}
-		}
-#if 0
-		else if (starts_with(newLine,
-			"----Average Cumulative Transaction Latency"))
-		{
-			char *firstBracket = strchr(newLine, '{');
-			if (firstBracket == NULL)
-				break;
-
-			char *secondBracket = strchr(newLine, '}');
-			if (secondBracket == NULL)
-				break;
-			*secondBracket = (char) NULL;
-			averageLatency = atof(firstBracket + 1);
-		}
-#endif
-#if 0
-		else if (starts_with(newLine,
-			"----Average Cumulative Adjusted Transaction Latency"))
-		{
-			char *firstBracket = strchr(newLine, '{');
-			if (firstBracket == NULL)
-				break;
-
-			char *secondBracket = strchr(newLine, '}');
-			if (secondBracket == NULL)
-				break;
-			*secondBracket = (char) NULL;
-			averageAdjustedLatency = atof(firstBracket + 1);
-		}
-#endif
-		else if (!foundEpoch && starts_with(newLine, "----Epoch"))
-		{
-			foundEpoch = true;
-
-			char *position = strchr(newLine, ' ');
-			if (position == NULL)
-				break;
-			epoch = atof(position + 1);
-		}
-		else if (!foundCommandline && starts_with(newLine, "----Command Line:"))
-		{
-			foundCommandline = true;
-
-			commandLine = newLine;
-		}
-	}
-
-	averageLatency = averageTransactionLatency.average();
-
-	return foundCommandline && foundEpoch;
 }
 
 void processPowerForPair(const pair<string, string> &filePair, map<string, list<string> > &results, list<pair<string, string> > &powerParams)
@@ -310,6 +152,8 @@ bool processPowerForFile(const string file, list<pair<string, string> > &powerPa
 	if (!inputStream.is_complete())
 		return false;
 
+	WeightedAverage<double> inUseTime;
+
 	for (inputStream.getline(newLine, NEWLINE_LENGTH);
 		(newLine[0] != NULL) && (!userStop);
 		inputStream.getline(newLine, NEWLINE_LENGTH))
@@ -320,6 +164,7 @@ bool processPowerForFile(const string file, list<pair<string, string> > &powerPa
 			PowerCalculations pc = params.calculateSystemPower(newLine,epochTime);
 			totalEnergy.first += pc.dimmEnergy;
 			totalEnergy.second += pc.energy;
+			inUseTime.add(pc.inUseTime,1);
 			//cerr << pc.inUseTime << endl;
 			//cerr << pc.energy << " " << pc.reducedEnergy << endl;
 		}
@@ -338,6 +183,8 @@ bool processPowerForFile(const string file, list<pair<string, string> > &powerPa
 			epochTime = atof(position + 1);
 		}
 	}
+
+	averageInUseTime = inUseTime.average();
 
 	return foundEpoch && foundCommandLine;
 }

@@ -112,7 +112,6 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 
 bool processPowerForFile(const string file, list<pair<string, string> > &powerParams, unsigned &epochCounter, double &epochTime, pair<double,double>  &totalEnergy, double &averageInUseTime);
 void processPowerForPair(const pair<string, string> &filePair, map<string, list<string> > &results, list<pair<string, string> > &powerParams);
-bool processStatsForFile(string file, unsigned &epochCounter, double &epoch, double &averageLatency, pair<unsigned, unsigned> &readHitsMisses, pair<unsigned, unsigned> &hitsMisses, string &commandLine);
 void processStatsForPair(const pair<string, string> &filePair, map<string, list<string> > &results);
 
 bool fileExists(const string&);
@@ -124,6 +123,7 @@ void processStats(const bf::path &outputDir, const string &filename);
 void sigproc(int i);
 bool ensureDirectoryExists(const bf::path &outputDir);
 void printTitle(const char *title, const vector<string> &commandLine, std::ostream &p, const unsigned numPlots = 0);
+bool regexSearch(const char *input, const char *regex);
 template <typename T>
 T regexMatch(const string &input, const char *regex)
 {
@@ -148,6 +148,8 @@ T regexMatch(const char *input, const char *regex)
 
 	return (T)0;
 }
+
+
 
 
 

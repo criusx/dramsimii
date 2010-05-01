@@ -81,27 +81,24 @@ void thumbNailWorker()
 			// 			first.magick("png");
 			// 			first.zoom(thumbnailResolution);
 			// 			first.write(baseFilename + "-thumb2.png");
-
-
-			if (generatePngFiles)
-			{
-				// 				string commandLine1 = string(MOGRIFY_COMMAND)
-				// 					+ " -resize 3840 -format png " + filename;
-				// 				system(commandLine1.c_str());
-			}
-
+			
 			bf::remove(bf::path(filename));
 		}
 	}
 }
 
+bool regexSearch(const char *input, const char *regex)
+{
+	boost::regex currentRegex(regex);
+	boost::cmatch match;
+	return boost::regex_search(input, match, currentRegex);
+}
+
 
 void process(const string i, const list<pair<string,string> > &powerParams)
 {
-	//cerr << "+" << i << endl;
-
-	if (ends_with(i, "power.gz") || ends_with(i, "power.bz2"))
-	{
+	if (regexSearch(i.c_str(), (const char *)"power[CN]?[.](gz|bz2)?$"))
+	{		
 		if (separateOutputDir)
 		{
 			bf::path filepath(i.substr(0, i.find("-power")));
@@ -118,8 +115,11 @@ void process(const string i, const list<pair<string,string> > &powerParams)
 			processPower(path, i, powerParams);
 		}
 	}
-	else if (ends_with(i, "stats.gz") || ends_with(i, "stats.bz2"))
+	else if (regexSearch(i.c_str(), (const char *)"stats[CN]?[.](gz|bz2)?$"))
+
 	{
+		cerr << i << endl;
+		return;
 		if (separateOutputDir)
 		{
 			bf::path filepath(i.substr(0, i.find("-stats")));
@@ -136,8 +136,6 @@ void process(const string i, const list<pair<string,string> > &powerParams)
 			processStats(path, i);
 		}
 	}
-
-	//cerr << "-" << i << endl;
 }
 
 
@@ -216,8 +214,6 @@ int main(int argc, char** argv)
 
 	bool processFilesOnly = vm.count("process") > 0;
 
-	generatePngFiles = vm.count("png") > 0;
-
 	cypressResults = vm.count("cypress") > 0;
 
 	list<string> toBeProcessed;
@@ -229,12 +225,7 @@ int main(int argc, char** argv)
 	// figure out which in the command line are viable files to analyze
 	for (int i = 0; i < argc; ++i)
 	{
-		if (ends_with(argv[i], "power.gz") || ends_with(argv[i], "power.bz2") ||
-			ends_with(argv[i], "powerC.gz") || ends_with(argv[i], "powerC.bz2") ||
-			ends_with(argv[i], "powerN.gz") || ends_with(argv[i], "powerN.bz2") ||
-			ends_with(argv[i], "stats.gz") || ends_with(argv[i],"stats.bz2") ||
-			ends_with(argv[i], "statsC.gz") || ends_with(argv[i],"statsC.bz2") ||
-			ends_with(argv[i], "statsN.gz") || ends_with(argv[i],"statsN.bz2"))
+		if (regexSearch(argv[i], (const char *)"(power|stats)[CN]?[.](gz|bz2)?$"))
 		{
 			files.push_back(string(argv[i]));
 		}
@@ -247,8 +238,10 @@ int main(int argc, char** argv)
 		for (vector<string>::const_iterator currentFile = files.begin(); 
 			currentFile < files.end(); ++currentFile)
 		{
-			if (ends_with(*currentFile,"C.gz") || ends_with(*currentFile,"C.bz2"))
+			// find the cache file
+			if (regexSearch(currentFile->c_str(), (const char *)"(power|stats)C.(gz|bz2)?$"))
 			{
+				// then find the non-cache file
 				for (vector<string>::const_iterator currentFile2 = files.begin(); 
 					currentFile2 < files.end(); ++currentFile2)
 				{
@@ -272,22 +265,12 @@ int main(int argc, char** argv)
 			currentFile < filePairs.end(); ++currentFile)
 		{
 			// go through the stats file
-			if (ends_with(currentFile->first, "stats.gz") ||
-				ends_with(currentFile->first, "stats.bz2") ||
-				ends_with(currentFile->first, "stats") ||
-				ends_with(currentFile->first, "statsC.gz") ||
-				ends_with(currentFile->first, "statsC.bz2") ||
-				ends_with(currentFile->first, "statsC"))
+			if (regexSearch(currentFile->first.c_str(), (const char *)"stats[CN]?[.](gz|bz2)?$"))
 			{
 				processStatsForPair(*currentFile, results);		
 			}
 			// go through the power file
-			else if (ends_with(currentFile->first, "power.gz") ||
-				ends_with(currentFile->first, "power.bz2") ||
-				ends_with(currentFile->first, "power") ||
-				ends_with(currentFile->first, "powerC.gz") ||
-				ends_with(currentFile->first, "powerC.bz2") ||
-				ends_with(currentFile->first, "powerC"))
+			else if (regexSearch(currentFile->first.c_str(), (const char *)"power[CN]?[.](gz|bz2)?$"))
 			{		
 				processPowerForPair(*currentFile, results, powerParams);
 			}
@@ -379,14 +362,11 @@ int main(int argc, char** argv)
 	if (!generateResultsOnly)
 	{
 		boost::thread threadA(thumbNailWorker);
-
-		// TODO: make this parallel?
+		
 #pragma omp parallel for shared(files)
 		for (vector<string>::const_iterator currentFile = files.begin(); currentFile < files.end(); ++currentFile)
 			process(*currentFile, powerParams);
-		//for_each(files.begin(), files.end(), process, __gnu_parallel::parallel_balanced);
-		//__gnu_parallel::for_each(files.begin(), files.end(), process);
-
+		
 		doneEntering = true;
 
 		boost::thread threadB(thumbNailWorker);
