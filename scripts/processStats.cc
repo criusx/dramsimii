@@ -94,7 +94,7 @@ bool regexSearch(const char *input, const char *regex)
 	return boost::regex_search(input, match, currentRegex);
 }
 
-
+#if 0
 void process(const string i, const list<pair<string,string> > &powerParams)
 {
 	if (regexSearch(i.c_str(), (const char *)"power[CN]?[.](gz|bz2)?$"))
@@ -104,7 +104,7 @@ void process(const string i, const list<pair<string,string> > &powerParams)
 			bf::path filepath(i.substr(0, i.find("-power")));
 			bf::path path = outputDir / filepath.filename();
 			bf::path filename(i);
-			processPower(path, filename.native_file_string(), powerParams);
+			//processPower(path, filename.native_file_string(), powerParams);
 		}
 		else
 		{
@@ -112,7 +112,7 @@ void process(const string i, const list<pair<string,string> > &powerParams)
 			bf::path path = filepath.branch_path()
 				/ filepath.leaf().substr(0, filepath.leaf().find(
 				"-power"));
-			processPower(path, i, powerParams);
+			//processPower(path, i, powerParams);
 		}
 	}
 	else if (regexSearch(i.c_str(), (const char *)"stats[CN]?[.](gz|bz2)?$"))
@@ -125,7 +125,7 @@ void process(const string i, const list<pair<string,string> > &powerParams)
 			bf::path filepath(i.substr(0, i.find("-stats")));
 			bf::path path = outputDir / filepath.filename();
 			bf::path filename(i);
-			processStats(path, filename.native_file_string());
+			//processStats(path, filename.native_file_string());
 		}
 		else
 		{
@@ -133,10 +133,11 @@ void process(const string i, const list<pair<string,string> > &powerParams)
 			bf::path path = filepath.branch_path()
 				/ filepath.leaf().substr(0, filepath.leaf().find(
 				"-stats"));
-			processStats(path, i);
+			//processStats(path, i);
 		}
 	}
 }
+#endif
 
 
 ////////////////////////////////////////////////
@@ -173,8 +174,6 @@ int main(int argc, char** argv)
 		exit(-1);
 	}
 
-
-
 	opt::notify(vm);
 
 	if (vm.count("help"))
@@ -197,11 +196,16 @@ int main(int argc, char** argv)
 		}
 	}
 
+	bf::path outputDir;
 	if (vm.count("output"))
 	{
 		outputDir = vm["output"].as<string> ();
 		separateOutputDir = true;
 		cerr << outputDir.native_directory_string() << endl;
+	}
+	else
+	{
+		outputDir = ".";
 	}
 
 	if (vm.count("create") > 0 && vm.count("process") > 0)
@@ -258,21 +262,20 @@ int main(int argc, char** argv)
 
 	if (!processFilesOnly)
 	{
-		int currentFileNumber = 0;
 		// gather stats from all the files to generate the html file
 #pragma omp parallel for shared(files) 
 		for (vector<pair<string, string> >::const_iterator currentFile = filePairs.begin(); 
 			currentFile < filePairs.end(); ++currentFile)
 		{
 			// go through the stats file
-			if (regexSearch(currentFile->first.c_str(), (const char *)"stats[CN]?[.](gz|bz2)?$"))
+			if (regexSearch(currentFile->first.c_str(), "stats[CN]?[.](gz|bz2)?$"))
 			{
-				processStatsForPair(*currentFile, results);		
+				processStatsForPair(*currentFile, results, outputDir);		
 			}
 			// go through the power file
-			else if (regexSearch(currentFile->first.c_str(), (const char *)"power[CN]?[.](gz|bz2)?$"))
+			else if (regexSearch(currentFile->first.c_str(), "power[CN]?[.](gz|bz2)?$"))
 			{		
-				processPowerForPair(*currentFile, results, powerParams);
+				processPowerForPair(*currentFile, results, powerParams, outputDir);
 			}
 		}
 
@@ -344,7 +347,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	bf::path sourceJsDirectory = executableDirectory / "js";
+	path sourceJsDirectory = executableDirectory / "js";
 
 	// copy all the files from the js directory to the result js directory
 	bf::directory_iterator endIter;
@@ -352,9 +355,11 @@ int main(int argc, char** argv)
 	{
 		if (!is_directory(*iter))
 		{
-			bf::path result = jsDirectory / iter->leaf();
-			if (!exists(result))
+			path result = jsDirectory / iter->leaf();
+			if (!exists(result) || !bf::is_regular_file(*iter) || !exists(*iter) || result.empty())
+			{
 				copy_file(*iter, result);
+			}
 		}
 	}
 
@@ -362,10 +367,11 @@ int main(int argc, char** argv)
 	if (!generateResultsOnly)
 	{
 		boost::thread threadA(thumbNailWorker);
-		
+#if 0
 #pragma omp parallel for shared(files)
 		for (vector<string>::const_iterator currentFile = files.begin(); currentFile < files.end(); ++currentFile)
 			process(*currentFile, powerParams);
+#endif
 		
 		doneEntering = true;
 

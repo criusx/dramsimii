@@ -151,7 +151,7 @@ t_cache_access(settings.hitLatency)
 		// this MHC will account for any issues
 		//assert(t_rcd + t_rtp + t_burst - t_ccd >= t_ras);
 		assert(t_rcd + t_cwd + t_burst + t_wr >= t_ras);
-		assert(t_al == t_cas - 2 || t_al == t_cas - 4);
+		assert(t_al == t_cas - 2 || t_al == t_cas - 4 || t_al == 0);
 
 		break;
 

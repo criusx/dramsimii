@@ -647,7 +647,7 @@ void StatsScripts::bigIpcGraph(const bf::path &outFilename, opstream &p, bool is
 		<< endl << "unset output" << endl;
 }
 
-void StatsScripts::cacheHitMissGraph(const bf::path &outFilename, opstream &p, bool isThumbnail)
+void StatsScripts::cacheHitMissGraph(const bf::path &outFilename, opstream &p, const vector<pair<unsigned,unsigned> > &alternateCacheHitMiss,  bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -660,7 +660,7 @@ void StatsScripts::cacheHitMissGraph(const bf::path &outFilename, opstream &p, b
 
 	float time = 0.0F;
 	for (vector<pair<unsigned, unsigned> >::const_iterator i =
-		cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
+		alternateCacheHitMiss.begin(); i != alternateCacheHitMiss.end(); ++i)
 	{
 		p << time << " " << i->first + i->second << endl;
 		//cerr << time << " " << i->first + i->second << endl;
@@ -671,7 +671,7 @@ void StatsScripts::cacheHitMissGraph(const bf::path &outFilename, opstream &p, b
 
 	time = 0.0F;
 	for (vector<pair<unsigned, unsigned> >::const_iterator i =
-		cacheHitMiss.begin(); i != cacheHitMiss.end(); ++i)
+		alternateCacheHitMiss.begin(); i != alternateCacheHitMiss.end(); ++i)
 	{
 		p << time << " " << (double) i->first / (i->first + i->second) << endl;
 		//cerr << time << " " << i->first << " " <<  i->second << endl;
@@ -716,10 +716,45 @@ void StatsScripts::transactionLatencyCumulativeDistributionGraph(const bf::path 
 	p << "e" << endl << "unset output" << endl;
 }
 
-void StatsScripts::generateGraphs(const bf::path &outputDir)
+void StatsScripts::generateJointGraphs(const bf::path &outputDir, const StatsScripts &alternateStats)
 {
+	opstream p0("gnuplot");
+	p0 << terminal << basicSetup;
 	
 
+	list<pair<string, string> > graphs;
+	bf::path outFilename;
+
+	//////////////////////////////////////////////////////////////////////////
+	// make the cache hit-miss graph
+	outFilename = outputDir / ("cacheHitRate." + extension);
+	cacheHitMissGraph(outFilename,p0,alternateStats.getCacheHitMiss(), false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string, string> ("cacheHitRate",
+		"DIMM Cache Hit/Miss"));
+	outFilename = outputDir / ("cacheHitRate-thumb." + thumbnailExtension);
+	cacheHitMissGraph(outFilename,p0,alternateStats.getCacheHitMiss(), true);	
+	//////////////////////////////////////////////////////////////////////////
+
+	p0 << endl << "exit" << endl;
+
+
+	p0.close();
+	
+
+#pragma omp critical
+	{
+		boost::mutex::scoped_lock lock(fileListMutex);
+		for (list<string>::const_iterator i = filesGenerated.begin(); i
+			!= filesGenerated.end(); ++i)
+			fileList.push_back(*i);
+	}
+
+	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, graphs);	
+}
+
+void StatsScripts::generateGraphs(const bf::path &outputDir)
+{
 	if (!ensureDirectoryExists(outputDir))
 		exit(-1);
 
@@ -917,16 +952,7 @@ void StatsScripts::generateGraphs(const bf::path &outputDir)
 		//////////////////////////////////////////////////////////////////////////
 	}
 
-	//////////////////////////////////////////////////////////////////////////
-	// make the cache hit-miss graph
-	outFilename = outputDir / ("cacheHitRate." + extension);
-	cacheHitMissGraph(outFilename,p1,false);
-	filesGenerated.push_back(outFilename.native_directory_string());
-	graphs.push_back(pair<string, string> ("cacheHitRate",
-		"DIMM Cache Hit/Miss"));
-	outFilename = outputDir / ("cacheHitRate-thumb." + thumbnailExtension);
-	cacheHitMissGraph(outFilename,p1,true);	
-	//////////////////////////////////////////////////////////////////////////
+	
 
 #ifndef NDEBUG
 	cerr << "Period: " << periodInNs << endl;
@@ -1105,7 +1131,7 @@ void StatsScripts::processLine(char *newLine)
 	else
 	{
 		if (starts_with(newLine, "----Transaction Latency"))
-		{
+		{			
 			// only if this is at least the second time around
 			if (throughOnce)
 			{
@@ -1147,8 +1173,6 @@ void StatsScripts::processLine(char *newLine)
 		}
 		else if (starts_with(newLine,"----Cumulative DIMM Cache Read Hits/Misses"))
 		{
-			epochCounter++;
-
 			char *firstBracket = strchr(newLine, '{');
 			if (firstBracket == NULL)
 				return;
@@ -1454,6 +1478,7 @@ void StatsScripts::processLine(char *newLine)
 
 void StatsScripts::pushStats()
 {
+	epochCounter++;
 	// look to dump the buffers into arrays
 	scaleIndex = (scaleIndex + 1) % scaleFactor;
 

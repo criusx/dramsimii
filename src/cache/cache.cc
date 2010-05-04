@@ -64,7 +64,7 @@ assoc(_assoc),
 hitLatency(_hit_latency),
 sets(numSets, CacheSet(_assoc)),
 blks(numSets * assoc),
-dataBlks(numSets * assoc * blkSize),
+//dataBlks(numSets * assoc * blkSize),
 setShift(floorLog2(blkSize)),
 tagShift(floorLog2(blkSize) + floorLog2(numSets)),
 setMask(numSets - 1),
@@ -136,7 +136,8 @@ replacementPolicy(_replacementPolicy)
 		{
 			// locate next cache block
 			LRUBlk *blk = &blks[blkIndex];
-			blk->data = &dataBlks[blkSize*blkIndex];
+			//blk->data = &dataBlks[blkSize*blkIndex];
+			blk->data = NULL;
 			++blkIndex;
 
 			// invalidate new cache block
@@ -163,7 +164,7 @@ assoc(rhs.assoc),
 hitLatency(rhs.hitLatency),
 sets(rhs.sets),
 blks(rhs.blks),
-dataBlks(rhs.dataBlks),
+//dataBlks(rhs.dataBlks),
 setShift(rhs.setShift),
 tagShift(rhs.tagShift),
 setMask(rhs.setMask),
@@ -186,7 +187,8 @@ replacementPolicy(rhs.replacementPolicy)
 		{
 			// locate next cache block
 			LRUBlk *blk = &blks[blkIndex];
-			blk->data = &dataBlks[blkSize*blkIndex];
+			//blk->data = &dataBlks[blkSize*blkIndex];
+			blk->data = NULL;
 			++blkIndex;
 
 			// invalidate new cache block
@@ -214,7 +216,7 @@ assoc(settings.associativity),
 hitLatency(settings.hitLatency),
 sets((settings.cacheSize * 1024) / settings.blockSize / settings.associativity, CacheSet(settings.associativity)),
 blks(numSets * assoc),
-dataBlks(numSets * assoc * blkSize),
+//dataBlks(numSets * assoc * blkSize),
 setShift(floorLog2(settings.blockSize)),
 tagShift(floorLog2((settings.cacheSize * 1024) / settings.blockSize / settings.associativity) + floorLog2(settings.blockSize)), 
 setMask((settings.cacheSize * 1024) / settings.blockSize / settings.associativity - 1),
@@ -258,7 +260,8 @@ replacementPolicy(settings.replacementPolicy)
 		{
 			// locate next cache block
 			LRUBlk *blk = &blks[blkIndex];
-			blk->data = &dataBlks[blkSize*blkIndex];
+			//blk->data = &dataBlks[blkSize*blkIndex];
+			blk->data = NULL;
 			blkIndex++;
 
 			// invalidate new cache block
@@ -787,7 +790,7 @@ Cache &Cache::operator =(const Cache& rhs)
 
 	sets = rhs.sets;
 	blks = rhs.blks;
-	dataBlks = rhs.dataBlks;
+	//dataBlks = rhs.dataBlks;
 
 	const_cast<int&>(setShift) = rhs.setShift;
 	const_cast<int&>(tagShift) = rhs.tagShift;
@@ -805,7 +808,8 @@ Cache &Cache::operator =(const Cache& rhs)
 		{
 			// locate next cache block
 			LRUBlk *blk = &blks[blkIndex];
-			blk->data = &dataBlks[blkSize*blkIndex];
+			//blk->data = &dataBlks[blkSize*blkIndex];
+			blk->data = NULL;
 			++blkIndex;
 
 			blk->size = blkSize;

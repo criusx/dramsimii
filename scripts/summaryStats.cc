@@ -1,8 +1,9 @@
 #include "processStats.hh"
 #include "globals.hh"
 #include "statsScripts.hh"
+#include "powerScripts.hh"
 
-void processStatsForPair(const pair<string, string> &filePair, map<string, list<string> > &results)
+void processStatsForPair(const pair<string, string> &filePair, map<string, list<string> > &results, path &outputDir)
 {
 	const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 	cerr << basefilename << endl;
@@ -51,7 +52,7 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, list<
 
 		stringstream current;
 
-		current << std::dec << std::fixed << std::setprecision(2) << ((double) ssCache.getEpochCounter() * ssCache.getEpochTime());
+		current << std::dec << std::fixed << std::setprecision(2) << ssNoCache.getRunTime();
 		currentLine.push_back(current.str());
 		current.str("");
 
@@ -88,22 +89,32 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, list<
 			results[basefilename].push_front(element);
 			currentLine.pop_back();
 		}
+
+		try
+		{
+			string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power).*");
+			//cerr << "bn: " << basename << " od: " << outputDir << endl;;
+			ssNoCache.generateGraphs(outputDir / basename);
+
+			ssNoCache.generateJointGraphs(outputDir / basename, ssCache);
+		}
+		catch (std::exception e)
+		{
+			return;
+		}		
 	}
 }
 
-void processPowerForPair(const pair<string, string> &filePair, map<string, list<string> > &results, list<pair<string, string> > &powerParams)
+void processPowerForPair(const pair<string, string> &filePair, map<string, list<string> > &results, list<pair<string, string> > &powerParams, path &outputDir)
 {
 
 	bool found0, found1;
-	unsigned epochCounter0 = 0, epochCounter1 = 0;
-	pair<double, double> totalEnergy0, totalEnergy1;
-	double epoch0 = 0.0, epoch1 = 0.0;
-	double averageInUseTime0, averageInUseTime1;
-
+	PowerScripts psCache(powerParams), psNoCache(powerParams);
+	
 	// with the cache
-	found0 = processPowerForFile(filePair.first, powerParams, epochCounter0, epoch0, totalEnergy0, averageInUseTime0);
+	found0 = psCache.processStatsForFile(filePair.first);
 	// without the cache
-	found1 = processPowerForFile(filePair.second, powerParams, epochCounter0, epoch0, totalEnergy1, averageInUseTime1);
+	found1 = psNoCache.processStatsForFile(filePair.second);
 
 	const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 	cerr << basefilename << endl;
@@ -111,80 +122,53 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, list<
 	if (found0 && found1)
 	{
 		stringstream current;
-		current << std::dec << std::fixed << std::setprecision(2) << ((double) totalEnergy1.second);
+		double energyCache = psCache.getTotalEnergy().first + psCache.getTotalEnergy().second;
+		double energyNormal = psNoCache.getTotalEnergy().second;
+
+
+		current << std::dec << std::fixed << std::setprecision(2) << energyNormal;
 #pragma omp critical 
 		results[basefilename].push_back(current.str());
 		current.str("");
 
-		current << std::dec << std::fixed << std::setprecision(2) << ((double) totalEnergy0.first + totalEnergy0.second);
+		current << std::dec << std::fixed << std::setprecision(2) << energyCache;
 #pragma omp critical
 		results[basefilename].push_back(current.str());
 		current.str("");
 
-		current << std::dec << std::fixed << std::setprecision(2) << ((double) (totalEnergy0.first + totalEnergy0.second) / totalEnergy1.second * 100);
+		current << std::dec << std::fixed << std::setprecision(2) << energyCache / energyNormal * 100.0;
 #pragma omp critical
 		results[basefilename].push_back(current.str());
 		current.str("");
 
-		current << std::dec << std::fixed << std::setprecision(2) << ((double) averageInUseTime0 * 100);
+		current << std::dec << std::fixed << std::setprecision(2) << psNoCache.getRunTime();
 #pragma omp critical
 		results[basefilename].push_back(current.str());
-	}
-}
+		current.str("");
 
-bool processPowerForFile(const string file, list<pair<string, string> > &powerParams, unsigned &epochCounter, double &epochTime, pair<double,double> &totalEnergy, double &averageInUseTime)
-{
-	bool foundCommandLine = false, foundEpoch = false;
+		current << std::dec << std::fixed << std::setprecision(2) << psCache.getRunTime();
+#pragma omp critical
+		results[basefilename].push_back(current.str());
+		current.str("");
 
-	filtering_istream inputStream;
+		current << std::dec << std::fixed << std::setprecision(2) << ((double) psCache.getAverageInUseTime() * 100);
+#pragma omp critical
+		results[basefilename].push_back(current.str());
 
-	if (ends_with(file, ".gz"))
-		inputStream.push(boost::iostreams::gzip_decompressor());
-	else if (ends_with(file, ".bz2"))
-		inputStream.push(boost::iostreams::bzip2_decompressor());
-
-	inputStream.push(file_source(file));
-	
-	PowerParameters<double> params;
-
-	char newLine[NEWLINE_LENGTH];
-
-	if (!inputStream.is_complete())
-		return false;
-
-	WeightedAverage<double> inUseTime;
-
-	for (inputStream.getline(newLine, NEWLINE_LENGTH);
-		(newLine[0] != NULL) && (!userStop);
-		inputStream.getline(newLine, NEWLINE_LENGTH))
-	{
-		
-		if (starts_with(newLine,"+ch"))
+		//cerr << "c " << psCache.getRunTime() << " nc " << psNoCache.getRunTime() << endl;
+		try
 		{
-			PowerCalculations pc = params.calculateSystemPower(newLine,epochTime);
-			totalEnergy.first += pc.dimmEnergy;
-			totalEnergy.second += pc.energy;
-			inUseTime.add(pc.inUseTime,1);
-			//cerr << pc.inUseTime << endl;
-			//cerr << pc.energy << " " << pc.reducedEnergy << endl;
+			string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power).*");
+
+			//psCache.evenRunTime(psNoCache.getRunTime());
+			//cerr << "bn: " << basename << " od: " << outputDir << endl;;
+			psNoCache.generateGraphs(outputDir / basename);
+
+			psNoCache.generateJointGraphs(outputDir / basename, psCache);
 		}
-		else if (!foundCommandLine && starts_with(newLine, "----Command Line:"))
+		catch (std::exception e)
 		{
-			foundCommandLine = true;
-			params.setParameters(newLine, powerParams);
-		}
-		else if (!foundEpoch && starts_with(newLine, "----Epoch"))
-		{
-			foundEpoch = true;
-
-			char *position = strchr(newLine, ' ');
-			if (position == NULL)
-				break;
-			epochTime = atof(position + 1);
+			return;
 		}
 	}
-
-	averageInUseTime = inUseTime.average();
-
-	return foundEpoch && foundCommandLine;
 }

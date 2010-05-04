@@ -2425,10 +2425,11 @@ void Channel::executeCommand(Command *thisCommand)
 		// lack of break is intentional
 	case Command::READ:
 		{
+			bool satisfied = false;
 			//////////////////////////////////////////////////////////////////////////
-			if (systemConfig.usingDimmCache())
+			if (systemConfig.isUsingDimmCache())
 			{
-				bool satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
+				satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
 
 				thisCommand->getHost()->setHit(satisfied);
 				if (!satisfied)

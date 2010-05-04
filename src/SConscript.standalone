@@ -98,6 +98,7 @@ baseDefines = ['__STDC_LIMIT_MACROS']
 debugDefines = baseDefines + ['DEBUG']
 optDefines = baseDefines + ['NDEBUG']
 baseFlags = [ '-Wconversion', '-Wuninitialized', '-std=c++0x', '-Wall', '-Wextra', '-Wunused', '-pedantic', '-Weffc++','-Wswitch-default', '-Wfloat-equal']
+simpleFlags = [ '-Wuninitialized', '-std=c++0x', '-Wall', '-Wswitch-default', '-Wfloat-equal']
 optFlags = baseFlags + ['-O3', '-funroll-all-loops', '-ffast-math', '-fprefetch-loop-arrays',  '-mtune=native', '-march=native','-fomit-frame-pointer', '-finline-functions']
 debugFlags = baseFlags + ['-g', '-ggdb3', '-O0']
 
@@ -107,7 +108,7 @@ SRCDIR = os.path.join(ROOT,'src')
 
 if platform == 'script':
 	env.Append(OBJSUFFIX='.os')
-	env.Append(CCFLAGS = optFlags + ['-fopenmp'])
+	env.Append(CCFLAGS = simpleFlags + ['-fopenmp'])
 	#env.Append(CPPDEFINES = optDefines + ['-D_GLIBCXX_PARALLEL'])
 	env.Append(CPPDEFINES = optDefines)
 	env.Append(LINKFLAGS = ['-fopenmp'])

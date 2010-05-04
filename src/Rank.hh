@@ -76,7 +76,7 @@ namespace DRAMsimII
 
 		std::pair<unsigned,unsigned> hits;		///< the number of read and write hits to this rank
 
-		Cache tags;							///< the tagstore of the emulated cache
+		//Cache tags;							///< the tagstore of the emulated cache
 
 	public:
 

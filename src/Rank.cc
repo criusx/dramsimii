@@ -50,7 +50,7 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
 banksPrecharged(/*settings.rowBufferManagementPolicy == OPEN_PAGE ? 0 : settings.bankCount */ 0),
-tags(settings),
+//tags(settings),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(sysConfig.getBankCount(),Bank(settings, timing, sysConfig, stats))
 {}
@@ -81,7 +81,7 @@ CASWLength(rhs.CASWLength),
 rankID(rhs.rankID),
 lastBankID(rhs.lastBankID),
 banksPrecharged(rhs.banksPrecharged),
-tags(rhs.tags),
+//tags(rhs.tags),
 lastActivateTimes(rhs.lastActivateTimes),
 bank(rhs.bank)
 {}
@@ -112,7 +112,7 @@ CASWLength(rhs.CASWLength),
 rankID(rhs.rankID),
 lastBankID(rhs.lastBankID),
 banksPrecharged(rhs.banksPrecharged),
-tags(rhs.tags),
+//tags(rhs.tags),
 lastActivateTimes(rhs.lastActivateTimes),
 bank((unsigned)sysConfig.getBankCount(), Bank(rhs.bank[0], timing, sysConfig, stats))
 {
@@ -150,7 +150,7 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(0),
 banksPrecharged(0),
-tags(128,64,4,5,0,Cache::LRU),
+//tags(128,64,4,5,0,Cache::LRU),
 lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
 bank(newBank)
 {}
@@ -540,7 +540,7 @@ Rank& Rank::operator =(const Rank& rhs)
 	otherLastCASWTime = rhs.otherLastCASWTime;
 	otherLastCASLength = rhs.otherLastCASLength;
 	otherLastCASWLength = rhs.otherLastCASWLength;
-	tags = rhs.tags;
+	//tags = rhs.tags;
 	lastCalculationTime = rhs.lastCalculationTime;
 	nextRefreshTime = rhs.nextRefreshTime;
 	nextWriteTime = rhs.nextWriteTime;

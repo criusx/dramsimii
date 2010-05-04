@@ -1,6 +1,8 @@
 #include "processStats.hh"
 #include "globals.hh"
 
+#include <boost/interprocess/sync/file_lock.hpp>
+
 using boost::ireplace_first;
 
 bf::path executableDirectory;
@@ -21,7 +23,7 @@ mutex fileListMutex;
 
 bool separateOutputDir = false;
 
-bf::path outputDir;
+using boost::algorithm::replace_first;
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief setup the output directory
@@ -29,43 +31,27 @@ bf::path outputDir;
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
 					  const vector<string> &commandLine, list<pair<string,
 					  string> > &graphs)
-{
-	bf::path templateFile = executableDirectory / "template.html";
+{	
+	bf::path printFile = outputDir  / ("index.html");
 
-	if (!fileExists(templateFile.native_directory_string()))
+	if (!fileExists(printFile.native_directory_string()))
 	{
-		cerr << "cannot find template:"
-			<< templateFile.native_directory_string();
-		return;
-	}
-	string basename;
-	string::size_type position = filename.find("-stats");
-	if (position != string::npos)
-	{
-		basename = filename.substr(0, position);
-	}
-	else if ((position = filename.find("-power")) != string::npos)
-	{
-		basename = filename.substr(0, position);
-	}
-	else
-		return;
+		bf::path templateFile = executableDirectory / "template.html";
 
-	bf::path printFile = outputDir / ("index.html");
+		if (!fileExists(templateFile.native_directory_string()))
+		{
+			cerr << "cannot find template:"
+				<< templateFile.native_directory_string();
+			return;
+		}
 
-	ifstream instream;
-
-	bool alreadyExists;
-
-	if (alreadyExists = fileExists(printFile.native_directory_string()))
-	{
-		instream.open(printFile.native_directory_string().c_str(), ios::in
-			| ios::ate);
+#pragma omp critical
+		bf::copy_file(templateFile, printFile);
 	}
-	else
-	{
-		instream.open(templateFile.directory_string().c_str(), ios::in | ios::ate);
-	}
+
+	boost::interprocess::file_lock flock(printFile.native_directory_string().c_str());
+
+	ifstream instream(printFile.native_directory_string().c_str(), ios::in | ios::ate);
 
 	ifstream::pos_type entireFileLength = instream.tellg();
 	char *entireFile = new char[entireFileLength];
@@ -79,17 +65,21 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 
 	bool changesMade = false;
 
-	if (!alreadyExists)
+	// update the title if necessary
+	const string titleString = "@@@";
+	if (outputContent.find(titleString) != string::npos)
 	{
-		// update the title 
-		string cmdLine;
+		string newTitle;
 		for (vector<string>::const_iterator i = commandLine.begin(), end = commandLine.end();
 			i < end; ++i)
-			cmdLine.append(*i);
-		ireplace_first(outputContent, "@@@", cmdLine);
-		changesMade = true;
+		{
+			newTitle.append(*i);
+		}
+		//cerr << "@@@" << newTitle << endl;
+		replace_first(outputContent, titleString, newTitle);
 	}
-
+	
+	// append all the images that are to go into this summary
 	for (list<pair<string, string> >::const_iterator i = graphs.begin(), end =
 		graphs.end(); i != end; ++i)
 	{
@@ -105,10 +95,10 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 				currentImageLink);
 		}
 	}
-//#pragma omp critical
+#pragma omp critical
 	if (changesMade)
 	{
-		cerr << endl << printFile.native_directory_string() << endl;
+		cerr << "Updating results file: " << printFile.native_directory_string() << endl;
 		std::ofstream out(printFile.native_directory_string().c_str());
 		out.write(outputContent.c_str(), outputContent.length());
 		out.close();

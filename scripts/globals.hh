@@ -3,19 +3,15 @@
 
 //string terminal = "set terminal svg size 1920,1200 dynamic enhanced fname \"Arial\" fsize 16\n";
 //string terminal = "set terminal svg size 2048,1152 dynamic enhanced font \"Arial\" fsize 18\n";
-// sudo apt-get install msttcorefonts
 const string terminal = "set terminal svg size 1920,1200 dynamic enhanced font \"Trebuchet_MS\" fsize 14\n";
-//string terminal = "set terminal svg size 1920,1200 enhanced\n";
 
-const string thumbnailTerminal = "set terminal png truecolor font \"Trebuchet_MS\" size 1200,800 enhanced \n";
+const string thumbnailTerminal = "set terminal png truecolor font \"Trebuchet_MS\" size 1400,900 enhanced \n";
 
 const string extension = "svg";
 
 const string processedExtension = "svgz";
 
 const string thumbnailExtension = "png";
-
-//const string thumbnailResolution = "800";
 
 // sudo apt-get install msttcorefonts
 // add export GDFONTPATH=/usr/share/fonts/truetype/msttcorefonts to .shrc
@@ -356,7 +352,6 @@ extern bool doneEntering;
 extern list<string> fileList;
 extern mutex fileListMutex;
 extern bf::path executableDirectory;
-extern bf::path outputDir;
 extern bool userStop;
 extern bool cypressResults;
 extern bool separateOutputDir;

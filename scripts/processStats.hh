@@ -110,16 +110,13 @@ using std::tr1::unordered_map;
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
 					  const vector<string> &commandLine, list<pair<string,string> > &graphs);
 
-bool processPowerForFile(const string file, list<pair<string, string> > &powerParams, unsigned &epochCounter, double &epochTime, pair<double,double>  &totalEnergy, double &averageInUseTime);
-void processPowerForPair(const pair<string, string> &filePair, map<string, list<string> > &results, list<pair<string, string> > &powerParams);
-void processStatsForPair(const pair<string, string> &filePair, map<string, list<string> > &results);
+void processPowerForPair(const pair<string, string> &filePair, map<string, list<string> > &results, list<pair<string, string> > &powerParams, path &outputDir);
+void processStatsForPair(const pair<string, string> &filePair, map<string, list<string> > &results, path &outputDir);
 
 bool fileExists(const string&);
 
 unordered_map<string, string> &setupDecoder();
 vector<string> getCommandLine(const string &inputLine);
-void processPower(const bf::path &outputDir, const string &filename, const list<pair<string,string> > &powerParams);
-void processStats(const bf::path &outputDir, const string &filename);
 void sigproc(int i);
 bool ensureDirectoryExists(const bf::path &outputDir);
 void printTitle(const char *title, const vector<string> &commandLine, std::ostream &p, const unsigned numPlots = 0);
@@ -233,7 +230,7 @@ public:
 		  count = 0;
 	  }
 
-	  T average()
+	  T average() const
 	  {
 		  return total / ((count > 0) ? (T) count : (T) 1);
 	  }
@@ -530,6 +527,7 @@ public:
 
 	// system information
 	unsigned ranksPerDimm;
+	unsigned dimms;
 
 	PowerParameters():
 	CKE_LO_ACT(0.01),
@@ -539,6 +537,8 @@ public:
 
 	void setParameters(const char* commandLine, const list<pair<string,string> > &updatedPowerParams)
 	{
+		dimms = regexMatch<unsigned>(commandLine, "dimm\\[([0-9]+)\\]");
+
 		tRc = regexMatch<T>(commandLine, "\\{RC\\}\\[([0-9]+)\\]");
 
 		tBurst = regexMatch<T>(commandLine, "tBurst\\[([0-9]+)\\]");
@@ -767,6 +767,24 @@ public:
 		pDsWr = (idd4w - idd3n) * vdd;
 	}
 
+	PowerCalculations calculateSystemPowerIdle(const T epochTime)
+	{
+		PowerCalculations pc;
+		pc.sramActivePower = 0.0;
+		pc.sramIdlePower = isb1 * vdd * dimms;
+
+		pc.dimmEnergy = isb1 * epochTime;
+
+		pc.PsysACT_STBY = 0.0;
+		pc.PsysACT_PDN = 0.0;
+		pc.PsysPRE_STBY = ranksPerDimm * devicesPerRank * frequencyScaleFactor * voltageScaleFactor * pDsPreStby * CKE_LO_PRE;
+		pc.PsysPRE_PDN = ranksPerDimm * devicesPerRank * frequencyScaleFactor * voltageScaleFactor * pDsPrePdn * (1 - CKE_LO_PRE);
+		pc.PsysWR = pc.PsysRD = 0.0;
+		pc.energy = (pc.PsysACT_STBY + pc.PsysACT + pc.PsysPRE_STBY + pc.PsysRD + pc.PsysWR + pc.PsysACT_PDN + pc.PsysPRE_PDN) * epochTime;
+
+		return pc;
+	}
+
 	PowerCalculations calculateSystemPower(const char* newLine, const T epochTime)
 	{
 		string line(newLine);
@@ -824,8 +842,8 @@ public:
 			double idleTime = duration - (double)inUseTime;
 			assert(idleTime >= 0);
 
-			pc.sramActivePower += (double)inUseTime / duration * idd;
-			pc.sramIdlePower += (double)idleTime / duration * isb1;
+			pc.sramActivePower += (double)inUseTime / duration * idd * vdd;
+			pc.sramIdlePower += (double)idleTime / duration * isb1 * vdd;
 			sramPower += (inUseTime / duration * idd + idleTime / duration * isb1) * 1.8;
 		}
 

@@ -145,7 +145,7 @@ namespace DRAMsimII
 
 		std::vector<CacheSet> sets;				///< The cache sets.
 		std::vector<LRUBlk> blks;				///< The cache blocks.
-		std::vector<uint8_t> dataBlks;			///< The data blocks, 1 per cache block.
+		//std::vector<uint8_t> dataBlks;			///< The data blocks, 1 per cache block.
 
 		const int setShift;						///< The amount to shift the address to get the set.
 		const int tagShift;						///< The amount to shift the address to get the tag.
