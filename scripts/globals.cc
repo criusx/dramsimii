@@ -17,7 +17,7 @@ unordered_map<string, string> decoder = setupDecoder();
 
 bool doneEntering = false;
 
-list<string> fileList;
+vector<string> fileList;
 
 mutex fileListMutex;
 

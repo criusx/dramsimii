@@ -29,29 +29,29 @@ unordered_map<string, string> &setupDecoder()
 }
 
 
-void thumbNailWorker()
+void thumbNailWorker(const string &filename)
 {
 	//using namespace Magick;
 
-	string filename;
+	//string filename;
 	string baseFilename;
 	//Image second;
 
 
-	while (!doneEntering || !fileList.empty())
+	//while (!doneEntering || !fileList.empty())
 	{
-		if (fileList.empty())
+		//if (fileList.empty())
 		{
 			boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
 		}
-		else
+		//else
 		{
 			{
-				boost::mutex::scoped_lock lock(fileListMutex);
-				filename = fileList.front();
-				baseFilename = fileList.front().substr(0,
-					fileList.front().find(extension) - 1);
-				fileList.pop_front();
+				//boost::mutex::scoped_lock lock(fileListMutex);
+				//filename = fileList.front();
+				//baseFilename = filename.front().substr(0,
+				//	fileList.front().find(extension) - 1);
+				//fileList.pop_front();
 			}
 			//string commandLine0 = CONVERT_COMMAND + " " + filename + "[" + thumbnailResolution + "] " + baseFilename + "-thumb.png";
 			//string commandLine1 = "mogrify -resize 3840 -format png -limit memory 1gb " + filename;
@@ -222,7 +222,7 @@ int main(int argc, char** argv)
 
 	list<string> toBeProcessed;
 
-	map<string, list<string> > results;
+	map<string, deque<string> > results;
 
 	vector<string> files;
 
@@ -293,14 +293,18 @@ int main(int argc, char** argv)
 		stringstream entirefile;
 		entirefile << instream.rdbuf();
 
+		//////////////////////////////////////////////////////////////////////////
+		generateOverallGraphs(outputDir, results);
+		//////////////////////////////////////////////////////////////////////////
+
 		string fileList;
 		string csvOutput;
-		for (map<string, list<string> >::const_iterator x = results.begin(); x
+		for (map<string, deque<string> >::const_iterator x = results.begin(); x
 			!= results.end(); ++x)
 		{
 			fileList += "<tr>";
 
-			for (list<string>::const_iterator i = x->second.begin(), end =
+			for (deque<string>::const_iterator i = x->second.begin(), end =
 				x->second.end(); i != end;)
 			{
 				csvOutput += *i;
@@ -364,25 +368,72 @@ int main(int argc, char** argv)
 	}
 
 	// finally, process the files to generate results
-	if (!generateResultsOnly)
+
+	cerr << "Waiting for post-processing to finish." << endl;
+
+#pragma omp parallel for
+	for (vector<string>::const_iterator i = fileList.begin(); i < fileList.end(); i++)
 	{
-		boost::thread threadA(thumbNailWorker);
-#if 0
-#pragma omp parallel for shared(files)
-		for (vector<string>::const_iterator currentFile = files.begin(); currentFile < files.end(); ++currentFile)
-			process(*currentFile, powerParams);
-#endif
-		
-		doneEntering = true;
-
-		boost::thread threadB(thumbNailWorker);
-
-		cerr << "Waiting for post-processing to finish." << endl;
-
-		threadA.join();
-		threadB.join();
+		thumbNailWorker(*i);
 	}
+
+	doneEntering = true;
+
 
 	return 0;
 }
 
+const string hitRateVsEnergyGraph = "set xrange [0 : 1] noreverse nowriteback\n\
+									set xlabel 'Hit Rate' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+									set ylabel 'Energy Reduction (%)'\n\
+									set style data points\n\
+									plot '-' using 1:2 t 'Hit Rate' w points ps 3.0\n";
+
+
+void generateHitRateVsEnergyGraph(const bf::path &outFilename, const map<string,deque<string> > &results, opstream &p, const bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+
+	vector<string> commandLine;
+	printTitle("Hit Rate vs. Energy Reduction", commandLine, p);
+
+	float maxY = 0.0F;
+	for (map<string,deque<string> >::const_iterator i = results.begin(), end = results.end();
+		i != results.end(); i++)
+	{
+		float value = lexical_cast<float>(i->second[32]);
+		maxY = max(maxY, value);
+	}
+	p << "set yrange[0:" << 1.2 * maxY << "]" << endl;
+	p << hitRateVsEnergyGraph;
+
+	for (map<string,deque<string> >::const_iterator i = results.begin(), end = results.end();
+		i != results.end(); i++)
+	{
+		p << i->second[26] << " " << i->second[32] << endl;
+	}
+	p << "e" << endl;
+	p << "unset output" << endl;
+}
+
+void generateHitRateVsLatencyGraph(const bf::path &outFilename, const map<string,deque<string> > &results, opstream &p, const bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+
+	vector<string> commandLine;
+	printTitle("Hit Rate vs. Latency Reduction", commandLine, p);
+
+}
+
+void generateOverallGraphs(const bf::path &outFilename, const map<string,deque<string> > &results)
+{
+	opstream p0("gnuplot");
+	p0 << terminal << basicSetup;
+	generateHitRateVsEnergyGraph(outFilename / "hitRateVsEnergy.png", results,p0,true);
+	generateHitRateVsLatencyGraph(outFilename / "hitRateVsLatency.png", results,p0,true);
+
+	p0 << "quit" << endl;
+	p0.close();
+}

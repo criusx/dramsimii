@@ -294,10 +294,7 @@ void StatsScripts::transactionLatencyDistributionGraph(const bf::path &outFilena
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0
-	p << "set title \"" << commandLine << "\\nRead Transaction Latency\""
-		<< endl;
-#endif
+
 	printTitle("Read Transaction Latency", commandLine, p);
 
 	p << transactionGraphScript << endl;
@@ -720,7 +717,6 @@ void StatsScripts::generateJointGraphs(const bf::path &outputDir, const StatsScr
 {
 	opstream p0("gnuplot");
 	p0 << terminal << basicSetup;
-	
 
 	list<pair<string, string> > graphs;
 	bf::path outFilename;

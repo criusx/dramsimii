@@ -6,6 +6,90 @@
 
 #define POWER_VALUES_PER_CHANNEL 8
 
+const string PowerScripts::energyScript = "unset border\n\
+										  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+										  set autoscale xfixmin\n\
+										  set autoscale xfixmax\n\
+										  set yrange [0:*] noreverse nowriteback\n\
+										  set title\n\
+										  set ytics out\n\
+										  set xtics out\n\
+										  set mxtics\n\
+										  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+										  unset x2tics\n\
+										  set multiplot\n\
+										  set size 1.0, 0.5\n\
+										  set origin 0.0, 0.5\n\
+										  set ylabel \"Energy\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+										  set xlabel \"Time (s)\"\n";
+
+const string PowerScripts::energy2Script = "set size 1.0, 0.5\n\
+										   set origin 0.0, 0.0\n\
+										   set title\n\
+										   plot '-' u 1:2 t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
+										   '-' u 1:2 t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n";
+
+const string PowerScripts::cumulPowerScript = "unset border\n\
+											  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+											  set autoscale xfixmin\n\
+											  set autoscale xfixmax\n\
+											  set yrange [0:*] noreverse nowriteback\n\
+											  unset x2tics\n\
+											  set mxtics\n\
+											  set xrange [0:*]\n\
+											  set xlabel \"Time (s)\"\n\
+											  set ylabel \"Energy (mJ)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+											  set ytics out\n\
+											  set origin 0.0, 0.0\n\
+											  plot '-' u 1:2 t \"Cumulative Energy\" w lines lw 1.5,\
+											  '-' u 1:2 t \"Theoretical Cumulative Energy\" w lines lw 1.5\n";
+
+
+const string PowerScripts::bigPowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+											set yrange [0:*] noreverse nowriteback\n\
+											unset x2tics\n\
+											set mxtics\n\
+											set xrange [0:*]\n\
+											set yrange [0:*]\n\
+											set xlabel \"Time (s)\"\n\
+											set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+											set ytics out\n\
+											set boxwidth 1.00 absolute\n\
+											set style fill  solid 1.00 noborder\n\
+											set style data histograms\n\
+											#set style data filledcurves below x1\n\
+											set style histogram rowstacked title offset 0,0,0\n";
+
+const string PowerScripts::comparativePowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+													set yrange [0:*] noreverse nowriteback\n\
+													unset x2tics\n\
+													set mxtics\n\
+													set xrange [0:*]\n\
+													set yrange [0:*]\n\
+													set xlabel \"Time (s)\"\n\
+													set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+													set ytics out\n\
+													set boxwidth 1.00 absolute\n\
+													set style fill  solid 1.00 noborder\n";
+
+const string PowerScripts::bigEnergyScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+											 set autoscale xfixmin\n\
+											 set autoscale xfixmax\n\
+											 set yrange [0:*] noreverse nowriteback\n\
+											 set ytics out\n\
+											 set xtics out\n\
+											 set mxtics\n\
+											 set yrange [0:*]\n\
+											 set y2range [0:*]\n\
+											 set ytics nomirror\n\
+											 set y2tics\n\
+											 unset x2tics\n\
+											 set boxwidth 1.00 relative\n\
+											 #set logscale y2\n\
+											 set ylabel \"Energy (mJ)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+											 set y2label \"Cumulative Energy (mJ)\"\n\
+											 set xlabel \"Time (s)\"\n";
+
 bool PowerScripts::processStatsForFile(const string &file)
 {
 	givenfilename = file;
@@ -48,12 +132,12 @@ void PowerScripts::processLine(char *newLine)
 				channelCount = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
 
 				values.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
-		
+
 				energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
 
 				// setup the buffer to be the same size as the value array
 				valueBuffer.resize(channelCount * POWER_VALUES_PER_CHANNEL);
-		
+
 				for (int i = channelCount * POWER_VALUES_PER_CHANNEL; i > 0; --i)
 				{
 					values.push_back(vector<float>());
@@ -265,7 +349,7 @@ void PowerScripts::generateGraphs(const bf::path &outputDir)
 	bigEnergyGraph(outFilename,p3,true);
 	//////////////////////////////////////////////////////////////////////////
 
-	
+
 
 	p << endl << "exit" << endl;
 	p2 << endl << "exit" << endl;
@@ -284,7 +368,7 @@ void PowerScripts::generateGraphs(const bf::path &outputDir)
 			!= filesGenerated.end(); ++i)
 			fileList.push_back(*i);
 	}
-	
+
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, graphs);
 }
 
@@ -309,13 +393,13 @@ void PowerScripts::evenRunTime(const double newRunTime)
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
-			
+
 			energyValueBuffer.first += pc.energy;
 			energyValueBuffer.second += pc.dimmEnergy;
 
 			totalEnergy.first += pc.dimmEnergy;
 			totalEnergy.second += pc.energy;
-			
+
 			if (currentChannel + 1 == channelCount)
 			{
 				pushStats();
@@ -408,6 +492,35 @@ void PowerScripts::generateJointGraphs(const bf::path &outputDir, PowerScripts &
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, graphs);
 }
 
+const string PowerScripts::totalPowerScript = "unset border\n\
+											  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
+											  set autoscale xfixmin\n\
+											  set autoscale xfixmax\n\
+											  set yrange [0:*] noreverse nowriteback\n\
+											  unset x2tics\n\
+											  set mxtics\n\
+											  set xrange [0:*]\n\
+											  set xlabel \"Time (s)\"\n\
+											  set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
+											  set ytics out\n\
+											  set multiplot\n\
+											  set size 1.0, 0.66\n\
+											  set origin 0.0, 0.34\n\
+											  set boxwidth 0.95 relative\n\
+											  set style fill  solid 1.00 noborder\n\
+											  set style data histograms\n\
+											  #set style data filledcurves below x1\n\
+											  set style histogram rowstacked title offset 0,0,0\n";
+
+const string PowerScripts::averagePowerScript = "set size 1.0, 0.35\n\
+												set origin 0.0, 0.0\n\
+												set title \"Power Dissipated\"\n\
+												set boxwidth 0.95 relative\n\
+												plot \
+												'-' u 1:2 t \"Total Power\" w boxes,\
+												'-' u 1:2 t \"Running Average\" w lines lw 1.00,\
+												'-' u 1:2 t \"Cumulative Average\" w lines lw 1.00\n";
+
 void PowerScripts::powerGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
@@ -415,7 +528,7 @@ void PowerScripts::powerGraph(const bf::path &outFilename, opstream &p, bool isT
 	p << totalPowerScript << endl;
 
 	printTitle("Power vs. Time", commandLine, p);
-	
+
 	p << "plot ";
 
 	unsigned channelCount = values.size() / POWER_VALUES_PER_CHANNEL;
@@ -453,7 +566,6 @@ void PowerScripts::powerGraph(const bf::path &outFilename, opstream &p, bool isT
 		p << i * epochTime << " " << totalPowerPerEpoch << endl;
 	}
 	p << "e" << endl;
-
 	// make the average power line
 	CumulativePriorMovingAverage cumulativePower;
 
@@ -480,7 +592,9 @@ void PowerScripts::powerGraph(const bf::path &outFilename, opstream &p, bool isT
 		powerMovingAverage.append(total);
 		p << i * epochTime << " " << powerMovingAverage.getAverage() << endl;
 	}
-	p << "e" << endl << "unset multiplot" << endl << "unset output" << endl;
+	p << "e" << endl;
+
+	p << "unset multiplot" << endl << "unset output" << endl;
 }
 
 void PowerScripts::energyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const
@@ -584,7 +698,7 @@ void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	
+
 	printTitle("Theoretical Power vs. Time", commandLine, p);
 
 	p << bigPowerScript << endl;
@@ -691,7 +805,7 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 	printTitle("Power/Theoretical Power vs. Time", commandLine, p);
 
 	p << bigPowerScript << endl;
-	
+
 	unsigned channelCount = values.size() / POWER_VALUES_PER_CHANNEL;
 
 	p << "plot '-' u 1:2 w lines lw 2.00 t \"Normal System\",'-' u 1:2 w lines lw 2.00 t \"Theoretical System\"" << endl;
@@ -700,7 +814,7 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 
 	vector<vector<float> >::size_type columns = values.size();
 	vector<float>::size_type epochs = max(values.front().size(), alternateValues.front().size());
-	
+
 	for (vector<float>::size_type i = 0; i < epochs; ++i)
 	{
 		if (i < values.front().size())
@@ -718,7 +832,7 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 		{
 			p << time << " " << 0.0 << endl;
 		}
-		
+
 		time += epochTime;
 	}
 
@@ -746,7 +860,7 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 	}
 
 	p << "e" << endl;
-	
+
 	p << "unset output" << endl;
 }
 //////////////////////////////////////////////////////////////////////////
@@ -793,7 +907,7 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 		totalPower += i->first + i->second;
 
 		p << time << " " << totalPower << endl;
-		
+
 		time += epochTime;
 	}
 	if (alternateValues.size() < totalPoints)

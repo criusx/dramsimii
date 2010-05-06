@@ -3,7 +3,7 @@
 #include "statsScripts.hh"
 #include "powerScripts.hh"
 
-void processStatsForPair(const pair<string, string> &filePair, map<string, list<string> > &results, path &outputDir)
+void processStatsForPair(const pair<string, string> &filePair, map<string, deque<string> > &results, path &outputDir)
 {
 	const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 	cerr << basefilename << endl;
@@ -105,7 +105,7 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, list<
 	}
 }
 
-void processPowerForPair(const pair<string, string> &filePair, map<string, list<string> > &results, list<pair<string, string> > &powerParams, path &outputDir)
+void processPowerForPair(const pair<string, string> &filePair, map<string, deque<string> > &results, list<pair<string, string> > &powerParams, path &outputDir)
 {
 
 	bool found0, found1;

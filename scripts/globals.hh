@@ -29,71 +29,6 @@ const string basicSetup = "unset border\n\
 						  set ytics out\n";
 
 // 0
-const string totalPowerScript = "unset border\n\
-								set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-								set autoscale xfixmin\n\
-								set autoscale xfixmax\n\
-								set yrange [0:*] noreverse nowriteback\n\
-								unset x2tics\n\
-								set mxtics\n\
-								set xrange [0:*]\n\
-								set xlabel \"Time (s)\"\n\
-								set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-								set ytics out\n\
-								set multiplot\n\
-								set size 1.0, 0.66\n\
-								set origin 0.0, 0.34\n\
-								set boxwidth 0.95 relative\n\
-								set style fill  solid 1.00 noborder\n\
-								set style data histograms\n\
-								#set style data filledcurves below x1\n\
-								set style histogram rowstacked title offset 0,0,0\n";
-
-const string averagePowerScript = "set size 1.0, 0.35\n\
-								  set origin 0.0, 0.0\n\
-								  set title \"Power Dissipated\"\n\
-								  set boxwidth 0.95 relative\n\
-								  plot '-' u 1:2 t \"Total Power\" w boxes,\
-								  '-' u 1:2 t \"Cumulative Average\" w lines lw 2.00,\
-								  '-' u 1:2 t \"Running Average\" w lines lw 2.00\n";
-
-const string energyScript = "unset border\n\
-							set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							set autoscale xfixmin\n\
-							set autoscale xfixmax\n\
-							set yrange [0:*] noreverse nowriteback\n\
-							set title\n\
-							set ytics out\n\
-							set xtics out\n\
-							set mxtics\n\
-							set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							unset x2tics\n\
-							set multiplot\n\
-							set size 1.0, 0.5\n\
-							set origin 0.0, 0.5\n\
-							set ylabel \"Energy\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							set xlabel \"Time (s)\"\n";
-
-const string energy2Script = "set size 1.0, 0.5\n\
-							 set origin 0.0, 0.0\n\
-							 set title\n\
-							 plot '-' u 1:2 t \"Energy Delay Prod (P t^{2})\" w lines lw 2.00,\
-							 '-' u 1:2 t \"IBM Energy2 (P^{2}t^{3})\" w lines lw 2.00\n";
-
-const string cumulPowerScript = "unset border\n\
-								set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-								set autoscale xfixmin\n\
-								set autoscale xfixmax\n\
-								set yrange [0:*] noreverse nowriteback\n\
-								unset x2tics\n\
-								set mxtics\n\
-								set xrange [0:*]\n\
-								set xlabel \"Time (s)\"\n\
-								set ylabel \"Energy (mJ)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-								set ytics out\n\
-								set origin 0.0, 0.0\n\
-								plot '-' u 1:2 t \"Cumulative Energy\" w lines lw 2.00,\
-								'-' u 1:2 t \"Theoretical Cumulative Energy\" w lines lw 2.00\n";
 
 const string hitMissScript = "unset border\n\
 							 set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
@@ -130,51 +65,6 @@ const string hitMissPowerScript = "unset border\n\
 								  plot '-' u 1:2 t \"SRAM Power\" axes x1y2 with lines lt rgb \"#5a3C3C\",\
 								  '-' u 1:2 t \"DRAM Power\" axes x1y1 w lines lw 2.00\n";
 
-
-const string bigPowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							  set yrange [0:*] noreverse nowriteback\n\
-							  unset x2tics\n\
-							  set mxtics\n\
-							  set xrange [0:*]\n\
-							  set yrange [0:*]\n\
-							  set xlabel \"Time (s)\"\n\
-							  set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							  set ytics out\n\
-							  set boxwidth 1.00 absolute\n\
-							  set style fill  solid 1.00 noborder\n\
-							  set style data histograms\n\
-							  #set style data filledcurves below x1\n\
-							  set style histogram rowstacked title offset 0,0,0\n";
-
-const string comparativePowerScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-									  set yrange [0:*] noreverse nowriteback\n\
-									  unset x2tics\n\
-									  set mxtics\n\
-									  set xrange [0:*]\n\
-									  set yrange [0:*]\n\
-									  set xlabel \"Time (s)\"\n\
-									  set ylabel \"Power Dissipated (mW)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-									  set ytics out\n\
-									  set boxwidth 1.00 absolute\n\
-									  set style fill  solid 1.00 noborder\n";
-
-const string bigEnergyScript = "set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
-							   set autoscale xfixmin\n\
-							   set autoscale xfixmax\n\
-							   set yrange [0:*] noreverse nowriteback\n\
-							   set ytics out\n\
-							   set xtics out\n\
-							   set mxtics\n\
-							   set yrange [0:*]\n\
-							   set y2range [0:*]\n\
-							   set ytics nomirror\n\
-							   set y2tics\n\
-							   unset x2tics\n\
-							   set boxwidth 1.00 relative\n\
-							   #set logscale y2\n\
-							   set ylabel \"Energy (mJ)\" offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
-							   set y2label \"Cumulative Energy (mJ)\"\n\
-							   set xlabel \"Time (s)\"\n";
 
 const string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR","ACT-PDN","PRE-PDN", "DIMM Cache"};
 
@@ -349,7 +239,7 @@ const string csvHeader("Benchmark,Channels,DIMMs,Ranks,Banks,Rows,Columns,DRAM W
 
 //extern const string csvHeader;
 extern bool doneEntering;
-extern list<string> fileList;
+extern vector<string> fileList;
 extern mutex fileListMutex;
 extern bf::path executableDirectory;
 extern bool userStop;
