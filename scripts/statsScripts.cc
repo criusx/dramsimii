@@ -757,15 +757,8 @@ void StatsScripts::generateGraphs(const bf::path &outputDir)
 	if (channelLatencyDistribution.size() < 1)
 		return;
 
-	opstream p0("gnuplot");
-	p0 << terminal << basicSetup;
-	opstream p1("gnuplot");
-	p1 << terminal << basicSetup;
-	opstream p2("gnuplot");
-	p2 << terminal << basicSetup;
-	opstream p3("gnuplot");
-	p3 << terminal << basicSetup;
-
+	opstream p0("gnuplot"), p1("gnuplot"), p2("gnuplot"), p3("gnuplot");
+	
 	list<pair<string, string> > graphs;
 	bf::path outFilename;
 

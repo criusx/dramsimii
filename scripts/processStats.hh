@@ -112,8 +112,9 @@ using std::tr1::unordered_map;
 void prepareOutputDir(const bf::path &outputDir, const string &filename,
 					  const vector<string> &commandLine, list<pair<string,string> > &graphs);
 
-void processPowerForPair(const pair<string, string> &filePair, map<string, deque<string> > &results, list<pair<string, string> > &powerParams, path &outputDir);
-void processStatsForPair(const pair<string, string> &filePair, map<string, deque<string> > &results, path &outputDir);
+class ResultSet;
+void processPowerForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, list<pair<string, string> > &powerParams, path &outputDir, const bool generateResultsOnly);
+void processStatsForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, path &outputDir, const bool generateResultsOnly);
 
 bool fileExists(const string&);
 
@@ -124,13 +125,15 @@ bool ensureDirectoryExists(const bf::path &outputDir);
 void printTitle(const char *title, const vector<string> &commandLine, std::ostream &p, const unsigned numPlots = 0);
 bool regexSearch(const char *input, const char *regex);
 
-void generateOverallGraphs(const bf::path &outFilename, const std::map<string,std::deque<string> > &results);
+void generateOverallGraphs(const bf::path &outFilename, const std::map<string,ResultSet > &results);
 
 template <typename T>
 T regexMatch(const string &input, const char *regex)
 {
 	return regexMatch<T>(input.c_str(),regex);
 }
+
+string matchMap(const string &match);
 
 template <typename T>
 T regexMatch(const char *input, const char *regex)
@@ -150,8 +153,6 @@ T regexMatch(const char *input, const char *regex)
 
 	return (T)0;
 }
-
-
 
 
 

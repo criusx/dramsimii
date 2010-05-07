@@ -79,7 +79,8 @@ scriptBase = ['../scripts/globals.cc',
 				'../scripts/statsScripts.cc',
 				'../scripts/powerScripts.cc',
 				'../scripts/util.cc',
-				'../scripts/summaryStats.cc']
+				'../scripts/summaryStats.cc',
+				'../scripts/resultSet.cc']
 
 sourceFile = sourceBase + ['main.cc']
 sourcesTest = sourceBase + ['unitTest.cc']
@@ -116,7 +117,7 @@ if platform == 'script':
 	env.Install(os.path.abspath('../scripts'),script)
 elif platform == 'scriptDebug':
 	envScriptD = env.Clone(OBJSUFFIX='.osd')
-	envScriptD.Append(CCFLAGS = debugFlags + ['-fopenmp'])
+	envScriptD.Append(CCFLAGS = debugFlags )
 	envScriptD.Append(CPPDEFINES = debugDefines)
 	envScriptD.Append(LINKFLAGS = ['-fopenmp'])
 	script = envScriptD.Program('processStats.debug',scriptBase)

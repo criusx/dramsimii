@@ -1,5 +1,6 @@
 #include "processStats.hh"
 #include "globals.hh"
+#include "resultSet.hh"
 
 unordered_map<string, string> &setupDecoder()
 {
@@ -26,6 +27,14 @@ unordered_map<string, string> &setupDecoder()
 	theMap["CPRH"] = "Command Pair Rank Hop";
 
 	return theMap;
+}
+
+string matchMap(const string &match)
+{
+	if (decoder.find(match) == decoder.end())
+		return match;
+	else
+		return decoder[match];
 }
 
 
@@ -153,14 +162,12 @@ int main(int argc, char** argv)
 	string extraSettings;
 	desc.add_options()
 		("help", "help message")
-		("create,f","Force creation of the index file only")
-		("power-params,r",opt::value<string>(),
-		"Update power parameters to different values than what are in the power files")
+		("create,i","Force creation of the index file only")
+		("power-params,m",opt::value<string>(),"Update power parameters to different values than what are in the power files")
 		("cypress,c","Generate only select graphs for Cypress study")
-		("process,r","Only process the files, do not regenerate the html file")
-		("output,o",opt::value<string>(),		
-		"Choose an output directory different from the current directory")
-		("pairs,p","Results for DIMM and non-DIMM are generated as pairs and should be processed accordingly");
+		("process,p","Only process the files, do not regenerate the html file")
+		("output,o",opt::value<string>(),"Choose an output directory different from the current directory")
+		("pairs,r","Results for DIMM and non-DIMM are generated as pairs and should be processed accordingly");
 
 	opt::variables_map vm;
 
@@ -222,7 +229,7 @@ int main(int argc, char** argv)
 
 	list<string> toBeProcessed;
 
-	map<string, deque<string> > results;
+	map<string, ResultSet> results;
 
 	vector<string> files;
 
@@ -270,12 +277,12 @@ int main(int argc, char** argv)
 			// go through the stats file
 			if (regexSearch(currentFile->first.c_str(), "stats[CN]?[.](gz|bz2)?$"))
 			{
-				processStatsForPair(*currentFile, results, outputDir);		
+				processStatsForPair(*currentFile, results, outputDir, generateResultsOnly);		
 			}
 			// go through the power file
 			else if (regexSearch(currentFile->first.c_str(), "power[CN]?[.](gz|bz2)?$"))
 			{		
-				processPowerForPair(*currentFile, results, powerParams, outputDir);
+				processPowerForPair(*currentFile, results, powerParams, outputDir, generateResultsOnly);
 			}
 		}
 
@@ -299,27 +306,12 @@ int main(int argc, char** argv)
 
 		string fileList;
 		string csvOutput;
-		for (map<string, deque<string> >::const_iterator x = results.begin(); x
+		for (map<string, ResultSet>::const_iterator x = results.begin(); x
 			!= results.end(); ++x)
 		{
-			fileList += "<tr>";
-
-			for (deque<string>::const_iterator i = x->second.begin(), end =
-				x->second.end(); i != end;)
-			{
-				csvOutput += *i;
-
-				fileList += "<td>" + ireplace_all_copy(ireplace_all_copy(urlString,
-					"%2", *i), "%1", x->first) + "</td>";
-
-				if (++i != end)
-					csvOutput += ',';
-				else
-					csvOutput += '\n';
-
-			}
-
-			fileList += "</tr>";
+			pair<string,string> output = x->second.generateResultLine();
+			csvOutput += output.first + "\n";
+			fileList += output.second + "\n";
 		}
 
 		// write the result html file
@@ -385,55 +377,151 @@ int main(int argc, char** argv)
 
 const string hitRateVsEnergyGraph = "set xrange [0 : 1] noreverse nowriteback\n\
 									set xlabel 'Hit Rate' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
-									set ylabel 'Energy Reduction (%)'\n\
+									set style line 1\n\
 									set style data points\n\
-									plot '-' using 1:2 t 'Hit Rate' w points ps 3.0\n";
+									set key rmargin center vertical reverse Right\n\
+									plot '-' using 1:2 t '8MB, 64B block' w points linewidth 2 pt 6 ps 2.5 lc 1,\
+									'-' using 1:2 t '8MB, 256B block' w points linewidth 2 pt 2 ps 2.5 lc 2,\
+									'-' using 1:2 t '16MB, 64B block' w points linewidth 2 pt 6 ps 2.5 lc 3,\
+									'-' using 1:2 t '16MB, 256B block' w points linewidth 2 pt 2 ps 2.5 lc 4\n";
 
 
-void generateHitRateVsEnergyGraph(const bf::path &outFilename, const map<string,deque<string> > &results, opstream &p, const bool isThumbnail)
+void generateHitRateVsEnergyGraph(const bf::path &outFilename, const map<string,ResultSet > &results, opstream &p, const bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 
 	vector<string> commandLine;
 	printTitle("Hit Rate vs. Energy Reduction", commandLine, p);
+	p << "set ylabel 'Energy Reduction (%)'" << endl;
 
-	float maxY = 0.0F;
-	for (map<string,deque<string> >::const_iterator i = results.begin(), end = results.end();
-		i != results.end(); i++)
-	{
-		float value = lexical_cast<float>(i->second[32]);
-		maxY = max(maxY, value);
+	double maxY = 0.0F;
+	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{		
+		maxY = max(maxY, i->second.getEnergyReduction());
 	}
-	p << "set yrange[0:" << 1.2 * maxY << "]" << endl;
+	p << "set yrange[0:" << 1.1 * maxY << "]" << endl;
 	p << hitRateVsEnergyGraph;
 
-	for (map<string,deque<string> >::const_iterator i = results.begin(), end = results.end();
-		i != results.end(); i++)
+
+	for (unsigned h = 8; h <=16; h+=8)
 	{
-		p << i->second[26] << " " << i->second[32] << endl;
+		for (unsigned j = 64; j <= 256; j*=4)
+		{
+			for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();
+				i != end; i++)
+			{
+				if (i->second.cacheSize == h)
+				{
+					if (i->second.blockSize == j)
+					{
+						p << i->second.readHitRate << " " << i->second.getEnergyReduction() << endl;
+					}
+				}
+			}
+			p << "e" << endl;
+		}
 	}
-	p << "e" << endl;
+
 	p << "unset output" << endl;
 }
 
-void generateHitRateVsLatencyGraph(const bf::path &outFilename, const map<string,deque<string> > &results, opstream &p, const bool isThumbnail)
+void generateHitRateVsEnergyGraph2(const bf::path &outFilename, const map<string,ResultSet > &results, opstream &p, const bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+
+	vector<string> commandLine;
+	printTitle("Hit Rate vs. Energy Reduction", commandLine, p);
+	p << "set ylabel 'Energy Reduction (mJ)'" << endl;
+
+	double maxY = 0.0F;
+	double minY = 0.0F;
+	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{		
+		maxY = max(maxY, i->second.getEnergyDifference());
+		minY = min(minY, i->second.getEnergyDifference());
+	}
+	p << "set yrange[" << 1.1 * minY << ":" << 1.1 * maxY << "]" << endl;
+	p << hitRateVsEnergyGraph;
+
+
+	for (unsigned h = 8; h <=16; h+=8)
+	{
+		for (unsigned j = 64; j <= 256; j*=4)
+		{
+			for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();
+				i != end; i++)
+			{
+				if (i->second.cacheSize == h)
+				{
+					if (i->second.blockSize == j)
+					{
+						p << i->second.readHitRate << " " << i->second.getEnergyDifference() << endl;
+					}
+				}
+			}
+			p << "e" << endl;
+		}
+	}
+
+	p << "unset output" << endl;
+}
+
+void generateHitRateVsLatencyGraph(const bf::path &outFilename, const map<string,ResultSet > &results, opstream &p, const bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 
 	vector<string> commandLine;
 	printTitle("Hit Rate vs. Latency Reduction", commandLine, p);
+	p << "set ylabel 'Latency Reduction (%)'" << endl;
+
+
+	double maxY = 0.0F;
+	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{		
+		maxY = max(maxY, i->second.getEnergyReduction());
+	}
+	p << "set yrange[0:" << 1.1 * maxY << "]" << endl;
+	p << hitRateVsEnergyGraph;
+
+
+	for (unsigned h = 8; h <=16; h+=8)
+	{
+		for (unsigned j = 64; j <= 256; j*=4)
+		{
+			for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();
+				i != end; i++)
+			{
+				if (i->second.cacheSize == h)
+				{
+					if (i->second.blockSize == j)
+					{
+						p << i->second.readHitRate << " " << i->second.getLatencyReduction() << endl;
+					}
+				}
+			}
+			p << "e" << endl;
+		}
+	}
+
+	p << "unset output" << endl;
+	
 
 }
 
-void generateOverallGraphs(const bf::path &outFilename, const map<string,deque<string> > &results)
+void generateOverallGraphs(const bf::path &outFilename, const map<string,ResultSet > &results)
 {
 	opstream p0("gnuplot");
 	p0 << terminal << basicSetup;
 	generateHitRateVsEnergyGraph(outFilename / "hitRateVsEnergy.png", results,p0,true);
+	generateHitRateVsEnergyGraph2(outFilename / "hitRateVsEnergy2.png", results,p0,true);
 	generateHitRateVsLatencyGraph(outFilename / "hitRateVsLatency.png", results,p0,true);
 
-	p0 << "quit" << endl;
+	p0 << "exit" << endl;
 	p0.close();
 }

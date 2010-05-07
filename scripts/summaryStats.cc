@@ -2,8 +2,9 @@
 #include "globals.hh"
 #include "statsScripts.hh"
 #include "powerScripts.hh"
+#include "resultSet.hh"
 
-void processStatsForPair(const pair<string, string> &filePair, map<string, deque<string> > &results, path &outputDir)
+void processStatsForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, path &outputDir, const bool generateResultsOnly)
 {
 	const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 	cerr << basefilename << endl;
@@ -22,7 +23,7 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, deque
 
 		/// @TODO process both of these?
 		//toBeProcessed.push_back(filePair->first);
-
+#if 0
 		//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
 		string modUrlString = ssCache.getRawCommandLine().substr(ssCache.getRawCommandLine().find(':') + 2, ssCache.getRawCommandLine().length());
 		vector<string> splitLine;
@@ -81,7 +82,25 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, deque
 			<< ssNoCache.getAverageLatency() - ssCache.getAverageLatency();
 		currentLine.push_back(current.str());
 		current.str("");
+#endif
+		ResultSet rs;
+		rs.parseCommandLine(ssCache.getRawCommandLine().c_str());
+		rs.runtime = ssCache.getRunTime();
+		rs.noCacheRuntime = ssNoCache.getRunTime();
+		rs.cacheRuntime = ssCache.getRunTime();
+		rs.readHitRate = ((double) ssCache.getReadHitsMisses().first
+			/ ((double) ssCache.getReadHitsMisses().first + ssCache.getReadHitsMisses().second));
+		rs.hitRate = ((double) ssCache.getReadHitsMisses().first
+			/ ((double) ssCache.getReadHitsMisses().first + ssCache.getReadHitsMisses().second));
+		rs.averageLatency = ssNoCache.getAverageLatency();
+		rs.averageTheoreticalLatency = ssCache.getAverageLatency();
 
+
+#pragma omp critical
+		results[basefilename].setStats(rs, true);
+
+
+#if 0
 		while (!currentLine.empty())
 		{
 			string element = currentLine.back();
@@ -89,23 +108,27 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, deque
 			results[basefilename].push_front(element);
 			currentLine.pop_back();
 		}
+#endif
 
-		try
+		if (!generateResultsOnly)
 		{
-			string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power).*");
-			//cerr << "bn: " << basename << " od: " << outputDir << endl;;
-			ssNoCache.generateGraphs(outputDir / basename);
+			try
+			{
+				string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power).*");
+				//cerr << "bn: " << basename << " od: " << outputDir << endl;;
+				ssNoCache.generateGraphs(outputDir / basename);
 
-			ssNoCache.generateJointGraphs(outputDir / basename, ssCache);
-		}
-		catch (std::exception e)
-		{
-			return;
+				ssNoCache.generateJointGraphs(outputDir / basename, ssCache);
+			}
+			catch (std::exception e)
+			{
+				return;
+			}
 		}		
 	}
 }
 
-void processPowerForPair(const pair<string, string> &filePair, map<string, deque<string> > &results, list<pair<string, string> > &powerParams, path &outputDir)
+void processPowerForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, list<pair<string, string> > &powerParams, path &outputDir, const bool generateResultsOnly)
 {
 
 	bool found0, found1;
@@ -120,12 +143,12 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, deque
 	cerr << basefilename << endl;
 
 	if (found0 && found1)
-	{
-		stringstream current;
+	{		
 		double energyCache = psCache.getTotalEnergy().first + psCache.getTotalEnergy().second;
 		double energyNormal = psNoCache.getTotalEnergy().second;
 
-
+#if 0
+		stringstream current;
 		current << std::dec << std::fixed << std::setprecision(2) << energyNormal;
 #pragma omp critical 
 		results[basefilename].push_back(current.str());
@@ -154,21 +177,32 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, deque
 		current << std::dec << std::fixed << std::setprecision(2) << ((double) psCache.getAverageInUseTime() * 100);
 #pragma omp critical
 		results[basefilename].push_back(current.str());
+#endif
+		ResultSet rs;
+		rs.energyUsed = energyNormal;
+		rs.energyUsedTheoretical = energyCache;
+		rs.percentCacheTimeInUse = ((double) psCache.getAverageInUseTime() * 100);
+		rs.noCacheRuntime = psNoCache.getRunTime();
+		rs.cacheRuntime = psCache.getRunTime();
+
+#pragma omp critical
+		results[basefilename].setStats(rs, false);
 
 		//cerr << "c " << psCache.getRunTime() << " nc " << psNoCache.getRunTime() << endl;
-		try
+		if (!generateResultsOnly)
 		{
-			string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power).*");
+			try
+			{
+				string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power).*");
 
-			//psCache.evenRunTime(psNoCache.getRunTime());
-			//cerr << "bn: " << basename << " od: " << outputDir << endl;;
-			psNoCache.generateGraphs(outputDir / basename);
+				psNoCache.generateGraphs(outputDir / basename);
 
-			psNoCache.generateJointGraphs(outputDir / basename, psCache);
-		}
-		catch (std::exception e)
-		{
-			return;
+				psNoCache.generateJointGraphs(outputDir / basename, psCache);
+			}
+			catch (std::exception e)
+			{
+				return;
+			}
 		}
 	}
 }
