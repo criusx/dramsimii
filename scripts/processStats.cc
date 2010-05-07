@@ -470,6 +470,134 @@ void generateHitRateVsEnergyGraph2(const bf::path &outFilename, const map<string
 	p << "unset output" << endl;
 }
 
+void generateHitRateVsEnergyGraph3(const bf::path &outFilename, const map<string,ResultSet > &results, opstream &p, const bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+
+	vector<string> commandLine;
+	printTitle("Hit Rate vs. Energy", commandLine, p);
+	p << "set ylabel 'Energy (mJ)'" << endl;
+
+	double maxY = 0.0F;
+	double minY = 0.0F;
+	//double minY = 1.0F;
+	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{		
+		maxY = max(maxY, max(i->second.energyUsed,i->second.energyUsedTheoretical));
+		//minY = min(minY, min(i->second.energyUsed,i->second.energyUsedTheoretical));
+	}
+	p << "set yrange[" << 0.9 * minY << ":" << 1.1 * maxY << "]" << endl;
+	//cerr << minY << " " << maxY << endl;
+	//p << "set logscale y" << endl;
+
+	p << hitRateVsEnergyGraph;
+
+
+	for (unsigned h = 8; h <=16; h+=8)
+	{
+		for (unsigned j = 64; j <= 256; j*=4)
+		{
+			for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();
+				i != end; i++)
+			{
+				if (i->second.cacheSize == h)
+				{
+					if (i->second.blockSize == j)
+					{
+						p << i->second.readHitRate << " " << i->second.energyUsedTheoretical << endl;
+						p << "0 " << i->second.energyUsed << endl;
+					}
+				}
+			}
+			p << "e" << endl;
+		}
+	}
+
+	p << "unset output" << endl;
+}
+
+const string hitRateVsEnergyGraph2 = "set xrange [0 : 1] noreverse nowriteback\n\
+									set xlabel 'Hit Rate' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+									set style line 1\n\
+									set style data points\n\
+									set key rmargin center vertical reverse Right\n\
+									plot '-' using 1:2 t '8MB, 64B block' w points linewidth 2 pt 6 ps 2.5 lc 1,\
+									'-' using 1:2 t '8MB, 256B block' w points linewidth 2 pt 2 ps 2.5 lc 2,\
+									'-' using 1:2 t '16MB, 64B block' w points linewidth 2 pt 6 ps 2.5 lc 3,\
+									'-' using 1:2 t '16MB, 256B block' w points linewidth 2 pt 2 ps 2.5 lc 4,\
+									'-' using 1:2 t 'no cache' w points linewidth 2 pt 4 ps 2.5 lc 5\n";
+
+void generateHitRateVsEnergyGraph4(const bf::path &outFilename, const string baseName, const map<string,ResultSet > &results, opstream &p, const bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+
+	vector<string> commandLine;
+	printTitle("Hit Rate vs. Energy", commandLine, p);
+	p << "set ylabel 'Energy (mJ)'" << endl;
+
+	double maxY = 0.0F;
+	double minY = 0.0F;
+	//double minY = 1.0F;
+	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{		
+		const char *name = i->first.c_str();
+		string base = regexMatch<string>(name,"^([A-Za-z]+)");
+		if (base == baseName)
+		{
+			maxY = max(maxY, max(i->second.energyUsed,i->second.energyUsedTheoretical));
+			//minY = min(minY, min(i->second.energyUsed,i->second.energyUsedTheoretical));
+		}
+	}
+	p << "set yrange[" << 0.9 * minY << ":" << 1.1 * maxY << "]" << endl;
+	//cerr << minY << " " << maxY << endl;
+	//p << "set logscale y" << endl;
+
+	p << hitRateVsEnergyGraph2;
+
+
+	for (unsigned h = 8; h <=16; h+=8)
+	{
+		for (unsigned j = 64; j <= 256; j*=4)
+		{
+			for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();
+				i != end; i++)
+			{
+				if (i->second.cacheSize == h)
+				{
+					if (i->second.blockSize == j)
+					{
+						const char *name = i->first.c_str();
+						string base = regexMatch<string>(name,"^([A-Za-z]+)");
+						if (base == baseName)
+						{
+							p << i->second.readHitRate << " " << i->second.energyUsedTheoretical << endl;
+						}
+					}
+				}
+			}
+			p << "e" << endl;
+		}
+	}
+
+	for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{
+		const char *name = i->first.c_str();
+		string base = regexMatch<string>(name,"^([A-Za-z]+)");
+		if (base == baseName)
+		{
+			p << "0 " << i->second.energyUsed << endl;
+		}
+	}
+	p << "e" << endl;
+
+	p << "unset output" << endl;
+}
+
 void generateHitRateVsLatencyGraph(const bf::path &outFilename, const map<string,ResultSet > &results, opstream &p, const bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
@@ -479,7 +607,6 @@ void generateHitRateVsLatencyGraph(const bf::path &outFilename, const map<string
 	printTitle("Hit Rate vs. Latency Reduction", commandLine, p);
 	p << "set ylabel 'Latency Reduction (%)'" << endl;
 
-
 	double maxY = 0.0F;
 	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
 		i != end; i++)
@@ -487,6 +614,7 @@ void generateHitRateVsLatencyGraph(const bf::path &outFilename, const map<string
 		maxY = max(maxY, i->second.getEnergyReduction());
 	}
 	p << "set yrange[0:" << 1.1 * maxY << "]" << endl;
+
 	p << hitRateVsEnergyGraph;
 
 
@@ -510,8 +638,6 @@ void generateHitRateVsLatencyGraph(const bf::path &outFilename, const map<string
 	}
 
 	p << "unset output" << endl;
-	
-
 }
 
 void generateOverallGraphs(const bf::path &outFilename, const map<string,ResultSet > &results)
@@ -520,7 +646,25 @@ void generateOverallGraphs(const bf::path &outFilename, const map<string,ResultS
 	p0 << terminal << basicSetup;
 	generateHitRateVsEnergyGraph(outFilename / "hitRateVsEnergy.png", results,p0,true);
 	generateHitRateVsEnergyGraph2(outFilename / "hitRateVsEnergy2.png", results,p0,true);
+	generateHitRateVsEnergyGraph3(outFilename / "hitRateVsEnergy3.png", results,p0,true);
 	generateHitRateVsLatencyGraph(outFilename / "hitRateVsLatency.png", results,p0,true);
+
+	map<string,unsigned> uniqueBenchmarks;
+	for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{
+		const char * name = i->first.c_str();
+		cerr << name << "|" ;
+		string basename = regexMatch<string>(name,"^([A-Za-z]+)");
+		cerr << basename << "|"<<endl;
+		uniqueBenchmarks[basename] = 1;
+	}
+
+	for (map<string,unsigned>::const_iterator i = uniqueBenchmarks.begin(), end = uniqueBenchmarks.end();
+		i != end; i++)
+	{
+		generateHitRateVsEnergyGraph4(outFilename / ("hitRateVsEnergy-" + i->first + ".png"), i->first, results, p0, true);
+	}
 
 	p0 << "exit" << endl;
 	p0.close();

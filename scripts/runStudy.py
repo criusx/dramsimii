@@ -49,22 +49,17 @@ def submitCommand(commandLine, name):
             f = open(scriptToRun, 'w')
             f.write("#!/bin/sh\n")
             f.write("export PBS_JOBID=" + nextId + "\n")
-            f.write("printenv\n")
-            f.write("echo $PBS_JOBID\n")
-            f.write("#" + command + "\n")
+            #f.write("printenv\n")
+            #f.write("echo $PBS_JOBID\n")
+            #f.write("#" + command + "\n")
+            #f.write("ls -lah\n")
+            #f.write("cd /\n")
+            #f.write("ls -lah\n")
+
+            f.write(command + "\n")
             f.close()
             submitCommand = submitString % (outputDir, outputDir, name, scriptToRun)
             os.system(submitCommand)
-            #f.write(command + "\n")
-
-        #f.write("ls -lah\n")
-        #f.write("cd /\n")
-        #f.write("ls -lah\n")
-
-            #f.write(commandLine + "\n")
-
-        #sts = os.waitpid(p.pid, 0)[1]
-        #print "'" + pstdout
 ######################################################################################
 
 # the directory where the traces are
@@ -94,7 +89,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'm5/configs/example/dramsimfs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyDtest')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyE')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -118,7 +113,7 @@ rowBufferManagementPolicy = []
 #rowBufferManagementPolicy += ['openpageaggressive']
 rowBufferManagementPolicy += ['openpage']
 rowBufferManagementPolicy += ['closepage']
-#rowBufferManagementPolicy += ['closepageaggressive']
+rowBufferManagementPolicy += ['closepageaggressive']
 
 interarrivalCycleCount = [4]
 
@@ -156,15 +151,15 @@ tFAW = [28]
 associativity = []
 associativity += [8]
 #associativity += [24]
-#associativity += [16]
-#associativity += [32]
+associativity += [16]
+associativity += [32]
 cacheSizes = []
 cacheSizes += [8192]
 cacheSizes += [16384]
 #cacheSizes += [24576]
 blockSize = []
 blockSize += [64]
-#blockSize += [128]
+blockSize += [128]
 blockSize += [256]
 hitLatency = [5]
 replacementPolicies = []
