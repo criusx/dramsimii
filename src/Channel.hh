@@ -58,13 +58,18 @@ namespace DRAMsimII
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
 		std::vector<Cache> cache;						///< the dimm caches
+		std::vector<std::pair<std::pair<unsigned,unsigned>,std::pair<unsigned,unsigned> > > cprhSequence;	///< the sequence that the command pair rank hopping follows
+		unsigned lastCprhLocation;						///< index of the last location where a cprh command was chosen from
 	
 		// functions
 		void retireCommand(Command *, const bool isHit);
 		bool checkForAvailableCommandSlots(const Transaction *trans) const;	
 		bool transaction2commands(Transaction *);
 		Command *getNextCommand(const Command *useThisCommand = NULL);
-		void getNextCPRHValues(unsigned &, unsigned &, const bool) const;
+
+		std::pair<unsigned,unsigned> getNextCPRHValues(const unsigned) const;
+		void setupCprhValues();
+		void setLastCprhLocation(unsigned rank, unsigned bank, bool isActivate);
 
 		Transaction *getTransaction();																
 		Transaction *getAvailableTransaction(unsigned useThis = UINT_MAX);

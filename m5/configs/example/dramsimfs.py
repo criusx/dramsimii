@@ -87,9 +87,10 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     self.membus = MemBus(bus_id=1, clock='2600MHz')
     self.bridge = Bridge(delay='5ns', nack_delay='1ns')
     # use the memory size established by the benchmark definition in Benchmarks.py
-    jobnumber = ''
     if 'PBS_JOBID' in os.environ:
         jobnumber = os.environ['PBS_JOBID'].split('.')[0]
+    else:
+        jobnumber = ''
 
     outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0] + jobnumber
 
@@ -114,8 +115,7 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     self.tsunami.attachIO(self.iobus)
     self.tsunami.ide.pio = self.iobus.port
     self.tsunami.ethernet.pio = self.iobus.port
-    self.simple_disk = SimpleDisk(disk=RawDiskImage(image_file = mdesc.disk(),
-                                                     read_only = True))
+    self.simple_disk = SimpleDisk(disk=RawDiskImage(image_file = mdesc.disk(),read_only = True))
     self.intrctrl = IntrControl()
     self.mem_mode = mem_mode
     self.terminal = Terminal()
@@ -222,6 +222,7 @@ if options.l2cache:
         print "no prefetcher"
         test_sys.l2 = L2Cache(size='512kB', assoc=16, latency="4ns", mshrs = 32)
     else:
+        #print "using prefetcher"
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
@@ -279,5 +280,5 @@ elif len(bm) == 1:
 else:
     print "Error I don't know how to create more than 2 systems."
     sys.exit(1)
-
+print "running"
 Simulation.run(options, root, test_sys, FutureClass)

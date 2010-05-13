@@ -159,7 +159,7 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		switch (token)
 		{
 		case unknown_token:
-			cerr << nodeName << " failed" << endl;
+			cerr << nodeName << " was not recognized" << endl;
 			return false;
 			break;
 		case cache_associativity_token:

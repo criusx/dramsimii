@@ -134,7 +134,8 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
 	xmlNodePtr rootNode = xmlNewNode(NULL, BAD_CAST "dramspec");
 	xmlDocSetRootElement(doc,rootNode);
-	xmlNewProp(rootNode, BAD_CAST "type", BAD_CAST "ddr2");
+	/// @TODO make this more general
+	xmlNewProp(rootNode, BAD_CAST "type", BAD_CAST "ddr3");
 	xmlNodePtr node = NULL;
 
 	//xmlDtdPtr dtd = 

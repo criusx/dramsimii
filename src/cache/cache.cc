@@ -526,9 +526,9 @@ bool Cache::timingAccess(const Command *currentCommand, tick time)
 
 bool Cache::isHit(const Command *currentCommand) const
 {
-	BlkType *blk = NULL;
+	//BlkType *blk = NULL;
 	PacketList writebacks;
-	tick latency = 0;
+	//tick latency = 0;
 
 	return accessBlock(currentCommand->getAddress().getPhysicalAddress()) != NULL;
 }

@@ -10,6 +10,7 @@ import tempfile
 import math
 import getopt
 import re
+import stat
 from subprocess import Popen, PIPE, STDOUT
 from array import array
 import shutil
@@ -46,9 +47,10 @@ def submitCommand(commandLine, name):
             i = (i + 1) % 2
             scriptToRun = os.path.join(outputDir, scriptName)
 
-            f = open(scriptToRun, 'w')
+            f = open(scriptToRun, 'w+')
             f.write("#!/bin/sh\n")
             f.write("export PBS_JOBID=" + nextId + "\n")
+            f.write("export M5_PATH=/home/joe/m5_system_2.0b3\n")
             #f.write("printenv\n")
             #f.write("echo $PBS_JOBID\n")
             #f.write("#" + command + "\n")
@@ -58,8 +60,12 @@ def submitCommand(commandLine, name):
 
             f.write(command + "\n")
             f.close()
+            os.chmod(scriptToRun, stat.S_IEXEC | stat.S_IREAD | stat.S_IWRITE)
             submitCommand = submitString % (outputDir, outputDir, name, scriptToRun)
+            #print submitCommand
             os.system(submitCommand)
+
+
 ######################################################################################
 
 # the directory where the traces are
@@ -89,7 +95,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'm5/configs/example/dramsimfs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyE')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/thesis/stream')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -103,14 +109,20 @@ m5SeCommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt
 m5FsCommandLine = Template(m5FsExecutable + " " + m5FsScript + ' -b $benchmark -F 10000000000')
 
 # the command line parameters for running in FS mode
-fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks banks $banks postedCAS $postedCas physicaladdressmappingpolicy $amp commandorderingalgorithm $coa perbankqueuedepth $pbqd readwritegrouping $rwg rowBufferPolicy $rbmp outfiledir $output')
+fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks banks $banks postedCAS $postedCas physicaladdressmappingpolicy $amp commandorderingalgorithm $coa perbankqueuedepth $pbqd readwritegrouping $rwg rowBufferPolicy $rbmp outfiledir $output usingCache false')
 
 addressMappingPolicy = ['sdramhiperf', 'sdrambase', 'closepagebaseline', 'closepagelowlocality', 'closepagehighlocality', 'closepagebaselineopt']
 
-commandOrderingAlgorithm = ['firstAvailableAge', 'bankroundrobin', 'rankroundrobin', 'firstAvailableRIFF', 'firstAvailableQueue', 'commandPairRankHop', 'strict']
+commandOrderingAlgorithm = ['firstAvailableAge']
+commandOrderingAlgorithm += ['bankroundrobin']
+commandOrderingAlgorithm += ['rankroundrobin']
+commandOrderingAlgorithm += ['firstAvailableRIFF']
+commandOrderingAlgorithm += ['firstAvailableQueue']
+commandOrderingAlgorithm += ['commandPairRankHop']
+commandOrderingAlgorithm += ['strict']
 
 rowBufferManagementPolicy = []
-#rowBufferManagementPolicy += ['openpageaggressive']
+rowBufferManagementPolicy += ['openpageaggressive']
 rowBufferManagementPolicy += ['openpage']
 rowBufferManagementPolicy += ['closepage']
 rowBufferManagementPolicy += ['closepageaggressive']
@@ -121,28 +133,32 @@ perBankQueueDepth = [12]
 
 readWriteGrouping = ['true']
 
-postedCas = ['true', 'false']
+postedCas = ['true']
+#postedCas += ['false']
 
 requests = [5000000]
 
 benchmarks = []
-benchmarks += ['calculix']
-benchmarks += ['milc']
-benchmarks += ['lbm']
-benchmarks += ['mcf']
+#benchmarks += ['calculix']
+#benchmarks += ['milc']
+#benchmarks += ['lbm']
+#benchmarks += ['mcf']
 benchmarks += ['stream']
-benchmarks += ['bzip2']
-benchmarks += ['sjeng']
-benchmarks += ['xalancbmk']
-benchmarks += ['GemsFDTD']
+#benchmarks += ['bzip2']
+#benchmarks += ['sjeng']
+#benchmarks += ['xalancbmk']
+#benchmarks += ['GemsFDTD']
 
 # options for the run
-channels = [2]
+channels = []
+channels += [2]
+#channels += [1]
 dimms = []
+dimms += [1]
 dimms += [2]
 #dimms += [4]
 ranks = []
-#ranks += [1]
+ranks += [1]
 ranks += [2]
 banks = [16]
 tFAW = [28]
@@ -200,6 +216,7 @@ def main():
     counting = False
     count = 0
 
+
     for opt, arg in opts:
 
         if opt == '-c':
@@ -246,9 +263,12 @@ def main():
                                                             submitCommand(newCommandLine, t + replacementPolicy)
                                                             count += 1
 
-            print str(count) + " simulations to be run."
+
 
         else:
+
+            print "estimated size" + str(len(addressMappingPolicy) * len(commandOrderingAlgorithm) * len(rowBufferManagementPolicy) * len(benchmarks) * len(channels) * len(dimms) * len(ranks) * len(banks) * len(perBankQueueDepth) * len(tFAW) * len(readWriteGrouping) * len(postedCas))
+
             for channel in channels:
                 for dimm in dimms:
                     for rank in ranks:
@@ -292,7 +312,8 @@ def main():
                                                                                                                                   amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
                                                                                                                                   output=outputDir, benchmark=benchmark, postedCas=pc) + '"'
                                                                     #                                (i, fScommandParameters % (channel, dimm, rank, bank, amp, coa, pbqd, rwg, rbmp, outputDir))
-                                                                    submitCommand(currentCommandLine, benchmark)
+                                                                    submitCommand([currentCommandLine], benchmark)
+                                                                    count += 1
 
                                                                 # variations of the per-DIMM cache
                                                                 elif opt == '-c':
@@ -303,7 +324,7 @@ def main():
                                                                                     for numSets in numberSets:
                                                                                         currentTrace = os.path.join(tracesDir, t)
                                                                                         currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimms[0], b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
-                                                                                        submitCommand(currentCommandLine, t)
+                                                                                        submitCommand([currentCommandLine], t)
 
                                                             #sys.exit(2)
 
@@ -311,7 +332,7 @@ def main():
                                                             #print submitCommandLine
 
 
-
+        print str(count) + " simulations to be run."
 if __name__ == "__main__":
 
      main()

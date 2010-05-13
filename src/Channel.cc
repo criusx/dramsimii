@@ -56,16 +56,28 @@ systemConfig(_systemConfig),
 statistics(_stats),
 powerModel(_settings),
 channelID(UINT_MAX),
-//dimm(_settings.dimmCount, DIMM(_settings,timingSpecification,_systemConfig, statistics)),
 rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
 finishedTransactions(),
-cache(_settings.dimmCount, Cache(_settings))
+cache(_settings.dimmCount, Cache(_settings)),
+lastCprhLocation(0)
 {
+	setupCprhValues();
 	// assign an id to each channel (normally done with commands)
 	// 	for (unsigned i = 0; i < _settings.rankCount; ++i)
 	// 	{
 	// 		rank[i].setRankID(i);
 	// 	}
+#if 0
+	for (unsigned i = 0; i < rank.size() * rank[0].bank.size() * 2; i++)
+	{
+		pair<unsigned,unsigned> a = getNextCPRHValues(i);
+		cerr << a.first << " " << a.second;
+		if ((i % 2) == 1)
+			cerr << endl;
+		else
+			cerr << " ";
+	}
+#endif
 
 	// initialize the refresh counters per rank
 
@@ -111,10 +123,11 @@ statistics(stats),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
 // to initialize the references
-//dimm((unsigned)systemConfig.getDimmCount(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, stats)),
 rank((unsigned)systemConfig.getRankCount() * systemConfig.getDimmCount(), Rank(rhs.rank[0], timingSpecification, systemConfig, stats)),
 finishedTransactions(),
-cache(rhs.cache.size(), Cache(rhs.cache[0]))
+cache(rhs.cache.size(), Cache(rhs.cache[0])),
+cprhSequence(rhs.cprhSequence),
+lastCprhLocation(rhs.lastCprhLocation)
 {
 	// to fill incomingTransaction the values
 	rank = rhs.rank;
@@ -143,7 +156,8 @@ powerModel(power),
 channelID(UINT_MAX),
 rank(newRank),
 finishedTransactions(),
-cache()
+cache(),
+lastCprhLocation(0)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -162,10 +176,11 @@ systemConfig(rhs.systemConfig),
 statistics(rhs.statistics),
 powerModel(rhs.powerModel),
 channelID(rhs.channelID),
-//dimm((unsigned)rhs.rank.size(), DIMM(rhs.dimm[0], timingSpecification, systemConfig, statistics)),
 rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0], timingSpecification, systemConfig, statistics)),
 finishedTransactions(),
-cache((unsigned)rhs.cache.size(), Cache(rhs.cache[0]))
+cache((unsigned)rhs.cache.size(), Cache(rhs.cache[0])),
+cprhSequence(rhs.cprhSequence),
+lastCprhLocation(rhs.lastCprhLocation)
 {
 	// TODO: copy over values incomingTransaction ranks now that reference members are init
 	// assign an id to each channel (normally done with commands)
@@ -2214,35 +2229,15 @@ const Command *Channel::readNextCommand() const
 
 	case COMMAND_PAIR_RANK_HOPPING:
 		{	
-			// determine
-			bool isActivate;
-			unsigned nextRank, nextBank;
-
-			if (lastCommand)
-			{
-				isActivate = lastCommand->isActivate();
-				nextRank = lastCommand->getAddress().getRank();
-				nextBank = lastCommand->getAddress().getBank();
-				getNextCPRHValues(nextRank, nextBank, isActivate);
-				assert(nextRank < systemConfig.getRankCount());
-				assert(nextBank < systemConfig.getBankCount());
-				isActivate = !isActivate;
-			}
-			else // special case, must reset to the first value in the pattern
-			{
-				isActivate = true;
-				nextRank = 0;
-				nextBank = systemConfig.getBankCount() / 2;
-			}
-
-			const unsigned originalRank = nextRank;
-			const unsigned originalBank = nextBank;
-			const bool originalActivate = isActivate;
+			// determine where to start
+			unsigned location = (lastCprhLocation + 1) % (2 * cprhSequence.size());
+			bool isActivate = (location % 2) == 0;
+			pair<unsigned,unsigned> memLocation = getNextCPRHValues(location);
 
 			while (true)
 			{
 				const Command *potentialCommand = 						
-					((rank.begin() + nextRank)->bank.begin() + nextBank)->front();
+					((rank.begin() + memLocation.first)->bank.begin() + memLocation.second)->front();
 
 				// see if this command could be used
 				if (potentialCommand)
@@ -2250,29 +2245,32 @@ const Command *Channel::readNextCommand() const
 					if (!potentialCommand->isRefresh())
 					{
 						if (potentialCommand->isActivate() == isActivate)
-						{							
+						{		
+							//cerr << "choose " << location;
 							return potentialCommand;
 						}
 					}
 					else
 					{
 						// look for refreshes
-						if ((rank.begin() + nextRank)->refreshAllReady())
+						if ((rank.begin() + memLocation.first)->refreshAllReady())
 						{
+							//cerr << "choose " << location;
 							return potentialCommand;
 						}
 					}
 				}
 
-				// then switch command
-				getNextCPRHValues(nextRank, nextBank, isActivate);
-				isActivate = !isActivate;	
-
 				// quit if already checked every rank/bank combination
-				if (nextRank == originalRank && nextBank == originalBank && originalActivate == isActivate)
+				if (location == lastCprhLocation)
 				{
 					return NULL;
 				}							
+
+				// then switch command
+				location = (location + 1) % (2 * cprhSequence.size());
+				isActivate = (location % 2) == 0;
+				memLocation = getNextCPRHValues(location);
 			}
 		}
 		break;
@@ -2287,8 +2285,57 @@ const Command *Channel::readNextCommand() const
 	return NULL;
 }
 
-void Channel::getNextCPRHValues(unsigned &nextRank, unsigned &nextBank, const bool isActivate) const
+void Channel::setupCprhValues()
 {
+	const unsigned rankCount = systemConfig.getDimmCount() * systemConfig.getRankCount();
+	const unsigned bankCount = systemConfig.getBankCount();
+	cprhSequence.resize(rankCount * bankCount);
+
+	cprhSequence[0] = pair<pair<unsigned,unsigned>,pair<unsigned,unsigned> >(pair<unsigned,unsigned>(0,bankCount / 2),pair<unsigned,unsigned> (0, 0));
+
+	for (unsigned i = 1; i < rankCount * bankCount; i++)
+	{
+		unsigned lastCasBank = cprhSequence[i - 1].second.second;
+		unsigned lastCasRank = cprhSequence[i - 1].second.first;
+
+		lastCasBank = (lastCasBank + 1) % bankCount;
+		lastCasRank = (lastCasBank == 0) ? (lastCasRank + 1) % rankCount : lastCasRank;
+		cprhSequence[i].second.first = lastCasRank;
+		cprhSequence[i].second.second = lastCasBank;
+
+		unsigned lastRasBank = cprhSequence[i - 1].first.second;
+		unsigned lastRasRank = cprhSequence[i - 1].first.first;
+		lastRasRank = (lastCasBank == 0) ? lastRasRank : (lastRasRank + 1) % rankCount;
+		lastRasBank = (lastCasBank == 0) ? bankCount / 2 : lastRasBank >= bankCount / 2 ? (lastRasBank + bankCount / 2) % bankCount : lastRasBank + bankCount / 2 + 1;
+		cprhSequence[i].first.first = lastRasRank;
+		cprhSequence[i].first.second = lastRasBank;
+	}
+}
+
+void Channel::setLastCprhLocation(unsigned rank, unsigned bank, bool isActivate)
+{
+	unsigned location = 0;
+
+	for (; location < cprhSequence.size(); location ++)
+	{
+		pair<pair<unsigned,unsigned>,pair<unsigned,unsigned> > memValue = cprhSequence[location];
+		unsigned currentRank = isActivate ? memValue.first.first : memValue.second.first;
+		unsigned currentBank = isActivate ? memValue.first.second : memValue.second.second;
+		if (currentRank == rank && currentBank == bank)
+		{
+			lastCprhLocation = 2 * location + (isActivate ? 0 : 1);
+			//cerr << "set to " << lastCprhLocation << endl;
+			return;
+		}
+	}
+	
+	cerr << "did not find " << endl;
+	exit(-6);
+}
+
+pair<unsigned,unsigned> Channel::getNextCPRHValues(const unsigned location) const
+{
+#if 0
 	unsigned oldBank = nextBank;
 	unsigned oldRank = nextRank;
 
@@ -2311,6 +2358,9 @@ void Channel::getNextCPRHValues(unsigned &nextRank, unsigned &nextBank, const bo
 			nextRank = (oldRank + oldBank + 1) % systemConfig.getRankCount();
 		}
 	}
+#endif
+	pair<pair<unsigned,unsigned>,pair<unsigned,unsigned> > loc = cprhSequence[location / 2];
+	return (location % 2) == 0 ? loc.first : loc.second;
 
 }
 
@@ -2345,6 +2395,11 @@ void Channel::executeCommand(Command *thisCommand)
 	bool wasActivated = currentBank->isActivated();
 
 	lastCommandIssueTime = time;
+
+	if (systemConfig.getCommandOrderingAlgorithm() == COMMAND_PAIR_RANK_HOPPING)
+	{
+		setLastCprhLocation(thisCommand->getAddress().getRank(),thisCommand->getAddress().getBank(), thisCommand->isActivate());
+	}
 
 	switch(thisCommand->getCommandType())
 	{
