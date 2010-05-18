@@ -64,18 +64,13 @@ if not conf.CheckLib('xml2'):
 
 try:
 	if 'fast' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
-		#print COMMAND_LINE_TARGETS[0]
 		env.Append(
-		# -funroll-all-loops -ffast-math -fprefetch-loop-arrays
 			CCFLAGS = ['-I/usr/include/libxml2', '-fprefetch-loop-arrays','-ffast-math', '-funroll-all-loops', '-fomit-frame-pointer', '-Wuninitialized', '-Wno-conversion',
-			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-generate', '-mtune=native']
-			# '-finline-functions', '-march=native','-Wno-unused-variable','-fprofile-use', '-mtune=native']
 			 '-finline-functions', '-march=native','-Wno-unused-variable', '-mtune=native']
-			#,CPPDEFINES = ['M5', 'TRACE_GENERATE', '__STDC_LIMIT_MACROS']
-			,CPPDEFINES = ['M5', '__STDC_LIMIT_MACROS']
-			#,LINKFLAGS = ['-fprofile-use']
-			#,LINKFLAGS = ['-fprofile-generate']
-			)
+			,CPPDEFINES = ['M5', '__STDC_LIMIT_MACROS'])
+		#env.Append(CPPDEFINES = ['TRACE_GENERATE']
+		env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['fprofile-generate'])
+		#env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
 		CCFLAGS = ['-I/usr/include/libxml2', '-march=native', '-mtune=native'],

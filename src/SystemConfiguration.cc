@@ -198,6 +198,8 @@ usingDimmCache(settings.usingCache)
 			else
 				suffix = "N" + suffix;
 
+			stringstream basename;
+
 			do
 			{
 				stringstream timingFilename;
@@ -205,16 +207,19 @@ usingDimmCache(settings.usingCache)
 				stringstream statsFilename;
 				stringstream verilogFilename;
 
+				basename.str("");
+				basename << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter;
+
 				timingFilename.str("");
 				powerFilename.str("");
 				statsFilename.str("");
 				settingsFilename.str("");
 				verilogFilename.str("");
-				timingFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-timing" << suffix;
-				powerFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-power" << suffix;
-				statsFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-stats" << suffix;
-				verilogFilename << outDir.string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-verilog" << suffix;
-				settingsFilename << outDir.native_directory_string() << "/" << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << "-settings" << settingsSuffix;	
+				timingFilename << outDir.string() << "/" << basename.str() << "-timing" << suffix;
+				powerFilename << outDir.string() << "/" << basename.str() << "-power" << suffix;
+				statsFilename << outDir.string() << "/" << basename.str() << "-stats" << suffix;
+				verilogFilename << outDir.string() << "/" << basename.str() << "-verilog" << suffix;
+				settingsFilename << outDir.native_directory_string() << "/" << basename.str() << "-settings" << settingsSuffix;	
 				timingFile = timingFilename.str();
 				powerFile = powerFilename.str();
 				statsFile = statsFilename.str();
@@ -233,7 +238,7 @@ usingDimmCache(settings.usingCache)
 
 			} while (!createNewFile(timingFile) || !createNewFile(powerFile) || !createNewFile(statsFile) || !createNewFile(settingsFilename.str()) || !createNewFile(verilogFile));
 
-			cerr << "note: setting output file base to " << baseFilename << setfill('0') << setw(endsWithNumber ? 0 : 3) << counter << endl;
+			cerr << "note: setting output file base to " << basename.str() << endl;
 
 			if (setupStreams())
 			{
