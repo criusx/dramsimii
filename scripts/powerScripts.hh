@@ -29,6 +29,8 @@ protected:
 
 	vector<string> commandLine;
 
+	string rawCommandLine;
+
 	bf::path givenfilename;
 
 	pair<double, double> totalEnergy;
@@ -55,6 +57,8 @@ public:
 	  void generateGraphs(const bf::path &outputDir);
 
 	  void generateJointGraphs(const bf::path &outputDir, PowerScripts &alternatePower);
+
+	  string getRawCommandLine() const { return rawCommandLine; }
 
 	  bool working() const
 	  {

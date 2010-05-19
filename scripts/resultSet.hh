@@ -30,6 +30,7 @@ public:
 	unsigned numberOfSets;
 	std::string replacementPolicy;
 	std::string title;
+	std::string basename;
 	double runtime;
 	double readHitRate;
 	double hitRate;
@@ -72,7 +73,7 @@ public:
 		percentCacheTimeInUse(0.0)
 	{}
 
-	void parseCommandLine(const char *commandLine);
+	void parseCommandLine(const char *commandLine, const std::string &filename);
 
 	std::pair<std::string,std::string> generateResultLine() const ;
 

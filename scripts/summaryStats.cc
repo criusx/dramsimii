@@ -84,7 +84,7 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 		current.str("");
 #endif
 		ResultSet rs;
-		rs.parseCommandLine(ssCache.getRawCommandLine().c_str());
+		rs.parseCommandLine(ssCache.getRawCommandLine().c_str(), filePair.first);
 		rs.runtime = ssCache.getRunTime();
 		rs.noCacheRuntime = ssNoCache.getRunTime();
 		rs.cacheRuntime = ssCache.getRunTime();
@@ -179,6 +179,7 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, Resul
 		results[basefilename].push_back(current.str());
 #endif
 		ResultSet rs;
+		rs.parseCommandLine(psNoCache.getRawCommandLine().c_str(), filePair.first);
 		rs.energyUsed = energyNormal;
 		rs.energyUsedTheoretical = energyCache;
 		rs.percentCacheTimeInUse = ((double) psCache.getAverageInUseTime() * 100);

@@ -127,6 +127,8 @@ void PowerScripts::processLine(char *newLine)
 			{
 				foundCommandLine = true;
 
+				rawCommandLine = newLine;
+
 				powerParameters.setParameters(newLine, powerParams);		
 
 				channelCount = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
@@ -813,9 +815,8 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 	double time = 0.0;
 
 	vector<vector<float> >::size_type columns = values.size();
-	vector<float>::size_type epochs = max(values.front().size(), alternateValues.front().size());
-
-	for (vector<float>::size_type i = 0; i < epochs; ++i)
+	
+	for (vector<float>::size_type i = 0; i < values.front().size(); ++i)
 	{
 		if (i < values.front().size())
 		{
@@ -839,23 +840,16 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 	p << "e" << endl;
 	time = 0.0;
 
-	for (vector<float>::size_type i = 0; i < epochs; ++i)
+	for (vector<float>::size_type i = 0; i < alternateValues.front().size(); ++i)
 	{
-		if (i < alternateValues.front().size())
-		{
-			double total = 0.0;
+		double total = 0.0;
 
-			for (vector<vector<float> >::size_type j = 0; j < columns; ++j)
-			{
-				total += alternateValues[j][i];
-			}
-
-			p << time << " " << total << endl;
-		}
-		else
+		for (vector<vector<float> >::size_type j = 0; j < columns; ++j)
 		{
-			p << time << " " << 0.0 << endl;
+			total += alternateValues[j][i];
 		}
+
+		p << time << " " << total << endl;
 		time += epochTime;
 	}
 
@@ -870,16 +864,13 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	//p << "set title \"" << "Cumulative Energy\\n" << commandLine << "\""
-	//	<< endl << cumulPowerScript;
 	printTitle("Cumulative Energy", commandLine, p);
 
 	p << cumulPowerScript;
 
 	float time = 0.0F;
 	float totalPower = 0.0F;
-	vector<pair<float,float> >::size_type totalPoints = max(energyValues.size(), alternateValues.size());
-
+	
 	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(), end = energyValues.end();
 		i < end; ++i)
 	{
@@ -889,13 +880,7 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 
 		time += epochTime;
 	}
-	if (energyValues.size() < totalPoints)
-	{
-		for (vector<pair<float, float> >::size_type i = totalPoints - energyValues.size(); i > 0; ++i)
-		{
-			p << time << " " << totalPower << endl;
-		}
-	}
+	
 
 	p << "e" << endl;
 
@@ -910,13 +895,6 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 
 		time += epochTime;
 	}
-	if (alternateValues.size() < totalPoints)
-	{
-		for (vector<pair<float, float> >::size_type i = totalPoints - alternateValues.size(); i > 0; ++i)
-		{
-			p << time << " " << totalPower << endl;
-		}
-	}
-	//////////////////////////////////////////////////////////////////////////
+
 	p << "e" << endl << "unset output" << endl;
 }
