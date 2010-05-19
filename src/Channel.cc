@@ -62,12 +62,15 @@ cache(_settings.dimmCount, Cache(_settings)),
 lastCprhLocation(0)
 {
 	setupCprhValues();
-	// assign an id to each channel (normally done with commands)
-	// 	for (unsigned i = 0; i < _settings.rankCount; ++i)
-	// 	{
-	// 		rank[i].setRankID(i);
-	// 	}
 #if 0
+	// assign an id to each channel (normally done with commands)
+	for (unsigned i = 0; i < _settings.rankCount; ++i)
+	{
+		rank[i].setRankID(i);
+	}
+#endif
+
+#if 1
 	for (unsigned i = 0; i < rank.size() * rank[0].bank.size() * 2; i++)
 	{
 		pair<unsigned,unsigned> a = getNextCPRHValues(i);

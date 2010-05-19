@@ -5,7 +5,7 @@ using std::string;
 
 const string ResultSet::urlString = "<a href=\"%1/index.html\">%2</a>";
 
-void ResultSet::parseCommandLine(const char *commandLine)
+void ResultSet::parseCommandLine(const char *commandLine, const string &filename)
 {
 	channels = regexMatch<unsigned>(commandLine,"ch\\[([0-9]+)\\]");
 	dimms = regexMatch<unsigned>(commandLine,"dimm\\[([0-9]+)\\]");
@@ -34,6 +34,8 @@ void ResultSet::parseCommandLine(const char *commandLine)
 	associativity = regexMatch<unsigned>(commandLine,"assoc\\[([0-9]+)\\]");
 	numberOfSets = regexMatch<unsigned>(commandLine,"sets\\[([0-9]+)\\]");
 	title = regexMatch<string>(commandLine,": ([0-9A-Za-z-]+)");
+	basename = regexMatch<string>(filename.c_str(),"^([0-9A-Za-z-]+)(-stats|-power)");
+	//cerr << "bn: " << basename << endl;
 	//cerr << title << endl;
 }
 
@@ -159,7 +161,7 @@ std::pair<string,string> ResultSet::generateResultLine() const
 
 string ResultSet::generateTd(const string &str) const
 {
-	return "<td>" + ireplace_all_copy(ireplace_all_copy(urlString,"%2", str), "%1", title) + "</td>";
+	return "<td>" + ireplace_all_copy(ireplace_all_copy(urlString,"%2", str), "%1", basename) + "</td>";
 }
 
 string ResultSet::generateTd(const unsigned value) const
@@ -221,7 +223,7 @@ void ResultSet::setStats(const ResultSet &rs, const bool isStat)
 		title = rs.title;
 		cacheRuntime = rs.cacheRuntime;
 		replacementPolicy = rs.replacementPolicy;
-		
+		basename = rs.basename;
 	}
 	else
 	{
