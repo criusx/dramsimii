@@ -44,6 +44,7 @@ from FSConfig import *
 from SysPaths import *
 from Benchmarks import *
 import Simulation
+import CacheConfig
 from Caches import *
 
 #update Benchmarks to support our benchmarks
@@ -71,13 +72,6 @@ Benchmarks['xalancbmk'] = [SysConfig('xalancbmk.rcS', '512MB')]
 benchs = Benchmarks.keys()
 benchs.sort()
 DefinedBenchmarks = ", ".join(benchs)
-
-class L3Cache(BaseCache):
-    assoc = 16
-    block_size = 64
-    latency = '4ns'
-    mshrs = 30
-    tgts_per_mshr = 12
 
 def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename="", revert=None):
     class BaseTsunami(Tsunami):
@@ -172,8 +166,8 @@ execfile(os.path.join(config_root, "common", "Options.py"))
 
 (options, args) = parser.parse_args()
 
-options.l2cache = True
 options.caches = True
+options.l3cache = True
 options.detailed = True
 
 if args:
@@ -188,8 +182,8 @@ drive_mem_mode = 'atomic'
 # system under test can be any CPU
 (TestCPUClass, test_mem_mode, FutureClass) = Simulation.setCPUClass(options)
 
-TestCPUClass.clock = '4GHz'
-DriveCPUClass.clock = '4GHz'
+TestCPUClass.clock = '3.2GHz'
+DriveCPUClass.clock = '3.2GHz'
 
 if options.benchmark:
     try:
@@ -223,24 +217,11 @@ if options.kernel is not None:
 if options.script is not None:
     test_sys.readfile = options.script
 
-if options.l2cache:
-    if options.nopre is True:
-        print "no prefetcher"
-        test_sys.l2 = L2Cache(size='512kB', assoc=8, latency="3.4375ns", mshrs = 32)
-    else:
-        #print "using prefetcher"
-        #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
-        #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
-        #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
-        test_sys.l2 = L2Cache(size = '8MB', assoc=8, latency="3.4375ns", mshrs = 22, tgts_per_mshr = 12)
-
-    test_sys.tol2bus = Bus()
-    test_sys.l2.cpu_side = test_sys.tol2bus.port
-    test_sys.l2.mem_side = test_sys.membus.port
-
 test_sys.cpu = [TestCPUClass(cpu_id=i) for i in xrange(np)]
 
-if options.caches or options.l2cache:
+CacheConfig.config_cache(options, test_sys)
+
+if options.caches or options.l2cache or options.l3cache:
     test_sys.bridge.filter_ranges_a=[AddrRange(0, Addr.max)]
     test_sys.bridge.filter_ranges_b=[AddrRange(0, size='8GB')]
     test_sys.iocache = IOCache(addr_range=AddrRange(0, size='8GB'))
@@ -248,16 +229,6 @@ if options.caches or options.l2cache:
     test_sys.iocache.mem_side = test_sys.membus.port
 
 for i in xrange(np):
-    if options.caches:
-        test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '32kB', latency="1.25ns", assoc = 4, mshrs = 12, tgts_per_mshr = 6),
-                                                L1Cache(size = '32kB', latency="1.25ns", assoc = 4, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16))
-        #test_sys.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '64kB', latency="500ps"),
-        #                                        L1Cache(size = '64kB', latency="500ps"))
-    if options.l2cache:
-        test_sys.cpu[i].connectMemPorts(test_sys.tol2bus)
-    else:
-        test_sys.cpu[i].connectMemPorts(test_sys.membus)
-
     if options.fastmem:
         test_sys.cpu[i].physmem_port = test_sys.physmem.port
 

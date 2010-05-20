@@ -41,7 +41,7 @@ try:
 			 '-finline-functions', '-march=native','-Wno-unused-variable', '-mtune=native']
 			,CPPDEFINES = ['M5', '__STDC_LIMIT_MACROS'])
 		#env.Append(CPPDEFINES = ['TRACE_GENERATE']
-		env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['fprofile-generate'])
+		#env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['fprofile-generate'])
 		#env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
