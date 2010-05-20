@@ -70,7 +70,7 @@ lastCprhLocation(0)
 	}
 #endif
 
-#if 1
+#if 0
 	for (unsigned i = 0; i < rank.size() * rank[0].bank.size() * 2; i++)
 	{
 		pair<unsigned,unsigned> a = getNextCPRHValues(i);

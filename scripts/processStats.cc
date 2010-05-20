@@ -103,51 +103,6 @@ bool regexSearch(const char *input, const char *regex)
 	return boost::regex_search(input, match, currentRegex);
 }
 
-#if 0
-void process(const string i, const list<pair<string,string> > &powerParams)
-{
-	if (regexSearch(i.c_str(), (const char *)"power[CN]?[.](gz|bz2)?$"))
-	{		
-		if (separateOutputDir)
-		{
-			bf::path filepath(i.substr(0, i.find("-power")));
-			bf::path path = outputDir / filepath.filename();
-			bf::path filename(i);
-			//processPower(path, filename.native_file_string(), powerParams);
-		}
-		else
-		{
-			bf::path filepath(i);
-			bf::path path = filepath.branch_path()
-				/ filepath.leaf().substr(0, filepath.leaf().find(
-				"-power"));
-			//processPower(path, i, powerParams);
-		}
-	}
-	else if (regexSearch(i.c_str(), (const char *)"stats[CN]?[.](gz|bz2)?$"))
-
-	{
-		cerr << i << endl;
-		return;
-		if (separateOutputDir)
-		{
-			bf::path filepath(i.substr(0, i.find("-stats")));
-			bf::path path = outputDir / filepath.filename();
-			bf::path filename(i);
-			//processStats(path, filename.native_file_string());
-		}
-		else
-		{
-			bf::path filepath(i);
-			bf::path path = filepath.branch_path()
-				/ filepath.leaf().substr(0, filepath.leaf().find(
-				"-stats"));
-			//processStats(path, i);
-		}
-	}
-}
-#endif
-
 
 ////////////////////////////////////////////////
 int main(int argc, char** argv)
@@ -305,7 +260,7 @@ int main(int argc, char** argv)
 		//////////////////////////////////////////////////////////////////////////
 
 		string fileList;
-		string csvOutput;
+		string csvOutput = results.begin()->second.getCsvHeader();
 		for (map<string, ResultSet>::const_iterator x = results.begin(); x
 			!= results.end(); ++x)
 		{
@@ -325,7 +280,6 @@ int main(int argc, char** argv)
 		// write the result csv file
 		bf::path outputCsv((separateOutputDir ? outputDir : ".") / "result.csv");	
 		ofstream outCsv(outputCsv.native_file_string().c_str());
-		outCsv.write(csvHeader.c_str(), csvHeader.length());
 		outCsv.write(csvOutput.c_str(), csvOutput.length());
 		outCsv.close();
 	}
@@ -392,14 +346,14 @@ void generateHitRateVsEnergyGraph(const bf::path &outFilename, const map<string,
 		<< outFilename.native_directory_string() << "'" << endl;
 
 	vector<string> commandLine;
-	printTitle("Hit Rate vs. Energy Reduction", commandLine, p);
-	p << "set ylabel 'Energy Reduction (%)'" << endl;
+	printTitle("Hit Rate vs. Energy Ratio", commandLine, p);
+	p << "set ylabel 'Energy Ratio (%)'" << endl;
 
 	double maxY = 0.0F;
 	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
 		i != end; i++)
 	{		
-		maxY = max(maxY, i->second.getEnergyReduction());
+		maxY = max(maxY, i->second.getEnergyRatio());
 	}
 	p << "set yrange[0:" << 1.1 * maxY << "]" << endl;
 	p << hitRateVsEnergyGraph;
@@ -416,7 +370,7 @@ void generateHitRateVsEnergyGraph(const bf::path &outFilename, const map<string,
 				{
 					if (i->second.blockSize == j)
 					{
-						p << i->second.readHitRate << " " << i->second.getEnergyReduction() << endl;
+						p << i->second.readHitRate << " " << i->second.getEnergyRatio() << endl;
 					}
 				}
 			}
@@ -518,6 +472,42 @@ void generateHitRateVsEnergyGraph3(const bf::path &outFilename, const map<string
 	p << "unset output" << endl;
 }
 
+const string hitRateVsEnergyGraph3 = "set xrange [0 : 1] noreverse nowriteback\n\
+									set xlabel 'Hit Rate' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+									set style line 1\n\
+									set style data points\n\
+									unset key\n\
+									plot '-' using 1:2 w points linewidth 2 pt 6 ps 2.5 lc 1\n";
+
+
+void generateHitRateVsEnergyGraph5(const bf::path &outFilename, const map<string,ResultSet > &results, opstream &p, const bool isThumbnail)
+{
+	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
+		<< outFilename.native_directory_string() << "'" << endl;
+
+	vector<string> commandLine;
+	printTitle("Hit Rate vs. Energy Ratio", commandLine, p);
+	p << "set ylabel 'Energy Ratio (%)'" << endl;
+
+	double maxY = 0.0F;
+	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{		
+		maxY = max(maxY, i->second.getEnergyRatio());
+	}
+	p << "set yrange[0:" << 1.1 * maxY << "]" << endl;
+	p << hitRateVsEnergyGraph3;
+
+	for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();
+		i != end; i++)
+	{
+		p << i->second.readHitRate << " " << i->second.getEnergyRatio() << endl;
+	}
+	p << "e" << endl;
+
+	p << "unset output" << endl;
+}
+
 const string hitRateVsEnergyGraph2 = "set xrange [0 : 1] noreverse nowriteback\n\
 									set xlabel 'Hit Rate' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
 									set style line 1\n\
@@ -535,7 +525,7 @@ void generateHitRateVsEnergyGraph4(const bf::path &outFilename, const string bas
 		<< outFilename.native_directory_string() << "'" << endl;
 
 	vector<string> commandLine;
-	printTitle("Hit Rate vs. Energy", commandLine, p);
+	printTitle("Hit Rate vs. Theoretical/Actual Energy", commandLine, p);
 	p << "set ylabel 'Energy (mJ)'" << endl;
 
 	double maxY = 0.0F;
@@ -604,19 +594,18 @@ void generateHitRateVsLatencyGraph(const bf::path &outFilename, const map<string
 		<< outFilename.native_directory_string() << "'" << endl;
 
 	vector<string> commandLine;
-	printTitle("Hit Rate vs. Latency Reduction", commandLine, p);
-	p << "set ylabel 'Latency Reduction (%)'" << endl;
+	printTitle("Read Hit Rate vs. Latency Ratio", commandLine, p);
+	p << "set ylabel 'Latency Ratio (%)'" << endl;
 
 	double maxY = 0.0F;
 	for (map<string,ResultSet>::const_iterator i = results.begin(), end = results.end();
 		i != end; i++)
 	{		
-		maxY = max(maxY, i->second.getEnergyReduction());
+		maxY = max(maxY, i->second.getEnergyRatio());
 	}
 	p << "set yrange[0:" << 1.1 * maxY << "]" << endl;
 
 	p << hitRateVsEnergyGraph;
-
 
 	for (unsigned h = 8; h <=16; h+=8)
 	{
@@ -647,7 +636,8 @@ void generateOverallGraphs(const bf::path &outFilename, const map<string,ResultS
 	generateHitRateVsEnergyGraph(outFilename / "hitRateVsEnergy.png", results,p0,true);
 	generateHitRateVsEnergyGraph2(outFilename / "hitRateVsEnergy2.png", results,p0,true);
 	generateHitRateVsEnergyGraph3(outFilename / "hitRateVsEnergy3.png", results,p0,true);
-	generateHitRateVsLatencyGraph(outFilename / "hitRateVsLatency.png", results,p0,true);
+	generateHitRateVsEnergyGraph5(outFilename / "hitRateVsEnergy4.png", results, p0, true);
+	generateHitRateVsLatencyGraph(outFilename / "hitRateVsLatency5.png", results,p0,true);
 
 	map<string,unsigned> uniqueBenchmarks;
 	for (map<string,ResultSet >::const_iterator i = results.begin(), end = results.end();

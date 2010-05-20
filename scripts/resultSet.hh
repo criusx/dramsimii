@@ -5,6 +5,7 @@
 class ResultSet
 {
 	const static std::string urlString;
+	const static std::string csvHeader;
 public:
 	unsigned channels;
 	unsigned dimms;
@@ -87,11 +88,13 @@ public:
 
 	void setStats(const ResultSet &rs, const bool isStats);
 
-	double getEnergyReduction() const { return energyUsedTheoretical / energyUsed; } 
+	double getEnergyRatio() const { return energyUsedTheoretical / energyUsed; } 
 
 	double getEnergyDifference() const { return energyUsed - energyUsedTheoretical; }
 
 	double getLatencyReduction() const { return averageTheoreticalLatency / averageLatency; }
+
+	std::string getCsvHeader() const { return csvHeader; }
 	
 };
 #endif

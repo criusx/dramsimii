@@ -23,66 +23,7 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 
 		/// @TODO process both of these?
 		//toBeProcessed.push_back(filePair->first);
-#if 0
-		//string currentUrlString = ireplace_all_copy(urlString,"%1",basefilename);
-		string modUrlString = ssCache.getRawCommandLine().substr(ssCache.getRawCommandLine().find(':') + 2, ssCache.getRawCommandLine().length());
-		vector<string> splitLine;
-		erase_all(modUrlString, "_");
-		erase_all(modUrlString, "{");
-		erase_all(modUrlString, "}");
-		replace_first(modUrlString,"  ]","]");
-		split(splitLine, modUrlString, is_any_of(" "), token_compress_on);
 
-		for (vector<string>::const_iterator x = splitLine.begin(); x
-			!= splitLine.end(); ++x)
-		{
-			string::size_type start = x->find("[");
-			string::size_type end = x->find("]");
-			string benchmarkName;
-
-			if (start == string::npos || end == string::npos)
-				benchmarkName = *x;
-			else
-				benchmarkName = x->substr(start + 1, end - start - 1);
-
-			if (decoder.find(benchmarkName) != decoder.end())
-				benchmarkName = decoder[benchmarkName];
-
-			currentLine.push_back(benchmarkName);
-		}
-
-		stringstream current;
-
-		current << std::dec << std::fixed << std::setprecision(2) << ssNoCache.getRunTime();
-		currentLine.push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2) << ((double) ssNoCache.getReadHitsMisses().first
-			/ ((double) ssNoCache.getReadHitsMisses().first + ssNoCache.getReadHitsMisses().second));
-		currentLine.push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2)
-			<< ((float) ssNoCache.getHitsMisses().first / ((float) ssNoCache.getHitsMisses().first
-			+ ssNoCache.getHitsMisses().second));
-		currentLine.push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2)
-			<< ssNoCache.getAverageLatency();
-		currentLine.push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2)
-			<< ssCache.getAverageLatency();
-		currentLine.push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2)
-			<< ssNoCache.getAverageLatency() - ssCache.getAverageLatency();
-		currentLine.push_back(current.str());
-		current.str("");
-#endif
 		ResultSet rs;
 		rs.parseCommandLine(ssCache.getRawCommandLine().c_str(), filePair.first);
 		rs.runtime = ssCache.getRunTime();
@@ -98,17 +39,6 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 
 #pragma omp critical
 		results[basefilename].setStats(rs, true);
-
-
-#if 0
-		while (!currentLine.empty())
-		{
-			string element = currentLine.back();
-#pragma omp critical
-			results[basefilename].push_front(element);
-			currentLine.pop_back();
-		}
-#endif
 
 		if (!generateResultsOnly)
 		{
@@ -130,7 +60,6 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 
 void processPowerForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, list<pair<string, string> > &powerParams, path &outputDir, const bool generateResultsOnly)
 {
-
 	bool found0, found1;
 	PowerScripts psCache(powerParams), psNoCache(powerParams);
 	
@@ -147,37 +76,6 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, Resul
 		double energyCache = psCache.getTotalEnergy().first + psCache.getTotalEnergy().second;
 		double energyNormal = psNoCache.getTotalEnergy().second;
 
-#if 0
-		stringstream current;
-		current << std::dec << std::fixed << std::setprecision(2) << energyNormal;
-#pragma omp critical 
-		results[basefilename].push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2) << energyCache;
-#pragma omp critical
-		results[basefilename].push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2) << energyCache / energyNormal * 100.0;
-#pragma omp critical
-		results[basefilename].push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2) << psNoCache.getRunTime();
-#pragma omp critical
-		results[basefilename].push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2) << psCache.getRunTime();
-#pragma omp critical
-		results[basefilename].push_back(current.str());
-		current.str("");
-
-		current << std::dec << std::fixed << std::setprecision(2) << ((double) psCache.getAverageInUseTime() * 100);
-#pragma omp critical
-		results[basefilename].push_back(current.str());
-#endif
 		ResultSet rs;
 		rs.parseCommandLine(psNoCache.getRawCommandLine().c_str(), filePair.first);
 		rs.energyUsed = energyNormal;
