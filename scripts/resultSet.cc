@@ -5,6 +5,10 @@ using std::string;
 
 const string ResultSet::urlString = "<a href=\"%1/index.html\">%2</a>";
 
+
+const string ResultSet::csvHeader = "Benchmark,Channels,DIMMs,Ranks,Banks,Rows,Columns,DRAM Width,Posted CAS,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Replacement Policy,Runtime,Read Hit Rate,Hit Rate,Average Latency,Average Theoretical Latency,Average Latency Change,Energy Used,Theoretical Energy Used,Energy Used Ratio (%),No Cache Runtime,Cache Runtime,Cache In Use (%)\n";
+
+
 void ResultSet::parseCommandLine(const char *commandLine, const string &filename)
 {
 	channels = regexMatch<unsigned>(commandLine,"ch\\[([0-9]+)\\]");
@@ -43,40 +47,40 @@ std::pair<string,string> ResultSet::generateResultLine() const
 {
 	string csvOutput, fileList("<tr>");
 	
-	csvOutput += title + ",";
+	csvOutput += lexical_cast<string>(title) + ",";
 	fileList += generateTd(title);
 
-	csvOutput += channels + ",";
+	csvOutput += lexical_cast<string>(channels) + ",";
 	fileList += generateTd(channels);
 
-	csvOutput += dimms + ",";
+	csvOutput += lexical_cast<string>(dimms) + ",";
 	fileList += generateTd(dimms);
 
-	csvOutput += ranks + ",";
+	csvOutput += lexical_cast<string>(ranks) + ",";
 	fileList += generateTd(ranks);
 
-	csvOutput += banks + ",";
+	csvOutput += lexical_cast<string>(banks) + ",";
 	fileList += generateTd(banks);
 
-	csvOutput += rows + ",";
+	csvOutput += lexical_cast<string>(rows) + ",";
 	fileList += generateTd(rows);
 
-	csvOutput += columns + ",";
+	csvOutput += lexical_cast<string>(columns) + ",";
 	fileList += generateTd(columns);
 
 	csvOutput += "x" + lexical_cast<string>(width) + ",";
 	fileList += generateTd("x" + lexical_cast<string>(width));
 
-	csvOutput += tRas + ",";
+	csvOutput += lexical_cast<string>(tRas) + ",";
 	fileList += generateTd(tRas);
 
-	csvOutput += tCas + ",";
+	csvOutput += lexical_cast<string>(tCas) + ",";
 	fileList += generateTd(tCas);
 
-	csvOutput += tRcd + ",";
+	csvOutput += lexical_cast<string>(tRcd) + ",";
 	fileList += generateTd(tRcd);
 
-	csvOutput += tRc + ",";
+	csvOutput += lexical_cast<string>(tRc) + ",";
 	fileList += generateTd(tRc);
 
 	csvOutput += (postedCas ? string("true") : string("false")) + ",";
@@ -94,22 +98,22 @@ std::pair<string,string> ResultSet::generateResultLine() const
 	csvOutput += datarate + ",";
 	fileList += generateTd(datarate);
 	
-	csvOutput += perBankQueueDepth + ",";
+	csvOutput += lexical_cast<string>(perBankQueueDepth) + ",";
 	fileList += generateTd(perBankQueueDepth);
 
-	csvOutput += tFaw + ",";
+	csvOutput += lexical_cast<string>(tFaw) + ",";
 	fileList += generateTd(tFaw);
 
-	csvOutput += cacheSize + ",";
+	csvOutput += lexical_cast<string>(cacheSize) + ",";
 	fileList += generateTd(cacheSize);
 
-	csvOutput += blockSize + ",";
+	csvOutput += lexical_cast<string>(blockSize) + ",";
 	fileList += generateTd(blockSize);
 
-	csvOutput += associativity + ",";
+	csvOutput += lexical_cast<string>(associativity) + ",";
 	fileList += generateTd(associativity);
 
-	csvOutput += numberOfSets + ",";
+	csvOutput += lexical_cast<string>(numberOfSets) + ",";
 	fileList += generateTd(numberOfSets);
 
 	csvOutput += replacementPolicy + ",";
@@ -148,7 +152,7 @@ std::pair<string,string> ResultSet::generateResultLine() const
 	csvOutput += lexical_cast<string>(cacheRuntime) + ",";
 	fileList += generateTd(cacheRuntime);
 
-	csvOutput += lexical_cast<string>(percentCacheTimeInUse * 100) + ",";
+	csvOutput += lexical_cast<string>(percentCacheTimeInUse) + ",";
 	fileList += generateTd(percentCacheTimeInUse);
 
 	///////////////////////////////////////////////////////////////////////
