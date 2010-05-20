@@ -47,7 +47,7 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings& _settings, const SystemConfiguration& _systemConfig, Statistics& _stats):
 time(0ll),
-lastCommandIssueTime(-100ll),
+lastCommandIssueTime(-1ll * _settings.tCMD),
 lastCommand(NULL),
 timingSpecification(_settings),
 transactionQueue(_settings.transactionQueueDepth),
@@ -148,7 +148,7 @@ lastCprhLocation(rhs.lastCprhLocation)
 //////////////////////////////////////////////////////////////////////////
 Channel::Channel(const Settings& settings, const SystemConfiguration& sysConf, Statistics &stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
 time(0),
-lastCommandIssueTime(0),
+lastCommandIssueTime(-1ll * settings.tCMD),
 lastCommand(NULL),
 timingSpecification(timing),
 transactionQueue(0),
