@@ -54,7 +54,7 @@ def submitCommand(commandLine, name):
         scriptName = nextId + suffixes[i] + ".sh"
         i = (i + 1) % 2
         scriptToRun = os.path.join(outputDir, scriptName)
-        
+
         count += 1
 
         if not testing:
@@ -232,7 +232,7 @@ def main():
                 sys.exit(-3)
 
     counting = False
-    
+
 
 
     for opt, arg in opts:

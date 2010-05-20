@@ -38,13 +38,13 @@ try:
 	if 'fast' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(CCFLAGS = ['-I/usr/include/libxml2', '-fprefetch-loop-arrays','-ffast-math', '-funroll-all-loops', '-fomit-frame-pointer', '-Wuninitialized', '-Wno-conversion',
 			 '-finline-functions', '-msse2', '-Wno-unused-variable'],CPPDEFINES = ['M5', '__STDC_LIMIT_MACROS'])
-			 
+
 		#env.Append(CCFLAGS = ['-march=native', '-mtune=native'])
 		env.Append(CCFLAGS = ['-march=amdfam10', '-mtune=amdfam10'])
-			
+
 		#env.Append(CPPDEFINES = ['TRACE_GENERATE']
 		#env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['-fprofile-generate'])
-		env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
+		#env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
 		CCFLAGS = ['-I/usr/include/libxml2', '-march=native', '-mtune=native'],
