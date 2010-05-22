@@ -99,7 +99,8 @@ nextStats(settings.epoch)
 		"cache[" << cacheSize << "] " <<
 		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" <<
 		settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]" << " policy[" <<
-		settings.replacementPolicy << ((settings.replacementPolicy == Cache::NMRU) ? lexical_cast<string>(settings.nmruTrackingCount) : string("")) << "]";
+		settings.replacementPolicy << ((settings.replacementPolicy == Cache::NMRU) ? lexical_cast<string>(settings.nmruTrackingCount) : string("")) << "] " << 
+		"usingCache[" << (settings.usingCache ? "T" : "F") << "]";
 
 	systemConfig.statsOutStream << printCommandLine.str() << endl;
 
@@ -440,7 +441,7 @@ void System::runSimulations(const unsigned requestCount)
 					outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(duplicateTrans, inputTransaction);
 
 					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
-
+#ifndef NDEBUG
 					bool foundOne = false;
 
 					if (outstandingTransacitonCounter % 5000 == 0)
@@ -459,7 +460,7 @@ void System::runSimulations(const unsigned requestCount)
 
 					if (foundOne)
 						cerr << "-----------------------------" << endl;
-
+#endif
 					if (!inputTransaction)
 						running = false;
 

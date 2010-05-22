@@ -144,6 +144,7 @@ namespace DRAMsimII
 		const unsigned ranks;
 		const unsigned banks;
 		const unsigned cacheHitLatency;								///< the latency caused when a transaction hits in the cache
+		const bool usingDimmCache;
 		unsigned validTransactionCount;
 		unsigned startNumber;
 		unsigned endNumber;
@@ -265,7 +266,7 @@ namespace DRAMsimII
 			{
 				ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
 					writeCount & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) & const_cast<unsigned&>(cacheHitLatency) &
-					const_cast<unsigned&>(banks) & timePerEpoch & aggregateBankUtilization & workingSet & cacheLatency &
+					const_cast<unsigned&>(banks) & const_cast<bool&>(usingDimmCache) & timePerEpoch & aggregateBankUtilization & workingSet & cacheLatency &
 					bankLatencyUtilization & pcOccurrence & issuedAtTFAW & rowBufferAccesses & dimmCacheBandwidthData;
 			}
 

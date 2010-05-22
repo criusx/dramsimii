@@ -100,7 +100,7 @@ debugDefines = baseDefines + ['DEBUG']
 optDefines = baseDefines + ['NDEBUG']
 baseFlags = [ '-Wconversion', '-Wuninitialized', '-std=c++0x', '-Wall', '-Wextra', '-Wunused', '-pedantic', '-Weffc++','-Wswitch-default', '-Wfloat-equal']
 simpleFlags = [ '-Wuninitialized', '-std=c++0x', '-Wall', '-Wswitch-default', '-Wfloat-equal']
-optFlags = baseFlags + ['-O3', '-funroll-all-loops', '-ffast-math', '-fprefetch-loop-arrays',  '-mtune=native', '-march=native','-fomit-frame-pointer', '-finline-functions']
+optFlags = baseFlags + ['-O3', '-funroll-all-loops', '-ffast-math', '-fprefetch-loop-arrays',  '-march=k8-sse3','-fomit-frame-pointer', '-finline-functions']
 debugFlags = baseFlags + ['-g', '-ggdb3', '-O0']
 
 
@@ -132,6 +132,11 @@ elif platform == 'debugOpt':
 	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogO')
 	envDebug.Append(CCFLAGS = '-g -O3 -Weffc++ -Wall -Wextra -Wswitch-default -mtune=native -march=native -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
 	debug = envDebug.Program('dramSimII.debugOpt',sourceFile)
+	envDebug.Install(os.path.abspath('..') + "/bin", debug)
+elif platform == 'debugOpt2':
+	envDebug = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogO2')
+	envDebug.Append(CCFLAGS = '-g -O3 -DNDEBUG -Weffc++ -Wall -Wextra -Wswitch-default -mtune=athlon64 -march=athlon64 -Wfloat-equal -DDEBUG -Wconversion -Wuninitialized -D__STDC_LIMIT_MACROS')
+	debug = envDebug.Program('dramSimII.debugOpt2',sourceFile)
 	envDebug.Install(os.path.abspath('..') + "/bin", debug)
 elif platform == 'debugsimple':
 	envDebugSimple = env.Clone(CPPPATH = '/usr/include/libxml2', OBJSUFFIX='.ogs')

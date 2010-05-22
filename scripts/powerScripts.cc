@@ -374,6 +374,7 @@ void PowerScripts::generateGraphs(const bf::path &outputDir)
 	prepareOutputDir(outputDir, givenfilename.leaf(), commandLine, graphs);
 }
 
+#if 0
 void PowerScripts::evenRunTime(const double newRunTime)
 {
 	int numberOfEpochs = (newRunTime - getRunTime()) / epochTime;
@@ -409,6 +410,7 @@ void PowerScripts::evenRunTime(const double newRunTime)
 		}
 	}
 }
+#endif
 
 void PowerScripts::generateJointGraphs(const bf::path &outputDir, PowerScripts &alternatePower) 
 {
@@ -868,8 +870,8 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 
 	p << cumulPowerScript;
 
-	float time = 0.0F;
-	float totalPower = 0.0F;
+	double time = 0.0;
+	double totalPower = 0.0;
 	
 	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(), end = energyValues.end();
 		i < end; ++i)
@@ -880,12 +882,14 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 
 		time += epochTime;
 	}
-	
+
+	cerr << "normal " << totalPower << endl;	
 
 	p << "e" << endl;
 
-	time = 0.0F;
-	totalPower = 0.0F;
+	time = 0.0;
+	totalPower = 0.0;
+
 	for (vector<pair<float, float> >::const_iterator i = alternateValues.begin(), end = alternateValues.end();
 		i < end; ++i)
 	{
@@ -895,6 +899,8 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 
 		time += epochTime;
 	}
+
+	cerr << "alt " << totalPower << endl;
 
 	p << "e" << endl << "unset output" << endl;
 }

@@ -482,6 +482,10 @@ void Channel::retireCommand(Command *newestCommand, const bool isHit)
 
 		lastCommand = newestCommand;
 	}
+	else
+	{
+		delete newestCommand;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2539,7 +2543,10 @@ void Channel::executeCommand(Command *thisCommand)
 		{
 			bool satisfied = 
 				cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
+			
 			currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
+
+			thisCommand->getHost()->setHit(satisfied);
 #ifndef NDEBUG
 			std::cout << (satisfied ? "|" : ".");
 #endif

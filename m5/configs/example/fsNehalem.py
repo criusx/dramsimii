@@ -87,10 +87,10 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     self.membus = MemBus(bus_id=1, clock='2600MHz')
     self.bridge = Bridge(delay='5ns', nack_delay='1ns')
     # use the memory size established by the benchmark definition in Benchmarks.py
-    if 'PBS_JOBID' in os.environ:
-        jobnumber = os.environ['PBS_JOBID'].split('.')[0]
-    else:
-        jobnumber = ''
+    #if 'PBS_JOBID' in os.environ:
+    #    jobnumber = os.environ['PBS_JOBID'].split('.')[0]
+    #else:
+    jobnumber = ''
 
     outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0] + jobnumber
 

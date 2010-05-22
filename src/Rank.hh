@@ -76,8 +76,6 @@ namespace DRAMsimII
 
 		std::pair<unsigned,unsigned> hits;		///< the number of read and write hits to this rank
 
-		//Cache tags;							///< the tagstore of the emulated cache
-
 	public:
 
 		boost::circular_buffer<tick> lastActivateTimes; ///< RAS activation history to ensure tFAW is met

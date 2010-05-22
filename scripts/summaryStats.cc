@@ -74,8 +74,10 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, Resul
 	if (found0 && found1)
 	{		
 		double energyCache = psCache.getTotalEnergy().first + psCache.getTotalEnergy().second;
-		double energyNormal = psNoCache.getTotalEnergy().second;
+		double energyNormal = psNoCache.getTotalEnergy().first + psNoCache.getTotalEnergy().second;
+		//cerr << "??? " << psNoCache.getTotalEnergy().first << endl;
 
+		//cerr << "normalA " << psNoCache.getTotalEnergy().first + psNoCache.getTotalEnergy().second << endl << "altA " << psCache.getTotalEnergy().first + psCache.getTotalEnergy().second << endl;
 		ResultSet rs;
 		rs.parseCommandLine(psNoCache.getRawCommandLine().c_str(), filePair.first);
 		rs.energyUsed = energyNormal;

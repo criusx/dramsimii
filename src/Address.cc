@@ -48,6 +48,7 @@ Address::Address():
 virtualAddress(UINT_MAX),
 physicalAddress(PHYSICAL_ADDRESS_MAX),
 channel(UINT_MAX),
+dimm(UINT_MAX),
 rank(UINT_MAX),
 bank(UINT_MAX),
 row(UINT_MAX),
@@ -58,6 +59,7 @@ Address::Address(PhysicalAddress pA):
 virtualAddress(0),
 physicalAddress(pA),
 channel(0),
+dimm(0),
 rank(0),
 bank(0),
 row(0),
@@ -66,9 +68,9 @@ column(0)
 	bool result = addressTranslation();
 
 #ifdef DEBUG
-	unsigned oldCh = channel, oldRk = rank, oldBk = bank, oldRow = row, oldCol = column;
+	unsigned oldCh = channel, oldDimm = dimm, oldRk = rank, oldBk = bank, oldRow = row, oldCol = column;
 	reverseAddressTranslation();
-	assert(oldCh == channel && oldRk == rank && oldBk == bank && oldRow == row && oldCol == column);
+	assert(oldCh == channel && oldDimm == dimm && oldRk == rank && oldBk == bank && oldRow == row && oldCol == column);
 	if (result)
 	{
 		assert((physicalAddress >> columnSizeDepth) == (pA >> columnSizeDepth));
@@ -80,6 +82,7 @@ Address::Address(const unsigned channel, const unsigned rank, const unsigned ban
 virtualAddress(0),
 physicalAddress(0x00),
 channel(channel),
+dimm(rank / rankCount),
 rank(rank),
 bank(bank),
 row(row),

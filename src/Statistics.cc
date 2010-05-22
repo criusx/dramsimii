@@ -50,6 +50,7 @@ channels(settings.channelCount),
 ranks(settings.rankCount * settings.dimmCount),
 banks(settings.bankCount),
 cacheHitLatency(settings.hitLatency + settings.tCMD + settings.tBurst),
+usingDimmCache(settings.usingCache),
 validTransactionCount(0),
 startNumber(0),
 endNumber(0),
@@ -91,6 +92,7 @@ channels(0),
 ranks(0),
 banks(0),
 cacheHitLatency(0),
+usingDimmCache(false),
 validTransactionCount(UINT_MAX),
 startNumber(UINT_MAX),
 endNumber(UINT_MAX),
@@ -143,23 +145,26 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 
 			if (currentTransaction->isRead())
 			{
-				// read hit
-				if (currentTransaction->isHit())
+				if (usingDimmCache)
 				{
-					//cumulativeAdjustedTransactionExecution[cacheHitLatency]++;
-					//adjustedTransactionExecution[cacheHitLatency]++;
-					cacheLatency += cacheHitLatency;
+					// read hit
+					if (currentTransaction->isHit())
+					{
+						//cumulativeAdjustedTransactionExecution[cacheHitLatency]++;
+						//adjustedTransactionExecution[cacheHitLatency]++;
+						cacheLatency += cacheHitLatency;
 
-					dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
-				}
-				// read miss
-				else
-				{
-					//cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
-					//adjustedTransactionExecution[currentTransaction->getLatency()]++;	
+						dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
+					}
+					// read miss
+					else
+					{
+						//cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
+						//adjustedTransactionExecution[currentTransaction->getLatency()]++;	
 
-					bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
-				}
+						bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
+					}
+				}				
 
 				assert(currentTransaction->getLatency() > 4);
 				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) +
@@ -173,17 +178,21 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 			}			
 			else if (currentTransaction->isWrite())
 			{
-				// write hit
-				if (currentTransaction->isHit())
+				if (usingDimmCache)
 				{
-					//dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
-					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
+					// write hit
+					if (currentTransaction->isHit())
+					{
+						//dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
+						bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
+					}
+					// write miss
+					else
+					{
+						bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
+					}
 				}
-				// write miss
-				else
-				{
-					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
-				}
+				
 				//cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
 				//adjustedTransactionExecution[currentTransaction->getLatency()]++;
 

@@ -126,12 +126,12 @@ private:
 	unsigned bankCount;
 	unsigned epochCounter;
 	vector<string> commandLine;
-string rawCommandLine;
+	string rawCommandLine;
 
 	bf::path givenfilename;
 
 public:
-	
+
 
 	pair<unsigned, unsigned> getReadHitsMisses() const { return readHitsMisses; }
 	pair<unsigned, unsigned> getHitsMisses() const { return hitsMisses; }
@@ -144,7 +144,7 @@ public:
 public:
 	StatsScripts():
 	  foundEpoch(false),
-	  scaleIndex(0),
+		  scaleIndex(0),
 		  scaleFactor(1),
 		  throughOnce(false),
 		  transactionCountBuffer(0ULL),
@@ -201,7 +201,7 @@ public:
 	  void generateGraphs(const bf::path &outputDir);
 
 	  void generateJointGraphs(const bf::path &outputDir, const StatsScripts &alternateStats);
-	  
+
 	  bool working()
 	  {
 		  return foundCommandline && foundEpoch;
@@ -215,39 +215,39 @@ protected:
 
 	void processLine(char *newLine);
 
-	  void pushStats();
+	void pushStats();
 
-	  void compressStats();
+	void compressStats();
 
-	  void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, unsigned channelID, bool isThumbnail);
+	void addressLatencyDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, unsigned channelID, bool isThumbnail);
 
-	  void addressDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, unsigned channelID, bool isThumbnail);
+	void addressDistributionPerChannelGraph(const bf::path &outFilename, opstream &p, unsigned channelID, bool isThumbnail);
 
-	  void overallAddressDistributionGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void overallAddressDistributionGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void pcVsLatencyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void pcVsLatencyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void pcVsAverageLatencyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void bandwidthGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void bandwidthGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void cacheGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void cacheGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void averageIpcAndLatencyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void averageIpcAndLatencyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void hitMissGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void hitMissGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void workingSetGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void workingSetGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void bigIpcGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void bigIpcGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	  void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const vector<pair<unsigned,unsigned> > &alternateCacheHitMiss, bool isThumbnail);
+	void cacheHitMissGraph(const bf::path &outFilename, opstream &p, const vector<pair<unsigned,unsigned> > &alternateCacheHitMiss, bool isThumbnail);
 
-	  void transactionLatencyCumulativeDistributionGraph(const bf::path &outFilename, opstream &p, const char* title,bool isThumbnail);
+	void transactionLatencyCumulativeDistributionGraph(const bf::path &outFilename, opstream &p, const char* title,bool isThumbnail);
 };
 
 #endif

@@ -252,7 +252,7 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	if (currentCommand->getAddress().getRank() == rankID)
 	{
-		if (currentCommand->getHost()->isHit())
+		if (systemConfig.isUsingDimmCache() && currentCommand->getHost()->isHit())
 			hits.first++;
 
 #if 0
@@ -300,9 +300,9 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
-	if (currentCommand->getAddress().getRank() == rankID)
+	if (systemConfig.isUsingDimmCache() && currentCommand->getAddress().getRank() == rankID)
 	{
-		if (currentCommand->getHost()->isHit())
+		if (systemConfig.isUsingDimmCache() && currentCommand->getHost()->isHit())
 			hits.second++;
 
 #if 0

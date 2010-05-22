@@ -534,6 +534,7 @@ public:
 	// system information
 	unsigned ranksPerDimm;
 	unsigned dimms;
+	bool usingCache;
 
 	PowerParameters():
 	CKE_LO_ACT(0.01),
@@ -572,6 +573,10 @@ public:
 		T idd4w = regexMatch<T>(commandLine,"IDD4W\\[([0-9]+)\\]");
 
 		T specFreq = regexMatch<T>(commandLine,"spedFreq\\[([0-9]+)\\]");
+
+		std::string cache = regexMatch<std::string>(commandLine,"usingCache\\[([TF]+)\\]");
+
+		usingCache = (cache == "T");
 
 		freq = regexMatch<T>(commandLine,"DR\\[([0-9]+)M\\]") * 1E6;
 
@@ -816,43 +821,50 @@ public:
 
 		double sramPower = 0.0;
 
-		for (;currentDimm != dimmEnd; ++currentDimm)
+		if (usingCache)
 		{
-			unsigned accesses;
-
-			try
+			for (;currentDimm != dimmEnd; ++currentDimm)
 			{
-				unsigned readHits = regexMatch<unsigned>(currentDimm->c_str(),"dimmReadHits\\{([0-9]+)\\}");
-				unsigned readMisses = regexMatch<unsigned>(currentDimm->c_str(),"dimmReadMisses\\{([0-9]+)\\}");
-				unsigned writeHits = regexMatch<unsigned>(currentDimm->c_str(),"dimmWriteHits\\{([0-9]+)\\}");
-				unsigned writeMisses = regexMatch<unsigned>(currentDimm->c_str(),"dimmWriteMisses\\{([0-9]+)\\}");
+				unsigned accesses;
 
-				// number of accesses * duration of access gives the time that this DIMM cache spent in Idd
-				accesses = readHits + readMisses + writeHits + writeMisses;
+				try
+				{
+					unsigned readHits = regexMatch<unsigned>(currentDimm->c_str(),"dimmReadHits\\{([0-9]+)\\}");
+					unsigned readMisses = regexMatch<unsigned>(currentDimm->c_str(),"dimmReadMisses\\{([0-9]+)\\}");
+					unsigned writeHits = regexMatch<unsigned>(currentDimm->c_str(),"dimmWriteHits\\{([0-9]+)\\}");
+					unsigned writeMisses = regexMatch<unsigned>(currentDimm->c_str(),"dimmWriteMisses\\{([0-9]+)\\}");
+
+					// number of accesses * duration of access gives the time that this DIMM cache spent in Idd
+					accesses = readHits + readMisses + writeHits + writeMisses;
+				}
+				catch (std::exception& e)
+				{
+					unsigned reads = regexMatch<unsigned>(currentDimm->c_str(),"read\\{([0-9]+)\\}") / 8;
+					unsigned writes = regexMatch<unsigned>(currentDimm->c_str(),"write\\{([0-9]+)\\}") / 8;
+
+					accesses = reads + writes;
+				}
+
+				unsigned inUseTime = accesses * hitLatency;
+
+				pc.inUseTime = inUseTime / duration;
+
+				assert(inUseTime >= 0);
+
+				// the remaining time was spent in idle mode
+				double idleTime = duration - (double)inUseTime;
+				assert(idleTime >= 0);
+
+				pc.sramActivePower += (double)inUseTime / duration * idd * vdd;
+				pc.sramIdlePower += (double)idleTime / duration * isb1 * vdd;
+				sramPower += (inUseTime / duration * idd + idleTime / duration * isb1) * 1.8;
 			}
-			catch (std::exception& e)
-			{
-				unsigned reads = regexMatch<unsigned>(currentDimm->c_str(),"read\\{([0-9]+)\\}") / 8;
-				unsigned writes = regexMatch<unsigned>(currentDimm->c_str(),"write\\{([0-9]+)\\}") / 8;
-
-				accesses = reads + writes;
-			}
-
-			unsigned inUseTime = accesses * hitLatency;
-
-			pc.inUseTime = inUseTime / duration;
-
-			assert(inUseTime >= 0);
-
-			// the remaining time was spent in idle mode
-			double idleTime = duration - (double)inUseTime;
-			assert(idleTime >= 0);
-
-			pc.sramActivePower += (double)inUseTime / duration * idd * vdd;
-			pc.sramIdlePower += (double)idleTime / duration * isb1 * vdd;
-			sramPower += (inUseTime / duration * idd + idleTime / duration * isb1) * 1.8;
 		}
-
+		else
+		{
+			pc.sramActivePower = pc.sramIdlePower = 0.0;
+		}
+	
 		pc.dimmEnergy = sramPower * epochTime;
 
 		for (;currentRank != end; ++currentRank)

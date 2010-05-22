@@ -19,7 +19,6 @@
 #include <sstream>
 #include "SystemConfiguration.hh"
 
-
 #ifndef WIN32
 #include <boost/iostreams/filter/bzip2.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
@@ -455,7 +454,7 @@ bool SystemConfiguration::setupStreams() const
 			exit(-12);
 		}
 
-		
+
 	}
 
 	if (!powerOutStream.is_complete())
