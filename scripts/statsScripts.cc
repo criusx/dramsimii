@@ -1002,6 +1002,10 @@ void StatsScripts::processLine(char *newLine)
 			double freq = regexMatch<double>(newLine,"DR\\[([0-9]+)M\\]") * 1.0E6;
 			periodInNs = 1 / freq / 1.0E-9;
 
+			std::string cache = regexMatch<std::string>(newLine,"usingCache\\[([TF]+)\\]");
+
+			usingCache = (cache == "T");
+
 			channelLatencyDistribution.reserve(channelCount);
 
 			for (unsigned i = channelCount; i > 0; --i)

@@ -73,6 +73,15 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, Resul
 
 	if (found0 && found1)
 	{		
+		bool problem, problem2 = false;
+		if (problem = !psCache.isUsingCache())
+			cerr << "no cache where there should be " << filePair.first << endl;
+		if (problem2 = psNoCache.isUsingCache())
+			cerr << "cache where there should not be " << filePair.second << endl;
+
+		if (problem2 || problem)
+			exit(-4);
+
 		double energyCache = psCache.getTotalEnergy().first + psCache.getTotalEnergy().second;
 		double energyNormal = psNoCache.getTotalEnergy().first + psNoCache.getTotalEnergy().second;
 		//cerr << "??? " << psNoCache.getTotalEnergy().first << endl;

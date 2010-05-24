@@ -4,7 +4,7 @@
 
 #include <boost/algorithm/string/regex.hpp>
 
-#define POWER_VALUES_PER_CHANNEL 8
+#define POWER_VALUES_PER_CHANNEL 10
 
 const string PowerScripts::energyScript = "unset border\n\
 										  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
@@ -133,6 +133,10 @@ void PowerScripts::processLine(char *newLine)
 
 				channelCount = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
 
+				std::string cache = regexMatch<std::string>(newLine,"usingCache\\[([TF]+)\\]");
+
+				usingCache = (cache == "T");
+
 				values.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
 
 				energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
@@ -167,44 +171,54 @@ void PowerScripts::processLine(char *newLine)
 	if (newLine[0] == '+')
 	{
 		// per channel power numbers
-
-		PowerCalculations pc = powerParameters.calculateSystemPower(newLine, (double)epochTime);
-
-		//cerr << PsysACT_STBY <<endl;
-		//cerr << PsysACT <<endl;
-		//cerr << PsysPRE_STBY <<endl;
-		//cerr << PsysRD <<endl;
-		//cerr << PsysWR <<endl;
-
-		//cerr << PsysRdAdjusted <<endl;
-		//cerr << PsysPRE_PDN <<endl;
-		//cerr << PsysACT_PDN <<endl;
-		//cerr << PsysACTAdjusted <<endl;
-		unsigned currentChannel = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
-
-		valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBY;
-		valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += pc.PsysACT;
-		valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += pc.PsysPRE_STBY;
-		valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRD;
-		valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
-		valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
-		valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
-		valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
-
-		averageInUseTime.add(pc.inUseTime, 1);
-		//cerr << pc.inUseTime << endl;
-
-		/// @TODO fix this too
-		energyValueBuffer.first += pc.energy;
-		energyValueBuffer.second += pc.dimmEnergy;
-
-		totalEnergy.first += pc.dimmEnergy;
-		totalEnergy.second += pc.energy;
-
-		if (currentChannel + 1 == channelCount)
+		try
 		{
-			pushStats();
+			PowerCalculations pc = powerParameters.calculateSystemPower(newLine, (double)epochTime);
+
+			//cerr << PsysACT_STBY <<endl;
+			//cerr << PsysACT <<endl;
+			//cerr << PsysPRE_STBY <<endl;
+			//cerr << PsysRD <<endl;
+			//cerr << PsysWR <<endl;
+
+			//cerr << PsysRdAdjusted <<endl;
+			//cerr << PsysPRE_PDN <<endl;
+			//cerr << PsysACT_PDN <<endl;
+			//cerr << PsysACTAdjusted <<endl;
+			unsigned currentChannel = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
+
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBY;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 1] += pc.PsysACT;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 2] += pc.PsysPRE_STBY;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 3] += pc.PsysRD;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.PsysDQ;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 8] += pc.PsysTermRoth + pc.PsysTermW + pc.PsysTermWoth;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 9] += pc.sramActivePower + pc.sramIdlePower;
+
+			averageInUseTime.add(pc.inUseTime, 1);
+			//cerr << pc.inUseTime << endl;
+
+			/// @TODO fix this too
+			energyValueBuffer.first += pc.energy;
+			energyValueBuffer.second += pc.dimmEnergy;
+
+			totalEnergy.first += pc.dimmEnergy;
+			totalEnergy.second += pc.energy;
+
+			if (currentChannel + 1 == channelCount)
+			{
+				pushStats();
+			}
 		}
+		catch (std::exception &ex)
+		{
+
+		}
+
+
 	}
 }
 
@@ -395,7 +409,9 @@ void PowerScripts::evenRunTime(const double newRunTime)
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 9] += pc.sramActivePower + pc.sramIdlePower;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 8] += pc.PsysTermRoth + pc.PsysTermW + pc.PsysTermWoth;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.PsysDQ;
 
 			energyValueBuffer.first += pc.energy;
 			energyValueBuffer.second += pc.dimmEnergy;
@@ -817,7 +833,7 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 	double time = 0.0;
 
 	vector<vector<float> >::size_type columns = values.size();
-	
+
 	for (vector<float>::size_type i = 0; i < values.front().size(); ++i)
 	{
 		if (i < values.front().size())
@@ -872,7 +888,7 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 
 	double time = 0.0;
 	double totalPower = 0.0;
-	
+
 	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(), end = energyValues.end();
 		i < end; ++i)
 	{

@@ -41,6 +41,8 @@ protected:
 
 	WeightedAverage<double> averageInUseTime;
 
+	bool usingCache;
+
 
 public:
 	PowerScripts(list<pair<string, string> > &_powerParams):
@@ -51,7 +53,8 @@ public:
 		  epochCount(0),
 		  foundEpoch(false),
 		  foundCommandLine(false),
-		  epochTime(0.0)
+		  epochTime(0.0),
+		usingCache(false)
 	  {  powerParams = _powerParams; }
 
 	  void generateGraphs(const bf::path &outputDir);
@@ -78,6 +81,8 @@ public:
 	  double getRunTime() const { return epochTime * (double)epochCount; }
 
 	  void evenRunTime(const double);
+
+	  bool isUsingCache() const { return usingCache; }
 
 protected:
 	void processLine(char *newLine);

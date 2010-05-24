@@ -130,6 +130,8 @@ private:
 
 	bf::path givenfilename;
 
+	bool usingCache;
+
 public:
 
 
@@ -140,6 +142,7 @@ public:
 	double getAverageLatency() const { return averageTransactionLatency.getStdDev().get<1>(); }
 	string getRawCommandLine() const { return rawCommandLine; }
 	double getRunTime() const { return (double)epochCounter * epochTime; }
+	bool isUsingCache() const { return usingCache; }
 
 public:
 	StatsScripts():
@@ -174,7 +177,8 @@ public:
 		  channelCount(0),
 		  rankCount(0),
 		  bankCount(0),
-		  epochCounter(0)
+		  epochCounter(0),
+		  usingCache(false)
 	  {
 		  transactionCount.reserve(MAXIMUM_VECTOR_SIZE);
 		  hitMissValues.reserve(MAXIMUM_VECTOR_SIZE);
