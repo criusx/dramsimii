@@ -425,7 +425,7 @@ PowerCalculations PowerParameters::calculateSystemPower(const char* newLine, con
 	return pc;
 }
 
-PowerCalculations PowerParameters::calculateSystemPowerIdle(const T epochTime)
+PowerCalculations PowerParameters::calculateSystemPowerIdle(const double epochTime)
 {
 	PowerCalculations pc;
 	pc.sramActivePower = 0.0;
