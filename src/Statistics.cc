@@ -141,30 +141,21 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 			}
 
 			transactionExecution[currentTransaction->getLatency()]++;
-			//cumulativeTransactionExecution[currentTransaction->getLatency()]++;
 
 			if (currentTransaction->isRead())
 			{
-				if (usingDimmCache)
+				// read hit
+				if (usingDimmCache &&currentTransaction->isHit())
 				{
-					// read hit
-					if (currentTransaction->isHit())
-					{
-						//cumulativeAdjustedTransactionExecution[cacheHitLatency]++;
-						//adjustedTransactionExecution[cacheHitLatency]++;
-						cacheLatency += cacheHitLatency;
+					cacheLatency += cacheHitLatency;
 
-						dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
-					}
-					// read miss
-					else
-					{
-						//cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
-						//adjustedTransactionExecution[currentTransaction->getLatency()]++;	
-
-						bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
-					}
-				}				
+					dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
+				}
+				// read miss
+				else
+				{
+					bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
+				}
 
 				assert(currentTransaction->getLatency() > 4);
 				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) +
@@ -173,33 +164,22 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 				bankLatencyUtilization[index] += currentTransaction->getLatency();
 				aggregateBankUtilization[index]++;
 				readCount++;
-				//readBytesTransferred += currentTransaction->getLength() * 8;
-				//bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
 			}			
 			else if (currentTransaction->isWrite())
 			{
-				if (usingDimmCache)
+				// write hit
+				if (usingDimmCache && currentTransaction->isHit())
 				{
-					// write hit
-					if (currentTransaction->isHit())
-					{
-						//dimmCacheBandwidthData[currentCommand->getAddress().getChannel()].second += currentCommand->getLength() * 8;
-						bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
-					}
-					// write miss
-					else
-					{
-						bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
-					}
+					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
 				}
-				
-				//cumulativeAdjustedTransactionExecution[currentTransaction->getLatency()]++;
-				//adjustedTransactionExecution[currentTransaction->getLatency()]++;
+				// write miss
+				else
+				{
+					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
+				}
 
 				// 64bit bus for most DDRx architectures
 				/// @todo use #DQ * length to calculate bytes Tx, Rx
-				//writeBytesTransferred += currentTransaction->getLength() * 8;
-				//bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
 				writeCount++;
 			}
 
@@ -304,15 +284,15 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
 	os << endl;
-	
+
 	os << "----Average Cumulative Transaction Latency {" << averageLatency.average() << "}" << endl;
 #endif
 	averageLatency.clear();
 	//os << "----Cumulative Adjusted Transaction Latency";
 	//for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeAdjustedTransactionExecution.begin(); currentValue != statsLog.cumulativeAdjustedTransactionExecution.end(); ++currentValue)
 	{
-	//	averageLatency.add(currentValue->first,currentValue->second);
-	//	os << " {" << currentValue->first << "," << currentValue->second << "}";
+		//	averageLatency.add(currentValue->first,currentValue->second);
+		//	os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
 	//os << endl;
 
@@ -349,7 +329,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	os << endl;
 #endif
-	
+
 	os << "----DIMM Cache Latency {" << statsLog.cacheLatency << "}" << endl;
 
 	os << "----Working Set {" << statsLog.workingSet.size() << "}" << endl;

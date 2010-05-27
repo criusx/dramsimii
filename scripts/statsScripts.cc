@@ -342,9 +342,17 @@ void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0
-	p << "set multiplot title \"" << commandLine << "\"" << endl;
-#endif
+
+	bool allZeros = true;
+	for (vector<pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(), end = bandwidthValues.end();
+		i != end; ++i)
+	{
+		if (i->first > 0 || i->second > 0)
+			allZeros = false;
+	}
+	if (allZeros)
+		p << "set yrange [0:1]" << endl;
+
 	printTitle("", commandLine, p, 2);
 	p << bandwidthGraphScript << endl;
 
@@ -420,10 +428,7 @@ void StatsScripts::cacheGraph(const bf::path &outFilename, opstream &p, bool isT
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0
-	p << "set multiplot layout 3, 1 title \"" << commandLine << "\""
-		<< endl;
-#endif
+
 	printTitle("", commandLine, p, 3);
 
 	p << cacheGraph1 << endl;
@@ -1136,32 +1141,32 @@ void StatsScripts::processLine(char *newLine)
 			}
 
 			// aggregate all the transaction latencies
-			averageTransactionLatency.clear();
 			char *position = newLine;
+			
 			while (position != NULL)
 			{
 				char *firstBracket = strchr(position, '{');
-				if (firstBracket == NULL)
-					break;
+				if (firstBracket == NULL) break;
 
-				char *secondBracket = strchr(position, '}');
-				if (secondBracket == NULL)
-					break;
+				char *comma = strchr(firstBracket + 1, ',');
+				if (comma == NULL) break;
 
-				char *comma = strchr(position, ',');
-				if (comma == NULL)
-					break;
+				char *secondBracket = strchr(comma + 1, '}');
+				if (secondBracket == NULL) break;			
 
 				*comma = *secondBracket = NULL;
 
 				unsigned latency = atoi(firstBracket + 1);
 				unsigned count = atoi(comma + 1);
 
-				averageTransactionLatency.add(latency, count);
 				transactionCountBuffer += count;
 				distTransactionLatency[latency] += count;
+				
+				totalLatency += (double)(latency * count);
+				totalCount += count;
 
 				position = secondBracket + 1;
+				if (*position == NULL) break;
 			}
 		}
 		else if (starts_with(newLine,"----Cumulative DIMM Cache Read Hits/Misses"))
@@ -1186,8 +1191,7 @@ void StatsScripts::processLine(char *newLine)
 			*secondBracket = (char) NULL;
 			readHitsMisses.second = max(atoi(firstBracket + 1), 1);
 		}
-		else if (starts_with(newLine,
-			"----Cumulative DIMM Cache Hits/Misses"))
+		else if (starts_with(newLine, "----Cumulative DIMM Cache Hits/Misses"))
 		{
 			char *firstBracket = strchr(newLine, '{');
 			if (firstBracket == NULL)
@@ -1299,12 +1303,11 @@ void StatsScripts::processLine(char *newLine)
 		else if (starts_with(newLine, "----DIMM Cache Bandwidth"))
 		{
 			char *firstBracket = strchr(newLine, '{');
-			if (firstBracket == NULL)
-				return;
+			if (firstBracket == NULL) return;
 
 			char *secondBracket = strchr(newLine, '}');
-			if (secondBracket == NULL)
-				return;
+			if (secondBracket == NULL) return;
+
 			*secondBracket = NULL;
 
 			// read bandwidth
@@ -1399,17 +1402,13 @@ void StatsScripts::processLine(char *newLine)
 			while (position != NULL)
 			{
 				char *leftParen = strchr(position, '(');
-				if (leftParen == NULL)
-					break;
+				if (leftParen == NULL) break;
 				char *firstComma = strchr(position, ',');
-				if (firstComma == NULL)
-					break;
+				if (firstComma == NULL) break;
 				char *secondComma = strchr(firstComma + 1, ',');
-				if (secondComma == NULL)
-					break;
+				if (secondComma == NULL) break;
 				char *rightParen = strchr(position, ')');
-				if (rightParen == NULL)
-					break;
+				if (rightParen == NULL) break;
 
 				*rightParen = NULL;
 				*firstComma = NULL;
@@ -1428,10 +1427,8 @@ void StatsScripts::processLine(char *newLine)
 				*rightBracket = NULL;
 				unsigned value = atoi(leftBracket + 1);
 
-				channelLatencyDistributionBuffer[channel][rank][bank]
-				+= value;
-				channelLatencyDistributionBuffer[channel][rank].back()
-					+= value;
+				channelLatencyDistributionBuffer[channel][rank][bank] += value;
+				channelLatencyDistributionBuffer[channel][rank].back() += value;
 
 				position = rightBracket + 1;
 			}
@@ -1501,9 +1498,8 @@ void StatsScripts::pushStats()
 		transactionLatency.push_back(
 			tuple<unsigned, unsigned, double, unsigned> (
 			(tuple<unsigned, unsigned, double,
-			unsigned> ) averageTransactionLatency.getStdDev()));
-		averageTransactionLatency.clear();
-
+			unsigned> ) getAverageLatency()));
+		
 		transactionCount.push_back(transactionCountBuffer
 			/ scaleFactor);
 		transactionCountBuffer = 0;

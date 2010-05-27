@@ -2335,7 +2335,7 @@ void Channel::setLastCprhLocation(unsigned rank, unsigned bank, bool isActivate)
 			return;
 		}
 	}
-	
+
 	cerr << "did not find " << endl;
 	exit(-6);
 }
@@ -2466,7 +2466,7 @@ void Channel::executeCommand(Command *thisCommand)
 						if (readCommand->isPrecharge())
 							break;
 					}	
-					
+
 					break;
 				}
 			}
@@ -2492,7 +2492,7 @@ void Channel::executeCommand(Command *thisCommand)
 			if (systemConfig.isUsingDimmCache())
 			{
 				satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
-
+				commandHit = satisfied;
 				thisCommand->getHost()->setHit(satisfied);
 				if (!satisfied)
 					currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
@@ -2543,7 +2543,7 @@ void Channel::executeCommand(Command *thisCommand)
 		{
 			bool satisfied = 
 				cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
-			
+
 			currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
 
 			thisCommand->getHost()->setHit(satisfied);
@@ -2848,8 +2848,6 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 		break;
 	}
 
-	//return max(min_gap,timingSpecification.tCMD());
-	//return max(min_gap,max(lastCommandIssueTime - time + (tick)timingSpecification.tCMD(),(tick)0));
 	return max(min_gap, lastCommandIssueTime + (tick)(timingSpecification.tCMD()) - time);
 }
 
@@ -3226,9 +3224,7 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 		break;
 	}
 
-	//return max(nextTime, time + timingSpecification.tCMD());
-	//return max(nextTime, max(time, lastCommandIssueTime + timingSpecification.tCMD()));
-	return max(nextTime, max(time , lastCommandIssueTime + timingSpecification.tCMD()));
+	return max(nextTime, max(time, lastCommandIssueTime + timingSpecification.tCMD()));
 }
 
 void Channel::resetStats()
@@ -3279,7 +3275,6 @@ void Channel::printVerilogCommand(const Command *thisCommand)
 			thisCommand->getAddress().getBank() << ",\t" << "0" << "); //" <<
 			time << endl;
 	}
-
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -3331,4 +3326,3 @@ std::ostream& DRAMsimII::operator<<(std::ostream& os, const DRAMsimII::Channel& 
 	os << r.powerModel << endl;
 	return os;
 }
-

@@ -98,7 +98,7 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 #pragma omp critical
 	if (changesMade)
 	{
-		cerr << "Updating results file: " << printFile.native_directory_string() << endl;
+		//cerr << "Updating results file: " << printFile.native_directory_string() << endl;
 		std::ofstream out(printFile.native_directory_string().c_str());
 		out.write(outputContent.c_str(), outputContent.length());
 		out.close();

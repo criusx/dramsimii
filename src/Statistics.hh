@@ -164,18 +164,13 @@ namespace DRAMsimII
 		std::tr1::unordered_map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
 		std::tr1::unordered_map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
 		std::tr1::unordered_map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
-		//std::tr1::unordered_map<unsigned,unsigned> adjustedTransactionExecution;	///< the adjusted times, excluding transactions that hit in the cache
-		//std::tr1::unordered_map<unsigned,unsigned> cumulativeTransactionExecution;						///< the transaction execution time of all transactions to the present
-		//std::tr1::unordered_map<unsigned,unsigned> cumulativeAdjustedTransactionExecution;	///< average transaction execution, adjusted for cache hits
 		tick cacheLatency;													///< the latency due to transactions that were serviced by the cache
 		// still some bugs supporting 64-bit numbers
 		std::map<PhysicalAddress, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
 		std::map<PhysicalAddress, unsigned> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
 		std::vector<tick> bankLatencyUtilization;	///< the latency due to each bank per unit time
-		//std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > hitRate; ///< the hit rate of the commands in the per-DIMM cache
-		//std::vector<std::vector<std::pair<std::pair<uint64_t, uint64_t>, std::pair<uint64_t, uint64_t> > > > cumulativeHitRate; ///< the hit rate of the commands in the per-DIMM cache for the entire run
-
+	
 	public:
 
 		// constructors

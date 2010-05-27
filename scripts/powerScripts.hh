@@ -2,6 +2,7 @@
 #define POWERSCRIPTS_HH
 
 #include "processStats.hh"
+#include "PowerParameters.hh"
 #include "globals.hh"
 
 class PowerScripts
@@ -35,9 +36,7 @@ protected:
 
 	pair<double, double> totalEnergy;
 
-	// power values
-
-	PowerParameters<double> powerParameters;	
+	PowerParameters powerParameters;	
 
 	WeightedAverage<double> averageInUseTime;
 

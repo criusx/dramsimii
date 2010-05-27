@@ -4,7 +4,7 @@
 
 #include <boost/algorithm/string/regex.hpp>
 
-#define POWER_VALUES_PER_CHANNEL 10
+#define POWER_VALUES_PER_CHANNEL 8
 
 const string PowerScripts::energyScript = "unset border\n\
 										  set key outside center bottom horizontal Left reverse invert enhanced samplen 4 autotitles columnhead box linetype -2 linewidth 0.5\n\
@@ -194,9 +194,9 @@ void PowerScripts::processLine(char *newLine)
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 4] += pc.PsysWR;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 5] += pc.PsysACT_PDN;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 6] += pc.PsysPRE_PDN;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.PsysDQ;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 8] += pc.PsysTermRoth + pc.PsysTermW + pc.PsysTermWoth;
-			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 9] += pc.sramActivePower + pc.sramIdlePower;
+			//valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.PsysDQ;
+			//valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 8] += pc.PsysTermRoth + pc.PsysTermW + pc.PsysTermWoth;
+			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
 
 			averageInUseTime.add(pc.inUseTime, 1);
 			//cerr << pc.inUseTime << endl;
@@ -899,7 +899,7 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 		time += epochTime;
 	}
 
-	cerr << "normal " << totalPower << endl;	
+	//cerr << "normal " << totalPower << endl;	
 
 	p << "e" << endl;
 
@@ -916,7 +916,7 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 		time += epochTime;
 	}
 
-	cerr << "alt " << totalPower << endl;
+	//cerr << "alt " << totalPower << endl;
 
 	p << "e" << endl << "unset output" << endl;
 }

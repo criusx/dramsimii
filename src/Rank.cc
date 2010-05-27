@@ -255,18 +255,6 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 		if (systemConfig.isUsingDimmCache() && currentCommand->getHost()->isHit())
 			hits.first++;
 
-#if 0
-		//////////////////////////////////////////////////////////////////////////
-		bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
-		if (!satisfied)
-			bank[currentCommand->getAddress().getBank()].setAllHits(false);
-		if (bank[currentCommand->getAddress().getBank()].isAllHits() && currentCommand->isPrecharge())
-		{
-			statistics.reportRasReduction(currentCommand);
-		}
-		//std::cout << (satisfied ? "|" : ".");
-		//////////////////////////////////////////////////////////////////////////
-#endif
 		// update the bank to reflect this change also
 		bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
 
@@ -300,18 +288,10 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 //////////////////////////////////////////////////////////////////////////
 void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
-	if (systemConfig.isUsingDimmCache() && currentCommand->getAddress().getRank() == rankID)
+	if (currentCommand->getAddress().getRank() == rankID)
 	{
 		if (systemConfig.isUsingDimmCache() && currentCommand->getHost()->isHit())
 			hits.second++;
-
-#if 0
-		//////////////////////////////////////////////////////////////////////////
-		bool satisfied = tags.timingAccess(currentCommand, currentCommand->getStartTime());
-		bank[currentCommand->getAddress().getBank()].setAllHits(false);
-		//std::cout << (satisfied ? "|" : ".");
-		//////////////////////////////////////////////////////////////////////////
-#endif
 
 		// update the bank to reflect this change also
 		bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);
@@ -516,7 +496,6 @@ bool Rank::isEmpty() const
 
 Rank& Rank::operator =(const Rank& rhs)
 {
-	//::new(this)DRAMsimII::Rank(rhs.timing,rhs.bank);
 	lastRefreshTime = rhs.lastRefreshTime;
 	lastPrechargeAnyBankTime = rhs.lastPrechargeAnyBankTime;
 	lastCASTime = rhs.lastCASTime;
@@ -536,7 +515,6 @@ Rank& Rank::operator =(const Rank& rhs)
 	otherLastCASWTime = rhs.otherLastCASWTime;
 	otherLastCASLength = rhs.otherLastCASLength;
 	otherLastCASWLength = rhs.otherLastCASWLength;
-	//tags = rhs.tags;
 	lastCalculationTime = rhs.lastCalculationTime;
 	nextRefreshTime = rhs.nextRefreshTime;
 	nextWriteTime = rhs.nextWriteTime;

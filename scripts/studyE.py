@@ -51,10 +51,7 @@ def submitCommand(commandLine, name):
 
     i = 0
     for command in commandLine:
-        if len(commandLine) < 2:
-            scriptName = nextId + ".sh"
-        else:
-            scriptName = nextId + suffixes[i] + ".sh"
+        scriptName = nextId + suffixes[i] + ".sh"
         i = (i + 1) % 2
         scriptToRun = os.path.join(outputDir, scriptName)
 
@@ -83,7 +80,7 @@ def submitCommand(commandLine, name):
 ######################################################################################
 
 # the directory where the traces are
-tracesDir = os.path.join(os.path.expanduser("~"), 'benchmarks/dsTraces/6MB/24WAY')
+tracesDir = os.path.join(os.path.expanduser("~"), 'benchmarks/dsTraces/6MB/24WAY/other')
 
 # the format of the traces
 traceType = 'dramsim'
@@ -109,7 +106,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'm5/configs/example/dramsimfs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/thesis/studyA')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyE')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -127,11 +124,11 @@ fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks ban
 
 addressMappingPolicy = []
 addressMappingPolicy += ['sdramhiperf']
-addressMappingPolicy += ['sdrambase']
-addressMappingPolicy += ['closepagebaseline']
-addressMappingPolicy += ['closepagelowlocality']
-addressMappingPolicy += ['closepagehighlocality']
-addressMappingPolicy += ['closepagebaselineopt']
+#addressMappingPolicy += ['sdrambase']
+#addressMappingPolicy += ['closepagebaseline']
+#addressMappingPolicy += ['closepagelowlocality']
+#addressMappingPolicy += ['closepagehighlocality']
+#addressMappingPolicy += ['closepagebaselineopt']
 
 commandOrderingAlgorithm = []
 commandOrderingAlgorithm += ['firstAvailableAge']
@@ -143,7 +140,7 @@ commandOrderingAlgorithm += ['firstAvailableAge']
 #commandOrderingAlgorithm += ['strict']
 
 rowBufferManagementPolicy = []
-rowBufferManagementPolicy += ['openpageaggressive']
+#rowBufferManagementPolicy += ['openpageaggressive']
 rowBufferManagementPolicy += ['openpage']
 rowBufferManagementPolicy += ['closepage']
 rowBufferManagementPolicy += ['closepageaggressive']
@@ -155,7 +152,7 @@ perBankQueueDepth = [12]
 readWriteGrouping = ['true']
 
 postedCas = ['true']
-#postedCas += ['false']
+postedCas += ['false']
 
 requests = [5000000]
 
@@ -165,7 +162,7 @@ benchmarks += ['milc']
 benchmarks += ['lbm']
 benchmarks += ['mcf']
 benchmarks += ['stream']
-benchmarks += ['bzip2']
+#benchmarks += ['bzip2']
 benchmarks += ['sjeng']
 benchmarks += ['xalancbmk']
 benchmarks += ['GemsFDTD']
@@ -177,10 +174,10 @@ channels += [2]
 dimms = []
 #dimms += [1]
 dimms += [2]
-dimms += [4]
+#dimms += [4]
 ranks = []
 #ranks += [1]
-ranks += [2]
+ranks += [4]
 banks = [16]
 tFAW = [28]
 
@@ -196,7 +193,7 @@ cacheSizes += [16384]
 #cacheSizes += [24576]
 blockSize = []
 blockSize += [64]
-blockSize += [128]
+#blockSize += [128]
 blockSize += [256]
 hitLatency = [5]
 replacementPolicies = []
@@ -249,15 +246,14 @@ def main():
             for channel in channels:
                 for dimm in dimms:
                     for rank in ranks:
-                        for t in traces:
-                            for blkSz in blockSize:
-                                for hitLat in hitLatency:
-                                    for assoc in associativity:
-                                        for size in cacheSizes:
-                                            for replacementPolicy in replacementPolicies:
-                                                for pc in postedCas:
-                                                    for rbmp in rowBufferManagementPolicy:
-
+                        for blkSz in blockSize:
+                            for hitLat in hitLatency:
+                                for assoc in associativity:
+                                    for size in cacheSizes:
+                                        for replacementPolicy in replacementPolicies:
+                                            for pc in postedCas:
+                                                for rbmp in rowBufferManagementPolicy:
+                                                    for t in traces:
                                                         newCommandLine = []
 
                                                         currentTrace = os.path.join(tracesDir, t)
@@ -266,7 +262,7 @@ def main():
                                                                                               0, perBankQueueDepth[0], 135000000000000, tFAW[0],
                                                                                                rbmp, outputDir,
                                                                                                ("inputfiletype %s inputfile %s outfile %s blockSize %s cacheSize %s " +
-                                                                                               "hitLatency %s associativity %s readPercentage .8 replacementPolicy %s " +
+                                                                                               "hitLatency %s associativity %s readPercentage .8 requestcount 500000000 replacementPolicy %s " +
                                                                                                "%%s") %
                                                                                                (traceType, currentTrace, t, blkSz, size, hitLat, assoc, replacementPolicy))
 

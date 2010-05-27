@@ -25,8 +25,7 @@ private:
 	std::tr1::unordered_map<boost::uint64_t, pair<uint64_t, uint64_t> > latencyVsPcHigh;
 
 	vector<tuple<unsigned, unsigned, double, unsigned> > transactionLatency;
-	StdDev<double> averageTransactionLatency;
-
+	
 	vector<unsigned> transactionCount;
 
 	uint64_t transactionCountBuffer;
@@ -125,6 +124,8 @@ private:
 	unsigned rankCount;
 	unsigned bankCount;
 	unsigned epochCounter;
+	double totalLatency;
+	unsigned totalCount;
 	vector<string> commandLine;
 	string rawCommandLine;
 
@@ -139,7 +140,9 @@ public:
 	pair<unsigned, unsigned> getHitsMisses() const { return hitsMisses; }
 	unsigned getEpochCounter() const { return epochCounter; }
 	unsigned getEpochTime() const { return epochTime; }
-	double getAverageLatency() const { return averageTransactionLatency.getStdDev().get<1>(); }
+	double getAverageLatency() const { return totalLatency / (double)totalCount; }
+	double getTotalLatency() const { return totalLatency; }
+	unsigned getTotalCount() const { return totalCount; }
 	string getRawCommandLine() const { return rawCommandLine; }
 	double getRunTime() const { return (double)epochCounter * epochTime; }
 	bool isUsingCache() const { return usingCache; }
@@ -178,6 +181,8 @@ public:
 		  rankCount(0),
 		  bankCount(0),
 		  epochCounter(0),
+		  totalLatency(0.0),
+		  totalCount(0.0),
 		  usingCache(false)
 	  {
 		  transactionCount.reserve(MAXIMUM_VECTOR_SIZE);

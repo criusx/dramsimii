@@ -66,7 +66,8 @@ const string hitMissPowerScript = "unset border\n\
 								  '-' u 1:2 t \"DRAM Power\" axes x1y1 w lines lw 2.00\n";
 
 
-const string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR","ACT-PDN","PRE-PDN", "IO","Term", "DIMM Cache"};
+//const string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR","ACT-PDN","PRE-PDN", "IO","Term", "DIMM Cache"};
+const string powerTypes[] = {"ACT-STBY","ACT","PRE-STBY","RD","WR","ACT-PDN","PRE-PDN", "DIMM Cache"};
 
 const string subAddrDistroA = "unset y2tics\n\
 							  unset logscale y\n\

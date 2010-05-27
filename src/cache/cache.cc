@@ -64,7 +64,6 @@ assoc(_assoc),
 hitLatency(_hit_latency),
 sets(numSets, CacheSet(_assoc)),
 blks(numSets * assoc),
-//dataBlks(numSets * assoc * blkSize),
 setShift(floorLog2(blkSize)),
 tagShift(floorLog2(blkSize) + floorLog2(numSets)),
 setMask(numSets - 1),
@@ -164,7 +163,6 @@ assoc(rhs.assoc),
 hitLatency(rhs.hitLatency),
 sets(rhs.sets),
 blks(rhs.blks),
-//dataBlks(rhs.dataBlks),
 setShift(rhs.setShift),
 tagShift(rhs.tagShift),
 setMask(rhs.setMask),
@@ -173,40 +171,42 @@ writeAllocate(rhs.writeAllocate),
 nmruCount(rhs.nmruCount),
 replacementPolicy(rhs.replacementPolicy)
 {
-	unsigned blkIndex = 0;       // index into blks array
-	for (unsigned i = 0; i < numSets; ++i) 
-	{ // TODO switch this to work for copies
-		// done in constructor
-		//sets[i].assoc = assoc;
+	if (rhs.blks.size() > 0)
+	{
+		unsigned blkIndex = 0;       // index into blks array
+		for (unsigned i = 0; i < numSets; ++i) 
+		{ // TODO switch this to work for copies
+			// done in constructor
+			//sets[i].assoc = assoc;
 
-		// done in constructor
-		//sets[i].blks = new LRUBlk*[assoc];
+			// done in constructor
+			//sets[i].blks = new LRUBlk*[assoc];
 
-		// link in the data blocks
-		for (unsigned j = 0; j < assoc; ++j) 
-		{
-			// locate next cache block
-			LRUBlk *blk = &blks[blkIndex];
-			//blk->data = &dataBlks[blkSize*blkIndex];
-			blk->data = NULL;
-			++blkIndex;
+			// link in the data blocks
+			for (unsigned j = 0; j < assoc; ++j) 
+			{
+				// locate next cache block
+				LRUBlk *blk = &blks[blkIndex];
+				//blk->data = &dataBlks[blkSize*blkIndex];
+				blk->data = NULL;
+				++blkIndex;
 
-			// invalidate new cache block
-			blk->status = 0;
+				// invalidate new cache block
+				blk->status = 0;
 
-			//EGH Fix Me : do we need to initialize blk?
+				//EGH Fix Me : do we need to initialize blk?
 
-			// Setting the tag to j is just to prevent long chains in the hash
-			// table; won't matter because the block is invalid
-			blk->tag = j;
-			blk->whenReady = 0;
-			blk->isTouched = false;
-			blk->size = blkSize;
-			sets[i].blks[j]=blk;
-			blk->set = i;
+				// Setting the tag to j is just to prevent long chains in the hash
+				// table; won't matter because the block is invalid
+				blk->tag = j;
+				blk->whenReady = 0;
+				blk->isTouched = false;
+				blk->size = blkSize;
+				sets[i].blks[j]=blk;
+				blk->set = i;
+			}
 		}
 	}
-
 }
 
 Cache::Cache(const DRAMsimII::Settings &settings):
@@ -214,9 +214,8 @@ numSets((settings.cacheSize * 1024)/ settings.blockSize / settings.associativity
 blkSize(settings.blockSize),
 assoc(settings.associativity),
 hitLatency(settings.hitLatency),
-sets((settings.cacheSize * 1024) / settings.blockSize / settings.associativity, CacheSet(settings.associativity)),
-blks(numSets * assoc),
-//dataBlks(numSets * assoc * blkSize),
+sets(settings.usingCache ? settings.cacheSize * 1024 / settings.blockSize / settings.associativity : 0, CacheSet(settings.associativity)),
+blks(settings.usingCache ? numSets * assoc : 0),
 setShift(floorLog2(settings.blockSize)),
 tagShift(floorLog2((settings.cacheSize * 1024) / settings.blockSize / settings.associativity) + floorLog2(settings.blockSize)), 
 setMask((settings.cacheSize * 1024) / settings.blockSize / settings.associativity - 1),
@@ -225,69 +224,75 @@ writeAllocate(false),
 nmruCount(settings.nmruTrackingCount),
 replacementPolicy(settings.replacementPolicy)
 {
-	if (blkSize < 4 || !isPowerOf2(blkSize)) 
+	if (settings.usingCache)
 	{
-		cerr << "Block size must be at least 4 and a power of 2" << endl;
-		exit(-2);
-	}
-	if (numSets <= 0 || !isPowerOf2(numSets)) 
-	{
-		cerr << "# of sets must be non-zero and a power of 2" << endl;
-		exit(-2);
-	}
-	if (assoc <= 0) 
-	{
-		cerr << "associativity must be greater than zero" << endl;
-		exit(-2);
-	}
-	if (hitLatency <= 0) 
-	{
-		cerr << "access latency must be greater than zero" << endl;
-		exit(-2);
-	}
-
-	unsigned blkIndex = 0;       // index into blks array
-	for (unsigned i = 0; i < numSets; ++i) 
-	{ // TODO switch this to work for copies
-		// done in constructor
-		//sets[i].assoc = assoc;
-
-		// done in constructor
-		//sets[i].blks = new LRUBlk*[assoc];
-
-		// link in the data blocks
-		for (unsigned j = 0; j < assoc; ++j) 
+		if (blkSize < 4 || !isPowerOf2(blkSize)) 
 		{
-			// locate next cache block
-			LRUBlk *blk = &blks[blkIndex];
-			//blk->data = &dataBlks[blkSize*blkIndex];
-			blk->data = NULL;
-			blkIndex++;
+			cerr << "Block size must be at least 4 and a power of 2" << endl;
+			exit(-2);
+		}
+		if (numSets <= 0 || !isPowerOf2(numSets)) 
+		{
+			cerr << "# of sets must be non-zero and a power of 2" << endl;
+			exit(-2);
+		}
+		if (assoc <= 0) 
+		{
+			cerr << "associativity must be greater than zero" << endl;
+			exit(-2);
+		}
+		if (hitLatency <= 0) 
+		{
+			cerr << "access latency must be greater than zero" << endl;
+			exit(-2);
+		}
 
-			// invalidate new cache block
-			blk->status = 0;
+		unsigned blkIndex = 0;       // index into blks array
+		for (unsigned i = 0; i < numSets; ++i) 
+		{ // TODO switch this to work for copies
+			// done in constructor
+			//sets[i].assoc = assoc;
 
-			//EGH Fix Me : do we need to initialize blk?
+			// done in constructor
+			//sets[i].blks = new LRUBlk*[assoc];
 
-			// Setting the tag to j is just to prevent long chains in the hash
-			// table; won't matter because the block is invalid
-			blk->tag = j;
-			blk->whenReady = 0;
-			blk->isTouched = false;
-			blk->size = blkSize;
-			sets[i].blks[j]=blk;
-			blk->set = i;
+			// link in the data blocks
+			for (unsigned j = 0; j < assoc; ++j) 
+			{
+				// locate next cache block
+				LRUBlk *blk = &blks[blkIndex];
+				//blk->data = &dataBlks[blkSize*blkIndex];
+				blk->data = NULL;
+				blkIndex++;
+
+				// invalidate new cache block
+				blk->status = 0;
+
+				//EGH Fix Me : do we need to initialize blk?
+
+				// Setting the tag to j is just to prevent long chains in the hash
+				// table; won't matter because the block is invalid
+				blk->tag = j;
+				blk->whenReady = 0;
+				blk->isTouched = false;
+				blk->size = blkSize;
+				sets[i].blks[j]=blk;
+				blk->set = i;
+			}
 		}
 	}
 }
 
 Cache::~Cache()
 {
-	for (unsigned i = 0; i < numSets; ++i) 
-	{ 
-		for (unsigned j = 0; j < assoc; ++j) 
-		{	
-			sets[i].blks[j] = NULL;
+	if (blks.size() > 0)
+	{
+		for (unsigned i = 0; i < numSets; ++i) 
+		{ 
+			for (unsigned j = 0; j < assoc; ++j) 
+			{	
+				sets[i].blks[j] = NULL;
+			}
 		}
 	}
 }

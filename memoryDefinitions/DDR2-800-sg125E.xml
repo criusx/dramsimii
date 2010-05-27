@@ -101,8 +101,8 @@
 		<DQSperDRAM>4</DQSperDRAM>
 		<DMperDRAM>2</DMperDRAM>
 		<frequencySpec>800000000</frequencySpec>
-		<maxVCC>1.9</maxVCC>
-		<systemVDD>1.8</systemVDD>
+		<maxVCC>1.65</maxVCC>
+		<systemVDD>1.5</systemVDD>
 		<!--all are in mA-->
 		<!--maximum active precharge current-->
 		<IDD0>90</IDD0>

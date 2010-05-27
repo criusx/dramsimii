@@ -79,8 +79,10 @@ scriptBase = ['../scripts/globals.cc',
 				'../scripts/statsScripts.cc',
 				'../scripts/powerScripts.cc',
 				'../scripts/util.cc',
-				'../scripts/summaryStats.cc',
-				'../scripts/resultSet.cc']
+				'../scripts/processPairs.cc',
+				'../scripts/resultSet.cc',
+				'../scripts/PowerParameters.cc',
+				'../scripts/main.cc']
 
 sourceFile = sourceBase + ['main.cc']
 sourcesTest = sourceBase + ['unitTest.cc']
