@@ -202,14 +202,19 @@ void System::checkStats()
 {
 	if (time >= nextStats)
 	{		
-		DEBUG_TIMING_LOG("aggregate stats");
-		doPowerCalculation();
-
-		printStatistics();
+		printStats();
 	}
 
 	while (time >= nextStats)
 		nextStats += systemConfig.getEpoch();
+}
+
+void System::printStats() 
+{
+	DEBUG_TIMING_LOG("aggregate stats");
+	doPowerCalculation();
+
+	printStatistics();
 }
 
 
@@ -470,7 +475,7 @@ void System::runSimulations(const unsigned requestCount)
 		}
 
 		delete inputTransaction;
-
+		printStats();
 	}
 	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(),
 		end = outstandingTransactions.end();

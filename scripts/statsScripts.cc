@@ -74,11 +74,7 @@ void StatsScripts::addressDistributionPerChannelGraph(const bf::path &outFilenam
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << subAddrDistroA;
-#if 0
-	p << "set multiplot layout "
-		<< channelDistribution[channelID].size()
-		<< ", 1 title \"" << commandLine << "\"" << endl;
-#endif
+
 	printTitle("", commandLine, p, channelDistribution[channelID].size());
 
 	for (unsigned rankID = 0; rankID
@@ -128,10 +124,7 @@ void StatsScripts::overallAddressDistributionGraph(const bf::path &outFilename, 
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0
-	p << "set title \"" << commandLine << "\\nChannel Distribution Rate\""
-		<< endl;
-#endif
+
 	printTitle("Channel Distribution Rate", commandLine, p);
 
 	p << addressDistroA;
@@ -318,10 +311,7 @@ void StatsScripts::zoomedTransactionLatencyDistributionGraph(const bf::path &out
 	for (std::tr1::unordered_map<unsigned, unsigned>::const_iterator i =
 		distTransactionLatency.begin(); i != distTransactionLatency.end(); ++i)
 		latencyDeviation.add(i->first * periodInNs, i->second);
-#if 0
-	p << "set title \"" << commandLine << "\\nRead Transaction Latency\""
-		<< endl ;
-#endif
+
 	printTitle("Read Transaction Latency", commandLine, p);
 
 	p << "set xrange [0:"
@@ -471,9 +461,7 @@ void StatsScripts::averageIpcAndLatencyGraph(const bf::path &outFilename, opstre
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0
-	p << "set multiplot layout 2,1 title \"" << commandLine << "\"" << endl;
-#endif
+
 	printTitle("", commandLine, p, 2);
 
 	// make the transaction latency graph
@@ -563,10 +551,7 @@ void StatsScripts::hitMissGraph(const bf::path &outFilename, opstream &p, bool i
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0
-	p << "set title \"" << "Reuse Rate of Open Rows vs. Time\\n"
-		<< commandLine << "\"" << endl;
-#endif
+
 	printTitle("Reuse Rate of Open Rows vs. Time", commandLine, p);
 	p << rowHitMissGraphScript << endl;
 
@@ -605,12 +590,9 @@ void StatsScripts::workingSetGraph(const bf::path &outFilename, opstream &p, boo
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0
-	p << "set title \"" << commandLine
-		<< "\\nWorking Set Size vs Time\" offset character 0, -1, 0 font '' norotate"
-		<< endl;	
-#endif
+
 	printTitle("Working Set Size vs. Time", commandLine, p);
+
 	p << workingSetSetup << endl;
 	float time = 0.0F;
 	for (vector<unsigned>::const_iterator i = workingSetSize.begin(); i
@@ -653,11 +635,9 @@ void StatsScripts::cacheHitMissGraph(const bf::path &outFilename, opstream &p, c
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0
-	p << "set title \"" << "Per-DIMM Cache Hit Rate\\n" << commandLine << "\""
-		<< endl;
-#endif
+
 	printTitle("Per-DIMM Cache Hit Rate",commandLine, p);
+
 	p << hitMissScript << endl;
 
 	float time = 0.0F;
@@ -1120,12 +1100,7 @@ void StatsScripts::processLine(char *newLine)
 	{
 		epochTime = lexical_cast<float> (strchr(newLine, ' ') + 1);
 		foundEpoch = true;
-	}
-	else if (starts_with(newLine, "----Datarate"))
-	{
-		//period = 1 / lexical_cast<float> (strchr(newLine, ' ') + 1)
-		//	/ 0.000000001F;
-	}
+	}	
 	else
 	{
 		if (starts_with(newLine, "----Transaction Latency"))
@@ -1163,6 +1138,7 @@ void StatsScripts::processLine(char *newLine)
 				distTransactionLatency[latency] += count;
 				
 				totalLatency += (double)(latency * count);
+				//cerr << latency * count << endl;
 				totalCount += count;
 
 				position = secondBracket + 1;

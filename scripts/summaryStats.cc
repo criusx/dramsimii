@@ -21,7 +21,6 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 	if (found0 && found1)
 	{
 		//cerr << "A " << ssCache.getTotalLatency() << " " << ssCache.getTotalCount() << " B " << ssNoCache.getTotalLatency() << " " << ssNoCache.getTotalCount() << endl;
-
 		vector<string> currentLine;
 
 		/// @TODO process both of these?
@@ -38,7 +37,9 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 			/ ((double) ssCache.getReadHitsMisses().first + ssCache.getReadHitsMisses().second));
 		rs.averageLatency = ssNoCache.getAverageLatency();
 		rs.averageTheoreticalLatency = ssCache.getAverageLatency();
-
+		rs.withCacheLatency = ssCache.getTotalLatency();
+		rs.withoutCacheLatency = ssNoCache.getTotalLatency();
+		cerr << "----" << rs.withoutCacheLatency << " " << rs.withCacheLatency << endl;
 
 #pragma omp critical
 		results[basefilename].setStats(rs, true);

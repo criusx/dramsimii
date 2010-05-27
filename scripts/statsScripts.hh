@@ -124,8 +124,8 @@ private:
 	unsigned rankCount;
 	unsigned bankCount;
 	unsigned epochCounter;
-	double totalLatency;
-	unsigned totalCount;
+	uint64_t totalLatency;
+	uint64_t totalCount;
 	vector<string> commandLine;
 	string rawCommandLine;
 
@@ -141,8 +141,8 @@ public:
 	unsigned getEpochCounter() const { return epochCounter; }
 	unsigned getEpochTime() const { return epochTime; }
 	double getAverageLatency() const { return totalLatency / (double)totalCount; }
-	double getTotalLatency() const { return totalLatency; }
-	unsigned getTotalCount() const { return totalCount; }
+	uint64_t getTotalLatency() const { return totalLatency; }
+	uint64_t getTotalCount() const { return totalCount; }
 	string getRawCommandLine() const { return rawCommandLine; }
 	double getRunTime() const { return (double)epochCounter * epochTime; }
 	bool isUsingCache() const { return usingCache; }

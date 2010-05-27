@@ -476,6 +476,7 @@ void Channel::retireCommand(Command *newestCommand, const bool isHit)
 
 	}
 	assert(!newestCommand->getHost());
+
 	if (!isHit)
 	{
 		delete lastCommand;

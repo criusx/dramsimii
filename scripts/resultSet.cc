@@ -25,10 +25,11 @@ void ResultSet::parseCommandLine(const char *commandLine, const string &filename
 	addressMappingPolicy = regexMatch<string>(commandLine,"AMP\\[([A-Z]+)\\]");
 	commandOrderingAlgorithm = regexMatch<string>(commandLine,"COA\\[([A-Z]+)\\]");
 	rowBufferManagementPolicy = regexMatch<string>(commandLine,"RBMP\\[([A-Z]+)\\]");
-	replacementPolicy = regexMatch<string>(commandLine,"policy\\[([A-Z0-9]+)\\]");
-	
+	replacementPolicy = regexMatch<string>(commandLine,"policy\\[([A-Z0-9]+)\\]");	
 
 	datarate = regexMatch<string>(commandLine,"DR\\[([0-9]+[KMG])\\]");
+	double value = regexMatch<double>(datarate.c_str(), "([0-9]+)");
+	datarateVal = value * (ends_with(datarate,"G") ? 1e9 : 1e6);
 	perBankQueueDepth = regexMatch<unsigned>(commandLine,"PBQ\\[([0-9]+)\\]");
 	tFaw = regexMatch<unsigned>(commandLine,"t_\\{FAW\\}\\[([0-9]+)\\]");
 	cacheSize = regexMatch<unsigned>(commandLine,"cache\\[([0-9]+)MB\\]");
@@ -43,122 +44,126 @@ void ResultSet::parseCommandLine(const char *commandLine, const string &filename
 
 std::pair<string,string> ResultSet::generateResultLine() const
 {
-	string csvOutput, fileList("<tr>");
+	string csvOutput, currentRow("<tr>");
 	
 	csvOutput += lexical_cast<string>(title) + ",";
-	fileList += generateTd(title);
+	currentRow += generateTd(title);
 
 	csvOutput += lexical_cast<string>(channels) + ",";
-	fileList += generateTd(channels);
+	currentRow += generateTd(channels);
 
 	csvOutput += lexical_cast<string>(dimms) + ",";
-	fileList += generateTd(dimms);
+	currentRow += generateTd(dimms);
 
 	csvOutput += lexical_cast<string>(ranks) + ",";
-	fileList += generateTd(ranks);
+	currentRow += generateTd(ranks);
 
 	csvOutput += lexical_cast<string>(banks) + ",";
-	fileList += generateTd(banks);
+	currentRow += generateTd(banks);
 
 	csvOutput += lexical_cast<string>(rows) + ",";
-	fileList += generateTd(rows);
+	currentRow += generateTd(rows);
 
 	csvOutput += lexical_cast<string>(columns) + ",";
-	fileList += generateTd(columns);
+	currentRow += generateTd(columns);
 
 	csvOutput += "x" + lexical_cast<string>(width) + ",";
-	fileList += generateTd("x" + lexical_cast<string>(width));
+	currentRow += generateTd("x" + lexical_cast<string>(width));
 
 	csvOutput += lexical_cast<string>(tRas) + ",";
-	fileList += generateTd(tRas);
+	currentRow += generateTd(tRas);
 
 	csvOutput += lexical_cast<string>(tCas) + ",";
-	fileList += generateTd(tCas);
+	currentRow += generateTd(tCas);
 
 	csvOutput += lexical_cast<string>(tRcd) + ",";
-	fileList += generateTd(tRcd);
+	currentRow += generateTd(tRcd);
 
 	csvOutput += lexical_cast<string>(tRc) + ",";
-	fileList += generateTd(tRc);
+	currentRow += generateTd(tRc);
 
 	csvOutput += (postedCas ? string("true") : string("false")) + ",";
-	fileList += generateTd(postedCas ? "true" : "false");
+	currentRow += generateTd(postedCas ? "true" : "false");
 
 	csvOutput += matchMap(addressMappingPolicy) + ",";
-	fileList += generateTd(matchMap(addressMappingPolicy));
+	currentRow += generateTd(matchMap(addressMappingPolicy));
 
 	csvOutput += matchMap(commandOrderingAlgorithm) + ",";
-	fileList += generateTd(matchMap(commandOrderingAlgorithm));
+	currentRow += generateTd(matchMap(commandOrderingAlgorithm));
 
 	csvOutput += matchMap(rowBufferManagementPolicy) + ",";
-	fileList += generateTd(matchMap(rowBufferManagementPolicy));
+	currentRow += generateTd(matchMap(rowBufferManagementPolicy));
 
 	csvOutput += datarate + ",";
-	fileList += generateTd(datarate);
+	currentRow += generateTd(datarate);
 	
 	csvOutput += lexical_cast<string>(perBankQueueDepth) + ",";
-	fileList += generateTd(perBankQueueDepth);
+	currentRow += generateTd(perBankQueueDepth);
 
 	csvOutput += lexical_cast<string>(tFaw) + ",";
-	fileList += generateTd(tFaw);
+	currentRow += generateTd(tFaw);
 
 	csvOutput += lexical_cast<string>(cacheSize) + ",";
-	fileList += generateTd(cacheSize);
+	currentRow += generateTd(cacheSize);
 
 	csvOutput += lexical_cast<string>(blockSize) + ",";
-	fileList += generateTd(blockSize);
+	currentRow += generateTd(blockSize);
 
 	csvOutput += lexical_cast<string>(associativity) + ",";
-	fileList += generateTd(associativity);
+	currentRow += generateTd(associativity);
 
 	csvOutput += lexical_cast<string>(numberOfSets) + ",";
-	fileList += generateTd(numberOfSets);
+	currentRow += generateTd(numberOfSets);
 
 	csvOutput += replacementPolicy + ",";
-	fileList += generateTd(replacementPolicy);
+	currentRow += generateTd(replacementPolicy);
 	
 	csvOutput += lexical_cast<string>(runtime) + ",";
-	fileList += generateTd(runtime);
+	currentRow += generateTd(runtime);
 
 	csvOutput += lexical_cast<string>(readHitRate) + ",";
-	fileList += generateTd(readHitRate);
+	currentRow += generateTd(readHitRate);
 
 	csvOutput += lexical_cast<string>(hitRate) + ",";
-	fileList += generateTd(hitRate);
+	currentRow += generateTd(hitRate);
 
 	csvOutput += lexical_cast<string>(averageLatency) + ",";
-	fileList += generateTd(averageLatency);
+	currentRow += generateTd(averageLatency);
 
 	csvOutput += lexical_cast<string>(averageTheoreticalLatency) + ",";
-	fileList += generateTd(averageTheoreticalLatency);
+	currentRow += generateTd(averageTheoreticalLatency);
 
 	csvOutput += lexical_cast<string>(averageLatency - averageTheoreticalLatency) + ",";
-	fileList += generateTd(averageLatency - averageTheoreticalLatency);
+	currentRow += generateTd(averageLatency - averageTheoreticalLatency);
 
 	csvOutput += lexical_cast<string>(energyUsed) + ",";
-	fileList += generateTd(energyUsed);
+	currentRow += generateTd(energyUsed);
 
 	csvOutput += lexical_cast<string>(energyUsedTheoretical) + ",";
-	fileList += generateTd(energyUsedTheoretical);
+	currentRow += generateTd(energyUsedTheoretical);
 
 	csvOutput += lexical_cast<string>((energyUsedTheoretical) / energyUsed * 100) + ",";
-	fileList += generateTd((energyUsedTheoretical) / energyUsed * 100);
+	currentRow += generateTd((energyUsedTheoretical) / energyUsed * 100);
 	
 	csvOutput += lexical_cast<string>(noCacheRuntime) + ",";
-	fileList += generateTd(noCacheRuntime);
+	currentRow += generateTd(noCacheRuntime);
 
 	csvOutput += lexical_cast<string>(cacheRuntime) + ",";
-	fileList += generateTd(cacheRuntime);
+	currentRow += generateTd(cacheRuntime);
 
 	csvOutput += lexical_cast<string>(percentCacheTimeInUse) + ",";
-	fileList += generateTd(percentCacheTimeInUse);
+	currentRow += generateTd(percentCacheTimeInUse);
 
+	csvOutput += lexical_cast<string>((withoutCacheLatency - withCacheLatency) / datarateVal) + ",";
+	currentRow += generateTd((withoutCacheLatency - withCacheLatency) / datarateVal);
+	//cerr << withCacheRequestCount << " " << withCacheRequestCount << endl;
+	//cerr << withCacheLatency << " " << with
 	///////////////////////////////////////////////////////////////////////
-	fileList += "</tr>";
+	currentRow += "</tr>";
 
 	//cerr << fileList << endl;
 
-	return pair<string,string>(csvOutput,fileList);
+	return pair<string,string>(csvOutput,currentRow);
 }
 
 string ResultSet::generateTd(const string &str) const
@@ -208,6 +213,7 @@ void ResultSet::setStats(const ResultSet &rs, const bool isStat)
 		noCacheRuntime = rs.noCacheRuntime;		
 		postedCas = rs.postedCas;
 		datarate = rs.datarate;
+		datarateVal = rs.datarateVal;
 		perBankQueueDepth = rs.perBankQueueDepth;
 		commandOrderingAlgorithm = rs.commandOrderingAlgorithm;
 		rowBufferManagementPolicy = rs.rowBufferManagementPolicy;
@@ -226,11 +232,15 @@ void ResultSet::setStats(const ResultSet &rs, const bool isStat)
 		cacheRuntime = rs.cacheRuntime;
 		replacementPolicy = rs.replacementPolicy;
 		basename = rs.basename;
+		withoutCacheLatency = rs.withoutCacheLatency;
+		withCacheLatency = rs.withCacheLatency;
+		withCacheRequestCount = rs.withCacheRequestCount;
+		withoutCacheRequestCount = rs.withoutCacheRequestCount;
 	}
 	else
 	{
 		energyUsed = rs.energyUsed;
 		energyUsedTheoretical = rs.energyUsedTheoretical;		
-		percentCacheTimeInUse = rs.percentCacheTimeInUse;
+		percentCacheTimeInUse = rs.percentCacheTimeInUse;		
 	}
 }

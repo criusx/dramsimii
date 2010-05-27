@@ -65,8 +65,9 @@ namespace DRAMsimII
 		void updateSystemTime();
 
 		void checkStats();
+		void printStats();
 		virtual void doPowerCalculation();
-		virtual void printStatistics();	
+		virtual void printStatistics();			
 		
 	public:		
 

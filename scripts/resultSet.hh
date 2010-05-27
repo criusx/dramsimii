@@ -23,6 +23,7 @@ public:
 	std::string commandOrderingAlgorithm;
 	std::string rowBufferManagementPolicy;
 	std::string datarate;
+	double datarateVal;
 	unsigned perBankQueueDepth;
 	unsigned tFaw;
 	unsigned cacheSize;
@@ -42,6 +43,10 @@ public:
 	double noCacheRuntime;
 	double cacheRuntime;
 	double percentCacheTimeInUse;
+	uint64_t withCacheLatency;
+	uint64_t withoutCacheLatency;
+	uint64_t withCacheRequestCount;
+	uint64_t withoutCacheRequestCount;
 
 	ResultSet():
 	channels(0),
@@ -56,6 +61,7 @@ public:
 		tRcd(0),
 		tRc(0),
 		postedCas(false),
+		datarateVal(0.0),
 		perBankQueueDepth(0),
 		tFaw(0),
 		cacheSize(0),
@@ -71,7 +77,11 @@ public:
 		energyUsedTheoretical(0.0),
 		noCacheRuntime(0.0),
 		cacheRuntime(0.0),
-		percentCacheTimeInUse(0.0)
+		percentCacheTimeInUse(0.0),
+		withCacheLatency(0),
+		withoutCacheLatency(0),
+		withCacheRequestCount(0),
+		withoutCacheRequestCount(0)
 	{}
 
 	void parseCommandLine(const char *commandLine, const std::string &filename);
@@ -95,6 +105,6 @@ public:
 	double getLatencyReduction() const { return averageTheoreticalLatency / averageLatency; }
 
 	std::string getCsvHeader() const { return csvHeader; }
-	
+
 };
 #endif

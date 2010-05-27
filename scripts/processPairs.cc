@@ -6,17 +6,12 @@
 
 void processStatsForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, path &outputDir, const bool generateResultsOnly)
 {
-	const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
-	cerr << basefilename << endl;
-
 	StatsScripts ssCache, ssNoCache;
-
-	bool found0, found1;
-
+	
 	// with the DIMM cache
-	found0 = ssCache.processStatsForFile(filePair.first);
+	bool found0 = ssCache.processStatsForFile(filePair.first);
 	// without the DIMM cache
-	found1 = ssNoCache.processStatsForFile(filePair.second);
+	bool found1 = ssNoCache.processStatsForFile(filePair.second);
 
 	if (found0 && found1)
 	{
@@ -29,6 +24,7 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 
 		ResultSet rs;
 		rs.parseCommandLine(ssCache.getRawCommandLine().c_str(), filePair.first);
+
 		rs.runtime = ssCache.getRunTime();
 		rs.noCacheRuntime = ssNoCache.getRunTime();
 		rs.cacheRuntime = ssCache.getRunTime();
@@ -38,7 +34,12 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 			/ ((double) ssCache.getReadHitsMisses().first + ssCache.getReadHitsMisses().second));
 		rs.averageLatency = ssNoCache.getAverageLatency();
 		rs.averageTheoreticalLatency = ssCache.getAverageLatency();
+		rs.withCacheLatency = ssCache.getTotalLatency();
+		rs.withoutCacheLatency = ssNoCache.getTotalLatency();
+		rs.withCacheRequestCount = ssCache.getTotalCount();
+		rs.withoutCacheRequestCount = ssNoCache.getTotalCount();
 
+		const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 
 #pragma omp critical
 		results[basefilename].setStats(rs, true);
@@ -63,23 +64,21 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 
 void processPowerForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, list<pair<string, string> > &powerParams, path &outputDir, const bool generateResultsOnly)
 {
-	bool found0, found1;
 	PowerScripts psCache(powerParams), psNoCache(powerParams);
 	
 	// with the cache
-	found0 = psCache.processStatsForFile(filePair.first);
+	bool found0 = psCache.processStatsForFile(filePair.first);
 	// without the cache
-	found1 = psNoCache.processStatsForFile(filePair.second);
-
-	const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
-	cerr << basefilename << endl;
+	bool found1 = psNoCache.processStatsForFile(filePair.second);
 
 	if (found0 && found1)
 	{		
-		bool problem, problem2 = false;
-		if (problem = !psCache.isUsingCache())
+		bool problem = !psCache.isUsingCache();
+		bool problem2 = psNoCache.isUsingCache();
+
+		if (problem)
 			cerr << "no cache where there should be " << filePair.first << endl;
-		if (problem2 = psNoCache.isUsingCache())
+		if (problem2)
 			cerr << "cache where there should not be " << filePair.second << endl;
 
 		if (problem2 || problem)
@@ -97,6 +96,8 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, Resul
 		rs.percentCacheTimeInUse = ((double) psCache.getAverageInUseTime() * 100);
 		rs.noCacheRuntime = psNoCache.getRunTime();
 		rs.cacheRuntime = psCache.getRunTime();
+
+		const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 
 #pragma omp critical
 		results[basefilename].setStats(rs, false);
