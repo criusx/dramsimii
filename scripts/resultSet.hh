@@ -2,6 +2,8 @@
 #define RESULTSET_HH
 #include <string>
 
+#include "PowerParameters.hh"
+
 class ResultSet
 {
 	const static std::string urlString;
@@ -47,6 +49,8 @@ public:
 	uint64_t withoutCacheLatency;
 	uint64_t withCacheRequestCount;
 	uint64_t withoutCacheRequestCount;
+
+	PowerParameters powerParameters;
 
 	ResultSet():
 	channels(0),
@@ -105,6 +109,11 @@ public:
 	double getLatencyReduction() const { return averageTheoreticalLatency / averageLatency; }
 
 	std::string getCsvHeader() const { return csvHeader; }
+
+	void setPowerParameters(const PowerParameters &rhs)
+	{
+		powerParameters = rhs;
+	}
 
 };
 #endif

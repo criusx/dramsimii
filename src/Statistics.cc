@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -70,9 +70,6 @@ commandExecution(),
 commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
-//adjustedTransactionExecution(),
-//cumulativeTransactionExecution(),
-//cumulativeAdjustedTransactionExecution(),
 cacheLatency(0),
 pcOccurrence(),
 workingSet(),
@@ -112,9 +109,6 @@ commandExecution(),
 commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
-//adjustedTransactionExecution(),
-//cumulativeTransactionExecution(),
-//cumulativeAdjustedTransactionExecution(),
 cacheLatency(0),
 pcOccurrence(),
 workingSet(),
@@ -288,15 +282,6 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	os << "----Average Cumulative Transaction Latency {" << averageLatency.average() << "}" << endl;
 #endif
 	averageLatency.clear();
-	//os << "----Cumulative Adjusted Transaction Latency";
-	//for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.cumulativeAdjustedTransactionExecution.begin(); currentValue != statsLog.cumulativeAdjustedTransactionExecution.end(); ++currentValue)
-	{
-		//	averageLatency.add(currentValue->first,currentValue->second);
-		//	os << " {" << currentValue->first << "," << currentValue->second << "}";
-	}
-	//os << endl;
-
-	//os << "----Average Cumulative Adjusted Transaction Latency {" << averageLatency.average() << "}" << endl;
 
 	// transaction delay
 	os << "----Transaction Delay";

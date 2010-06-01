@@ -102,6 +102,9 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, Resul
 #pragma omp critical
 		results[basefilename].setStats(rs, false);
 
+#pragma omp critical
+		results[basefilename].setPowerParameters(psCache.getPowerParameters());
+
 		//cerr << "c " << psCache.getRunTime() << " nc " << psNoCache.getRunTime() << endl;
 		if (!generateResultsOnly)
 		{

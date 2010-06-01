@@ -58,6 +58,7 @@ namespace DRAMsimII
 		InputStream inputStream;				///< provides an interface to the input trace for the simulation
 
 		tick time;								///< master clock, usually set to the oldest channel's time
+		tick lastStatsTime;						///< the time at which stats were last printed
 		tick nextStats;							///< the next time at which stats should be collected
 
 		//functions
@@ -90,6 +91,7 @@ namespace DRAMsimII
 		// constructors	
 		explicit System(const Settings& settings);
 		explicit System(const System& rhs);
+		~System();
 		
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const System &);	

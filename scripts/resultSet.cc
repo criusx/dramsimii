@@ -1,11 +1,12 @@
 #include "resultSet.hh"
 #include "processStats.hh"
 
+
 using std::string;
 
 const string ResultSet::urlString = "<a href=\"%1/index.html\">%2</a>";
 
-const string ResultSet::csvHeader = "Benchmark,Channels,DIMMs,Ranks,Banks,Rows,Columns,DRAM Width,Posted CAS,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Replacement Policy,Runtime,Read Hit Rate,Hit Rate,Average Latency,Average Theoretical Latency,Average Latency Change,Energy Used,Theoretical Energy Used,Energy Used Ratio (%),No Cache Runtime,Cache Runtime,Cache In Use (%)\n";
+const string ResultSet::csvHeader = "Benchmark,Channels,DIMMs,Ranks,Banks,Rows,Columns,DRAM Width,Posted CAS,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Replacement Policy,Runtime,Read Hit Rate,Hit Rate,Average Latency,Average Theoretical Latency,Average Latency Change,Energy Used,Theoretical Energy Used,Energy Used Ratio (%),No Cache Runtime,Cache Runtime,Cache In Use (%),Energy Reduced Due to Latency, Difference in Total Latency\n";
 
 void ResultSet::parseCommandLine(const char *commandLine, const string &filename)
 {
@@ -154,8 +155,12 @@ std::pair<string,string> ResultSet::generateResultLine() const
 	csvOutput += lexical_cast<string>(percentCacheTimeInUse) + ",";
 	currentRow += generateTd(percentCacheTimeInUse);
 
-	csvOutput += lexical_cast<string>((withoutCacheLatency - withCacheLatency) / datarateVal) + ",";
-	currentRow += generateTd((withoutCacheLatency - withCacheLatency) / datarateVal);
+	PowerCalculations pc = powerParameters.calculateSystemPowerIdle((double)(withoutCacheLatency - withCacheLatency) / datarateVal);
+	csvOutput += lexical_cast<string>(pc.energy) + ",";
+	currentRow += generateTd(pc.energy);
+
+	csvOutput += lexical_cast<string>((withoutCacheLatency - withoutCacheLatency) / datarateVal) + ",";
+	currentRow += generateTd((double)(withoutCacheLatency - withCacheLatency) / datarateVal);
 	//cerr << withCacheRequestCount << " " << withCacheRequestCount << endl;
 	//cerr << withCacheLatency << " " << with
 	///////////////////////////////////////////////////////////////////////
@@ -239,6 +244,7 @@ void ResultSet::setStats(const ResultSet &rs, const bool isStat)
 	}
 	else
 	{
+		//powerParameters = rs.getPowerParameters();
 		energyUsed = rs.energyUsed;
 		energyUsedTheoretical = rs.energyUsedTheoretical;		
 		percentCacheTimeInUse = rs.percentCacheTimeInUse;		

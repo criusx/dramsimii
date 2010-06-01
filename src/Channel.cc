@@ -644,7 +644,7 @@ void Channel::doPowerCalculation(ostream& os)
 		//totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankId()].first.first;
 		totalReadHits += cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first;
 		BOOST_ASSERT(thisRankAdjustedRasCount >= 0);
-		BOOST_ASSERT(thisRankAdjustedRasCount <= thisRankRasCount);
+		//BOOST_ASSERT(thisRankAdjustedRasCount <= thisRankRasCount);
 
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
 		double percentActive = 1.0 - (k->getPrechargeTime(time) / max((double)(time - powerModel.getLastCalculation()), 0.00000001));

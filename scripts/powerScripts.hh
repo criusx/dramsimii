@@ -83,6 +83,8 @@ public:
 
 	  bool isUsingCache() const { return usingCache; }
 
+	  const PowerParameters &getPowerParameters() const { return powerParameters; }
+
 protected:
 	void processLine(char *newLine);
 

@@ -72,7 +72,7 @@ public:
 
 	void setParameters(const char* commandLine, const std::list<std::pair<std::string,std::string> > &updatedPowerParams);
 	PowerCalculations calculateSystemPower(const char* newLine, const double epochTime);
-	PowerCalculations calculateSystemPowerIdle(const double epochTime);
+	PowerCalculations calculateSystemPowerIdle(const double epochTime) const;
 };
 
 #endif

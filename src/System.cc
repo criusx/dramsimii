@@ -164,6 +164,12 @@ nextStats(0)
 	channel = rhsChan;
 }
 
+System::~System()
+{
+	systemConfig.statsOutStream << "----Runtime: {" << time / systemConfig.getDatarate() << "} duration{" << time - lastStatsTime << "}" << endl;
+	printStats();
+}
+
 
 //////////////////////////////////////////////////////////////////////
 /// @brief returns the time at which the next event happens
@@ -203,6 +209,7 @@ void System::checkStats()
 	if (time >= nextStats)
 	{		
 		printStats();
+		lastStatsTime = time;
 	}
 
 	while (time >= nextStats)
@@ -475,7 +482,7 @@ void System::runSimulations(const unsigned requestCount)
 		}
 
 		delete inputTransaction;
-		printStats();
+		
 	}
 	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(),
 		end = outstandingTransactions.end();
