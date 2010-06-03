@@ -275,15 +275,15 @@ namespace DRAMsimII
 				const std::vector<Channel>* const channel = &(st->channel);
 				ar << channel;
 
-				std::map<unsigned,unsigned> serializeMap;
-				std::tr1::unordered_map<unsigned,unsigned>::const_iterator it;
+				std::map<tick, tick> serializeMap;
+				std::tr1::unordered_map<tick, tick>::const_iterator it;
 
 				for (it = st->commandDelay.begin(); it != st->commandDelay.end(); it++)
 				{
 					serializeMap[it->first] = it->second;
 				}
 				{
-					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					const std::map<tick,tick> serializeMap2(serializeMap);
 					ar << serializeMap2;
 				}
 				serializeMap.clear();
@@ -292,7 +292,7 @@ namespace DRAMsimII
 					serializeMap[it->first] = it->second;
 				}
 				{
-					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					const std::map<tick,tick> serializeMap2(serializeMap);
 					ar << serializeMap2;
 				}
 				serializeMap.clear();
@@ -302,7 +302,7 @@ namespace DRAMsimII
 					serializeMap[it->first] = it->second;
 				}
 				{
-					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					const std::map<tick,tick> serializeMap2(serializeMap);
 					ar << serializeMap2;
 				}
 				serializeMap.clear();
@@ -312,7 +312,7 @@ namespace DRAMsimII
 					serializeMap[it->first] = it->second;
 				}
 				{
-					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					const std::map<tick,tick> serializeMap2(serializeMap);
 					ar << serializeMap2;
 				}
 				serializeMap.clear();
@@ -322,7 +322,7 @@ namespace DRAMsimII
 					serializeMap[it->first] = it->second;
 				}
 				{
-					const std::map<unsigned,unsigned> serializeMap2(serializeMap);
+					const std::map<tick,tick> serializeMap2(serializeMap);
 					ar << serializeMap2;
 				}
 			}
