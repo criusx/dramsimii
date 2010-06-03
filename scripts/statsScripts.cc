@@ -556,6 +556,16 @@ void StatsScripts::hitMissGraph(const bf::path &outFilename, opstream &p, bool i
 	p << rowHitMissGraphScript << endl;
 
 	float time = 0.0F;
+	for (vector<unsigned>::const_iterator i = hitMissTotals.begin(), end = hitMissTotals.end(); i
+		!= end; ++i)
+	{
+		p << time << " " << max(*i, 1U) << endl;
+		time += epochTime;
+	}
+
+	p << "e" << endl;
+
+	time = 0.0F;
 	for (vector<float>::const_iterator i = hitMissValues.begin(); i
 		!= hitMissValues.end(); ++i)
 	{
@@ -575,15 +585,7 @@ void StatsScripts::hitMissGraph(const bf::path &outFilename, opstream &p, bool i
 	}
 	p << "e" << endl;
 
-	time = 0.0F;
-	for (vector<unsigned>::const_iterator i = hitMissTotals.begin(), end = hitMissTotals.end(); i
-		!= end; ++i)
-	{
-		p << time << " " << max(*i, 1U) << endl;
-		time += epochTime;
-	}
-
-	p << "e" << endl << "unset output" << endl;
+	p << "unset output" << endl;
 }
 
 void StatsScripts::workingSetGraph(const bf::path &outFilename, opstream &p, bool isThumbnail)
@@ -1050,49 +1052,42 @@ void StatsScripts::processLine(char *newLine)
 	}
 	else if (starts_with(newLine, "----M5 Stat:"))
 	{
-		char *position = strchr(newLine, ' ');
-		position = strchr(position + 1, ' ');
-		if (position == NULL) return;
-		*position++ = 0;
-		char* splitline2 = position;
-		position = strchr(splitline2, ' ');
-		if (position == NULL)
-			return;
-		*position++ = 0;
-		char *position2 = strchr(position, ' ');
-		if (position2 == NULL)
-			return;
-		*position2 = 0;
+		char *firstOpeningBrace = strchr(newLine, '{');
+		if (firstOpeningBrace == NULL) return;
+		firstOpeningBrace++;
+		char *firstClosingBrace = strchr(newLine, '}');
+		if (firstClosingBrace == NULL) return;
+		char *secondOpeningBrace = strchr(firstClosingBrace + 1, '{');
+		if (secondOpeningBrace == NULL) return;
+		secondOpeningBrace++;
+		char *secondClosingBrace = strchr(firstClosingBrace + 1, '}');
+		if (secondClosingBrace == NULL) return;
+		*secondClosingBrace = *firstClosingBrace = NULL;
 
-		if (strcmp(splitline2, "system.cpu.dcache.overall_hits") == 0)
-			dCacheHitBuffer = atoi(position);
-		else if (strcmp(splitline2,
-			"system.cpu.dcache.overall_miss_latency") == 0)
-			dCacheMissLatencyBuffer = atoi(position);
-		else if (strcmp(splitline2, "system.cpu.dcache.overall_misses")
-			== 0)
-			dCacheMissBuffer = atoi(position);
-		else if (strcmp(splitline2, "system.cpu.icache.overall_hits") == 0)
-			iCacheHitBuffer = atoi(position);
-		else if (strcmp(splitline2,
-			"system.cpu.icache.overall_miss_latency") == 0)
-			iCacheMissLatencyBuffer = atof(position);
-		else if (strcmp(splitline2, "system.cpu.icache.overall_misses")
-			== 0)
-			iCacheMissBuffer = atoi(position);
-		else if (strcmp(splitline2, "system.l2.overall_hits") == 0)
-			l2CacheHitBuffer = atoi(position);
-		else if (strcmp(splitline2, "system.l2.overall_miss_latency") == 0)
-			l2CacheMissLatencyBuffer = atof(position);
-		else if (strcmp(splitline2, "system.l2.overall_misses") == 0)
-			l2CacheMissBuffer = atoi(position);
-		else if (strcmp(splitline2, "system.l2.overall_mshr_hits") == 0)
-			l2MshrHitBuffer = atoi(position);
-		else if (strcmp(splitline2, "system.l2.overall_mshr_miss_latency")
-			== 0)
-			l2MshrMissLatencyBuffer = atof(position);
-		else if (strcmp(splitline2, "system.l2.overall_mshr_misses") == 0)
-			l2MshrMissBuffer = atoi(position);
+		if (strcmp(firstOpeningBrace, "system.cpu.dcache.overall_hits") == 0)
+			dCacheHitBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.cpu.dcache.overall_miss_latency") == 0)
+			dCacheMissLatencyBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.cpu.dcache.overall_misses") == 0)
+			dCacheMissBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.cpu.icache.overall_hits") == 0)
+			iCacheHitBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.cpu.icache.overall_miss_latency") == 0)
+			iCacheMissLatencyBuffer = atof(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.cpu.icache.overall_misses") == 0)
+			iCacheMissBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l2.overall_hits") == 0)
+			l2CacheHitBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l2.overall_miss_latency") == 0)
+			l2CacheMissLatencyBuffer = atof(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l2.overall_misses") == 0)
+			l2CacheMissBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l2.overall_mshr_hits") == 0)
+			l2MshrHitBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l2.overall_mshr_miss_latency") == 0)
+			l2MshrMissLatencyBuffer = atof(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l2.overall_mshr_misses") == 0)
+			l2MshrMissBuffer = atoi(secondOpeningBrace);
 		else
 			cerr << "missed something: " << newLine << endl;
 	}
@@ -1305,12 +1300,16 @@ void StatsScripts::processLine(char *newLine)
 		{
 			if (ipcLinesWritten < 1)
 			{
-				float currentValue = starts_with(newLine, "nan") ? 0.0F
-					: atof(newLine);
+				char *firstBracket = strchr(newLine,'{');
+				char *secondBracket = strchr(newLine,'}');
+				*secondBracket = NULL;
+				float currentValue = starts_with(firstBracket + 1, "nan") ? 0.0F
+					: atof(firstBracket + 1);
 				if (currentValue != currentValue)
 					currentValue = 0.0F;
 
 				ipcValueBuffer += currentValue;
+				cerr << "IPC added: " << currentValue << " " << endl;
 			}
 			ipcLinesWritten++;
 			ipcLinesWritten = 0;
@@ -1627,6 +1626,8 @@ void StatsScripts::compressStats()
 		+ hitMissValues[2 * epoch + 1])
 			/ 2;
 
+		hitMissTotals[epoch] = (hitMissTotals[2 * epoch] + hitMissTotals[2 * epoch + 1]) / 2;
+
 		iCacheHits[epoch] = (iCacheHits[2 * epoch]
 		+ iCacheHits[2 * epoch + 1]) / 2;
 
@@ -1724,6 +1725,8 @@ void StatsScripts::compressStats()
 	transactionCount.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 	hitMissValues.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+	hitMissTotals.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 	iCacheHits.resize(MAXIMUM_VECTOR_SIZE / 2);
 

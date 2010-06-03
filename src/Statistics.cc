@@ -248,7 +248,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	Statistics::WeightedAverage<double> averageLatency;
 	os << "----Transaction Latency";
-	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); ++currentValue)
+	for (unordered_map<tick, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); ++currentValue)
 	{
 		averageLatency.add(currentValue->first,currentValue->second);
 		os << " {" << currentValue->first << "," << currentValue->second << "}";
@@ -285,7 +285,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	// transaction delay
 	os << "----Transaction Delay";
-	for (unordered_map<unsigned, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); ++currentValue)
+	for (unordered_map<tick, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); ++currentValue)
 	{
 		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}

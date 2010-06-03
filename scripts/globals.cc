@@ -19,7 +19,7 @@ bool doneEntering = false;
 
 vector<string> fileList;
 
-mutex fileListMutex;
+boost::mutex fileListMutex;
 
 bool separateOutputDir = false;
 

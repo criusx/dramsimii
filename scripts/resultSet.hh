@@ -3,6 +3,7 @@
 #include <string>
 
 #include "PowerParameters.hh"
+#include "globals.hh"
 
 class ResultSet
 {

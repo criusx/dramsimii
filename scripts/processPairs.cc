@@ -15,13 +15,6 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 
 	if (found0 && found1)
 	{
-		//cerr << "A " << ssCache.getTotalLatency() << " " << ssCache.getTotalCount() << " B " << ssNoCache.getTotalLatency() << " " << ssNoCache.getTotalCount() << endl;
-
-		vector<string> currentLine;
-
-		/// @TODO process both of these?
-		//toBeProcessed.push_back(filePair->first);
-
 		ResultSet rs;
 		rs.parseCommandLine(ssCache.getRawCommandLine().c_str(), filePair.first);
 
@@ -48,7 +41,7 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 		{
 			try
 			{
-				string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power).*");
+				string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power)(C|N)?.*");
 				//cerr << "bn: " << basename << " od: " << outputDir << endl;;
 				ssNoCache.generateGraphs(outputDir / basename);
 
@@ -59,6 +52,103 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 				return;
 			}
 		}		
+	}
+}
+
+void processStats(const pair<string, string> &filePair, map<string, ResultSet > &results, path &outputDir, const bool generateResultsOnly)
+{
+	StatsScripts ssNoCache;
+	
+	// without the DIMM cache
+	bool found1 = ssNoCache.processStatsForFile(filePair.second);
+
+	if (found1)
+	{
+		ResultSet rs;
+		rs.parseCommandLine(ssNoCache.getRawCommandLine().c_str(), filePair.second);
+
+		rs.runtime = ssNoCache.getRunTime();
+		rs.noCacheRuntime = ssNoCache.getRunTime();
+		rs.cacheRuntime = 0;
+		rs.readHitRate = 0;
+		rs.hitRate = 0;
+		rs.averageLatency = ssNoCache.getAverageLatency();
+		rs.averageTheoreticalLatency = 0;
+		rs.withCacheLatency = 0;
+		rs.withoutCacheLatency = ssNoCache.getTotalLatency();
+		rs.withCacheRequestCount = 0;
+		rs.withoutCacheRequestCount = ssNoCache.getTotalCount();
+
+		const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
+
+#pragma omp critical
+		results[basefilename].setStats(rs, true);
+
+		if (!generateResultsOnly)
+		{
+			try
+			{
+				string basename = regexMatch<string>(filePair.second.c_str(), "(.*)-(stats|power)(C|N)?.*");
+				ssNoCache.generateGraphs(outputDir / basename);
+			}
+			catch (std::exception e)
+			{
+				return;
+			}
+		}		
+	}
+}
+
+void processPower(const pair<string, string> &filePair, map<string, ResultSet > &results, list<pair<string, string> > &powerParams, path &outputDir, const bool generateResultsOnly)
+{
+	PowerScripts psCache(powerParams), psNoCache(powerParams);
+	
+	// without the cache
+	bool found1 = psNoCache.processStatsForFile(filePair.second);
+
+	if (found1)
+	{		
+		bool problem2 = psNoCache.isUsingCache();
+
+		if (problem2)
+		{
+			cerr << "cache where there should not be " << filePair.second << endl;
+			exit(-4);
+		}
+
+		double energyNormal = psNoCache.getTotalEnergy().first + psNoCache.getTotalEnergy().second;
+		//cerr << "??? " << psNoCache.getTotalEnergy().first << endl;
+
+		//cerr << "normalA " << psNoCache.getTotalEnergy().first + psNoCache.getTotalEnergy().second << endl << "altA " << psCache.getTotalEnergy().first + psCache.getTotalEnergy().second << endl;
+		ResultSet rs;
+		rs.parseCommandLine(psNoCache.getRawCommandLine().c_str(), filePair.first);
+		rs.energyUsed = energyNormal;
+		rs.energyUsedTheoretical = 0;
+		rs.percentCacheTimeInUse = 0;
+		rs.noCacheRuntime = psNoCache.getRunTime();
+		rs.cacheRuntime = 0;
+
+		const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
+
+#pragma omp critical
+		results[basefilename].setStats(rs, false);
+
+#pragma omp critical
+		results[basefilename].setPowerParameters(psCache.getPowerParameters());
+
+		if (!generateResultsOnly)
+		{
+			try
+			{
+				string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power)(C|N)?.*");
+
+				psNoCache.generateGraphs(outputDir / basename);
+			}
+			catch (std::exception e)
+			{
+				return;
+			}
+		}
 	}
 }
 
@@ -110,7 +200,7 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, Resul
 		{
 			try
 			{
-				string basename = regexMatch<string>(filePair.first.c_str(), "(.*)-(stats|power).*");
+				string basename = regexMatch<string>(filePair.second.c_str(), "(.*)-(stats|power)(C|N)?.*");
 
 				psNoCache.generateGraphs(outputDir / basename);
 

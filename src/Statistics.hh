@@ -159,11 +159,11 @@ namespace DRAMsimII
 		std::vector<std::vector<std::pair<unsigned,unsigned> > > rowBufferAccesses;												///< the number of row hits this epoch
 		std::vector<std::vector<unsigned> > rasReduction;				///< the number of unnecessary RAS commands
 		unsigned issuedAtTFAW;											///< the number of commands executed at exactly tFAW
-		std::tr1::unordered_map<unsigned,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
-		std::tr1::unordered_map<unsigned,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
-		std::tr1::unordered_map<unsigned,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
-		std::tr1::unordered_map<unsigned,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
-		std::tr1::unordered_map<unsigned,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
+		std::tr1::unordered_map<tick,unsigned> commandDelay;			///< stores the start time - enqueue time stats for commands
+		std::tr1::unordered_map<tick,unsigned> commandExecution;		///< stores the finish time - start time stats for commands
+		std::tr1::unordered_map<tick,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
+		std::tr1::unordered_map<tick,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
+		std::tr1::unordered_map<tick,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
 		tick cacheLatency;													///< the latency due to transactions that were serviced by the cache
 		// still some bugs supporting 64-bit numbers
 		std::map<PhysicalAddress, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency

@@ -80,8 +80,7 @@ int main(int argc, char** argv)
 	cypressResults = vm.count("cypress") > 0;
 
 	list<string> toBeProcessed;
-
-	
+		
 	vector<string> files;
 
 	// figure out which in the command line are viable files to analyze
@@ -91,14 +90,15 @@ int main(int argc, char** argv)
 		{
 			files.push_back(string(argv[i]));
 		}
+		
 	}
-
+	
 	vector<pair<string,string> > filePairs;
 
-	if (vm.count("pairs"))
+	for (vector<string>::const_iterator currentFile = files.begin(); 
+		currentFile < files.end(); ++currentFile)
 	{
-		for (vector<string>::const_iterator currentFile = files.begin(); 
-			currentFile < files.end(); ++currentFile)
+		if (vm.count("pairs"))
 		{
 			// find the cache file
 			if (regexSearch(currentFile->c_str(), (const char *)"(power|stats)C.(gz|bz2)?$"))
@@ -111,9 +111,15 @@ int main(int argc, char** argv)
 						ends_with(*currentFile2,"N.gz"))
 					{
 						filePairs.push_back(pair<string,string>(*currentFile,*currentFile2));
-						//cerr << *currentFile << " " << *currentFile2 << endl;
 					}
 				}
+			}
+		}
+		else
+		{
+			if (regexSearch(currentFile->c_str(), (const char *)"(power|stats)(C|N)?.(gz|bz2)?$"))
+			{
+				filePairs.push_back(pair<string,string>(*currentFile,*currentFile));
 			}
 		}
 	}
@@ -127,18 +133,34 @@ int main(int argc, char** argv)
 		for (vector<pair<string, string> >::const_iterator currentFile = filePairs.begin(); 
 			currentFile < filePairs.end(); ++currentFile)
 		{
-			// go through the stats file
-			if (regexSearch(currentFile->first.c_str(), "stats[CN]?[.](gz|bz2)?$"))
+			if (vm.count("pairs"))
 			{
-				processStatsForPair(*currentFile, results, outputDir, generateResultsOnly);		
+				// go through the stats file
+				if (regexSearch(currentFile->first.c_str(), "stats[CN]?[.](gz|bz2)?$"))
+				{
+					processStatsForPair(*currentFile, results, outputDir, generateResultsOnly);		
+				}
+				// go through the power file
+				else if (regexSearch(currentFile->first.c_str(), "power[CN]?[.](gz|bz2)?$"))
+				{		
+					processPowerForPair(*currentFile, results, powerParams, outputDir, generateResultsOnly);
+				}
 			}
-			// go through the power file
-			else if (regexSearch(currentFile->first.c_str(), "power[CN]?[.](gz|bz2)?$"))
-			{		
-				processPowerForPair(*currentFile, results, powerParams, outputDir, generateResultsOnly);
+			else
+			{
+				// go through the stats file
+				if (regexSearch(currentFile->second.c_str(), "stats[CN]?[.](gz|bz2)?$"))
+				{
+					processStats(*currentFile, results, outputDir, generateResultsOnly);		
+				}
+				// go through the power file
+				else if (regexSearch(currentFile->second.c_str(), "power[CN]?[.](gz|bz2)?$"))
+				{		
+					processPower(*currentFile, results, powerParams, outputDir, generateResultsOnly);
+				}
 			}
 		}
-		
+
 		if (int i = generateResultHtml(results, outputDir))
 			return i;
 

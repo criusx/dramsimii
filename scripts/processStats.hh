@@ -1,7 +1,6 @@
 #ifndef PROCESSSTATS_HH
 #define PROCESSSTATS_HH
 
-#include <parallel/algorithm>
 #include <cstdio>
 #include <string>
 #include <list>
@@ -37,12 +36,13 @@
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <signal.h>
-#ifdef WIN32
+#ifdef _MSC_VER
 #include <unordered_map>
 #else
 #include <tr1/unordered_map>
-#endif
 #include <sys/wait.h>
+#endif
+
 
 #include "pstream.h"
 
@@ -112,8 +112,13 @@ void prepareOutputDir(const bf::path &outputDir, const string &filename,
 					  const vector<string> &commandLine, list<pair<string,string> > &graphs);
 
 class ResultSet;
+
 void processPowerForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, list<pair<string, string> > &powerParams, path &outputDir, const bool generateResultsOnly);
 void processStatsForPair(const pair<string, string> &filePair, map<string, ResultSet > &results, path &outputDir, const bool generateResultsOnly);
+
+void processPower(const pair<string, string> &filePair, map<string, ResultSet > &results, list<pair<string, string> > &powerParams, path &outputDir, const bool generateResultsOnly);
+void processStats(const pair<string, string> &filePair, map<string, ResultSet > &results, path &outputDir, const bool generateResultsOnly);
+
 void thumbNailWorker(const string &filename);
 int generateResultHtml(map<string,ResultSet> &results, bf::path &outputDir);
 bool fileExists(const string&);
