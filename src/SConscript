@@ -29,10 +29,10 @@ if not conf.CheckLib('xml2'):
 	print 'e.g. sudo apt-get install "libxml2-*"'
 	Exit(1)
 
-#try:
-#	env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
-#except ValueError:
-#	pass
+try:
+	env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
+except ValueError:
+	pass
 
 try:
 	if 'fast' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
@@ -44,8 +44,8 @@ try:
 		#env.Append(CCFLAGS = ['-march=amdfam10', '-mtune=amdfam10'])
 
 		#env.Append(CPPDEFINES = ['TRACE_GENERATE']
-		#env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['-fprofile-generate'])
-		env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
+		env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['-fprofile-generate'])
+		#env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
 		CCFLAGS = ['-I/usr/include/libxml2', '-march=native', '-mtune=native'],
@@ -53,7 +53,7 @@ try:
 	elif 'prof' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
 			CCFLAGS = ['-I/usr/include/libxml2', '-funroll-loops',
-			'-ffast-math', '-finline-functions', '-march=native','-Wno-unused-variable']
+			'-ffast-math', '-finline-functions', '-march=k8-sse','-Wno-unused-variable']
 			,CPPDEFINES = ['__STDC_LIMIT_MACROS']
 			)
 		try:
