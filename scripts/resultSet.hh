@@ -36,6 +36,8 @@ public:
 	std::string replacementPolicy;
 	std::string title;
 	std::string basename;
+	double averageIpc;
+	double reuseRate;
 	double runtime;
 	double readHitRate;
 	double hitRate;
@@ -46,10 +48,12 @@ public:
 	double noCacheRuntime;
 	double cacheRuntime;
 	double percentCacheTimeInUse;
+	std::pair<double,double> averageBandwidth;
 	uint64_t withCacheLatency;
 	uint64_t withoutCacheLatency;
 	uint64_t withCacheRequestCount;
 	uint64_t withoutCacheRequestCount;
+	double averageActStbyPower;
 
 	PowerParameters powerParameters;
 
@@ -73,6 +77,8 @@ public:
 		blockSize(0),
 		associativity(0),
 		numberOfSets(0),
+		averageIpc(0.0),
+		reuseRate(0.0),
 		runtime(0.0),
 		readHitRate(0.0),
 		hitRate(0.0),
@@ -86,7 +92,8 @@ public:
 		withCacheLatency(0),
 		withoutCacheLatency(0),
 		withCacheRequestCount(0),
-		withoutCacheRequestCount(0)
+		withoutCacheRequestCount(0),
+		averageActStbyPower(0)
 	{}
 
 	void parseCommandLine(const char *commandLine, const std::string &filename);

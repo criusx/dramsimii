@@ -48,7 +48,7 @@ try:
 		#env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
-		CCFLAGS = ['-I/usr/include/libxml2', '-march=native', '-mtune=native'],
+		CCFLAGS = ['-I/usr/include/libxml2', '-march=k8-sse3', '-mtune=k8-sse3'],
 		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5', '__STDC_LIMIT_MACROS'])
 	elif 'prof' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(

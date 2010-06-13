@@ -245,17 +245,16 @@ const std::string averageTransactionLatencyScript = "set yrange [1 : *] norevers
 													'-' using 1:2 title \"Average + 2 std. dev.\" with lines lw 1.25\n";
 
 
-const std::string rowHitMissGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
-										  set y2range [1 : *] noreverse nowriteback\n\
-										  set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
-										  set ylabel 'Reuse Rate'\n\
-										  set y2label 'Accesses'\n\
-										  set y2tics\n\
-										  set my2tics\n\
-										  set logscale y2\n\
-										  plot '-' using 1:2 axes x1y2 t 'Accesses' with filledcurve below x1 lt rgb \"#28B95A\",\
-										  '-' using 1:2 axes x1y1 title 'Hit Rate' with lines lw 1.250 lt rgb \"#5B28B8\",\
-										  '-' using 1:2 axes x1y1 title 'Cumulative Average Hit Rate' with lines lw 1.250 lt rgb \"#C3FF68\"\n";
+const std::string rowReuseRateGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
+											set y2range [1 : *] noreverse nowriteback\n\
+											set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+											set ylabel 'Reuse Rate'\n\
+											set y2label 'Accesses'\n\
+											set y2tics\n\
+											set my2tics\n\
+											set logscale y2\n\
+											plot '-' using 1:2 axes x1y2 t 'Accesses' with impulses lt rgb \"#28B95A\",\
+											'-' using 1:2 axes x1y1 title 'Hit Rate' with lines lw 1.75 lt rgb \"#5B28B8\"\n";
 
 
 

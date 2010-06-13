@@ -65,7 +65,7 @@ namespace DRAMsimII
 		template <typename T>
 		class WeightedAverage
 		{
-			typedef boost::uint64_t uint64_t;
+			//typedef boost::uint64_t uint64_t;
 
 			uint64_t count;
 			T total;
@@ -276,7 +276,7 @@ namespace DRAMsimII
 				ar << channel;
 
 				std::map<tick, tick> serializeMap;
-				std::tr1::unordered_map<tick, tick>::const_iterator it;
+				std::tr1::unordered_map<tick, unsigned>::const_iterator it;
 
 				for (it = st->commandDelay.begin(); it != st->commandDelay.end(); it++)
 				{

@@ -382,7 +382,7 @@ void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool
 	p << smallIPCGraphScript << endl;
 
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
+	for (vector<double>::const_iterator i = ipcValues.begin(); i
 		!= ipcValues.end(); ++i)
 	{
 		p << time << " " << *i << endl;
@@ -392,7 +392,7 @@ void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool
 
 	time = 0.0F;
 	CumulativePriorMovingAverage ipcTotal;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
+	for (vector<double>::const_iterator i = ipcValues.begin(); i
 		!= ipcValues.end(); ++i)
 	{
 		ipcTotal.add(1, *i);
@@ -403,7 +403,7 @@ void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool
 
 	time = 0.0F;
 	PriorMovingAverage ipcBuffer(WINDOW);
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
+	for (vector<double>::const_iterator i = ipcValues.begin(); i
 		!= ipcValues.end(); ++i)
 	{
 		ipcBuffer.append(*i);
@@ -512,7 +512,7 @@ void StatsScripts::averageIpcAndLatencyGraph(const bf::path &outFilename, opstre
 	p << "set title 'Average IPC vs. Time'" << endl << otherIPCGraphScript << endl;
 
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
+	for (vector<double>::const_iterator i = ipcValues.begin(); i
 		!= ipcValues.end(); ++i)
 	{
 		p << time << " " << *i << endl;
@@ -535,7 +535,7 @@ void StatsScripts::averageIpcAndLatencyGraph(const bf::path &outFilename, opstre
 
 	PriorMovingAverage ipcBuffer(WINDOW);
 	time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
+	for (vector<double>::const_iterator i = ipcValues.begin(); i
 		!= ipcValues.end(); ++i)
 	{
 		ipcBuffer.append(*i);
@@ -547,13 +547,13 @@ void StatsScripts::averageIpcAndLatencyGraph(const bf::path &outFilename, opstre
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
 
-void StatsScripts::hitMissGraph(const bf::path &outFilename, opstream &p, bool isThumbnail)
+void StatsScripts::openRowReuseRateGraph(const bf::path &outFilename, opstream &p, bool isThumbnail)
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 
 	printTitle("Reuse Rate of Open Rows vs. Time", commandLine, p);
-	p << rowHitMissGraphScript << endl;
+	p << rowReuseRateGraphScript << endl;
 
 	float time = 0.0F;
 	for (vector<unsigned>::const_iterator i = hitMissTotals.begin(), end = hitMissTotals.end(); i
@@ -573,18 +573,7 @@ void StatsScripts::hitMissGraph(const bf::path &outFilename, opstream &p, bool i
 		time += epochTime;
 	}
 	p << "e" << endl;
-
-	CumulativePriorMovingAverage hitMissTotal;
-	time = 0.0F;
-	for (vector<float>::const_iterator i = hitMissValues.begin(); i
-		!= hitMissValues.end(); ++i)
-	{
-		hitMissTotal.add(1.0, *i);
-		p << time << " " << hitMissTotal.getAverage() << endl;
-		time += epochTime;
-	}
-	p << "e" << endl;
-
+	
 	p << "unset output" << endl;
 }
 
@@ -612,7 +601,7 @@ void StatsScripts::bigIpcGraph(const bf::path &outFilename, opstream &p, bool is
 		<< outFilename.native_directory_string() << "'" << endl;
 	p << bigIPCGraphScript << endl;
 	float time = 0.0F;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
+	for (vector<double>::const_iterator i = ipcValues.begin(); i
 		!= ipcValues.end(); ++i)
 	{
 		p << time << " " << *i << endl;
@@ -622,7 +611,7 @@ void StatsScripts::bigIpcGraph(const bf::path &outFilename, opstream &p, bool is
 
 	time = 0.0F;
 	CumulativePriorMovingAverage ipcTotal;
-	for (vector<float>::const_iterator i = ipcValues.begin(); i
+	for (vector<double>::const_iterator i = ipcValues.begin(); i
 		!= ipcValues.end(); ++i)
 	{
 		ipcTotal.add(1, *i);
@@ -721,10 +710,8 @@ void StatsScripts::generateJointGraphs(const bf::path &outputDir, const StatsScr
 
 	p0 << endl << "exit" << endl;
 
-
 	p0.close();
 	
-
 #pragma omp critical
 	{
 		boost::mutex::scoped_lock lock(fileListMutex);
@@ -894,11 +881,11 @@ void StatsScripts::generateGraphs(const bf::path &outputDir)
 		//////////////////////////////////////////////////////////////////////////
 		// make the hit-miss graph
 		outFilename = outputDir / ("rowHitRate." + extension);
-		hitMissGraph(outFilename,p0,false);
+		openRowReuseRateGraph(outFilename,p0,false);
 		filesGenerated.push_back(outFilename.native_directory_string());
 		graphs.push_back(pair<string, string> ("rowHitRate", "Row Reuse"));
 		outFilename = outputDir / ("rowHitRate-thumb." + thumbnailExtension);
-		hitMissGraph(outFilename,p0,true);
+		openRowReuseRateGraph(outFilename,p0,true);
 		//////////////////////////////////////////////////////////////////////////
 	}
 
@@ -1309,7 +1296,6 @@ void StatsScripts::processLine(char *newLine)
 					currentValue = 0.0F;
 
 				ipcValueBuffer += currentValue;
-				cerr << "IPC added: " << currentValue << " " << endl;
 			}
 			ipcLinesWritten++;
 			ipcLinesWritten = 0;
@@ -1319,7 +1305,7 @@ void StatsScripts::processLine(char *newLine)
 			char *firstBracket = strchr(newLine, '{');
 			if (firstBracket == NULL) return;
 
-			char *secondBracket = strchr(newLine, '}');
+			char *secondBracket = strchr(firstBracket + 1, '}');
 			if (secondBracket == NULL) return;
 			*secondBracket = NULL;
 			unsigned hitCount = max(atoi(firstBracket + 1), 1);
@@ -1327,10 +1313,13 @@ void StatsScripts::processLine(char *newLine)
 			firstBracket = strchr(secondBracket + 1, '{');
 			if (firstBracket == NULL) return;
 
-			secondBracket = strchr(secondBracket + 1, '}');
+			secondBracket = strchr(firstBracket + 1, '}');
 			if (secondBracket == NULL) return;
 			*secondBracket = NULL;
 			unsigned missCount = max(atoi(firstBracket + 1), 1);
+
+			hitTotal += hitCount;
+			missTotal += missCount;
 
 			hitMissValueBuffer += hitCount
 				/ ((double) missCount + hitCount);

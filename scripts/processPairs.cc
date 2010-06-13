@@ -78,6 +78,9 @@ void processStats(const pair<string, string> &filePair, map<string, ResultSet > 
 		rs.withoutCacheLatency = ssNoCache.getTotalLatency();
 		rs.withCacheRequestCount = 0;
 		rs.withoutCacheRequestCount = ssNoCache.getTotalCount();
+		rs.reuseRate = ssNoCache.getReuseRate();
+		rs.averageIpc = ssNoCache.getAverageIpcValue();
+		rs.averageBandwidth = ssNoCache.getAverageBandwidth();
 
 		const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 
@@ -127,6 +130,7 @@ void processPower(const pair<string, string> &filePair, map<string, ResultSet > 
 		rs.percentCacheTimeInUse = 0;
 		rs.noCacheRuntime = psNoCache.getRunTime();
 		rs.cacheRuntime = 0;
+		rs.averageActStbyPower = psNoCache.getAverageActStbyPower();
 
 		const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 

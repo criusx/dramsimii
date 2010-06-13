@@ -217,11 +217,10 @@ Channel::~Channel()
 		lastCommand = cmd;
 	}
 #endif
-	if (lastCommand)
-	{
-		delete lastCommand;
-		lastCommand = NULL;
-	}
+
+	delete lastCommand;
+	lastCommand = NULL;
+
 #if 1
 	for (vector<Transaction *>::iterator i = refreshCounter.begin(), end = refreshCounter.end(); i != end; ++i)
 	{
@@ -611,7 +610,7 @@ void Channel::doPowerCalculation(ostream& os)
 	double PsysPRE_PDN = 0.0;
 	double PsysACT_PDN = 0.0;
 	double PsysACT = 0.0;
-	double PsysACTAdjusted = 0.0;
+	//double PsysACTAdjusted = 0.0;
 
 	float tRRDschAdjusted = 0.0F;
 

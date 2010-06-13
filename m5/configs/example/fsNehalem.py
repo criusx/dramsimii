@@ -55,6 +55,8 @@ Benchmarks['mcf'] = [SysConfig('mcf.rcS', '1500MB')]
 Benchmarks['soplex'] = [SysConfig('soplex.rcS', '768MB')]
 Benchmarks['bzip2'] = [SysConfig('bzip2.rcS', '512MB')]
 Benchmarks['milc'] = [SysConfig('milc.rcS', '512MB')]
+Benchmarks['milcLong'] = [SysConfig('milcLong.rcS', '512MB')]
+Benchmarks['mcfLong'] = [SysConfig('mcfLong.rcS', '2GB')]
 Benchmarks['cactusADM'] = [SysConfig('cactusADM.rcS', '512MB')]
 Benchmarks['namd'] = [SysConfig('namd.rcS', '512MB')]
 Benchmarks['gobmk'] = [SysConfig('gobmk.rcS', '512MB')]
@@ -168,7 +170,7 @@ execfile(os.path.join(config_root, "common", "Options.py"))
 
 options.l2cache = True
 options.caches = True
-options.detailed = True
+options.detailed = False
 
 if args:
     print "Error: script doesn't take any positional arguments"
@@ -196,7 +198,7 @@ else:
     if options.dual:
         bm = [SysConfig(), SysConfig()]
     else:
-        bm = [SysConfig()]
+        bm = [SysConfig('','512MB')]
 
 np = options.num_cpus
 
@@ -226,7 +228,8 @@ if options.l2cache:
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24, prefetch_cache_check_push=False)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='stride', prefetch_degree=2, prefetcher_size=64, prefetch_cache_check_push=True)
         #test_sys.l2 = L2Cache(size='1MB', assoc=16, latency="7ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=2, prefetcher_size=16)
-        test_sys.l2 = L2Cache(size='8MB', assoc=16, latency="49ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24)
+        test_sys.l2 = L2Cache(size='8MB', assoc=16, latency="49ns")
+        #test_sys.l2 = L2Cache(size='8MB', assoc=16, latency="49ns", mshrs=32, prefetch_policy='ghb', prefetch_degree=3, prefetcher_size=256, tgts_per_mshr=24)
 
     test_sys.tol2bus = Bus()
     test_sys.l2.cpu_side = test_sys.tol2bus.port

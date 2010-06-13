@@ -149,7 +149,7 @@ usingCache(false)
 bool Settings::setKeyValue(const string &nodeName, const string &value)
 {
 	string nodeValue = value;
-	bool result = true;
+	//bool result = true;
 	boost::algorithm::to_lower(nodeValue);
 
 	const FileIOToken token = dramTokenizer(nodeName);

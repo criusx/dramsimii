@@ -39,7 +39,7 @@ namespace DRAMsimII
 		SimulationParameters(const Settings& settings);
 
 		// functions
-		tick getRequestCount() {return requestCount;}
+		tick getRequestCount() const {return requestCount;}
 
 		// friends
 		friend std::ostream& operator<<(std::ostream& , const SimulationParameters&);

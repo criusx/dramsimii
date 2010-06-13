@@ -405,7 +405,7 @@ void System::runSimulations(const unsigned requestCount)
 
 	std::queue<std::pair<unsigned, tick> > finishedTransactions;
 
-	bool running = true;
+	//bool running = true;
 
 	if (inputTransaction)
 	{		

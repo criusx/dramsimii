@@ -277,8 +277,7 @@ PowerCalculations PowerParameters::calculateSystemPower(const char* newLine, con
 
 	PowerCalculations pc;
 
-	double totalReadHits = 0.0;
-
+	
 	const double duration = max(regexMatch<double>(currentRank->c_str(),"duration\\{([0-9]+)\\}"), 0.000001);
 
 	// calculate SRAM power from the DIMM caches
@@ -350,7 +349,7 @@ PowerCalculations PowerParameters::calculateSystemPower(const char* newLine, con
 		try
 		{			
 			//cerr << *currentRank << endl;
-			unsigned currentRankID = regexMatch<unsigned>(currentRank->c_str(),"^\\[([0-9]+)\\]");
+			//unsigned currentRankID = regexMatch<unsigned>(currentRank->c_str(),"^\\[([0-9]+)\\]");
 
 
 			// because each rank on any dimm will report the same hit and miss counts
@@ -359,7 +358,7 @@ PowerCalculations PowerParameters::calculateSystemPower(const char* newLine, con
 
 			//double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
 			double thisRankRasCount = regexMatch<double>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
-			double thisRankAdjustedRasCount = regexMatch<double>(currentRank->c_str(),"adjRasCount\\{([0-9]+)\\}");
+			//double thisRankAdjustedRasCount = regexMatch<double>(currentRank->c_str(),"adjRasCount\\{([0-9]+)\\}");
 			double readCycles = regexMatch<double>(currentRank->c_str(),"read\\{([0-9]+)\\}");
 			double writeCycles = regexMatch<double>(currentRank->c_str(),"write\\{([0-9]+)\\}");
 			//double readHits = regexMatch<double>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");

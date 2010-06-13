@@ -66,6 +66,9 @@ row(0),
 column(0)
 {
 	bool result = addressTranslation();
+#ifndef NDEBUG
+	assert(result);
+#endif
 
 #ifdef DEBUG
 	unsigned oldCh = channel, oldDimm = dimm, oldRk = rank, oldBk = bank, oldRow = row, oldCol = column;

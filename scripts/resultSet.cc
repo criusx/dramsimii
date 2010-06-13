@@ -6,7 +6,7 @@ using std::string;
 
 const string ResultSet::urlString = "<a href=\"%1/index.html\">%2</a>";
 
-const string ResultSet::csvHeader = "Benchmark,Channels,DIMMs,Ranks,Banks,Rows,Columns,DRAM Width,Posted CAS,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Replacement Policy,Runtime,Read Hit Rate,Hit Rate,Average Latency,Average Theoretical Latency,Average Latency Change,Energy Used,Theoretical Energy Used,Energy Used Ratio (%),No Cache Runtime,Cache Runtime,Cache In Use (%),Energy Reduced Due to Latency, Difference in Total Latency\n";
+const string ResultSet::csvHeader = "Benchmark,Channels,DIMMs,Ranks,Banks,Rows,Columns,DRAM Width,Posted CAS,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Replacement Policy,Runtime,Row Reuse Rate,Average IPC,Read Hit Rate,Hit Rate,Average Bandwidth, Average ACT_STBY Power, Average Latency,Average Theoretical Latency,Average Latency Change,Energy Used,Theoretical Energy Used,Energy Used Ratio (%),No Cache Runtime,Cache Runtime,Cache In Use (%),Energy Reduced Due to Latency, Difference in Total Latency\n";
 
 void ResultSet::parseCommandLine(const char *commandLine, const string &filename)
 {
@@ -122,12 +122,24 @@ std::pair<string,string> ResultSet::generateResultLine() const
 	csvOutput += lexical_cast<string>(runtime) + ",";
 	currentRow += generateTd(runtime);
 
+	csvOutput += lexical_cast<string>(reuseRate) + ",";
+	currentRow += generateTd(reuseRate);
+
+	csvOutput += lexical_cast<string>(averageIpc) + ",";
+	currentRow += generateTd(averageIpc);
+
 	csvOutput += lexical_cast<string>(readHitRate) + ",";
 	currentRow += generateTd(readHitRate);
 
 	csvOutput += lexical_cast<string>(hitRate) + ",";
 	currentRow += generateTd(hitRate);
 
+	csvOutput += lexical_cast<string>(averageBandwidth.first + averageBandwidth.second) + ",";
+	currentRow += generateTd(averageBandwidth.first + averageBandwidth.second);
+
+	csvOutput += lexical_cast<string>(averageActStbyPower) + ",";
+	currentRow += generateTd(averageActStbyPower);
+	
 	csvOutput += lexical_cast<string>(averageLatency) + ",";
 	currentRow += generateTd(averageLatency);
 
@@ -229,6 +241,8 @@ void ResultSet::setStats(const ResultSet &rs, const bool isStat)
 		associativity = rs.associativity;
 		numberOfSets = rs.numberOfSets;
 		runtime = rs.runtime;
+		reuseRate = rs.reuseRate;
+		averageIpc = rs.averageIpc;
 		readHitRate = rs.readHitRate;
 		hitRate = rs.hitRate;
 		averageLatency = rs.averageLatency;
@@ -241,12 +255,14 @@ void ResultSet::setStats(const ResultSet &rs, const bool isStat)
 		withCacheLatency = rs.withCacheLatency;
 		withCacheRequestCount = rs.withCacheRequestCount;
 		withoutCacheRequestCount = rs.withoutCacheRequestCount;
+		averageBandwidth = rs.averageBandwidth;
 	}
 	else
 	{
 		//powerParameters = rs.getPowerParameters();
 		energyUsed = rs.energyUsed;
 		energyUsedTheoretical = rs.energyUsedTheoretical;		
-		percentCacheTimeInUse = rs.percentCacheTimeInUse;		
+		percentCacheTimeInUse = rs.percentCacheTimeInUse;	
+		averageActStbyPower = rs.averageActStbyPower;
 	}
 }

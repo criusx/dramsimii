@@ -82,7 +82,7 @@ namespace DRAMsimII
 		int tRTRS() const { return t_rtrs; }
 		int tRC() const { return t_rc; }
 		int tOST() const { return t_ost; }
-		int tCacheAccess() { return t_cache_access; }
+		int tCacheAccess() const { return t_cache_access; }
 
 		// friends
 		friend std::ostream &operator<<( std::ostream&, const TimingSpecification&);

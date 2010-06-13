@@ -126,7 +126,7 @@ namespace DRAMsimII
 		};
 
 		typedef DRAMsimII::PhysicalAddress Addr;
-		typedef boost::uint8_t uint8_t;
+		//typedef boost::uint8_t uint8_t;
 		typedef DRAMsimII::tick tick;
 		typedef DRAMsimII::Command Command;
 

@@ -60,6 +60,8 @@ def submitCommand(commandLine, name):
 
         count += 1
 
+        submitCommand = submitString % (outputDir, outputDir, name, scriptToRun)
+
         if not testing:
             f = open(scriptToRun, 'w+')
             f.write("#!/bin/sh\n")
@@ -75,9 +77,11 @@ def submitCommand(commandLine, name):
             f.write(command + "\n")
             f.close()
             os.chmod(scriptToRun, stat.S_IEXEC | stat.S_IREAD | stat.S_IWRITE)
-            submitCommand = submitString % (outputDir, outputDir, name, scriptToRun)
-            #print submitCommand
+                        #print submitCommand
             os.system(submitCommand)
+        else:
+            print command
+            print submitCommand
 
 
 ######################################################################################
@@ -87,8 +91,6 @@ tracesDir = os.path.join(os.path.expanduser("~"), 'benchmarks/dsTraces/6MB/24WAY
 
 # the format of the traces
 traceType = 'dramsim'
-
-#traces = ['lbm000-trace.gz', 'mcf000-trace.gz', 'milc000-trace.gz']
 
 # the name of the DRAMsimII executable
 dramSimExe = 'dramSimII.opt'
@@ -109,7 +111,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'm5/configs/example/dramsimfs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/thesis/studyA')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/thesis/studyC')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -131,7 +133,7 @@ addressMappingPolicy += ['sdramhiperf']
 #addressMappingPolicy += ['closepagebaseline']
 #addressMappingPolicy += ['closepagelowlocality']
 #addressMappingPolicy += ['closepagehighlocality']
-addressMappingPolicy += ['closepagebaselineopt']
+#addressMappingPolicy += ['closepagebaselineopt']
 
 commandOrderingAlgorithm = []
 commandOrderingAlgorithm += ['firstAvailableAge']
@@ -143,9 +145,9 @@ commandOrderingAlgorithm += ['commandPairRankHop']
 commandOrderingAlgorithm += ['strict']
 
 rowBufferManagementPolicy = []
-#rowBufferManagementPolicy += ['openpageaggressive']
-#rowBufferManagementPolicy += ['openpage']
-#rowBufferManagementPolicy += ['closepage']
+rowBufferManagementPolicy += ['openpageaggressive']
+rowBufferManagementPolicy += ['openpage']
+rowBufferManagementPolicy += ['closepage']
 rowBufferManagementPolicy += ['closepageaggressive']
 
 interarrivalCycleCount = [4]
@@ -157,22 +159,23 @@ readWriteGrouping = ['true']
 postedCas = ['true']
 #postedCas += ['false']
 
-requests = [5000000]
+requests = [150000000]
 
 benchmarks = []
 benchmarks += ['calculix']
 #benchmarks += ['milc']
-benchmarks += ['lbm']
-benchmarks += ['mcf']
-benchmarks += ['stream']
-benchmarks += ['bzip2']
-benchmarks += ['sjeng']
-benchmarks += ['xalancbmk']
-benchmarks += ['GemsFDTD']
+#benchmarks += ['lbm']
+#benchmarks += ['mcf']
+#benchmarks += ['stream']
+#benchmarks += ['bzip2']
+#benchmarks += ['sjeng']
+#benchmarks += ['xalancbmk']
+#benchmarks += ['GemsFDTD']
 
 # options for the run
 channels = []
 channels += [2]
+#channels += [4]
 #channels += [1]
 dimms = []
 #dimms += [1]
@@ -181,7 +184,10 @@ dimms += [4]
 ranks = []
 #ranks += [1]
 ranks += [2]
-banks = [16]
+ranks += [4]
+banks = []
+banks += [8]
+banks += [16]
 tFAW = [28]
 
 # per-DIMM cache parameters
@@ -189,15 +195,15 @@ associativity = []
 associativity += [8]
 #associativity += [24]
 associativity += [16]
-associativity += [32]
+#associativity += [32]
 cacheSizes = []
 cacheSizes += [8192]
-cacheSizes += [16384]
+#cacheSizes += [16384]
 #cacheSizes += [24576]
 blockSize = []
 blockSize += [64]
-blockSize += [128]
-blockSize += [256]
+#blockSize += [128]
+#blockSize += [256]
 hitLatency = [5]
 replacementPolicies = []
 replacementPolicies += ['nmru']
@@ -320,8 +326,8 @@ def main():
                                                                 elif opt == '-r':
                                                                     for f in interarrivalCycleCount:
                                                                         for h in requests:
-                                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimm, b, c, d, e, f, g, h, j, l, outputDir, "")
-                                                                            submitCommand(currentCommandLine, "%d%s%d" % (f, i, h))
+                                                                            currentCommandLine = commandLine % (ds2executable, memorySettings, channel, dimm, rank, bank, pc, amp, coa, f, pbqd, h, j, rbmp, outputDir, " usingcache false")
+                                                                            submitCommand([currentCommandLine], "r%d/%d" % (f, h))
 
                                                                 # full system
                                                                 elif opt == '-f':

@@ -58,16 +58,39 @@ public:
 	double PdsTermRoth;
 	double PdsTermWoth;
 
-
 	// system information
 	unsigned ranksPerDimm;
 	unsigned dimms;
 	bool usingCache;
 
 	PowerParameters():
-	CKE_LO_ACT(0.01),
+	pDsAct(0.0),
+		pDsActStby(0.0),
+		pDsActPdn(0.0),
+		pDsPreStby(0.0),
+		pDsPrePdn(0.0),
+		pDsRd(0.0),
+		pDsWr(0.0),
+		voltageScaleFactor(0.0),
+		frequencyScaleFactor(0.0),
+		tRc(0.0),
+		tBurst(0.0),
+		CKE_LO_ACT(0.01),
 		CKE_LO_PRE(0.95),
-		devicesPerRank(8.0)
+		freq(0.0),
+		idd1(0.0),
+		vdd(0.0),
+		devicesPerRank(8.0),
+		hitLatency(0.0),
+		idd(0.0),
+		isb1(0.0),
+		PdsDq(0.0),
+		PdsTermW(0.0),
+		PdsTermRoth(0.0),
+		PdsTermWoth(0.0),
+		ranksPerDimm(0),
+		dimms(0),
+		usingCache(false)
 	{}
 
 	void setParameters(const char* commandLine, const std::list<std::pair<std::string,std::string> > &updatedPowerParams);

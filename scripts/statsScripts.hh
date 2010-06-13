@@ -40,6 +40,10 @@ private:
 
 	unsigned hitMissTotalBuffer;
 
+	uint64_t hitTotal;
+
+	uint64_t missTotal;
+
 	vector<unsigned> iCacheHits;
 
 	uint64_t iCacheHitBuffer;
@@ -104,7 +108,7 @@ private:
 	pair<unsigned, unsigned> readHitsMisses;
 	pair<unsigned, unsigned> hitsMisses;
 
-	vector<float> ipcValues;
+	vector<double> ipcValues;
 
 	double ipcValueBuffer;
 
@@ -141,11 +145,36 @@ public:
 	unsigned getEpochCounter() const { return epochCounter; }
 	unsigned getEpochTime() const { return epochTime; }
 	double getAverageLatency() const { return totalLatency / (double)totalCount; }
+	double getReuseRate() const { return (double)hitTotal / ((double)hitTotal + (double)missTotal); }
 	uint64_t getTotalLatency() const { return totalLatency; }
 	uint64_t getTotalCount() const { return totalCount; }
 	string getRawCommandLine() const { return rawCommandLine; }
 	double getRunTime() const { return (double)epochCounter * epochTime; }
 	bool isUsingCache() const { return usingCache; }
+	double getAverageIpcValue() const 
+	{
+		double total = 0.0;
+		double count = (double)ipcValues.size();
+		for (vector<double>::const_iterator i = ipcValues.begin(), end = ipcValues.end(); i < end; i++)
+		{
+			total += *i;
+		}
+		return total / count;
+	}
+
+	std::pair<double,double> getAverageBandwidth() const
+	{
+		double totalR = 0.0, totalW = 0.0;
+		uint64_t count = (double)bandwidthValues.size();
+		for (vector<std::pair<uint64_t,uint64_t> >::const_iterator i = bandwidthValues.begin(), end = bandwidthValues.end();
+			i < end; i++)
+		{
+			totalR += i->first;
+			totalW += i->second;
+		}
+
+		return std::pair<double,double>((double)totalR / (double)count,(double)totalW / (double)count);
+	}
 
 public:
 	StatsScripts():
@@ -156,6 +185,8 @@ public:
 		  transactionCountBuffer(0ULL),
 		  hitMissValueBuffer(0.0),
 		  hitMissTotalBuffer(0U),
+		  hitTotal(0ULL),
+		  missTotal(0ULL),
 		  iCacheHitBuffer(0ULL),
 		  iCacheMissBuffer(0U),
 		  iCacheMissLatencyBuffer(0ULL),
@@ -172,7 +203,9 @@ public:
 		  cacheBandwidthValuesBuffer(0ULL, 0ULL),
 		  cacheHitMissBuffer(0, 0),
 		  ipcValueBuffer(0.0),
+		  workingSetSizeBuffer(0),
 		  foundCommandline(false),
+		  ipcLinesWritten(0),
 		  epochTime(0.0F),
 		  periodInNs(0.0F),
 		  tRC(0),
@@ -211,7 +244,7 @@ public:
 
 	  void generateJointGraphs(const bf::path &outputDir, const StatsScripts &alternateStats);
 
-	  bool working()
+	  bool working() const
 	  {
 		  return foundCommandline && foundEpoch;
 	  }
@@ -248,7 +281,7 @@ protected:
 
 	void averageIpcAndLatencyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
-	void hitMissGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void openRowReuseRateGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
 	void workingSetGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 

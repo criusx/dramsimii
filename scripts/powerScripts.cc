@@ -146,7 +146,7 @@ void PowerScripts::processLine(char *newLine)
 
 				for (int i = channelCount * POWER_VALUES_PER_CHANNEL; i > 0; --i)
 				{
-					values.push_back(vector<float>());
+					values.push_back(vector<double>());
 					values.back().reserve(MAXIMUM_VECTOR_SIZE);
 				}
 
@@ -231,15 +231,15 @@ void PowerScripts::pushStats()
 	// when the scale buffer is full
 	if (scaleIndex == 0)
 	{
-		vector<float>::size_type limit = valueBuffer.size();
+		vector<double>::size_type limit = valueBuffer.size();
 
-		for (vector<float>::size_type i = 0; i < limit; ++i)
+		for (vector<double>::size_type i = 0; i < limit; ++i)
 		{
 			values[i].push_back(valueBuffer[i] / scaleFactor);
 			valueBuffer[i] = 0;
 		}
 
-		energyValues.push_back(pair<float, float> (
+		energyValues.push_back(pair<double, double> (
 			energyValueBuffer.first / scaleFactor,
 			energyValueBuffer.second / scaleFactor));
 
@@ -257,7 +257,7 @@ void PowerScripts::compressStats()
 	// try to compress the array by half and double the scaleFactor
 
 	// scale the array back by half
-	for (vector<vector<float> >::iterator i = values.begin(), end = values.end();
+	for (vector<vector<double> >::iterator i = values.begin(), end = values.end();
 		i < end; ++i)
 	{
 		for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
@@ -272,7 +272,7 @@ void PowerScripts::compressStats()
 	// scale the alternate array back by half
 	for (unsigned j = 0; j < MAXIMUM_VECTOR_SIZE / 2; ++j)
 	{
-		energyValues[j] = pair<float, float> (
+		energyValues[j] = pair<double, double> (
 			(energyValues[2 * j].first + energyValues[2
 			* j + 1].first) / 2.0F,
 			(energyValues[2 * j].second
@@ -562,11 +562,11 @@ void PowerScripts::powerGraph(const bf::path &outFilename, opstream &p, bool isT
 	}
 	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
 	assert(values.size() > 0);
-	for (vector<vector<float> >::const_iterator i = values.begin(); i
+	for (vector<vector<double> >::const_iterator i = values.begin(); i
 		!= values.end(); ++i)
 	{
 		assert(i->size() > 0);
-		for (vector<float>::const_iterator j = i->begin(); j != i->end(); ++j)
+		for (vector<double>::const_iterator j = i->begin(); j != i->end(); ++j)
 		{
 			p << *j << endl;
 		}
@@ -580,7 +580,7 @@ void PowerScripts::powerGraph(const bf::path &outFilename, opstream &p, bool isT
 	// make the total power bar graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float totalPowerPerEpoch = 0.0F;
+		double totalPowerPerEpoch = 0.0F;
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 		p << i * epochTime << " " << totalPowerPerEpoch << endl;
@@ -591,7 +591,7 @@ void PowerScripts::powerGraph(const bf::path &outFilename, opstream &p, bool isT
 
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float total = 0;
+		double total = 0;
 
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			total += values[j][i];
@@ -605,7 +605,7 @@ void PowerScripts::powerGraph(const bf::path &outFilename, opstream &p, bool isT
 	// moving window average
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float total = 0;
+		double total = 0;
 
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			total += values[j][i];
@@ -631,7 +631,7 @@ void PowerScripts::energyGraph(const bf::path &outFilename, opstream &p, bool is
 	// various energy graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float totalPowerPerEpoch = 0.0F;
+		double totalPowerPerEpoch = 0.0F;
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
@@ -639,23 +639,21 @@ void PowerScripts::energyGraph(const bf::path &outFilename, opstream &p, bool is
 	}
 	p << "e" << endl;
 
-	double cumulativeEnergy = 0.0F;
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float totalPowerPerEpoch = 0.0F;
+		double totalPowerPerEpoch = 0.0F;
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
 		p << i * epochTime << " " << totalPowerPerEpoch * totalPowerPerEpoch
-			* epochTime * epochTime << endl;
-		cumulativeEnergy += totalPowerPerEpoch * epochTime;
+			* epochTime * epochTime << endl;		
 	}
 
 	p << "e" << endl << energy2Script << endl;
 
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float totalPowerPerEpoch = 0.0F;
+		double totalPowerPerEpoch = 0.0F;
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
@@ -666,7 +664,7 @@ void PowerScripts::energyGraph(const bf::path &outFilename, opstream &p, bool is
 
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float totalPowerPerEpoch = 0.0F;
+		double totalPowerPerEpoch = 0.0F;
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
@@ -691,7 +689,7 @@ void PowerScripts::bigEnergyGraph(const bf::path &outFilename, opstream &p, bool
 	// various energy graphs
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float totalPowerPerEpoch = 0.0F;
+		double totalPowerPerEpoch = 0.0F;
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
@@ -702,7 +700,7 @@ void PowerScripts::bigEnergyGraph(const bf::path &outFilename, opstream &p, bool
 	double cumulativeEnergy = 0.0F;
 	for (vector<unsigned>::size_type i = 0; i < values.back().size(); ++i)
 	{
-		float totalPowerPerEpoch = 0.0F;
+		double totalPowerPerEpoch = 0.0F;
 		for (vector<unsigned>::size_type j = 0; j < values.size(); ++j)
 			totalPowerPerEpoch += values[j][i];
 
@@ -714,7 +712,7 @@ void PowerScripts::bigEnergyGraph(const bf::path &outFilename, opstream &p, bool
 		<< "unset output" << endl;
 }
 
-void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<float> > &alternateValues, bool isThumbnail) const
+void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -738,10 +736,10 @@ void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const
 	//p << "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
 	p << "'-' u 1:2 axes x1y1 t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
 	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
-	for (vector<vector<float> >::const_iterator i = alternateValues.begin(), end = alternateValues.end(); 
+	for (vector<vector<double> >::const_iterator i = alternateValues.begin(), end = alternateValues.end(); 
 		i < end; ++i)
 	{
-		for (vector<float>::const_iterator j = i->begin(), end = i->end(); j != end; ++j)
+		for (vector<double>::const_iterator j = i->begin(), end = i->end(); j != end; ++j)
 		{
 			p << *j << endl;
 		}
@@ -752,7 +750,7 @@ void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const
 
 	for (vector<unsigned>::size_type i = 0; i < alternateValues.back().size(); ++i)
 	{
-		float total = 0;
+		double total = 0;
 
 		for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
 			total += alternateValues[j][i];
@@ -764,7 +762,7 @@ void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const
 		<< "unset output" << endl;
 }
 
-void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<vector<float> > &alternateValues, bool isThumbnail) const
+void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -805,7 +803,7 @@ void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, cons
 
 	for (vector<unsigned>::size_type i = 0; i < alternateValues.back().size(); ++i)
 	{
-		float total = 0;
+		double total = 0;
 
 		for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
 			total += alternateValues[j][i];
@@ -818,29 +816,27 @@ void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, cons
 }
 
 //////////////////////////////////////////////////////////////////////////
-void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<float> > &alternateValues, bool isThumbnail) const
+void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
 	printTitle("Power/Theoretical Power vs. Time", commandLine, p);
 
 	p << bigPowerScript << endl;
-
-	unsigned channelCount = values.size() / POWER_VALUES_PER_CHANNEL;
-
+		
 	p << "plot '-' u 1:2 w lines lw 2.00 t \"Normal System\",'-' u 1:2 w lines lw 2.00 t \"Theoretical System\"" << endl;
 
 	double time = 0.0;
 
-	vector<vector<float> >::size_type columns = values.size();
+	vector<vector<double> >::size_type columns = values.size();
 
-	for (vector<float>::size_type i = 0; i < values.front().size(); ++i)
+	for (vector<double>::size_type i = 0; i < values.front().size(); ++i)
 	{
 		if (i < values.front().size())
 		{
 			double total = 0.0;
 
-			for (vector<vector<float> >::size_type j = 0; j < columns; ++j)
+			for (vector<vector<double> >::size_type j = 0; j < columns; ++j)
 			{
 				total += values[j][i];
 			}
@@ -858,11 +854,11 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 	p << "e" << endl;
 	time = 0.0;
 
-	for (vector<float>::size_type i = 0; i < alternateValues.front().size(); ++i)
+	for (vector<double>::size_type i = 0; i < alternateValues.front().size(); ++i)
 	{
 		double total = 0.0;
 
-		for (vector<vector<float> >::size_type j = 0; j < columns; ++j)
+		for (vector<vector<double> >::size_type j = 0; j < columns; ++j)
 		{
 			total += alternateValues[j][i];
 		}
@@ -878,7 +874,7 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<float,float> > &alternateValues, bool isThumbnail) const
+void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<double,double> > &alternateValues, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -889,7 +885,7 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 	double time = 0.0;
 	double totalPower = 0.0;
 
-	for (vector<pair<float, float> >::const_iterator i = energyValues.begin(), end = energyValues.end();
+	for (vector<pair<double, double> >::const_iterator i = energyValues.begin(), end = energyValues.end();
 		i < end; ++i)
 	{
 		totalPower += i->first + i->second;
@@ -906,7 +902,7 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 	time = 0.0;
 	totalPower = 0.0;
 
-	for (vector<pair<float, float> >::const_iterator i = alternateValues.begin(), end = alternateValues.end();
+	for (vector<pair<double, double> >::const_iterator i = alternateValues.begin(), end = alternateValues.end();
 		i < end; ++i)
 	{
 		totalPower += i->first + i->second;
