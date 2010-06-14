@@ -1,0 +1,1 @@
+./build/ALPHA_FS/m5.fast ./configs/example/fs.py -n 4 --script=./configs/boot/bodytrack_4c_simsmall.rcS --detailed --caches --l3cache -F 5000000000
