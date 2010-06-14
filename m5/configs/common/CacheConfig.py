@@ -34,26 +34,32 @@ from m5.objects import *
 from Caches import *
 
 def config_cache(options, system):
-    if options.l3cache:
-        system.l2tol3bus = Bus()
-        system.l3cache = L3Cache()
-        system.l3cache.num_cpus = options.num_cpus
-        system.l3cache.cpu_side = system.l2tol3bus.port
-        system.l3cache.mem_side = system.membus.port
+    if options.l2cache:
+        system.l2cache = L2Cache(size='2MB')
+        system.tol2bus = Bus()
+        system.l2cache.cpu_side = system.tol2bus.port
+        system.l2cache.mem_side = system.membus.port
+        system.l2cache.num_cpus = options.num_cpus
 
-        for i in xrange(options.num_cpus):
+    if options.l3cache:
+        system.l3cache = L3Cache(size='8MB')
+        system.tol3bus = Bus()
+        system.l3cache.cpu_side = system.tol3bus.port
+        system.l3cache.mem_side = system.membus.port
+        system.l3cache.num_cpus = options.num_cpus
+
+    for i in xrange(options.num_cpus):
+        if options.l1cache:
             system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
-            system.cpu[i].l2cache = L2Cache()
-            system.cpu[i].l1tol2bus = Bus()
-            system.cpu[i].connectMemPorts(system.cpu[i].l1tol2bus)
-            system.cpu[i].l2cache.cpu_side = system.cpu[i].l1tol2bus.port
-            system.cpu[i].l2cache.mem_side = system.l2tol3bus.port
+            system.cpu[i].connectMemPorts(system.membus)
+
+        elif options.l2cache:
+            system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
+            system.cpu[i].connectMemPorts(system.to22bus)
+
+	elif options.l3cache:
+	    system.cpu[i].addTwoLevelCacheHierarchy(L1Cache(), L1Cache(), L2Cache())
+	    system.cpu[i].connectMemPorts(system.tol3bus)
+
 
     return system
-
-
-
-
-
-
-
