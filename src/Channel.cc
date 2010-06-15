@@ -691,7 +691,7 @@ void Channel::doPowerCalculation(ostream& os)
 #endif
 		PsysACT += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * PschACT;
 
-		PsysACTAdjusted += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDschAdjusted) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
+		//PsysACTAdjusted += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDschAdjusted) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
 
 		//PsysACTArray.push_back(PsysACT);
 

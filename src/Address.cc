@@ -67,7 +67,7 @@ column(0)
 {
 	bool result = addressTranslation();
 #ifndef NDEBUG
-	assert(result);
+	//assert(result);
 #endif
 
 #ifdef DEBUG
@@ -288,13 +288,11 @@ bool Address::reverseAddressTranslation()
 //////////////////////////////////////////////////////////////////////
 bool Address::addressTranslation()
 {
-
 	if (!physicalAddress)
 		return false;
 
 	// strip away the byte address portion
 	PhysicalAddress tempAddress = physicalAddress >> columnSizeDepth;
-
 
 	switch (mappingScheme)
 	{

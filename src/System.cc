@@ -473,8 +473,8 @@ void System::runSimulations(const unsigned requestCount)
 					if (foundOne)
 						cerr << "-----------------------------" << endl;
 #endif
-					if (!inputTransaction)
-						running = false;
+					//if (!inputTransaction)
+					//	running = false;
 
 					i--;
 				}

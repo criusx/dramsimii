@@ -32,7 +32,7 @@ class L1Cache(BaseCache):
     size = '32kB'
     assoc = 4
     block_size = 64
-    latency = '1.25ns'
+    latency = '.9375ns'
     num_cpus = 1
     mshrs = 10
     tgts_per_mshr = 5
@@ -50,7 +50,7 @@ class L3Cache(BaseCache):
     size = '8MB'
     assoc = 16
     block_size = 64
-    latency = '16.25ns'
+    latency = '12.1875ns'
     num_cpus = 4
     mshrs = 24
     tgts_per_mshr = 12

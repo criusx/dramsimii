@@ -70,6 +70,19 @@ parser.add_option("--etherdump", action="store", type="string", dest="etherdump"
                   help="Specify the filename to dump a pcap capture of the" \
                   "ethernet traffic")
 
+# DRAMsimII specific options
+parser.add_option("-f", "--DRAMsimConfig",
+          default="",
+          help="The DRAMsimII config file.")
+
+parser.add_option("--mp",
+                  default="", help="Override default memory parameters with this switch")
+
+parser.add_option("--revert", action="store_true")
+
+parser.add_option("--nopre", action="store_true")
+
+# more options
 execfile(os.path.join(config_root, "common", "Options.py"))
 
 (options, args) = parser.parse_args()
@@ -105,6 +118,11 @@ else:
 np = options.num_cpus
 
 if buildEnv['TARGET_ISA'] == "alpha":
+    if options.revert:
+        print "info: using PhysicalMemory"
+    else:
+        print "info: using DRAMsimII"
+        drive_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig)
     test_sys = makeLinuxAlphaSystem(test_mem_mode, bm[0])
 elif buildEnv['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])

@@ -579,7 +579,7 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				outFileType = NONE;
 			break;
 		default:
-			result = false;
+			//result = false;
 			break;
 		}
 
