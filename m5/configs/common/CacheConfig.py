@@ -41,7 +41,7 @@ def config_cache(options, system):
         system.l2cache.mem_side = system.membus.port
         system.l2cache.num_cpus = options.num_cpus
 
-    if options.l3cache:
+    elif options.l3cache:
         system.l3cache = L3Cache(size='8MB')
         system.tol3bus = Bus()
         system.l3cache.cpu_side = system.tol3bus.port
@@ -55,7 +55,7 @@ def config_cache(options, system):
 
         elif options.l2cache:
             system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
-            system.cpu[i].connectMemPorts(system.to22bus)
+            system.cpu[i].connectMemPorts(system.tol2bus)
 
 	elif options.l3cache:
 	    system.cpu[i].addTwoLevelCacheHierarchy(L1Cache(), L1Cache(), L2Cache())
