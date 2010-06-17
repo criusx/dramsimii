@@ -57,9 +57,9 @@ def config_cache(options, system):
             system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
             system.cpu[i].connectMemPorts(system.tol2bus)
 
-	    elif options.l3cache:
-	       system.cpu[i].addTwoLevelCacheHierarchy(L1Cache(), L1Cache(), L2Cache())
-	       system.cpu[i].connectMemPorts(system.tol3bus)
+        elif options.l3cache:
+            system.cpu[i].addTwoLevelCacheHierarchy(L1Cache(), L1Cache(), L2Cache())
+            system.cpu[i].connectMemPorts(system.tol3bus)
 
 
     return system
