@@ -160,7 +160,7 @@ void Rank::setRankID(const unsigned channelID, const unsigned rankID)
 		unsigned bankID = 0;
 		for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); ++i)
 		{
-			Transaction t(Transaction::AUTO_PRECHARGE_TRANSACTION,0,timing.tBurst(), Address(channelID,rankID,bankID++, 0,0));
+			Transaction t(Transaction::AUTO_PRECHARGE_TRANSACTION, 0, timing.tBurst(), Address(channelID, rankID, bankID++, 0, 0));
 			i->push(new Command(&t, 0, false, timing.tBurst(), Command::PRECHARGE));
 		}
 	}

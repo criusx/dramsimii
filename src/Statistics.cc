@@ -223,7 +223,7 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 	{
 		if (!currentCommand->isRefresh())
 		{
-			assert(currentCommand->getLatency() < 2147483648);
+			assert(currentCommand->getLatency() < 2147483648 || (currentCommand->isPrecharge() && currentCommand->getEnqueueTime() == 0));
 			commandDelay[currentCommand->getDelayTime()]++;
 			commandExecution[currentCommand->getExecuteTime()]++;
 			commandTurnaround[currentCommand->getLatency()]++;		
