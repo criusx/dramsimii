@@ -120,10 +120,11 @@ np = options.num_cpus
 if buildEnv['TARGET_ISA'] == "alpha":
     if options.revert:
         print "info: using PhysicalMemory"
+        test_sys = makeLinuxAlphaSystem(test_mem_mode, bm[0])
     else:
         print "info: using DRAMsimII"
-        drive_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig)
-    test_sys = makeLinuxAlphaSystem(test_mem_mode, bm[0])
+        test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig)
+    
 elif buildEnv['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])
 elif buildEnv['TARGET_ISA'] == "sparc":
