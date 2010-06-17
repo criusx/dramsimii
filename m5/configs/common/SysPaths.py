@@ -1,4 +1,4 @@
-# Copyright (c) 2010 Advanced Micro Devices, Inc.
+# Copyright (c) 2006 The Regents of The University of Michigan
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -24,42 +24,48 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# Authors: Lisa Hsu
+# Authors: Ali Saidi
 
-# Configure the M5 cache hierarchy config in one place
-#
+import os, sys
+from os.path import isdir, join as joinpath
+from os import environ as env
 
-import m5
-from m5.objects import *
-from Caches import *
+config_path = os.path.dirname(os.path.abspath(__file__))
+config_root = os.path.dirname(config_path)
 
-def config_cache(options, system):
-    if options.l2cache:
-        system.l2cache = L2Cache(size='2MB')
-        system.tol2bus = Bus()
-        system.l2cache.cpu_side = system.tol2bus.port
-        system.l2cache.mem_side = system.membus.port
-        system.l2cache.num_cpus = options.num_cpus
+def disk(file):
+    system()
+    return joinpath(disk.dir, file)
 
-    elif options.l3cache:
-        system.l3cache = L3Cache(size='8MB')
-        system.tol3bus = Bus()
-        system.l3cache.cpu_side = system.tol3bus.port
-        system.l3cache.mem_side = system.membus.port
-        system.l3cache.num_cpus = options.num_cpus
+def binary(file):
+    system()
+    return joinpath(binary.dir, file)
 
-    for i in xrange(options.num_cpus):
-        if options.l1cache:
-            system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
-            system.cpu[i].connectMemPorts(system.membus)
+def script(file):
+    system()
+    return joinpath(script.dir, file)
 
-        elif options.l2cache:
-            system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
-            system.cpu[i].connectMemPorts(system.tol2bus)
+def system():
+    if not system.dir:
+        try:
+                path = env['M5_PATH'].split(':')
+        except KeyError:
+                path = [ '/dist/m5/system', '/n/poolfs/z/dist/m5/system' ]
 
-	    elif options.l3cache:
-	       system.cpu[i].addTwoLevelCacheHierarchy(L1Cache(), L1Cache(), L2Cache())
-	       system.cpu[i].connectMemPorts(system.tol3bus)
+        for system.dir in path:
+            if os.path.isdir(system.dir):
+                break
+        else:
+            raise ImportError, "Can't find a path to system files."
 
+    if not binary.dir:
+        binary.dir = joinpath(system.dir, 'binaries')
+    if not disk.dir:
+        disk.dir = joinpath(system.dir, 'disks')
+    if not script.dir:
+        script.dir = joinpath(config_root, 'boot')
 
-    return system
+system.dir = None
+binary.dir = None
+disk.dir = None
+script.dir = None
