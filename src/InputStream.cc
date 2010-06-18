@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -165,9 +165,9 @@ arrivalGenerator(randomNumberGenerator, gaussianDistribution)
 	using namespace boost::algorithm;
 	using boost::iostreams::file_source;
 	if (interarrivalDistributionModel == UNIFORM_DISTRIBUTION)
-		arrivalThreshold = 1.0 - (1.0 / (double)averageInterarrivalCycleCount);
+		arrivalThreshold = 1.0 - (1.0 / (float)averageInterarrivalCycleCount);
 	else if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
-		arrivalThreshold = 1.0 - (1.0 / boxMuller((double)averageInterarrivalCycleCount, 10));
+		arrivalThreshold = 1.0 - (1.0 / boxMuller((float)averageInterarrivalCycleCount, 10));
 	if (arrivalThreshold > 1.0F)
 		arrivalThreshold = 1.0F / arrivalThreshold;
 
@@ -255,7 +255,8 @@ InputStream::~InputStream()
 {
 	boost::iostreams::close(traceFile,std::ios_base::in);
 }
-
+
+
 //////////////////////////////////////////////////////////////////////
 /// @brief generates a number using a Poisson random variable
 /// @details from the book "Numerical Recipes in C: The Art of Scientific Computing"

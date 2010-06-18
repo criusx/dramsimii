@@ -460,7 +460,7 @@ void System::runSimulations(const unsigned requestCount)
 					{
 						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(), end = outstandingTransactions.end(); j != end; ++j)
 						{
-							unsigned diff = time - j->second.first->getEnqueueTime();
+							tick diff = time - j->second.first->getEnqueueTime();
 							if (diff > 20000)
 							{
 								foundOne = true;

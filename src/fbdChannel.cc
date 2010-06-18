@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -870,7 +870,7 @@ const Command *fbdChannel::readNextCommand(const Command *slotACommand, const Co
 
 					if (challengerCommand)
 					{
-						int challengerGap = minProtocolGap(challengerCommand);
+						tick challengerGap = minProtocolGap(challengerCommand);
 
 						if (challengerGap < candidateGap || (candidateGap == challengerGap && challengerCommand->getEnqueueTime() < candidateCommand->getEnqueueTime()))
 						{

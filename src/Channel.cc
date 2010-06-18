@@ -401,7 +401,7 @@ tick Channel::nextCommandExecuteTime() const
 	{
 		tick tempCommandExecuteTime = earliestExecuteTime(tempCommand);
 #ifndef NDEBUG
-		int tempGap = minProtocolGap(tempCommand);
+		tick tempGap = minProtocolGap(tempCommand);
 
 		if (time + tempGap != tempCommandExecuteTime)
 			cerr << time << " " << tempGap << " " << tempCommandExecuteTime << " " << tempCommand->getCommandType() << " " << tempCommand->getAddress() << endl;
@@ -1599,7 +1599,7 @@ const Command *Channel::readNextCommand() const
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG
-							int minGap = minProtocolGap(challengerCommand);
+							tick minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap != challengerExecuteTime)
 							{
@@ -1622,7 +1622,7 @@ const Command *Channel::readNextCommand() const
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG
-							int minGap = minProtocolGap(challengerCommand);
+							tick minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap != challengerExecuteTime)
 							{
@@ -1692,7 +1692,7 @@ const Command *Channel::readNextCommand() const
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG
-							int minGap = minProtocolGap(challengerCommand);
+							tick minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap != challengerExecuteTime)
 								assert(time + minGap == challengerExecuteTime);
@@ -1712,7 +1712,7 @@ const Command *Channel::readNextCommand() const
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG
-							int minGap = minProtocolGap(challengerCommand);
+							tick minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap != challengerExecuteTime)
 							{
@@ -1779,7 +1779,7 @@ const Command *Channel::readNextCommand() const
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG
-							int minGap = minProtocolGap(challengerCommand);
+							tick minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap!= max(challengerExecuteTime,time))
 								assert(time + minGap == challengerExecuteTime);
@@ -1799,7 +1799,7 @@ const Command *Channel::readNextCommand() const
 						{
 							tick challengerExecuteTime = earliestExecuteTime(challengerCommand);
 #ifndef NDEBUG
-							int minGap = minProtocolGap(challengerCommand);
+							tick minGap = minProtocolGap(challengerCommand);
 
 							if (time + minGap != challengerExecuteTime)
 							{
@@ -2692,7 +2692,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 	case Command::READ:
 		{
 			//respect last ras of same rank
-			int tRCDGap = ((currentBank.getLastRasTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
+			tick tRCDGap = ((currentBank.getLastRasTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
 
 			// ensure that if no other rank has issued a CAS command that it will treat
 			// this as if a CAS command was issued long ago
@@ -2725,7 +2725,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 			//casw_length = max(timing_specification.t_int_burst,this_r.last_casw_length);
 			// DW 3/9/2006 replace the line after next with the next line
 			//t_cas_gap = max(0,(int)(this_r.last_cas_time + cas_length - now));
-			int t_cas_gap = ((currentRank.getLastCasTime() - time) + timingSpecification.tBurst());
+			tick t_cas_gap = ((currentRank.getLastCasTime() - time) + timingSpecification.tBurst());
 
 			//respect last cas write of same rank
 			// DW 3/9/2006 replace the line after next with the next line
@@ -2754,7 +2754,7 @@ tick Channel::minProtocolGap(const Command *currentCommand) const
 	case Command::WRITE:
 		{
 			//respect last ras of same rank
-			int t_ras_gap = ((currentBank.getLastRasTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
+			tick t_ras_gap = ((currentBank.getLastRasTime() - time) + timingSpecification.tRCD() - timingSpecification.tAL());
 
 			tick otherRankLastCASTime = time - 10000000;
 			int otherRankLastCASLength = timingSpecification.tBurst();
@@ -3250,14 +3250,14 @@ void Channel::printVerilogCommand(const Command *thisCommand)
 		systemConfig.verilogOutStream << "read\t\t(" << thisCommand->getAddress().getRank() << ",\t"
 			<< thisCommand->getAddress().getBank() << ",\t" << thisCommand->getAddress().getColumn() <<
 			",\t" << (thisCommand->isPrecharge() ? "1" : "0") << ",\t" <<
-			(thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << "); //" <<
+			((int)thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << "); //" <<
 			time << endl;
 	}
 	else if (thisCommand->isWrite())
 	{
 		systemConfig.verilogOutStream << "write\t\t(" << thisCommand->getAddress().getRank() << ",\t" << thisCommand->getAddress().getBank() <<
 			",\t" << thisCommand->getAddress().getColumn() << ",\t" << (thisCommand->isPrecharge() ? "1" : "0") << ",\t" <<
-			(thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << ",\t0,\t10); //" << time << endl;
+			((int)thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << ",\t0,\t10); //" << time << endl;
 	}
 	else if (thisCommand->isActivate())
 	{
