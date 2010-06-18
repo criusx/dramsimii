@@ -50,15 +50,17 @@ class M5dramSystem(PhysicalMemory):
 	eventQueueDepth = Param.String("8","")
 	refreshQueueDepth = Param.String("8","")
 	readWriteGrouping = Param.String("true","")
-	autoPrecharge = Param.String("true","");
+	autoPrecharge = Param.String("true","")
 
 	# cache parameters
-	associativity = Param.String("8","");
-	cacheSize = Param.String("8192","");
-	blockSize = Param.String("64","");
-	hitLatency = Param.String("5","");
-	replacementPolicy = Param.String("nmru","");
-	nmruTrackingCount = Param.String("4","");
+	associativity = Param.String("8","")
+	cacheSize = Param.String("8192","")
+	blockSize = Param.String("64","")
+	hitLatency = Param.String("5","")
+	replacementPolicy = Param.String("nmru","")
+	nmruTrackingCount = Param.String("4","")
+	usingCache = Param.String("true","")
+	fixedLatency = Param.String("false","")
 
 	# timing parameters
 	tBufferDelay = Param.Int(2,"delay from Transaction to Commands")

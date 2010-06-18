@@ -101,7 +101,8 @@ shortBurstRatio(settings.shortBurstRatio),
 readPercentage(settings.readPercentage),
 sessionID(settings.sessionID),
 outType(settings.outFileType),
-usingDimmCache(settings.usingCache)
+usingDimmCache(settings.usingCache),
+fixedCacheLatency(settings.fixedCacheLatency)
 {
 	Address::initialize(settings);
 
@@ -285,7 +286,8 @@ timingFile(rhs.timingFile),
 powerFile(rhs.powerFile),
 statsFile(rhs.statsFile),
 outType(rhs.outType),
-usingDimmCache(rhs.usingDimmCache)
+usingDimmCache(rhs.usingDimmCache),
+fixedCacheLatency(rhs.fixedCacheLatency)
 {
 	setupStreams();
 }

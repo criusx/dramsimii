@@ -77,7 +77,8 @@ namespace DRAMsimII
 		std::string statsFile;		
 		std::string verilogFile;
 		OutputFileType outType;
-		bool usingDimmCache;
+		bool usingDimmCache;											///< whether the DIMM cache is being used or it is a normal DIMM
+		bool fixedCacheLatency;											///< whether the transactions that hit in the cache are returned sooner or at the time they would be if a DRAM returned the value
 
 
 	public:

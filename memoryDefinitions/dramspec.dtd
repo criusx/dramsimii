@@ -105,3 +105,4 @@ decodeWindow, eventQueueDepth, refreshQueueDepth, readWriteGrouping, autoPrechar
 <!ELEMENT transactionOrderingAlgorithm (#PCDATA)>
 <!ELEMENT transactionQueueDepth (#PCDATA)>
 <!ELEMENT usingCache (#PCDATA)>
+<!ATTLIST usingCache fixedLatency (true|false) #REQUIRED>

@@ -147,6 +147,7 @@ namespace DRAMsimII
 		Cache::ReplacementPolicy replacementPolicy;
 		unsigned nmruTrackingCount;
 		bool usingCache;
+		bool fixedCacheLatency;
 	
 		bool setKeyValue(const std::string &nodeName, const std::string &nodeValue);
 		bool setKeyValue(const char* nodeName, const std::string &nodeValue) { std::string name(nodeName); return setKeyValue(name, nodeValue); }
@@ -178,6 +179,7 @@ namespace DRAMsimII
 			theMap[cache_replacementpolicy_token] = "replacementPolicy";
 			theMap[cache_nmrutrackingcount_token] = "nmruTrackingCount";
 			theMap[using_cache_token] = "usingCache";
+			theMap[fixed_cache_latency_token] = "fixedLatency";
 
 			theMap[clock_granularity_token] = "clockGranularity";
 			theMap[channel_count_token] = "channels";
@@ -278,6 +280,7 @@ namespace DRAMsimII
 			theMap["replacementpolicy"] = cache_replacementpolicy_token;
 			theMap["nmrutrackingcount"] = cache_nmrutrackingcount_token;
 			theMap["usingcache"] = using_cache_token;
+			theMap["fixedlatency"] = fixed_cache_latency_token;
 
 			theMap["type"]=dram_type_token;
 			theMap["dbreporting"]=dbreporting_token;
@@ -544,7 +547,7 @@ namespace DRAMsimII
 				rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS & tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI &
 				tRFC & tRP & tRRD & tRTP & tWR & tCMD & tInternalBurst & tBufferDelay & cpuToMemoryClockRatio & PdqRD & PdqWR & PdqRDoth &
 				PdqWRoth & DQperDRAM & DQSperDRAM & DMperDRAM & frequencySpec & maxVCC & VDD & IDD0 & IDD1 & IDD2P & IDD2N & IDD3P & IDD3N & IDD4W &
-				IDD4R & IDD5 & associativity & hitLatency & cacheSize & blockSize & nmruTrackingCount & replacementPolicy;
+				IDD4R & IDD5 & associativity & hitLatency & cacheSize & blockSize & nmruTrackingCount & replacementPolicy & fixedCacheLatency;
 		}
 	};
 }

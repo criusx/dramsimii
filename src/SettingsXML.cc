@@ -181,6 +181,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "replacementPolicy", (const xmlChar *)lexical_cast<string>(replacementPolicy).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "hitLatency", (const xmlChar *)lexical_cast<string>(nmruTrackingCount).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "usingCache", (const xmlChar *)(usingCache ? "true" : "false"));
+	xmlNewChild(node, NULL, BAD_CAST "fixedCacheLatency", (const xmlChar *)(fixedCacheLatency ? "true" : "false"));
 
 	// create the timing parameter section
 	node = xmlNewChild(rootNode, NULL, BAD_CAST "timing", NULL);
@@ -243,8 +244,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewProp(node2, BAD_CAST "type", (const xmlChar *)lexical_cast<string>(inFileType).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "cpuToMemoryClockRatio", (const xmlChar *)lexical_cast<string>(cpuToMemoryClockRatio).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "epoch", (const xmlChar *)lexical_cast<string>(epoch).c_str());
-
-
+	
 	int len;
 	xmlChar *buffer;
 	xmlDocDumpFormatMemoryEnc(doc, &buffer, &len, "UTF-8", 1);
@@ -426,7 +426,24 @@ bool Settings::loadSettingsFromFile(int argc, char **argv)
 						}
 
 						xmlFree(attr);
-					}					
+					}
+					else if (nodeName == "usingCache")
+					{
+						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"fixedLatency");
+						string type = (const char *)attr;
+
+						if (attr)
+						{
+							const string type = (const char *)attr;
+#ifndef NDEBUG
+							bool result =
+#endif
+								setKeyValue("fixedLatency",type);
+							assert(result);
+						}
+
+						xmlFree(attr);
+					}
 				}
 				break;
 			case XML_TEXT_NODE:				
