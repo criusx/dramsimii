@@ -164,7 +164,7 @@ void PowerScripts::processLine(char *newLine)
 				if (position == NULL)
 					return;
 				position++;
-				epochTime = lexical_cast<float> (position);
+				baseEpochTime = epochTime = lexical_cast<float> (position);
 			}
 		}
 	}
@@ -211,23 +211,23 @@ void PowerScripts::processLine(char *newLine)
 			if (currentChannel + 1 == channelCount)
 			{
 				pushStats();
-			}
+			}			
 		}
 		catch (std::exception &ex)
 		{
-
 		}
-
-
 	}
 }
 
 void PowerScripts::pushStats()
 {
 	epochCount++;
+	
 	// look to dump the buffer into the array
 	scaleIndex = (scaleIndex + 1) % scaleFactor;
 
+	runTime += baseEpochTime;
+	//cerr << runTime << " " << baseEpochTime << endl;
 	// when the scale buffer is full
 	if (scaleIndex == 0)
 	{
@@ -708,7 +708,7 @@ void PowerScripts::bigEnergyGraph(const bf::path &outFilename, opstream &p, bool
 		p << i * epochTime << " " << cumulativeEnergy << endl;
 	}
 
-	p << "e" << endl << "0 0" << endl << values.front().size() * epochTime << " 1E-5" << endl << "e" << endl
+	p << "e" << endl << "0 0" << endl << runTime << " 1E-5" << endl << "e" << endl
 		<< "unset output" << endl;
 }
 
@@ -733,8 +733,6 @@ void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const
 		}
 	}
 
-	//p << "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
-	p << "'-' u 1:2 axes x1y1 t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
 	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 	for (vector<vector<double> >::const_iterator i = alternateValues.begin(), end = alternateValues.end(); 
 		i < end; ++i)
@@ -745,20 +743,8 @@ void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const
 		}
 		p << "e" << endl;
 	}
-
-	CumulativePriorMovingAverage cumulativePower;
-
-	for (vector<unsigned>::size_type i = 0; i < alternateValues.back().size(); ++i)
-	{
-		double total = 0;
-
-		for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
-			total += alternateValues[j][i];
-		cumulativePower.add(1.0, total);
-		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
-	}
-	p << "e" << endl;
-	p << "0 0" << endl << alternateValues.back().size() * epochTime << " 1e-5" << endl << "e" << endl
+		
+	p << "0 0" << endl << runTime << " 1e-5" << endl << "e" << endl
 		<< "unset output" << endl;
 }
 
@@ -766,27 +752,21 @@ void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, cons
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	//p << "set title \"{ Power vs. Time}\\n{ "
-	//	<< commandLine
-	//	<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
-	printTitle("Theoretical Power vs. Time", commandLine, p);
+	printTitle("Power vs. Time", commandLine, p);
 
 	p << bigPowerScript << endl;
 	p << "plot ";
 
-	unsigned channelCount = alternateValues.size() / POWER_VALUES_PER_CHANNEL;
+	const unsigned powerValues = usingCache ? POWER_VALUES_PER_CHANNEL : POWER_VALUES_PER_CHANNEL - 1;
 
-	for (unsigned b = 0; b < POWER_VALUES_PER_CHANNEL; b++)
+	for (unsigned b = 0; b < powerValues; b++)
 	{
-		p << "'-' using 1 axes x2y1 title \"P_{sys}("
-			<< powerTypes[b] << ")\",";
+		p << "'-' using 1 axes x2y1 title \"P_{sys}(" << powerTypes[b] << ")\",";
 	}
 
-	//p << "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
-	p << "'-' u 1:2 axes x1y1 t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
 	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
-	for (int i = 0; i < POWER_VALUES_PER_CHANNEL; i++)
+	for (int i = 0; i < powerValues; i++)
 	{
 		for (int j = 0; j < alternateValues.front().size(); j++)
 		{
@@ -798,20 +778,8 @@ void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, cons
 		}
 		p << "e" << endl;
 	}
-
-	CumulativePriorMovingAverage cumulativePower;
-
-	for (vector<unsigned>::size_type i = 0; i < alternateValues.back().size(); ++i)
-	{
-		double total = 0;
-
-		for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
-			total += alternateValues[j][i];
-		cumulativePower.add(1.0, total);
-		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
-	}
-	p << "e" << endl;
-	p << "0 0" << endl << alternateValues.front().size() * epochTime << " 1e-5" << endl << "e" << endl
+	
+	p << "0 0" << endl << runTime << " 1e-5" << endl << "e" << endl
 		<< "unset output" << endl;
 }
 

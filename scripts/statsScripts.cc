@@ -8,17 +8,7 @@ void StatsScripts::addressLatencyDistributionPerChannelGraph(const bf::path &out
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0	
-	p << "set multiplot layout " << channelDistribution[channelID].size() << ", 1 title \"";
 
-
-	for (vector<string>::const_iterator i = commandLine.begin(), end = commandLine.end();
-		i < end; ++i)
-	{
-		p << "{/*1.5" << i << "};";
-	}
-
-#endif
 	p << subAddrDistroA;
 
 	printTitle("", commandLine, p, channelDistribution[channelID].size());
@@ -62,8 +52,7 @@ void StatsScripts::addressLatencyDistributionPerChannelGraph(const bf::path &out
 			}
 			p << "e" << endl;
 		}
-		p << channelDistribution[channelID][rankID][0].size()
-			* epochTime << " " << "0.2" << endl << "e" << endl;
+		p << runTime << " " << "0.2" << endl << "e" << endl;
 	}
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
@@ -114,8 +103,7 @@ void StatsScripts::addressDistributionPerChannelGraph(const bf::path &outFilenam
 			}
 			p << "e" << endl;
 		}
-		p << channelDistribution[channelID][rankID][0].size()
-			* epochTime << " " << "0.2" << endl << "e" << endl;
+		p << runTime << " " << "0.2" << endl << "e" << endl;
 	}
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
@@ -218,7 +206,7 @@ void StatsScripts::overallAddressDistributionGraph(const bf::path &outFilename, 
 		}
 		p << "e" << endl;
 	}
-	p << channelDistribution[0][0][0].size() * epochTime << " " << "0.2"
+	p << runTime << " " << "0.2"
 		<< endl << "e" << endl;
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
@@ -1080,7 +1068,7 @@ void StatsScripts::processLine(char *newLine)
 	}
 	else if (starts_with(newLine, "----Epoch"))
 	{
-		epochTime = lexical_cast<float> (strchr(newLine, ' ') + 1);
+		baseEpochTime = epochTime = lexical_cast<float> (strchr(newLine, ' ') + 1);
 		foundEpoch = true;
 	}	
 	else
@@ -1435,6 +1423,8 @@ void StatsScripts::pushStats()
 	epochCounter++;
 	// look to dump the buffers into arrays
 	scaleIndex = (scaleIndex + 1) % scaleFactor;
+
+	runTime += baseEpochTime;
 
 	// when the scale buffer is full
 	if (scaleIndex == 0)

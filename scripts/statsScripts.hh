@@ -117,11 +117,17 @@ private:
 	uint64_t workingSetSizeBuffer;
 
 	bool foundCommandline;
+
 	unsigned ipcLinesWritten;
+
 	double epochTime;
+
+	double baseEpochTime;
+
 	double periodInNs;
 
 	unsigned tRC;
+
 	unsigned tRAS;
 
 	unsigned channelCount;
@@ -137,6 +143,8 @@ private:
 
 	bool usingCache;
 
+	double runTime;
+
 public:
 
 
@@ -149,7 +157,7 @@ public:
 	uint64_t getTotalLatency() const { return totalLatency; }
 	uint64_t getTotalCount() const { return totalCount; }
 	string getRawCommandLine() const { return rawCommandLine; }
-	double getRunTime() const { return (double)epochCounter * epochTime; }
+	double getRunTime() const { return runTime; }
 	bool isUsingCache() const { return usingCache; }
 	double getAverageIpcValue() const 
 	{
@@ -206,7 +214,8 @@ public:
 		  workingSetSizeBuffer(0),
 		  foundCommandline(false),
 		  ipcLinesWritten(0),
-		  epochTime(0.0F),
+		  epochTime(0.0),
+		  baseEpochTime(0.0),
 		  periodInNs(0.0F),
 		  tRC(0),
 		  tRAS(0),
@@ -216,7 +225,8 @@ public:
 		  epochCounter(0),
 		  totalLatency(0.0),
 		  totalCount(0.0),
-		  usingCache(false)
+		  usingCache(false),
+		  runTime(0.0)
 	  {
 		  transactionCount.reserve(MAXIMUM_VECTOR_SIZE);
 		  hitMissValues.reserve(MAXIMUM_VECTOR_SIZE);

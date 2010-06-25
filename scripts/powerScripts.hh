@@ -18,13 +18,18 @@ protected:
 	pair<double, double> energyValueBuffer;
 
 	unsigned scaleFactor;
+	
 	unsigned scaleIndex;
+	
 	unsigned channelCount;
+	
 	unsigned epochCount;
 
 	bool foundEpoch, foundCommandLine;
 
 	double epochTime;
+
+	double baseEpochTime;
 
 	list<pair<string, string> > powerParams;
 
@@ -42,6 +47,8 @@ protected:
 
 	bool usingCache;
 
+	double runTime;
+
 
 public:
 	PowerScripts(list<pair<string, string> > &_powerParams):
@@ -53,7 +60,9 @@ public:
 		  foundEpoch(false),
 		  foundCommandLine(false),
 		  epochTime(0.0),
-		usingCache(false)
+		  baseEpochTime(0.0),
+		usingCache(false),
+		runTime(0.0)
 	  {  powerParams = _powerParams; }
 
 	  double getAverageActStbyPower() const
@@ -90,7 +99,7 @@ public:
 
 	  const vector<pair<double,double> > &getEnergyValues() const { return energyValues; }
 
-	  double getRunTime() const { return epochTime * (double)epochCount; }
+	  double getRunTime() const { return runTime; }
 
 	  void evenRunTime(const double);
 
