@@ -227,7 +227,7 @@ void PowerScripts::pushStats()
 	scaleIndex = (scaleIndex + 1) % scaleFactor;
 
 	runTime += baseEpochTime;
-	//cerr << runTime << " " << baseEpochTime << endl;
+	
 	// when the scale buffer is full
 	if (scaleIndex == 0)
 	{
@@ -752,7 +752,9 @@ void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, cons
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	printTitle("Power vs. Time", commandLine, p);
+	vector<string> cl2;
+	cl2.push_back(commandLine.front());
+	printTitle("Power vs. Time", cl2, p);
 
 	p << bigPowerScript << endl;
 	p << "plot ";

@@ -17,7 +17,7 @@ import shutil
 
 ######################################################################################
 # whether jobs are actually submitted or not
-testing = True
+testing = False
 
 # the number of jobs submitted
 count = 0
@@ -56,9 +56,9 @@ def submitCommand(commandLine, name):
         scriptToRun = os.path.join(outputDir, scriptName)
 
         count += 1
-        
+
         submitCommand = submitString % (outputDir, outputDir, name, scriptToRun)
-            
+
         if not testing:
             f = open(scriptToRun, 'w+')
             f.write("#!/bin/sh\n")
@@ -72,7 +72,7 @@ def submitCommand(commandLine, name):
             #f.write("cd /\n")
             #f.write("ls -lah\n")
 
-            f.write("nice -n 2 " +command + "\n")
+            f.write("nice -n 2 time -v " +command + "\n")
             f.close()
             os.chmod(scriptToRun, stat.S_IEXEC | stat.S_IREAD | stat.S_IWRITE)
             #print submitCommand

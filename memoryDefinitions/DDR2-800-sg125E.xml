@@ -109,17 +109,17 @@
 		<!--one bank Activate-to-Read-to-Precharge current-->
 		<IDD1>110</IDD1>
 		<!--maximum precharge power-down standby current-->
-		<IDD2P>7</IDD2P>
+		<IDD2P>25</IDD2P>
 		<!--maximum precharge standby current-->
-		<IDD2N>60</IDD2N>
+		<IDD2N>50</IDD2N>
 		<!--maximum active power-down standby current-->
-		<IDD3P>50</IDD3P>
+		<IDD3P>25</IDD3P>
 		<!--maximum active standby current-->
-		<IDD3N>60</IDD3N>
+		<IDD3N>50</IDD3N>
 		<!--maximum read burst current-->
-		<IDD4R>190</IDD4R>
+		<IDD4R>130</IDD4R>
 		<!--maximum write burst current-->
-		<IDD4W>210</IDD4W>
+		<IDD4W>130</IDD4W>
 		<!--maximum burst refresh current-->
 		<IDD5A>235</IDD5A>
 	</power>
