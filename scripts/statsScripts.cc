@@ -1548,7 +1548,9 @@ void StatsScripts::compressStats()
 	// double the scale factor
 	scaleFactor *= 2;
 
+#ifndef NDEBUG
 	cerr << "scaleFactor at " << scaleFactor << endl;
+#endif
 
 	// scale all the arrays by half
 	for (unsigned epoch = 0; epoch

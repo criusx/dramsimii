@@ -27,6 +27,9 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 			/ ((double) ssCache.getReadHitsMisses().first + ssCache.getReadHitsMisses().second));
 		rs.averageLatency = ssNoCache.getAverageLatency();
 		rs.averageTheoreticalLatency = ssCache.getAverageLatency();
+		rs.reuseRate = ssNoCache.getReuseRate();
+		rs.averageBandwidth = ssNoCache.getAverageBandwidth();
+		rs.averageIpc = ssCache.getAverageIpcValue();
 		rs.withCacheLatency = ssCache.getTotalLatency();
 		rs.withoutCacheLatency = ssNoCache.getTotalLatency();
 		rs.withCacheRequestCount = ssCache.getTotalCount();
@@ -57,30 +60,30 @@ void processStatsForPair(const pair<string, string> &filePair, map<string, Resul
 
 void processStats(const pair<string, string> &filePair, map<string, ResultSet > &results, path &outputDir, const bool generateResultsOnly)
 {
-	StatsScripts ssNoCache;
+	StatsScripts statScript;
 	
 	// without the DIMM cache
-	bool found1 = ssNoCache.processStatsForFile(filePair.second);
+	bool found1 = statScript.processStatsForFile(filePair.second);
 
 	if (found1)
 	{
 		ResultSet rs;
-		rs.parseCommandLine(ssNoCache.getRawCommandLine().c_str(), filePair.second);
+		rs.parseCommandLine(statScript.getRawCommandLine().c_str(), filePair.second);
 
-		rs.runtime = ssNoCache.getRunTime();
-		rs.noCacheRuntime = ssNoCache.getRunTime();
+		rs.runtime = statScript.getRunTime();
+		rs.noCacheRuntime = statScript.getRunTime();
 		rs.cacheRuntime = 0;
 		rs.readHitRate = 0;
 		rs.hitRate = 0;
-		rs.averageLatency = ssNoCache.getAverageLatency();
+		rs.averageLatency = statScript.getAverageLatency();
 		rs.averageTheoreticalLatency = 0;
 		rs.withCacheLatency = 0;
-		rs.withoutCacheLatency = ssNoCache.getTotalLatency();
+		rs.withoutCacheLatency = statScript.getTotalLatency();
 		rs.withCacheRequestCount = 0;
-		rs.withoutCacheRequestCount = ssNoCache.getTotalCount();
-		rs.reuseRate = ssNoCache.getReuseRate();
-		rs.averageIpc = ssNoCache.getAverageIpcValue();
-		rs.averageBandwidth = ssNoCache.getAverageBandwidth();
+		rs.withoutCacheRequestCount = statScript.getTotalCount();
+		rs.reuseRate = statScript.getReuseRate();
+		rs.averageIpc = statScript.getAverageIpcValue();
+		rs.averageBandwidth = statScript.getAverageBandwidth();
 
 		const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 
@@ -92,7 +95,7 @@ void processStats(const pair<string, string> &filePair, map<string, ResultSet > 
 			try
 			{
 				string basename = regexMatch<string>(filePair.second.c_str(), "(.*)-(stats|power)(C|N)?.*");
-				ssNoCache.generateGraphs(outputDir / basename);
+				statScript.generateGraphs(outputDir / basename);
 			}
 			catch (std::exception e)
 			{
@@ -190,6 +193,7 @@ void processPowerForPair(const pair<string, string> &filePair, map<string, Resul
 		rs.percentCacheTimeInUse = ((double) psCache.getAverageInUseTime() * 100);
 		rs.noCacheRuntime = psNoCache.getRunTime();
 		rs.cacheRuntime = psCache.getRunTime();
+		rs.averageActStbyPower = psNoCache.getAverageActStbyPower();
 
 		const string basefilename = filePair.first.substr(0, filePair.first.find_last_of('-'));
 

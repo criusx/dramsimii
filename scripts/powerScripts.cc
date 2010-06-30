@@ -287,7 +287,9 @@ void PowerScripts::compressStats()
 	// double scaleFactor since each entry now represents twice what it did before
 	scaleFactor *= 2;
 	epochTime *= 2;
+#ifndef NDEBUG
 	cerr << "scaleFactor at " << scaleFactor << endl;
+#endif
 }
 
 void PowerScripts::generateGraphs(const bf::path &outputDir)

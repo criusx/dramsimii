@@ -82,6 +82,8 @@ parser.add_option("--revert", action="store_true")
 
 parser.add_option("--nopre", action="store_true")
 
+parser.add_option("--benchmarkName", default="")
+
 # more options
 execfile(os.path.join(config_root, "common", "Options.py"))
 
@@ -99,8 +101,8 @@ drive_mem_mode = 'atomic'
 # system under test can be any CPU
 (TestCPUClass, test_mem_mode, FutureClass) = Simulation.setCPUClass(options)
 
-TestCPUClass.clock = '3.2GHz'
-DriveCPUClass.clock = '3.2GHz'
+TestCPUClass.clock = '3.8GHz'
+DriveCPUClass.clock = '3.8GHz'
 
 if options.benchmark:
     try:
@@ -123,8 +125,8 @@ if buildEnv['TARGET_ISA'] == "alpha":
         test_sys = makeLinuxAlphaSystem(test_mem_mode, bm[0])
     else:
         print "info: using DRAMsimII"
-        test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig)
-    
+        test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig, options.benchmarkName)
+
 elif buildEnv['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])
 elif buildEnv['TARGET_ISA'] == "sparc":

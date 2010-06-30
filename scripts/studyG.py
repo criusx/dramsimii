@@ -122,7 +122,7 @@ commandLine = '%s --config-file %s --modifiers "channels %d dimms %d ranks %d ba
 m5SeCommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt --mp "channels %d ranks %s banks %s physicaladdressmappingpolicy %s commandorderingalgorithm %s perbankqueuedepth %s outfiledir %s"'
 
 # command line to setup full system runs
-m5FsCommandLine = Template(m5FsExecutable + " " + m5FsScript + ' --detailed --caches --l3cache --script=$benchmarkScript -F 10000000000')
+m5FsCommandLine = Template(m5FsExecutable + " " + m5FsScript + ' --detailed --caches --l3cache --script=$benchmarkScript --benchmarkName=$benchmarkName -F 10000000000')
 
 # the command line parameters for running in FS mode
 fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks banks $banks postedCAS $postedCas physicaladdressmappingpolicy $amp commandorderingalgorithm $coa perbankqueuedepth $pbqd readwritegrouping $rwg rowBufferPolicy $rbmp outfiledir $output usingCache $usingCache')
@@ -179,11 +179,11 @@ benchmarks += ['facesim']
 benchmarks += ['ferret']
 benchmarks += ['fluidanimate']
 benchmarks += ['freqmine']
-benchmarks += ['rtview']
+#benchmarks += ['rtview']
 benchmarks += ['streamcluster']
 benchmarks += ['swaptions']
 benchmarks += ['vips']
-benchmarks += ['x264']
+#benchmarks += ['x264']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'
 benchmarkScriptExtension = '_4c_simsmall.rcS'
@@ -195,9 +195,10 @@ channels += [2]
 dimms = []
 #dimms += [1]
 dimms += [2]
-#dimms += [4]
+dimms += [4]
 ranks = []
 #ranks += [1]
+ranks += [2]
 ranks += [4]
 banks = [16]
 tFAW = [28]
@@ -211,10 +212,10 @@ associativity += [32]
 cacheSizes = []
 cacheSizes += [8192]
 cacheSizes += [16384]
-#cacheSizes += [24576]
+cacheSizes += [24576]
 blockSize = []
 blockSize += [64]
-#blockSize += [128]
+blockSize += [128]
 blockSize += [256]
 hitLatency = [5]
 replacementPolicies = []
@@ -348,7 +349,7 @@ def main():
                                                                         exit(-1)
                                                                     currentCommandLine = []
                                                                     for uc in ['true','false']:
-                                                                        currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath) + ' --mp "' + fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
+                                                                        currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --mp "' + fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
                                                                                                                                   amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
                                                                                                                                   output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc) + '"')
                                                                     submitCommand(currentCommandLine, benchmark)
