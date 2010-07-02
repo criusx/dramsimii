@@ -56,9 +56,9 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
 
     if mdesc.scriptname != None:
         outFile = mdesc.scriptname.split('.')[0]
-    elif benchmarkName != None
+    elif benchmarkName != None:
         outFile = benchmarkName
-    else
+    else:
         outFile = ''
 
     self.physmem = M5dramSystem(extraParameters=extraParameters,

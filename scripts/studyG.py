@@ -49,7 +49,11 @@ def submitCommand(commandLine, name):
     if not os.path.exists(outputDir):
         os.makedirs(outputDir)
 
+    if testing:
+        print "---------------"
+
     i = 0
+
     for command in commandLine:
         scriptName = nextId + suffixes[i] + ".sh"
         i = (i + 1) % 2
@@ -111,7 +115,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyH')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyI')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -125,12 +129,12 @@ m5SeCommandLine = '%s %s -f %s -c /home/crius/benchmarks/stream/stream-short-opt
 m5FsCommandLine = Template(m5FsExecutable + " " + m5FsScript + ' --detailed --caches --l3cache --script=$benchmarkScript --benchmarkName=$benchmarkName -F 10000000000')
 
 # the command line parameters for running in FS mode
-fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks banks $banks postedCAS $postedCas physicaladdressmappingpolicy $amp commandorderingalgorithm $coa perbankqueuedepth $pbqd readwritegrouping $rwg rowBufferPolicy $rbmp outfiledir $output usingCache $usingCache')
+fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks banks $banks postedCAS $postedCas physicaladdressmappingpolicy $amp commandorderingalgorithm $coa perbankqueuedepth $pbqd readwritegrouping $rwg rowBufferPolicy $rbmp outfiledir $output blockSize $blockSize associativity $associativity cacheSize $cacheSize usingCache $usingCache')
 
 addressMappingPolicy = []
 addressMappingPolicy += ['sdramhiperf']
-addressMappingPolicy += ['sdrambase']
-addressMappingPolicy += ['closepagebaseline']
+#addressMappingPolicy += ['sdrambase']
+#addressMappingPolicy += ['closepagebaseline']
 #addressMappingPolicy += ['closepagelowlocality']
 #addressMappingPolicy += ['closepagehighlocality']
 addressMappingPolicy += ['closepagebaselineopt']
@@ -146,8 +150,8 @@ commandOrderingAlgorithm += ['firstAvailableAge']
 
 rowBufferManagementPolicy = []
 rowBufferManagementPolicy += ['openpageaggressive']
-rowBufferManagementPolicy += ['openpage']
-rowBufferManagementPolicy += ['closepage']
+#rowBufferManagementPolicy += ['openpage']
+#rowBufferManagementPolicy += ['closepage']
 rowBufferManagementPolicy += ['closepageaggressive']
 
 interarrivalCycleCount = [4]
@@ -157,7 +161,7 @@ perBankQueueDepth = [12]
 readWriteGrouping = ['true']
 
 postedCas = ['true']
-postedCas += ['false']
+#postedCas += ['false']
 
 requests = [5000000]
 
@@ -186,7 +190,7 @@ benchmarks += ['vips']
 #benchmarks += ['x264']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'
-benchmarkScriptExtension = '_4c_simsmall.rcS'
+benchmarkScriptExtension = '_4c_simlarge.rcS'
 
 # options for the run
 channels = []
@@ -194,7 +198,7 @@ channels += [2]
 #channels += [1]
 dimms = []
 #dimms += [1]
-dimms += [2]
+#dimms += [2]
 dimms += [4]
 ranks = []
 #ranks += [1]
@@ -211,13 +215,13 @@ associativity += [16]
 associativity += [32]
 cacheSizes = []
 cacheSizes += [8192]
-cacheSizes += [16384]
+#cacheSizes += [16384]
 cacheSizes += [24576]
 blockSize = []
 blockSize += [64]
 blockSize += [128]
 blockSize += [256]
-hitLatency = [5]
+#hitLatency = [5]
 replacementPolicies = []
 replacementPolicies += ['nmru']
 #replacementPolicies += ['lru']
@@ -303,8 +307,18 @@ def main():
 
 
         else:
+            estimatedSize = len(addressMappingPolicy) * len(commandOrderingAlgorithm) * \
+                                          len(rowBufferManagementPolicy) * len(benchmarks) * len(channels) * \
+                                          len(dimms) * len(ranks) * len(banks) * len(perBankQueueDepth) * len(tFAW) * \
+                                          len(readWriteGrouping) * len(postedCas) * len(blockSize) * \
+                                          len(associativity) * len(cacheSizes) * 2
 
-            print "estimated size " + str(len(addressMappingPolicy) * len(commandOrderingAlgorithm) * len(rowBufferManagementPolicy) * len(benchmarks) * len(channels) * len(dimms) * len(ranks) * len(banks) * len(perBankQueueDepth) * len(tFAW) * len(readWriteGrouping) * len(postedCas))
+            print "estimated size " + str(estimatedSize)
+            if estimatedSize > 100:
+                print "more than 100 simulations, continue? [yn] "
+                s = raw_input('')
+                if s != 'y' and s != 'yes':
+                    sys.exit(1)
 
             for channel in channels:
                 for dimm in dimms:
@@ -343,16 +357,25 @@ def main():
 
                                                                 # full system
                                                                 elif opt == '-f':
-                                                                    scriptPath = os.path.join(benchmarkScriptDir,benchmark + benchmarkScriptExtension)
+                                                                    scriptPath = os.path.join(benchmarkScriptDir, benchmark + benchmarkScriptExtension)
                                                                     if not os.path.exists(scriptPath):
                                                                         print scriptPath + " is not right."
                                                                         exit(-1)
-                                                                    currentCommandLine = []
-                                                                    for uc in ['true','false']:
-                                                                        currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --mp "' + fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
-                                                                                                                                  amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
-                                                                                                                                  output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc) + '"')
-                                                                    submitCommand(currentCommandLine, benchmark)
+
+
+                                                                    for blkSz in blockSize:
+                                                                       for assoc in associativity:
+                                                                           for size in cacheSizes:
+                                                                               currentCommandLine = []
+
+                                                                               for uc in ['true', 'false']:
+                                                                                    currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --mp "' + \
+                                                                                                              fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
+                                                                                                                                                 amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
+                                                                                                                                                 output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \
+                                                                                                                                                 associativity=assoc, blockSize=blkSz, cacheSize=size) + '"')
+
+                                                                               submitCommand(currentCommandLine, benchmark)
 
                                                                 # variations of the per-DIMM cache
                                                                 elif opt == '-c':
@@ -362,6 +385,7 @@ def main():
                                                                                 for assoc in associativity:
                                                                                     for numSets in numberSets:
                                                                                         currentTrace = os.path.join(tracesDir, t)
+
                                                                                         currentCommandLine = commandLine % (ds2executable, memorySettings, a, dimms[0], b, c, d, e, 0, g, 135000000000000, j, l, outputDir, "inputfiletype %s inputfile %s outfile %s blockSize %s numberSets %s hitLatency %s associativity %s readPercentage .8" % (traceType, currentTrace, t, blkSz, numSets, hitLat, assoc))
                                                                                         submitCommand([currentCommandLine], t)
 
