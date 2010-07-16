@@ -336,7 +336,6 @@ outstandingPackets(0)
 		//string tracefilename;
 		string baseFilename = settings.outFile;
 
-
 		do
 		{
 			stringstream tracefilename;

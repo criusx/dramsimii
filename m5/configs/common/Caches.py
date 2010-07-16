@@ -53,7 +53,7 @@ class L3Cache(BaseCache):
     latency = '12.1875ns'
     num_cpus = 4
     mshrs = 24
-    tgts_per_mshr = 12
+    tgts_per_mshr = 12    
 
 class IOCache(BaseCache):
     assoc = 8
