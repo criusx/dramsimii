@@ -56,7 +56,6 @@ def submitCommand(commandLine, name):
 
     for command in commandLine:
         scriptName = nextId + suffixes[i] + ".sh"
-        i = (i + 1) % 2
         scriptToRun = os.path.join(outputDir, scriptName)
 
         count += 1
@@ -68,6 +67,8 @@ def submitCommand(commandLine, name):
             f.write("#!/bin/sh\n")
             f.write("export PBS_JOBID=" + nextId + "\n")
             f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
+            f.write("mkdir -p " + outputDir + "/" + nextId + suffixes[i])
+            f.write("cd " + outputDir + "/" + nextId + suffixes[i])
 	        #export M5_PATH=$HOME/benchmarks/parsec-2.1
             #f.write("printenv\n")
             #f.write("echo $PBS_JOBID\n")
@@ -84,7 +85,9 @@ def submitCommand(commandLine, name):
         else:
             print '-' + command
             print '+' + submitCommand
-
+            
+         i = (i + 1) % 2
+       
 
 ######################################################################################
 
@@ -115,7 +118,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyI')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyJ')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -175,18 +178,19 @@ benchmarks = []
 #benchmarks += ['sjeng']
 #benchmarks += ['xalancbmk']
 #benchmarks += ['GemsFDTD']
-benchmarks += ['blackscholes']
-benchmarks += ['bodytrack']
+
+#benchmarks += ['blackscholes']
+#benchmarks += ['bodytrack']
 benchmarks += ['canneal']
-benchmarks += ['dedup']
-benchmarks += ['facesim']
-benchmarks += ['ferret']
-benchmarks += ['fluidanimate']
-benchmarks += ['freqmine']
+#benchmarks += ['dedup']
+#benchmarks += ['facesim']
+#benchmarks += ['ferret']
+#benchmarks += ['fluidanimate']
+#benchmarks += ['freqmine']
 #benchmarks += ['rtview']
-benchmarks += ['streamcluster']
-benchmarks += ['swaptions']
-benchmarks += ['vips']
+#benchmarks += ['streamcluster']
+#benchmarks += ['swaptions']
+#benchmarks += ['vips']
 #benchmarks += ['x264']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'

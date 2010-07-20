@@ -95,6 +95,8 @@ public:
 
 	  double getAverageInUseTime() const { return averageInUseTime.average();}
 
+	  double getEpochTime() const { return epochTime; }
+
 	  const vector<vector<double> > &getValues() const { return values; }
 
 	  const vector<pair<double,double> > &getEnergyValues() const { return energyValues; }
@@ -116,17 +118,17 @@ protected:
 
 	void powerGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const;
 
-	void bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const;
-
-	void bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const;
-
-	void comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const;
-
 	void energyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const;
 
 	void bigEnergyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const;
 
-	void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<double, double> > &alternateValues, bool isThumbnail) const;
+	void bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateRuntime, bool isThumbnail) const;
+
+	void bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateRuntime, bool isThumbnail) const;
+
+	void comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateEpochTime, bool isThumbnail) const;
+
+	void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<double, double> > &alternateValues, const double alternateEpochTime, bool isThumbnail) const;
 
 	// the scripts to generate the graphs
 	static const string totalPowerScript;

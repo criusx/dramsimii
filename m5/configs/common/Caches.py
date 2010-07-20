@@ -50,10 +50,14 @@ class L3Cache(BaseCache):
     size = '8MB'
     assoc = 16
     block_size = 64
-    latency = '12.1875ns'
+    latency = '12.25ns'
     num_cpus = 4
     mshrs = 24
     tgts_per_mshr = 12
+    prefetch_policy='ghb'
+    prefetch_degree=3
+    prefetcher_size=256
+
 
 class IOCache(BaseCache):
     assoc = 8

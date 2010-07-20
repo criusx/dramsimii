@@ -471,8 +471,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			(info->name.find("l2.overall_mshr_misses") != string::npos) ||
 			(info->name.find("l2.overall_mshr_miss_latency") != string::npos) ||
 			(info->name.find("l2.overall_miss_latency") != string::npos) ||
-			(info->name.find("l3cache.overall_hits::total") != string::npos) ||
-			(info->name.find("l3cache.overall_misses::total") != string::npos) ||
+			(info->name.find("l3cache.overall_hits") != string::npos) ||
+			(info->name.find("l3cache.overall_misses") != string::npos) ||
 			(info->name.find("l3cache.overall_miss_latency") != string::npos) ||
 			(info->name.find("l3cache.overall_mshr_miss_latency") != string::npos))
 		{

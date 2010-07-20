@@ -51,7 +51,7 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
         mdesc = SysConfig()
     self.readfile = mdesc.script()
     self.iobus = Bus(bus_id=0)
-    self.membus = MemBus(bus_id=1, clock='2600MHz')
+    self.membus = MemBus(bus_id=1, clock='3333MHz')
     self.bridge = Bridge(delay='5ns', nack_delay='1ns')
 
     if mdesc.scriptname != None:
