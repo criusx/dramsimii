@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cd /benchmarks/453.povray/data/all/input
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+i=4
+while [ $i -gt 0 ]
+do
+	/benchmarks/453.povray/exe/povray_base.alpha-gcc410-glibc236 /benchmarks/453.povray/data/ref/input/SPEC-benchmark-ref.ini&
+	i=$(($i-1))
+done
+wait
+/sbin/m5 exit

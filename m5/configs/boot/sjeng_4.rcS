@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#cd /benchmarks/458.sjeng/data/test/input
+echo sjeng
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+i=4
+while [ $i -gt 0 ]
+do
+	/benchmarks/458.sjeng/exe/sjeng_base.alpha-gcc410-glibc236 /benchmarks/458.sjeng/data/test/input/test.txt&
+	i=$(($i-1))
+done
+wait
+/sbin/m5 exit
