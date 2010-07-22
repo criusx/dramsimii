@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd /benchmarks/454.calculix/data/train/input
+echo Calculix
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+i=4
+while [ $i -gt 0 ]
+do
+	/benchmarks/454.calculix/exe/calculix_base.alpha-gcc410-glibc236 -i stairs&
+	i=$(($i-1))
+done
+wait
+#/benchmarks/454.calculix/exe/calculix_base.alpha-gcc410-glibc236 -i beampic
+
+echo Done.
+/sbin/m5 exit
