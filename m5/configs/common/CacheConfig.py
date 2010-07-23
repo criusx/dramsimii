@@ -42,7 +42,7 @@ def config_cache(options, system):
         system.l2cache.num_cpus = options.num_cpus
 
     elif options.l3cache:
-        system.l3cache = L3Cache(size='8MB')
+        system.l3cache = L3Cache()
         system.tol3bus = Bus()
         system.l3cache.cpu_side = system.tol3bus.port
         system.l3cache.mem_side = system.membus.port
