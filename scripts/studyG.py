@@ -11,6 +11,7 @@ import math
 import getopt
 import re
 import stat
+import math
 from subprocess import Popen, PIPE, STDOUT
 from array import array
 import shutil
@@ -66,9 +67,10 @@ def submitCommand(commandLine, name):
             f = open(scriptToRun, 'w+')
             f.write("#!/bin/sh\n")
             f.write("export PBS_JOBID=" + nextId + "\n")
-            f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
-            f.write("mkdir -p " + outputDir + "/" + nextId + suffixes[i])
-            f.write("cd " + outputDir + "/" + nextId + suffixes[i])
+            #f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
+            f.write("export M5_PATH=$HOME/m5_system_2.0b3\n")
+            f.write("mkdir -p " + outputDir + "/" + nextId + suffixes[i] + "\n")
+            f.write("cd " + outputDir + "/" + nextId + suffixes[i] + "\n")
 	        #export M5_PATH=$HOME/benchmarks/parsec-2.1
             #f.write("printenv\n")
             #f.write("echo $PBS_JOBID\n")
@@ -86,10 +88,15 @@ def submitCommand(commandLine, name):
             print '-' + command
             print '+' + submitCommand
             
-         i = (i + 1) % 2
+        i = (i + 1) % 2
        
 
 ######################################################################################
+def leastSigBit(n):
+    return n & ~(n - 1)
+    
+def isPowerOf2(n):
+    return n != 0 and leastSigBit(n) == n
 
 # the directory where the traces are
 tracesDir = os.path.join(os.path.expanduser("~"), 'benchmarks/dsTraces/6MB/24WAY')
@@ -118,7 +125,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyJ')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyK')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -171,7 +178,7 @@ requests = [5000000]
 benchmarks = []
 #benchmarks += ['calculix']
 #benchmarks += ['milc']
-#benchmarks += ['lbm']
+benchmarks += ['lbm']
 #benchmarks += ['mcf']
 #benchmarks += ['stream']
 #benchmarks += ['bzip2']
@@ -181,7 +188,7 @@ benchmarks = []
 
 #benchmarks += ['blackscholes']
 #benchmarks += ['bodytrack']
-benchmarks += ['canneal']
+#benchmarks += ['canneal']
 #benchmarks += ['dedup']
 #benchmarks += ['facesim']
 #benchmarks += ['ferret']
@@ -194,7 +201,7 @@ benchmarks += ['canneal']
 #benchmarks += ['x264']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'
-benchmarkScriptExtension = '_4c_simlarge.rcS'
+benchmarkScriptExtension = '_4.rcS'
 
 # options for the run
 channels = []
@@ -373,11 +380,12 @@ def main():
                                                                                currentCommandLine = []
 
                                                                                for uc in ['true', 'false']:
-                                                                                    currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --mp "' + \
-                                                                                                              fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
-                                                                                                                                                 amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
-                                                                                                                                                 output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \
-                                                                                                                                                 associativity=assoc, blockSize=blkSz, cacheSize=size) + '"')
+                                                                                   if isPowerOf2(size * 1024 / blkSz / assoc):
+                                                                                       currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1792MB --mp "' + \
+                                                                                                                 fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
+                                                                                                                                                amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
+                                                                                                                                                output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \
+                                                                                                                                                associativity=assoc, blockSize=blkSz, cacheSize=size) + '"')
 
                                                                                submitCommand(currentCommandLine, benchmark)
 
@@ -401,8 +409,5 @@ def main():
 
         print str(count) + " simulations to be run."
 if __name__ == "__main__":
-
-     main()
-
-
-
+    
+    main()
