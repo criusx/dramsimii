@@ -632,9 +632,10 @@ void Channel::doPowerCalculation(ostream& os)
 
 		// what if the RAS could be reduced by specific caching
 		unsigned thisRankAdjustedRasCount = thisRankRasCount - statistics.getRowReduction()[getChannelID()][k->getRankId()]; 
-
+#ifndef NDEBUG
 		if (thisRankRasCount < statistics.getRowReduction()[getChannelID()][k->getRankId()])
 			cerr << thisRankRasCount << " " << statistics.getRowReduction()[getChannelID()][k->getRankId()] << endl;
+#endif
 #if 0
 		cerr << "!!! rasCount " << allBankRASCount << " reduxBy " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << 
 			" reducedTo " << allBankRASCount - statistics.getRowReduction()[getChannelID()][k->getRankID()] << " totalReadHits " <<

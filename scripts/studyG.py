@@ -66,9 +66,10 @@ def submitCommand(commandLine, name):
             f = open(scriptToRun, 'w+')
             f.write("#!/bin/sh\n")
             f.write("export PBS_JOBID=" + nextId + "\n")
-            f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
-            f.write("mkdir -p " + outputDir + "/" + nextId + suffixes[i])
-            f.write("cd " + outputDir + "/" + nextId + suffixes[i])
+            #f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
+            f.write("export M5_PATH=$HOME/m5_system_2.0b3\n")
+            f.write("mkdir -p " + outputDir + "/" + nextId + suffixes[i] + "\n")
+            f.write("cd " + outputDir + "/" + nextId + suffixes[i] + "\n")
 	        #export M5_PATH=$HOME/benchmarks/parsec-2.1
             #f.write("printenv\n")
             #f.write("echo $PBS_JOBID\n")
@@ -86,7 +87,7 @@ def submitCommand(commandLine, name):
             print '-' + command
             print '+' + submitCommand
             
-         i = (i + 1) % 2
+        i = (i + 1) % 2
        
 
 ######################################################################################
@@ -118,7 +119,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyJ')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyK')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -171,7 +172,7 @@ requests = [5000000]
 benchmarks = []
 #benchmarks += ['calculix']
 #benchmarks += ['milc']
-#benchmarks += ['lbm']
+benchmarks += ['lbm']
 #benchmarks += ['mcf']
 #benchmarks += ['stream']
 #benchmarks += ['bzip2']
@@ -181,7 +182,7 @@ benchmarks = []
 
 #benchmarks += ['blackscholes']
 #benchmarks += ['bodytrack']
-benchmarks += ['canneal']
+#benchmarks += ['canneal']
 #benchmarks += ['dedup']
 #benchmarks += ['facesim']
 #benchmarks += ['ferret']
@@ -194,7 +195,7 @@ benchmarks += ['canneal']
 #benchmarks += ['x264']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'
-benchmarkScriptExtension = '_4c_simlarge.rcS'
+benchmarkScriptExtension = '_4.rcS'
 
 # options for the run
 channels = []
@@ -373,7 +374,7 @@ def main():
                                                                                currentCommandLine = []
 
                                                                                for uc in ['true', 'false']:
-                                                                                    currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --mp "' + \
+                                                                                    currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1792MB --mp "' + \
                                                                                                               fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
                                                                                                                                                  amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
                                                                                                                                                  output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \
