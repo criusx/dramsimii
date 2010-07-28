@@ -11,6 +11,7 @@ import math
 import getopt
 import re
 import stat
+import math
 from subprocess import Popen, PIPE, STDOUT
 from array import array
 import shutil
@@ -46,6 +47,7 @@ def submitCommand(commandLine, name):
         if line.startswith("set server"):
             m = re.search('next_job_number = ([0-9]+)', line)
             nextId = m.group(1)
+            
     if not os.path.exists(outputDir):
         os.makedirs(outputDir)
 
@@ -91,6 +93,11 @@ def submitCommand(commandLine, name):
        
 
 ######################################################################################
+def leastSigBit(n):
+    return n & ~(n - 1)
+    
+def isPowerOf2(n):
+    return n != 0 and leastSigBit(n) == n
 
 # the directory where the traces are
 tracesDir = os.path.join(os.path.expanduser("~"), 'benchmarks/dsTraces/6MB/24WAY')
@@ -172,7 +179,7 @@ requests = [5000000]
 benchmarks = []
 #benchmarks += ['calculix']
 #benchmarks += ['milc']
-#benchmarks += ['lbm']
+benchmarks += ['lbm']
 benchmarks += ['mcf']
 #benchmarks += ['stream']
 #benchmarks += ['bzip2']
@@ -374,11 +381,12 @@ def main():
                                                                                currentCommandLine = []
 
                                                                                for uc in ['true', 'false']:
-                                                                                    currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1792MB --mp "' + \
-                                                                                                              fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
-                                                                                                                                                 amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
-                                                                                                                                                 output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \
-                                                                                                                                                 associativity=assoc, blockSize=blkSz, cacheSize=size) + '"')
+                                                                                   if isPowerOf2(size * 1024 / blkSz / assoc):
+                                                                                       currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1792MB --mp "' + \
+                                                                                                                 fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
+                                                                                                                                                amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
+                                                                                                                                                output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \
+                                                                                                                                                associativity=assoc, blockSize=blkSz, cacheSize=size) + '"')
 
                                                                                submitCommand(currentCommandLine, benchmark)
 
@@ -402,8 +410,5 @@ def main():
 
         print str(count) + " simulations to be run."
 if __name__ == "__main__":
-
-     main()
-
-
-
+    
+    main()
