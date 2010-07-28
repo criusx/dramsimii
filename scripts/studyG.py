@@ -47,6 +47,7 @@ def submitCommand(commandLine, name):
         if line.startswith("set server"):
             m = re.search('next_job_number = ([0-9]+)', line)
             nextId = m.group(1)
+            
     if not os.path.exists(outputDir):
         os.makedirs(outputDir)
 
