@@ -1,0 +1,13 @@
+#!/bin/sh
+
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+i=4
+while [ $i -gt 0 ]
+do
+	/benchmarks/447.dealII/exe/dealII_base.alpha-gcc410-glibc236 8&
+	i=$(($i-1))
+done
+wait
+
+/sbin/m5 exit
