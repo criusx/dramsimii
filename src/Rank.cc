@@ -171,11 +171,7 @@ void Rank::setRankID(const unsigned channelID, const unsigned rankID)
 /// @brief this logically issues a RAS command and updates all variables to reflect this
 //////////////////////////////////////////////////////////////////////////
 void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
-{
-	//////////////////////////////////////////////////////////////////////////
-	bank[currentCommand->getAddress().getBank()].setAllHits(true);
-	//////////////////////////////////////////////////////////////////////////
-
+{	
 	// see if this was held due to tFAW (or at least tied with other restrictions)
 	if (currentTime - lastActivateTimes.back() == timing.tFAW())
 		statistics.reportTFawCommand();
@@ -208,14 +204,7 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 /// @brief issue a precharge command to this rank
 //////////////////////////////////////////////////////////////////////////
 void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
-{
-	//////////////////////////////////////////////////////////////////////////
-	if (bank[currentCommand->getAddress().getBank()].isAllHits() && currentCommand->isBasicPrecharge())
-	{
-		statistics.reportRasReduction(currentCommand);
-	}
-	//////////////////////////////////////////////////////////////////////////
-
+{	
 	// update the bank to reflect this change also
 	Bank &currentBank = bank[currentCommand->getAddress().getBank()];
 	currentBank.issuePRE(currentTime, currentCommand);

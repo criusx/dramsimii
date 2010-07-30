@@ -192,11 +192,6 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 	}
 }
 
-void Statistics::reportRasReduction(const Command *currentCommand)
-{
-	rasReduction[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()]++;
-}
-
 //////////////////////////////////////////////////////////////////////////
 /// @brief tells of a row buffer hit when setting up commands
 //////////////////////////////////////////////////////////////////////////

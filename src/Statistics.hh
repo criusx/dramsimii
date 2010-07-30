@@ -184,11 +184,9 @@ namespace DRAMsimII
 		inline void setValidTransactionCount(int vtc) {validTransactionCount = vtc;}
 		inline void reportTFawCommand() { issuedAtTFAW++; }
 		void reportRowBufferAccess(const Transaction *currentTransaction, bool isHit);
-		void reportRasReduction(const Command *);
-
+		
 		// accessors
 		const std::vector<std::vector<std::pair<unsigned,unsigned> > > &getRowBufferAccesses() const { return rowBufferAccesses; }
-		const std::vector<std::vector<unsigned> >& getRowReduction() const { return rasReduction;}
 		const std::vector<std::pair<unsigned,unsigned> >& getBandwidthData() const { return bandwidthData;}
 		const std::vector<std::pair<unsigned,unsigned> >& getDimmCacheBandwidthData() const { return dimmCacheBandwidthData;}
 		unsigned getDIMMReadBytesTransferred() const 
