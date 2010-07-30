@@ -167,12 +167,11 @@ std::pair<string,string> ResultSet::generateResultLine() const
 	csvOutput += lexical_cast<string>(percentCacheTimeInUse) + ",";
 	currentRow += generateTd(percentCacheTimeInUse);
 
-	PowerCalculations pc = powerParameters.calculateSystemPowerIdle((double)(withoutCacheLatency - withCacheLatency) / datarateVal);
-	csvOutput += lexical_cast<string>(pc.energy) + ",";
-	currentRow += generateTd(pc.energy);
+	csvOutput += lexical_cast<string>(energyUsedTheoretical - energyUsed) + ",";
+	currentRow += generateTd(energyUsedTheoretical - energyUsed);
 
-	csvOutput += lexical_cast<string>((withoutCacheLatency - withoutCacheLatency) / datarateVal) + ",";
-	currentRow += generateTd((double)(withoutCacheLatency - withCacheLatency) / datarateVal);
+	csvOutput += lexical_cast<string>(noCacheRuntime - cacheRuntime) + ",";
+	currentRow += generateTd((double)(noCacheRuntime - cacheRuntime));
 	//cerr << withCacheRequestCount << " " << withCacheRequestCount << endl;
 	//cerr << withCacheLatency << " " << with
 	///////////////////////////////////////////////////////////////////////
