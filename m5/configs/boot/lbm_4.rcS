@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd /benchmarks/470.lbm/data/test/input
+echo "LBM Test"
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+i=4
+while [ $i -gt 0 ]
+do
+	/benchmarks/470.lbm/exe/lbm_base.alpha-gcc410-glibc236 5 reference.dat 0 1 100_100_130_cf_a.of&
+	i=$(($i-1))
+done
+wait
+echo "LBM Done"
+/sbin/m5 exit
