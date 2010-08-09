@@ -116,19 +116,6 @@ namespace DRAMsimII
 					  count == right.count;
 			  }
 
-		private:
-
-			friend class boost::serialization::access;
-
-			template<class Archive>
-			void serialize(Archive &ar, const unsigned version)
-			{
-				if (version == 0)
-				{
-					ar & accumulatedLatency & count;
-				}
-
-			}
 		};
 
 	protected:

@@ -23,7 +23,6 @@
 #include "TimingSpecification.hh"
 #include "Address.hh"
 #include "command.hh"
-#include "simulationParameters.hh"
 #include "Statistics.hh"
 #include "InputStream.hh"
 #include "event.hh"
@@ -48,11 +47,9 @@ namespace DRAMsimII
 	protected:
 		// members
 		const SystemConfiguration systemConfig;		///< stores the parameters for the DRAM system, including channel/rank/bank/row counts		
-		SimulationParameters simParameters;		///< has all the necessary parameters for the simulation run
 		Statistics statistics;					///< keeps running statistics about the simulation
 		std::vector<Channel> channel;			///< represents the independent channels
-		InputStream inputStream;				///< provides an interface to the input trace for the simulation
-
+	
 		tick time;								///< master clock, usually set to the oldest channel's time
 		tick lastStatsTime;						///< the time at which stats were last printed
 		tick nextStats;							///< the next time at which stats should be collected
@@ -92,9 +89,6 @@ namespace DRAMsimII
 		friend std::ostream &operator<<(std::ostream &, const System &);	
 		bool operator==(const System &rhs) const;
 
-	private:
-		
-		explicit System(Settings &settings, const SystemConfiguration &systemConfig);		
 	};
 }
 #endif

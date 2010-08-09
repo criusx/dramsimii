@@ -51,7 +51,6 @@
     <ClCompile Include="src\powerConfig.cc" />
     <ClCompile Include="src\Rank.cc" />
     <ClCompile Include="src\Settings.cc" />
-    <ClCompile Include="src\simulationParameters.cc" />
     <ClCompile Include="src\SSTdramSystem.cc" />
     <ClCompile Include="src\Statistics.cc" />
     <ClCompile Include="src\System.cc" />

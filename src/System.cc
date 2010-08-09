@@ -52,32 +52,11 @@ using namespace DRAMsimII;
 //////////////////////////////////////////////////////////////////////
 System::System(const Settings &settings):
 systemConfig(settings),
-simParameters(settings),
 statistics(settings, channel),
 channel(systemConfig.getChannelCount(), Channel(settings, systemConfig, statistics)),
-inputStream(settings, systemConfig, channel),
 time(0),
 nextStats(settings.epoch)
-{
-	//Address::initialize(settings);
-
-	string commandLine(settings.commandLine);
-
-	if (commandLine.length() < 1)
-	{
-		if (settings.inFileType == InputStream::RANDOM)
-			commandLine = "Random";
-		else if (settings.inFileType == InputStream::MASE_TRACE || settings.inFileType == InputStream::DRAMSIM)
-		{			
-			size_t begin = settings.inFile.find_last_of('/');
-			size_t end = settings.inFile.find_last_of('.');
-			if (begin != string::npos && end != string::npos)
-				commandLine = settings.inFile.substr(begin + 1,end - begin - 1);
-			else
-				commandLine = settings.inFile;
-		}
-	}
-	
+{	
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
 	{
@@ -92,10 +71,8 @@ nextStats(settings.epoch)
 //////////////////////////////////////////////////////////////////////////
 System::System(const System &rhs):
 systemConfig(rhs.systemConfig),
-simParameters(rhs.simParameters),
 statistics(rhs.statistics),
 channel(systemConfig.getChannelCount(), Channel(rhs.channel[0],systemConfig, statistics)),
-inputStream(rhs.inputStream,systemConfig,channel),
 time(0),
 nextStats(rhs.nextStats)
 {
@@ -103,22 +80,6 @@ nextStats(rhs.nextStats)
 	channel = rhs.channel;
 }
 
-//////////////////////////////////////////////////////////////////////////
-/// @brief deserialization constructor
-//////////////////////////////////////////////////////////////////////////
-System::System(const SystemConfiguration &sysConfig, const std::vector<Channel> &rhsChan, const SimulationParameters &simParams,
-			   const Statistics &stats, const InputStream &inputStr):
-systemConfig(sysConfig),
-simParameters(simParams),
-statistics(stats),
-channel((unsigned)rhsChan.size(),Channel(rhsChan[0],sysConfig,statistics)),
-inputStream(inputStr),
-time(0),
-nextStats(0)
-{
-	Address::initialize(systemConfig);
-	channel = rhsChan;
-}
 
 System::~System()
 {

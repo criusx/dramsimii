@@ -49,8 +49,6 @@ channel(_cache),
 channels(settings.channelCount),
 ranks(settings.rankCount * settings.dimmCount),
 banks(settings.bankCount),
-cacheHitLatency(settings.hitLatency + settings.tCMD + settings.tBurst),
-usingDimmCache(settings.usingCache),
 validTransactionCount(0),
 startNumber(0),
 endNumber(0),
@@ -88,8 +86,6 @@ channel(channel),
 channels(0),
 ranks(0),
 banks(0),
-cacheHitLatency(0),
-usingDimmCache(false),
 validTransactionCount(UINT_MAX),
 startNumber(UINT_MAX),
 endNumber(UINT_MAX),
@@ -353,56 +349,10 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	os << "----Row Hit/Miss Counts {" << hitCount << "} {" << missCount << "}" << endl;
 
-	os << "----DIMM Cache Per-DIMM Hit/Miss Counts ";
-	currentChannel = 0;
-	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
-		h != hEnd; ++h)
-	{
-		unsigned currentDimm = 0;
-		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
-			i != iEnd; ++i)
-		{
-			os << "ch[" << currentChannel << "] dimm[" << currentDimm++ <<
-				"] RHit{" << i->getReadHitsMisses().first << "} RMiss{" << i->getReadHitsMisses().second <<
-				"} WHit{" << i->getHitsMisses().first - i->getReadHitsMisses().first << "} WMiss{" 
-				<< i->getHitsMisses().second - i->getReadHitsMisses().second << "} ";
-		}
-		currentChannel++;
-	}
-	os << endl;
-
 
 	uint64_t hits = 0, misses = 0;
-	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
-		h != hEnd; ++h)
-	{
-		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
-			i != iEnd; ++i)
-		{
-			hits += i->getHitsMisses().first;
-			misses += i->getHitsMisses().second;
-		}
-	}
-	os << "----Cache Hit/Miss Counts {" << hits << "} {" << misses << "}" << endl;
 
-	hits = 0, misses = 0;
 	uint64_t readHits = 0, readMisses = 0;
-	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
-		h != hEnd; ++h)
-	{
-		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
-			i != iEnd; ++i)
-		{
-			readHits += i->getCumulativeReadHitsMisses().first;
-			readMisses += i->getCumulativeReadHitsMisses().second;
-			hits += i->getCumulativeHitsMisses().first;
-			misses += i->getCumulativeHitsMisses().second;
-		}
-	}
-
-	os << "----Cumulative DIMM Cache Read Hits/Misses {" << readHits << "} {" << readMisses << "}" << endl;
-
-	os << "----Cumulative DIMM Cache Hits/Misses {" << hits << "} {" << misses << "}" << endl;
 
 	os << "----Utilization";
 	for (unsigned i = 0; i < statsLog.channels; ++i)

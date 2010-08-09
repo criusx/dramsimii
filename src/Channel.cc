@@ -58,7 +58,6 @@ powerModel(_settings),
 channelID(UINT_MAX),
 rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
 finishedTransactions(),
-cache(_settings.dimmCount, Cache(_settings)),
 lastCprhLocation(0)
 {
 	setupCprhValues();
@@ -128,7 +127,6 @@ channelID(rhs.channelID),
 // to initialize the references
 rank((unsigned)systemConfig.getRankCount() * systemConfig.getDimmCount(), Rank(rhs.rank[0], timingSpecification, systemConfig, stats)),
 finishedTransactions(),
-cache(rhs.cache.size(), Cache(rhs.cache[0])),
 cprhSequence(rhs.cprhSequence),
 lastCprhLocation(rhs.lastCprhLocation)
 {
@@ -159,7 +157,6 @@ powerModel(power),
 channelID(UINT_MAX),
 rank(newRank),
 finishedTransactions(),
-cache(),
 lastCprhLocation(0)
 {}
 

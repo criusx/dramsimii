@@ -42,25 +42,21 @@ int main(int argc,char **argv, char *envp[])
 			cerr << '"';		
 	}
 	cerr << endl;
-
+#if 0
 	const Settings settings(argc, argv);	
-
+#endif
+	const Settings settings();
 
 #ifdef DEBUG
 	//cerr << TICK_MAX << endl;
 	//cerr << PHYSICAL_ADDRESS_MAX << endl;
 	//DRAMsimII::unitTests(settings);
 #endif
-	if (settings.systemType == FBD_CONFIG)
-	{
-		//fbdSystem fbds(settings);
-		//fbds.runSimulations();
-	}
-	else
 	{
 		System ds(settings); 
 		ds.runSimulations();
 	}
+
 
 	//_CrtDumpMemoryLeaks();
 	return 0;

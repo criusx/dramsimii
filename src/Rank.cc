@@ -240,8 +240,6 @@ void Rank::issueCAS(const tick currentTime, const Command *currentCommand)
 {
 	if (currentCommand->getAddress().getRank() == rankID)
 	{
-		if (systemConfig.isUsingDimmCache() && currentCommand->getHost()->isHit())
-			hits.first++;
 
 		// update the bank to reflect this change also
 		bank[currentCommand->getAddress().getBank()].issueCAS(currentTime, currentCommand);
@@ -278,8 +276,6 @@ void Rank::issueCASW(const tick currentTime, const Command *currentCommand)
 {
 	if (currentCommand->getAddress().getRank() == rankID)
 	{
-		if (systemConfig.isUsingDimmCache() && currentCommand->getHost()->isHit())
-			hits.second++;
 
 		// update the bank to reflect this change also
 		bank[currentCommand->getAddress().getBank()].issueCASW(currentTime, currentCommand);

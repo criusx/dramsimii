@@ -38,22 +38,9 @@ namespace DRAMsimII
 		static std::map<std::string, FileIOToken> tokenizeMap;
 		static std::map<FileIOToken, std::string> lookupMap;
 	public:
-		//////////////////////////////////////////////////////////////////////////
-		// output file
-		std::string settingsOutputFile;
 		//////////////////////////////////////////////////////////////////////////	
 		// command data
 		unsigned epoch;
-		std::string inFile;
-		std::string sessionID;
-		InputStream::DistributionType arrivalDistributionModel;
-		InputStream::InputType inFileType;
-		std::string outFile;
-		std::string outFileDir;
-		std::string commandLine;
-		OutputFileType outFileType;
-		tick requestCount;
-		unsigned averageInterarrivalCycleCount;
 		RefreshPolicy refreshPolicy;
 		DRAMType dramType;
 		unsigned dataRate; // frequency
@@ -80,15 +67,12 @@ namespace DRAMsimII
 		bool postedCAS;
 		bool readWriteGrouping;
 		bool autoPrecharge;
-		bool dbReporting;
 		unsigned clockGranularity;
 		unsigned cachelinesPerRow;
 		unsigned channelCount;
 		unsigned dimmCount;
 		unsigned rankCount;
 		unsigned bankCount;
-		float shortBurstRatio;
-		float readPercentage;
 		//////////////////////////////////////////////////////////////////////////	
 		// timing data
 		unsigned tRTRS;
@@ -507,12 +491,8 @@ namespace DRAMsimII
 			else
 				return false;
 		}
-
-		bool loadSettingsFromFile(int, char **);
-		bool loadSettings(std::vector<std::string> &);
-
+			
 		// create a dramSettings from command line arguments
-		explicit Settings(int, char **);
 		explicit Settings();
 		
 	};
