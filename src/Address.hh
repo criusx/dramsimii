@@ -20,9 +20,6 @@
 
 #include "globals.hh"
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-
 namespace DRAMsimII
 {
 
@@ -110,7 +107,6 @@ namespace DRAMsimII
 		PhysicalAddress static maxAddress();
 
 		// friend		
-		friend class boost::serialization::access;
 		friend std::ostream &DRAMsimII::operator<<(std::ostream &os, const Address&);
 
 		// overloads
@@ -118,18 +114,7 @@ namespace DRAMsimII
 		bool operator!=(const Address& right) const;
 
 	private:
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth 
-					& columnAddressDepth & columnSizeDepth & mappingScheme & 
-					virtualAddress & physicalAddress & channel & rank 
-					& bank & row & column & columnLowAddressDepth & columnHighAddressDepth & dimm;
-			}
-		}
-	};
+	
 	std::ostream& operator<<(std::ostream&, const Address::AddressMappingScheme&);
 
 }

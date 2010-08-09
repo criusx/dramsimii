@@ -23,9 +23,6 @@
 
 #include <map>
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-
 namespace DRAMsimII
 {
 	// t_pp (min prec to prec of any bank) ignored
@@ -91,21 +88,11 @@ namespace DRAMsimII
 		bool operator==(const TimingSpecification& right) const;
 
 	private:
-		// serialization
-		friend class boost::serialization::access;
 		friend void unitTests(const Settings &settings);
 
 		TimingSpecification();
 
-		template<class Archive>
-		void serialize( Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & t_al & t_burst & t_cas & t_ccd & t_cmd & t_cwd &  t_faw & t_ras & t_rc & t_rcd & t_rfc & t_rp & t_rrd & t_rtp &
-					t_rtrs & t_wr & t_wtr & t_int_burst & t_buffer_delay & t_refi & t_ost;
-			}			
-		}
+		
 	};
 }
 #endif

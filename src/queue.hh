@@ -18,10 +18,6 @@
 #define QUEUE_H
 #pragma once
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/vector.hpp>
-
 #include <iostream>
 #include <cassert>
 #include <vector>
@@ -434,25 +430,7 @@ namespace DRAMsimII
 			return *this;
 		}
 
-		friend std::ostream& operator<< <T>(std::ostream&, const Queue<T>&);
-
-
-		// serialization
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned int version)
-		{
-			if (version == 0)
-			{
-				ar & count & head & tail & const_cast<bool&>(pool);	
-
-				ar & entry;
-
-				for (unsigned i = 0; i < count; i++)
-					assert(at(i));
-			}
-		}
+		friend std::ostream& operator<< <T>(std::ostream&, const Queue<T>&);	
 	};
 
 	template<typename T>

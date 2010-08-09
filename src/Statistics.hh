@@ -31,11 +31,6 @@
 #include <tr1/unordered_map>
 #endif
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/map.hpp>
-#include <boost/serialization/vector.hpp>
-
 namespace DRAMsimII
 {
 	template <typename A, typename B>
@@ -250,124 +245,7 @@ namespace DRAMsimII
 	private:
 
 		explicit Statistics(const std::vector<Channel> &);
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize( Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & validTransactionCount & startNumber & endNumber & burstOf4Count & burstOf8Count & columnDepth & readCount &
-					writeCount & const_cast<unsigned&>(channels) & const_cast<unsigned&>(ranks) & const_cast<unsigned&>(cacheHitLatency) &
-					const_cast<unsigned&>(banks) & const_cast<bool&>(usingDimmCache) & timePerEpoch & aggregateBankUtilization & workingSet & cacheLatency &
-					bankLatencyUtilization & pcOccurrence & issuedAtTFAW & rowBufferAccesses & dimmCacheBandwidthData;
-			}
-
-		}
-
-		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const Statistics* st, const unsigned version)
-		{
-			if (version == 0)
-			{
-				const std::vector<Channel>* const channel = &(st->channel);
-				ar << channel;
-
-				std::map<tick, tick> serializeMap;
-				std::tr1::unordered_map<tick, unsigned>::const_iterator it;
-
-				for (it = st->commandDelay.begin(); it != st->commandDelay.end(); it++)
-				{
-					serializeMap[it->first] = it->second;
-				}
-				{
-					const std::map<tick,tick> serializeMap2(serializeMap);
-					ar << serializeMap2;
-				}
-				serializeMap.clear();
-				for (it = st->commandExecution.begin(); it != st->commandExecution.end(); it++)
-				{
-					serializeMap[it->first] = it->second;
-				}
-				{
-					const std::map<tick,tick> serializeMap2(serializeMap);
-					ar << serializeMap2;
-				}
-				serializeMap.clear();
-
-				for (it = st->commandTurnaround.begin(); it != st->commandTurnaround.end(); it++)
-				{
-					serializeMap[it->first] = it->second;
-				}
-				{
-					const std::map<tick,tick> serializeMap2(serializeMap);
-					ar << serializeMap2;
-				}
-				serializeMap.clear();
-
-				for (it = st->transactionDecodeDelay.begin(); it != st->transactionDecodeDelay.end(); it++)
-				{
-					serializeMap[it->first] = it->second;
-				}
-				{
-					const std::map<tick,tick> serializeMap2(serializeMap);
-					ar << serializeMap2;
-				}
-				serializeMap.clear();
-
-				for (it = st->transactionExecution.begin(); it != st->transactionExecution.end(); it++)
-				{
-					serializeMap[it->first] = it->second;
-				}
-				{
-					const std::map<tick,tick> serializeMap2(serializeMap);
-					ar << serializeMap2;
-				}
-			}
-
-		}
-
-		template<class Archive>
-		friend inline void load_construct_data(Archive& ar, Statistics *st, const unsigned version)
-		{
-			if (version == 0)
-			{
-				std::vector<Channel> *channel;
-				ar >> channel;
-
-				Settings settings;
-				new(st)Statistics(settings, *channel);
-
-				std::map<unsigned,unsigned> serializeMap;
-				std::map<unsigned,unsigned>::const_iterator it;
-
-				ar >> serializeMap;
-				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
-				{
-					st->commandDelay[it->first] = it->second;
-				}
-				ar >> serializeMap;
-				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
-				{
-					st->commandExecution[it->first] = it->second;
-				}
-				ar >> serializeMap;
-				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
-				{
-					st->commandTurnaround[it->first] = it->second;
-				}
-				ar >> serializeMap;
-				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
-				{
-					st->transactionDecodeDelay[it->first] = it->second;
-				}
-				ar >> serializeMap;
-				for (it = serializeMap.begin(); it != serializeMap.end(); it++)
-				{
-					st->transactionExecution[it->first] = it->second;
-				}				
-			}
-		}
+	
 	};	
 }
 

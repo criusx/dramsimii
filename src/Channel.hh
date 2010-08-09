@@ -32,11 +32,6 @@
 #include <vector>
 #include <queue>
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/vector.hpp>
-
-
 namespace DRAMsimII
 {
 	/// @brief represents a DRAM channel, has individual timing parameters, ranks, banks, clock, etc.
@@ -144,67 +139,7 @@ namespace DRAMsimII
 
 		// serialization
 		explicit Channel(const Settings& settings, const SystemConfiguration& sysConf, Statistics& stats, const PowerConfig& power,const std::vector<Rank>& rank, const TimingSpecification& timing);
-		explicit Channel();
-
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize( Archive & ar, const unsigned int version)
-		{
-			if (version == 0)
-			{
-				ar & time & lastCommandIssueTime & transactionQueue & refreshCounter & channelID;
-			}
-
-		}
-
-		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const Channel *t, const unsigned version)
-		{			
-			if (version == 0)
-			{
-				const SystemConfiguration* const sysC = &(t->systemConfig);
-				ar << sysC;
-				const Statistics* const stats = &(t->statistics);
-				ar << stats;
-				const PowerConfig* const power = &(t->powerModel);
-				ar << power;
-				const std::vector<Rank>* const rank = &(t->rank);
-				ar << rank;
-				const TimingSpecification* const timing = &(t->timingSpecification);
-				ar << timing;
-				
-				ar << t->lastCommand;
-			}
-
-		}
-
-		template<class Archive>
-		friend inline void load_construct_data(Archive &ar, Channel *t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				SystemConfiguration* sysC;
-				ar >> sysC;
-				Statistics* stats;
-				ar >> stats;
-				PowerConfig* power;
-				ar >> power;
-				std::vector<Rank>* newRank;
-				ar >> newRank;
-				TimingSpecification* timing;
-				ar >> timing;
-				Settings settings;
-
-
-				new(t)Channel(settings, *sysC, *stats, *power, *newRank, *timing);
-
-				Command *lastCmd;
-				ar >> lastCmd;
-				t->lastCommand = lastCmd;
-			}
-
-		}
+		explicit Channel();		
 	};
 }
 #endif

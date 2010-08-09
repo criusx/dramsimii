@@ -24,13 +24,6 @@
 
 #include <fstream>
 
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/list.hpp>
-
 namespace DRAMsimII
 {
 	/// @brief stores the system configuration options for a dramSystem
@@ -38,10 +31,10 @@ namespace DRAMsimII
 	{
 	public:
 		// streams available to other classes
-		mutable boost::iostreams::filtering_ostream timingOutStream;
-		mutable boost::iostreams::filtering_ostream powerOutStream;
-		mutable boost::iostreams::filtering_ostream statsOutStream;	
-		mutable boost::iostreams::filtering_ostream verilogOutStream;
+		//mutable boost::iostreams::filtering_ostream timingOutStream;
+		//mutable boost::iostreams::filtering_ostream powerOutStream;
+		//mutable boost::iostreams::filtering_ostream statsOutStream;	
+		//mutable boost::iostreams::filtering_ostream verilogOutStream;
 	protected:
 		CommandOrderingAlgorithm commandOrderingAlgorithm;				///< describes how to place commands into the per bank command queues
 		TransactionOrderingAlgorithm transactionOrderingAlgorithm;		///< the algorithm that describes how to place transactions into the queue
@@ -127,34 +120,6 @@ namespace DRAMsimII
 		// friends
 		friend std::ostream &operator<<(std::ostream &, const System &);	
 		friend std::ostream &operator<<(std::ostream &, const SystemConfiguration &);		
-
-
-	private:
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive& ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & commandOrderingAlgorithm & transactionOrderingAlgorithm & configType & refreshTime & refreshPolicy & columnSize & rowSize &
-					cachelineSize & seniorityAgeLimit & dramType & rowBufferManagementPolicy & addressMappingScheme & datarate & postedCAS &
-					readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount & rankCount & bankCount & rowCount &
-					columnCount & shortBurstRatio & readPercentage & sessionID & decodeWindow & const_cast<unsigned&>(epoch);
-			}
-		}
-
-
-		template <class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMsimII::SystemConfiguration *t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				Settings s;
-
-				new(t)DRAMsimII::SystemConfiguration(s);
-			}
-		}
 
 	};
 }

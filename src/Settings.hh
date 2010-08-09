@@ -20,7 +20,6 @@
 #include "InputStream.hh"
 #include "Address.hh"
 #include "enumTypes.hh"
-#include "cache/cache.hh"
 
 #include <string>
 #include <iostream>
@@ -28,10 +27,6 @@
 #include <functional>
 #include <algorithm>
 #include <map>
-
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/list.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
 namespace DRAMsimII
@@ -532,23 +527,7 @@ namespace DRAMsimII
 		// create a dramSettings from command line arguments
 		explicit Settings(int, char **);
 		explicit Settings();
-
-		// serialization
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize( Archive & ar,const unsigned int version)
-		{
-			ar & settingsOutputFile & epoch & inFile & sessionID & arrivalDistributionModel & inFileType & outFile & outFileType & outFileDir & requestCount &
-				refreshPolicy & dramType & dataRate & commandOrderingAlgorithm & transactionOrderingAlgorithm & systemType & perBankQueueDepth &
-				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & historyQueueDepth & completionQueueDepth &
-				transactionQueueDepth & eventQueueDepth & refreshQueueDepth & refreshTime & seniorityAgeLimit & rowBufferManagementPolicy &
-				addressMappingScheme & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount &
-				rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS & tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI &
-				tRFC & tRP & tRRD & tRTP & tWR & tCMD & tInternalBurst & tBufferDelay & cpuToMemoryClockRatio & PdqRD & PdqWR & PdqRDoth &
-				PdqWRoth & DQperDRAM & DQSperDRAM & DMperDRAM & frequencySpec & maxVCC & VDD & IDD0 & IDD1 & IDD2P & IDD2N & IDD3P & IDD3N & IDD4W &
-				IDD4R & IDD5 & associativity & hitLatency & cacheSize & blockSize & nmruTrackingCount & replacementPolicy & fixedCacheLatency;
-		}
+		
 	};
 }
 #endif
