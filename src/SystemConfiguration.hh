@@ -29,12 +29,6 @@ namespace DRAMsimII
 	/// @brief stores the system configuration options for a dramSystem
 	class SystemConfiguration
 	{
-	public:
-		// streams available to other classes
-		//mutable boost::iostreams::filtering_ostream timingOutStream;
-		//mutable boost::iostreams::filtering_ostream powerOutStream;
-		//mutable boost::iostreams::filtering_ostream statsOutStream;	
-		//mutable boost::iostreams::filtering_ostream verilogOutStream;
 	protected:
 		CommandOrderingAlgorithm commandOrderingAlgorithm;				///< describes how to place commands into the per bank command queues
 		TransactionOrderingAlgorithm transactionOrderingAlgorithm;		///< the algorithm that describes how to place transactions into the queue
@@ -62,24 +56,13 @@ namespace DRAMsimII
 		unsigned columnCount;											///< columns per row
 		unsigned decodeWindow;											///< how many transactions to consider when decoding to commands
 		const unsigned epoch;											///< the amount of time between stats aggregation and reporting
-		double shortBurstRatio;
-		double readPercentage;											///< the percentage of transactions that are reads
-		std::string sessionID;											///< a unique identifier for this run
-		std::string timingFile;
-		std::string powerFile;
-		std::string statsFile;		
-		std::string verilogFile;
-		OutputFileType outType;
-		bool usingDimmCache;											///< whether the DIMM cache is being used or it is a normal DIMM
-		bool fixedCacheLatency;											///< whether the transactions that hit in the cache are returned sooner or at the time they would be if a DRAM returned the value
-
+	
 
 	public:
 		// constructors
 		explicit SystemConfiguration(const Settings& settings);
 		explicit SystemConfiguration(const SystemConfiguration &rhs);
-		~SystemConfiguration();
-
+	
 		// accessors
 		RowBufferPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
 		Address::AddressMappingScheme getAddressMappingScheme() const { return addressMappingScheme; }
@@ -103,15 +86,8 @@ namespace DRAMsimII
 		bool isAutoPrecharge() const { return autoPrecharge; }
 		bool isReadWriteGrouping() const { return readWriteGrouping; }
 		bool isPostedCAS() const { return postedCAS; }
-		double getShortBurstRatio() const { return shortBurstRatio; }
-		double getReadPercentage() const { return readPercentage; }
 		double Frequency() const { return datarate; }
-		const std::string &getSessionID() const { return sessionID; }
 		unsigned getDecodeWindow() const { return decodeWindow; }
-		bool fileExists(std::stringstream& fileName) const;
-		bool createNewFile(const std::string& fileName) const;
-		bool setupStreams() const;
-		bool isUsingDimmCache() const { return usingDimmCache; }
 		
 		// operator overloads
 		SystemConfiguration& operator =(const SystemConfiguration &rs);

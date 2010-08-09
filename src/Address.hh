@@ -112,9 +112,8 @@ namespace DRAMsimII
 		// overloads
 		bool operator==(const Address& right) const;
 		bool operator!=(const Address& right) const;
+	};
 
-	private:
-	
 	std::ostream& operator<<(std::ostream&, const Address::AddressMappingScheme&);
 
 }

@@ -42,20 +42,15 @@
     <ClCompile Include="src\Address.cc" />
     <ClCompile Include="src\Bank.cc" />
     <ClCompile Include="src\Channel.cc" />
-    <ClCompile Include="src\Channel.cpp" />
     <ClCompile Include="src\command.cc" />
     <ClCompile Include="src\event.cc" />
-    <ClCompile Include="src\fbdAMB.cc" />
-    <ClCompile Include="src\fbdChannel.cc" />
-    <ClCompile Include="src\fbdFrame.cc" />
-    <ClCompile Include="src\fbdSystem.cc" />
-    <ClCompile Include="src\InputStream.cc" />
-    <ClCompile Include="src\m5-dramSystem.cc" />
+    <ClCompile Include="src\m5-dramSystem.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\main.cc" />
     <ClCompile Include="src\powerConfig.cc" />
     <ClCompile Include="src\Rank.cc" />
     <ClCompile Include="src\Settings.cc" />
-    <ClCompile Include="src\SettingsXML.cc" />
     <ClCompile Include="src\simulationParameters.cc" />
     <ClCompile Include="src\SSTdramSystem.cc" />
     <ClCompile Include="src\Statistics.cc" />
@@ -63,7 +58,9 @@
     <ClCompile Include="src\SystemConfiguration.cc" />
     <ClCompile Include="src\TimingSpecification.cc" />
     <ClCompile Include="src\transaction.cc" />
-    <ClCompile Include="src\unitTest.cc" />
+    <ClCompile Include="src\unitTest.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D4AC043A-9CB0-463F-B1E8-838BDD2D3C38}</ProjectGuid>
@@ -170,7 +167,7 @@
       <Optimization>Disabled</Optimization>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include;C:\boost\boost_1_43_0;C:\Users\CriuS\Work\zlib;C:\Users\CriuS\Work\m5-stable\src;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto;C:\Users\CriuS\Work\iconv-1.9.2.win32\include;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Documents and Settings\Administrator\My Documents\Work\iconv-1.9.2.win32\include;C:\Documents and Settings\Administrator\My Documents\Work\libxml2-2.7.6.win32\include;C:\Program Files (x86)\boost\boost_1_42;C:\boost\boost_1_43_0;C:\Users\CriuS\Work\zlib;C:\Users\CriuS\Work\m5-stable\src;C:\Users\CriuS\Work\sst-1.1.2\Struct_Simulator\serialProto;C:\Users\CriuS\Work\iconv-1.9.2.win32\include;C:\Users\CriuS\Work\libxml2-2.6.30.win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>

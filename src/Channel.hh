@@ -52,7 +52,6 @@ namespace DRAMsimII
 		unsigned channelID;								///< the ordinal value of this channel (0..n)
 		std::vector<Rank> rank;							///< vector of the array of ranks
 		std::queue<std::pair<unsigned,tick> > finishedTransactions;		///< the transactions finished this time
-		std::vector<Cache> cache;						///< the dimm caches
 		std::vector<std::pair<std::pair<unsigned,unsigned>,std::pair<unsigned,unsigned> > > cprhSequence;	///< the sequence that the command pair rank hopping follows
 		unsigned lastCprhLocation;						///< index of the last location where a cprh command was chosen from
 	
@@ -104,7 +103,6 @@ namespace DRAMsimII
 		void resetToTime(const tick time);
 		std::queue<std::pair<unsigned,tick> >::size_type pendingTransactionCount() const { return finishedTransactions.size(); }
 		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
-		const std::vector<Cache> &getDimmCache() const { return cache; }
 		void resetStats();
 
 		virtual void moveToTime(const tick currentTime);

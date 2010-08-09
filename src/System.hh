@@ -81,7 +81,6 @@ namespace DRAMsimII
 		double Frequency() const { return systemConfig.Frequency(); }	///< accessor to get the frequency of the DRAM system
 		tick getTime() const { return time; }
 		void resetToTime(const tick time);
-		boost::iostreams::filtering_ostream &getTimingStream() { return systemConfig.timingOutStream; }
 		bool isEmpty() const;
 
 		// constructors	

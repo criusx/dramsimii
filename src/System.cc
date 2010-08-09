@@ -77,48 +77,7 @@ nextStats(settings.epoch)
 				commandLine = settings.inFile;
 		}
 	}
-
-	assert(systemConfig.statsOutStream.is_complete());
-
-	// else printing to these streams goes nowhere
-	string cacheSize = (settings.cacheSize >= 1024) ? (settings.cacheSize / 1024) + "MB" : settings.cacheSize + "kB";
-
-	stringstream printCommandLine;
-
-	printCommandLine << "----Command Line: " << commandLine << " ch[" << settings.channelCount << 
-		"] dimm[" << settings.dimmCount <<
-		"] rk[" << settings.rankCount * settings.dimmCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
-		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] PC[" << (settings.postedCAS ? "T" : "F") << "] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
-		"cache[" << cacheSize << "] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" <<
-		settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]" << " policy[" <<
-		settings.replacementPolicy << ((settings.replacementPolicy == Cache::NMRU) ? settings.nmruTrackingCount : string("")) << "] " << 
-		"usingCache[" << (settings.usingCache ? "T" : "F") << "]";
-
-	systemConfig.statsOutStream << printCommandLine.str() << endl;
-
-	systemConfig.powerOutStream << printCommandLine.str() <<
-		"IDD0[" << settings.IDD0 << "] IDD1[" << settings.IDD1 << "] IDD2N[" << settings.IDD2N << "] IDD2P[" << settings.IDD2P << "] IDD3N[" << settings.IDD3N <<
-		"] IDD3P[" << settings.IDD3P << "] IDD4R[" << settings.IDD4R << "] IDD4W[" << settings.IDD4W << "] VDD[" << settings.VDD << "] VDDmax[" << settings.maxVCC <<
-		"] spedFreq[" << settings.frequencySpec << "] ChannelWidth[" << settings.channelWidth * 8 << "] DQPerDRAM[" << settings.DQperDRAM << "] tBurst[" << settings.tBurst << "]" << endl;
-
-#ifndef NDEBUG 
-	systemConfig.timingOutStream << printCommandLine.str() << endl;
-#endif
-
-
-	systemConfig.statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
-
-	systemConfig.powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
 	
-	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() * systemConfig.getDimmCount() << "]+++-" << endl;	
-
-	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() * systemConfig.getDimmCount() << "]+++-" << endl;
-
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
 	{

@@ -54,8 +54,7 @@ t_cache_access(-1)
 
 TimingSpecification::TimingSpecification(const Settings& settings):
 t_buffer_delay(settings.tBufferDelay),
-t_refi(settings.tREFI),
-t_cache_access(settings.hitLatency)
+t_refi(settings.tREFI)
 {
 	switch(settings.dramType)
 	{

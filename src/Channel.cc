@@ -2330,63 +2330,6 @@ void Channel::executeCommand(Command *thisCommand)
 		{
 			assert(!thisCommand->getHost());
 
-			if (systemConfig.isUsingDimmCache())
-			{
-				unsigned i = 0;
-
-				bool allHits = true;
-
-				while (const Command *followingCommand = currentBank->read(i++))
-				{
-					assert(followingCommand && (followingCommand->isReadOrWrite() || followingCommand->isPrecharge()));
-
-					if ((followingCommand->isRead() && cache[followingCommand->getAddress().getDimm()].isHit(followingCommand)) || followingCommand->isBasicPrecharge())
-					{
-						if (followingCommand->isPrecharge())
-							break;
-					}
-					else
-					{
-						allHits = false;
-						break;
-					}
-				}
-
-				if (allHits)
-				{	
-					thisCommand->setCompletionTime(time);
-					commandHit = true;
-
-					while (Command *readCommand = currentBank->pop())
-					{
-						if (!readCommand->isBasicPrecharge())
-						{
-							bool success = cache[readCommand->getAddress().getDimm()].timingAccess(readCommand,time);
-							assert(success);
-#ifndef NDEBUG
-							std::cout << (success ? "|" : ".");
-#endif
-							readCommand->setStartTime(time);
-
-							readCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCacheAccess() + timingSpecification.tBurst());
-							readCommand->getHost()->setCompletionTime(readCommand->getCompletionTime());
-							readCommand->getHost()->setHit(true);
-
-							time += timingSpecification.tCacheAccess();
-							lastCommandIssueTime = time;
-						}
-
-						retireCommand(readCommand, true);
-
-						assert(readCommand->isRead() || readCommand->isBasicPrecharge());
-						if (readCommand->isPrecharge())
-							break;
-					}	
-
-					break;
-				}
-			}
-
 			currentRank->issueRAS(time, thisCommand);	
 
 			// specific for RAS command
@@ -2403,38 +2346,18 @@ void Channel::executeCommand(Command *thisCommand)
 		// lack of break is intentional
 	case Command::READ:
 		{
-			bool satisfied = false;
-			//////////////////////////////////////////////////////////////////////////
-			if (systemConfig.isUsingDimmCache())
-			{
-				satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
-				commandHit = satisfied;
-				thisCommand->getHost()->setHit(satisfied);			
-#ifndef NDEBUG
-				std::cout << (satisfied ? "|" : ".");
-#endif
-			}
-			//////////////////////////////////////////////////////////////////////////
-
 			// specific for CAS command
 			// should account for tAL buffering the CAS command until the right moment
 			//thisCommand->setCompletionTime(max(currentBank.getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tCMD() + timingSpecification.tCAS() + timingSpecification.tBurst()));
 			assert(wasActivated);
-			if (satisfied && systemConfig.isUsingDimmCache())
-			{
-				thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCacheAccess() + timingSpecification.tBurst());
-				thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
-			}
-			else
-			{			
-				thisCommand->setCompletionTime(max(currentBank->getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
-				thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
 
-				for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
-				{
-					i->issueCAS(time, thisCommand);
-				}
-			}
+			thisCommand->setCompletionTime(max(currentBank->getLastRasTime() + timingSpecification.tRCD() + timingSpecification.tCAS() + timingSpecification.tBurst(), time + timingSpecification.tAL() + timingSpecification.tCAS() + timingSpecification.tBurst()));
+			thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
+
+			for (vector<Rank>::iterator i = rank.begin(); i != rank.end(); ++i)
+			{
+				i->issueCAS(time, thisCommand);
+			}			
 		}
 		break;
 
@@ -2446,19 +2369,6 @@ void Channel::executeCommand(Command *thisCommand)
 
 		// missing break is intentional
 	case Command::WRITE:
-
-		//////////////////////////////////////////////////////////////////////////
-		if (systemConfig.isUsingDimmCache())
-		{
-			bool satisfied = 
-				cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
-
-			thisCommand->getHost()->setHit(satisfied);
-#ifndef NDEBUG
-			std::cout << (satisfied ? "|" : ".");
-#endif
-		}
-		//////////////////////////////////////////////////////////////////////////
 
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());

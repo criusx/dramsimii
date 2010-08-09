@@ -87,7 +87,7 @@ namespace DRAMsimII
 		// mutators
 		Transaction *removeHost() { Transaction* host = hostTransaction; hostTransaction = NULL; return host; }
 		void setAutoPrecharge(const bool autoPrecharge) const;
-		
+
 		// friends
 		friend std::ostream &DRAMsimII::operator<<(std::ostream &,const Command &);	
 
@@ -96,9 +96,8 @@ namespace DRAMsimII
 		bool operator!=(const Command& right) const;
 		void *operator new(size_t size);
 		void operator delete(void *);
+	};
 
-	private:	
-
-		std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
-	}
+	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
+}
 #endif

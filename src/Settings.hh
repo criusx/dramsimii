@@ -133,20 +133,7 @@ namespace DRAMsimII
 		unsigned IDD4R;
 		unsigned IDD5;
 
-		//////////////////////////////////////////////////////////////////////////
-		// cache data
-		unsigned associativity;
-		unsigned cacheSize;		///< given in kiB
-		unsigned blockSize;
-		unsigned hitLatency;
-		Cache::ReplacementPolicy replacementPolicy;
-		unsigned nmruTrackingCount;
-		bool usingCache;
-		bool fixedCacheLatency;
 	
-		bool setKeyValue(const std::string &nodeName, const std::string &nodeValue);
-		bool setKeyValue(const char* nodeName, const std::string &nodeValue) { std::string name(nodeName); return setKeyValue(name, nodeValue); }
-
 		// converts a string to a file_io_token
 		static FileIOToken dramTokenizer(const std::string & value)
 		{

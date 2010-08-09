@@ -13,16 +13,17 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
+
 #ifndef GLOBALS_HH
 #define GLOBALS_HH
 #pragma once
 //#define __STDC_LIMIT_MACROS
 
-#include <boost/iostreams/filtering_stream.hpp>
-#include <sstream>
+#include <ostream>
 
 #include <limits>
 #include <cmath>
+#include <assert.h>
 
 #include "enumTypes.hh"
 #ifdef _MSC_VER
@@ -51,19 +52,14 @@ namespace DRAMsimII
 	class Transaction;
 	class System;
 	class Channel;
-	class fbdFrame;
 	class SystemConfiguration;
 	class TimingSpecification;
-	class InputStream;
 	class Settings;
 	class PowerConfig;
 	class Bank;
 	class Rank;
-	class BusEvent;
-	class Cache;
 	class Statistics;
-	class DIMM;
-
+	
 	void unitTests(const Settings &settings);
 	
 	// overloaded insertion operator functions for printing various aspects of the dram system
@@ -74,9 +70,7 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Event&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::fbdFrame&);	
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandOrderingAlgorithm);
 	std::ostream& operator<<(std::ostream&, const RowBufferPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::SystemConfigurationType);
@@ -190,8 +184,9 @@ namespace DRAMsimII
 #endif
 
 #ifdef _MSC_VER
-	typedef boost::uint64_t PhysicalAddress;
-typedef __int64 tick;
+	//typedef boost::uint64_t PhysicalAddress;
+	typedef unsigned __int64 PhysicalAddress;
+	typedef __int64 tick;
 #else
 	typedef uint64_t PhysicalAddress;
 	typedef int64_t tick;
@@ -199,7 +194,7 @@ typedef __int64 tick;
 
 
 
-//	typedef boost::int64_t tick;
+	//	typedef boost::int64_t tick;
 //#define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
 //#define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)
 // x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
