@@ -37,10 +37,6 @@
 #include <ostream>
 #include <iostream>
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/vector.hpp>
-
 namespace DRAMsimII
 {
 	/// @brief represents a DRAM system, the memory controller(s) and associated channels
@@ -98,63 +94,8 @@ namespace DRAMsimII
 		bool operator==(const System &rhs) const;
 
 	private:
-		// serialization
-		friend class boost::serialization::access;
-
-		explicit System(Settings &settings, const SystemConfiguration &systemConfig);
-
-		// deserialization constructor
-		explicit System(const SystemConfiguration &sysConfig, const std::vector<Channel> &chan, const SimulationParameters &simParams,
-			const Statistics &stats, const InputStream &inputStr);
-
-		template<class Archive>
-		void serialize(Archive& ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & time & nextStats;
-			}
-
-		}
-
-		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const System *t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				const SystemConfiguration* const sysConfig = &(t->systemConfig);
-				ar << sysConfig;
-				const std::vector<Channel>* const channel = &(t->channel);
-				ar << channel;
-				const SimulationParameters* const simParameters = &(t->simParameters);			
-				ar << simParameters;
-				const Statistics* const statistics = &(t->statistics);
-				ar << statistics;
-				const InputStream* const inputStream = &(t->inputStream);
-				ar << inputStream;
-			}
-		}
-
-		template<class Archive>
-		friend inline void load_construct_data(Archive & ar, System * t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				SystemConfiguration *sysConfig;
-				ar >> sysConfig;
-				std::vector<Channel> *channel;
-				ar >> channel;
-				SimulationParameters *simParameters;
-				ar >> simParameters;
-				Statistics *statistics;
-				ar >> statistics;
-				InputStream *inputStream;
-				ar >> inputStream;
-
-				new(t)DRAMsimII::System(*sysConfig, *channel, *simParameters, *statistics, *inputStream);
-			}
-
-		}
+		
+		explicit System(Settings &settings, const SystemConfiguration &systemConfig);		
 	};
 }
 #endif

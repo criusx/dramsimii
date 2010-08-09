@@ -20,9 +20,6 @@
 
 #include "Address.hh"
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-
 namespace DRAMsimII
 {
 	/// @brief pending event queue
@@ -106,19 +103,6 @@ namespace DRAMsimII
 		bool operator==(const Event& right) const
 		{
 			return (arrivalTime == right.arrivalTime && enqueueTime == right.enqueueTime && startTime == right.startTime && completionTime == right.completionTime && address == right.getAddress());
-		}
-	private:
-		// serialization
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-ar & startTime & enqueueTime & completionTime & arrivalTime & const_cast<Address&>(address);
-			}
-			
 		}
 	};
 }

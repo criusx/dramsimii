@@ -28,8 +28,6 @@
 #include <functional>
 #include <algorithm>
 #include <assert.h>
-#include <boost/functional.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include "System.hh"
 
@@ -45,7 +43,6 @@ using std::endl;
 using std::ostream;
 using std::min;
 using std::stringstream;
-using boost::lexical_cast;
 using namespace DRAMsimII;
 
 //////////////////////////////////////////////////////////////////////
@@ -84,7 +81,7 @@ nextStats(settings.epoch)
 	assert(systemConfig.statsOutStream.is_complete());
 
 	// else printing to these streams goes nowhere
-	string cacheSize = (settings.cacheSize >= 1024) ? lexical_cast<string>(settings.cacheSize / 1024) + "MB" : lexical_cast<string>(settings.cacheSize) + "kB";
+	string cacheSize = (settings.cacheSize >= 1024) ? (settings.cacheSize / 1024) + "MB" : settings.cacheSize + "kB";
 
 	stringstream printCommandLine;
 
@@ -99,7 +96,7 @@ nextStats(settings.epoch)
 		"cache[" << cacheSize << "] " <<
 		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" <<
 		settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]" << " policy[" <<
-		settings.replacementPolicy << ((settings.replacementPolicy == Cache::NMRU) ? lexical_cast<string>(settings.nmruTrackingCount) : string("")) << "] " << 
+		settings.replacementPolicy << ((settings.replacementPolicy == Cache::NMRU) ? settings.nmruTrackingCount : string("")) << "] " << 
 		"usingCache[" << (settings.usingCache ? "T" : "F") << "]";
 
 	systemConfig.statsOutStream << printCommandLine.str() << endl;
