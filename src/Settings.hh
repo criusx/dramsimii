@@ -46,7 +46,6 @@ namespace DRAMsimII
 		unsigned dataRate; // frequency
 		CommandOrderingAlgorithm commandOrderingAlgorithm;
 		TransactionOrderingAlgorithm transactionOrderingAlgorithm;
-		SystemConfigurationType systemType;
 		unsigned perBankQueueDepth;
 		unsigned columnSize;
 		unsigned rowSize;
@@ -116,7 +115,6 @@ namespace DRAMsimII
 		unsigned IDD4W;
 		unsigned IDD4R;
 		unsigned IDD5;
-
 	
 		// converts a string to a file_io_token
 		static FileIOToken dramTokenizer(const std::string & value)
@@ -133,6 +131,9 @@ namespace DRAMsimII
 
 			return first;
 		}
+
+		bool setKeyValue(const std::string &nodeName, const std::string &nodeValue);
+		bool setKeyValue(const char* nodeName, const std::string &nodeValue) { std::string name(nodeName); return setKeyValue(name, nodeValue); }
 
 		static std::map<FileIOToken, std::string> lookupSetup()
 		{
@@ -491,7 +492,7 @@ namespace DRAMsimII
 			else
 				return false;
 		}
-			
+	
 		// create a dramSettings from command line arguments
 		explicit Settings();
 		

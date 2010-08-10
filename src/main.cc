@@ -56,8 +56,6 @@ int main(int argc,char **argv, char *envp[])
 		System ds(settings); 
 		ds.runSimulations();
 	}
-
-
 	//_CrtDumpMemoryLeaks();
 	return 0;
 }

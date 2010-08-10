@@ -24,6 +24,7 @@
 #include "event.hh"
 
 #include <boost/pool/pool.hpp>
+#include <climits>
 
 namespace DRAMsimII
 {

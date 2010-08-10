@@ -17,53 +17,15 @@
 #include <tr1/unordered_map>
 #endif
 
-#ifdef TRACE_GENERATE
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/bzip2.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
-#include <boost/iostreams/device/file_descriptor.hpp>
-#include <boost/iostreams/device/file.hpp>
-#include <boost/filesystem.hpp>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
-
-
-using boost::iostreams::bzip2_compressor;
-using boost::iostreams::gzip_compressor;
-using boost::iostreams::gzip_params;
-using boost::iostreams::file_sink;
-using boost::filesystem::exists;
-using boost::filesystem::path;
-using boost::filesystem::create_directory;
-using boost::filesystem::is_directory;
-using std::cout;
-using std::stringstream;
-using std::setw;
-using std::setfill;
-
-#endif
-
 #include <queue>
 
 #include "System.hh"
-#include "fbdSystem.hh"
 #include "Settings.hh"
 #include "globals.hh"
 
 using DRAMsimII::tick;
 
 //#define PROCESS_BEFORE
-
-#if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) // compiler should declare this
-#define M5_TIMING(X) ds->getTimingStream() << X << std::endl;
-#define M5_TIMING2(X) memory->ds->getTimingStream() << X << std::endl;
-#define M5_TIMING3(X) memory->ds->getTimingStream() << X;
-#else
-#define M5_TIMING(X)
-#define M5_TIMING2(X)
-#define M5_TIMING3(X)
-#endif
 
 
 /// @brief wrapper class to allow M5 to work with DRAMsimII

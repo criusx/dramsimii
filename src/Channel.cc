@@ -178,7 +178,6 @@ powerModel(rhs.powerModel),
 channelID(rhs.channelID),
 rank((unsigned)rhs.rank.size(), Rank(rhs.rank[0], timingSpecification, systemConfig, statistics)),
 finishedTransactions(),
-cache((unsigned)rhs.cache.size(), Cache(rhs.cache[0])),
 cprhSequence(rhs.cprhSequence),
 lastCprhLocation(rhs.lastCprhLocation)
 {
@@ -596,10 +595,9 @@ Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 /// also does breakdowns of power consumed per channel and per epoch as well as averaged over time
 /// @author Joe Gross
 //////////////////////////////////////////////////////////////////////
-void Channel::doPowerCalculation(ostream& os)
+ostream &Channel::doPowerCalculation(ostream& os)
 {	
 	double PsysRD = 0.0;
-	double PsysRdAdjusted = 0.0;
 	double PsysWR = 0.0;
 
 	double PsysACT_STBY = 0.0;
@@ -608,10 +606,6 @@ void Channel::doPowerCalculation(ostream& os)
 	double PsysACT_PDN = 0.0;
 	double PsysACT = 0.0;
 	//double PsysACTAdjusted = 0.0;
-
-	float tRRDschAdjusted = 0.0F;
-
-	uint64_t totalReadHits = 0;
 
 	os << "+ch[" << channelID << "]";
 
@@ -626,9 +620,6 @@ void Channel::doPowerCalculation(ostream& os)
 			thisRankRasCount += l->getRASCount();
 			l->accumulateAndResetCounts();
 		}
-			
-		//totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankId()].first.first;
-		totalReadHits += cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first;
 		
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
 		double percentActive = 1.0 - (k->getPrechargeTime(time) / max((double)(time - powerModel.getLastCalculation()), 0.00000001));
@@ -697,19 +688,6 @@ void Channel::doPowerCalculation(ostream& os)
 		k->resetCycleCounts();
 	}
 
-	unsigned dimmId = 0;
-	for (vector<Cache>::iterator currentDimm = cache.begin(), end = cache.end();
-		currentDimm < end; ++currentDimm)
-	{
-		os << " dimm[" << dimmId++ << "]" <<
-			" dimmReadHits{" << currentDimm->getReadHits() <<
-			"} dimmReadMisses{" << currentDimm->getReadMisses() <<
-			"} dimmWriteHits{" << currentDimm->getWriteHits() <<
-			"} dimmWriteMisses{" << currentDimm->getWriteMisses() << "}";
-	}
-
-	os << endl;
-
 	os << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysACT_STBY << "} mW " << endl;
 	
 	os << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) << PsysACT << "} mW" << endl;
@@ -721,6 +699,8 @@ void Channel::doPowerCalculation(ostream& os)
 	os << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << PsysWR << "} mW" << endl;
 
 	powerModel.setLastCalculation(time);
+
+	return os;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -3043,11 +3023,6 @@ tick Channel::earliestExecuteTimeLog(const Command *currentCommand) const
 
 void Channel::resetStats()
 {
-	for (vector<Cache>::iterator i = cache.begin(), iEnd = cache.end();
-		i != iEnd; ++i)
-	{
-		i->resetStats();
-	}
 }
 
 
@@ -3055,39 +3030,39 @@ void Channel::printVerilogCommand(const Command *thisCommand)
 {
 	static tick lastTime;
 
-	systemConfig.verilogOutStream << "nop(" << (time - lastTime) / systemConfig.getDatarate() * 1.0E9 << "); //" << time - lastTime << endl;
+	VERILOG_LOG("nop(" << (time - lastTime) / systemConfig.getDatarate() * 1.0E9 << "); //" << time - lastTime)
 
 	lastTime = time;
 
 	if (thisCommand->isRead())
 	{
-		systemConfig.verilogOutStream << "read\t\t(" << thisCommand->getAddress().getRank() << ",\t"
+		VERILOG_LOG("read\t\t(" << thisCommand->getAddress().getRank() << ",\t"
 			<< thisCommand->getAddress().getBank() << ",\t" << thisCommand->getAddress().getColumn() <<
 			",\t" << (thisCommand->isPrecharge() ? "1" : "0") << ",\t" <<
 			((int)thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << "); //" <<
-			time << endl;
+			time);
 	}
 	else if (thisCommand->isWrite())
 	{
-		systemConfig.verilogOutStream << "write\t\t(" << thisCommand->getAddress().getRank() << ",\t" << thisCommand->getAddress().getBank() <<
+		VERILOG_LOG("write\t\t(" << thisCommand->getAddress().getRank() << ",\t" << thisCommand->getAddress().getBank() <<
 			",\t" << thisCommand->getAddress().getColumn() << ",\t" << (thisCommand->isPrecharge() ? "1" : "0") << ",\t" <<
-			((int)thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << ",\t0,\t10); //" << time << endl;
+			((int)thisCommand->getLength() < (timingSpecification.tBurst()) ? "1" : "0") << ",\t0,\t10); //" << time);
 	}
 	else if (thisCommand->isActivate())
 	{
-		systemConfig.verilogOutStream << "activate\t(" << thisCommand->getAddress().getRank() << ",\t" << 
+		VERILOG_LOG("activate\t(" << thisCommand->getAddress().getRank() << ",\t" << 
 			thisCommand->getAddress().getBank() << ",\t" << thisCommand->getAddress().getRow() << "); //" <<
-			time << endl;
+			time);
 	}
 	else if (thisCommand->isRefresh())
 	{
-		systemConfig.verilogOutStream << "refresh(" << thisCommand->getAddress().getRank() << ");" << endl;
+		VERILOG_LOG("refresh(" << thisCommand->getAddress().getRank() << ");");
 	}
 	else if (thisCommand->isBasicPrecharge())
 	{
-		systemConfig.verilogOutStream << "precharge\t(" << thisCommand->getAddress().getRank() << ",\t" <<
+		VERILOG_LOG("precharge\t(" << thisCommand->getAddress().getRank() << ",\t" <<
 			thisCommand->getAddress().getBank() << ",\t" << "0" << "); //" <<
-			time << endl;
+			time);
 	}
 }
 

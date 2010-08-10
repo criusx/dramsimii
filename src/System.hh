@@ -69,7 +69,6 @@ namespace DRAMsimII
 		bool moveToTime(const tick endTime);
 		bool enqueue(Transaction* trans);
 		virtual tick nextTick() const;
-		void runSimulations(const unsigned requestCount = 0);
 		unsigned pendingTransactionCount() const;
 		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
 

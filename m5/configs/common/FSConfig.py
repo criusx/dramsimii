@@ -61,11 +61,7 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
     else:
         outFile = ''
 
-    self.physmem = M5dramSystem(extraParameters=extraParameters,
-                                    settingsFile=settingsFilename,
-                                    outFilename=outFile,
-                                    commandLine=outFile,
-                                    range=AddrRange(mdesc.mem()))
+    self.physmem = M5dramSystem(range=AddrRange(mdesc.mem()))
     self.bridge.side_a = self.iobus.port
     self.bridge.side_b = self.membus.port
     self.physmem.port = self.membus.port

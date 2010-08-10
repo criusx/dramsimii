@@ -98,7 +98,7 @@ namespace DRAMsimII
 		bool enqueue(Transaction *in);
 		bool isFull() const { return transactionQueue.isFull(); }	///< determines whether there is room for more transactions
 		unsigned getChannelID() const { return channelID; }			///< return the ordinal of this channel
-		void doPowerCalculation(std::ostream &os);
+		std::ostream &doPowerCalculation(std::ostream &os);
 		virtual tick nextTick() const;
 		void resetToTime(const tick time);
 		std::queue<std::pair<unsigned,tick> >::size_type pendingTransactionCount() const { return finishedTransactions.size(); }

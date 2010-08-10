@@ -38,11 +38,6 @@ namespace DRAMsimII
 		CLOSE_PAGE_AGGRESSIVE // improve upon regular close page
 	};
 
-	enum SystemConfigurationType
-	{
-		BASELINE_CONFIG, // direct control. 1 or 2 ranks in DDR3
-		FBD_CONFIG // fully buffered DIMMS
-	};
 
 	/// we can define various algorithms previously explored by Rixner, McKee et al. here.
 	enum CommandOrderingAlgorithm

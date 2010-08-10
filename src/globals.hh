@@ -59,9 +59,9 @@ namespace DRAMsimII
 	class Bank;
 	class Rank;
 	class Statistics;
-	
+
 	void unitTests(const Settings &settings);
-	
+
 	// overloaded insertion operator functions for printing various aspects of the dram system
 	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Bank&);
@@ -73,7 +73,6 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandOrderingAlgorithm);
 	std::ostream& operator<<(std::ostream&, const RowBufferPolicy);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::SystemConfigurationType);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::RefreshPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionOrderingAlgorithm);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::OutputFileType);
@@ -125,27 +124,55 @@ namespace DRAMsimII
 		return std::abs(nVal1 - nVal2) <= EPSILON * std::fabs(nVal1);
 		// see Knuth section 4.2.2 pages 217-218
 	}
-	
+
 	// converts a string to its corresponding magnitude representation
 	double ascii2multiplier(const std::string &);
 
-// debug macros
+	// debug macros
 
-//#define DEBUG_FLAG
+	//#define DEBUG_FLAG
 
 #define DEBUG_COMMAND
 
 #define DEBUG_TRANSACTION
 
-//#define DEBUG_RAND
+	//#define DEBUG_RAND
 
 #define DEBUGDRAMSIM
 
-//#define DEBUG_MIN_PROTOCOL_GAP
+	//#define DEBUG_MIN_PROTOCOL_GAP
 
-//#define DEBUG_FLAG_2
+	//#define DEBUG_FLAG_2
+#define NO_STREAMS
 
+#if !defined(NO_STREAMS)
+#define STATS_LOG(X) systemConfig.statsOutStream << X << std::endl;
+#else
+#define STATS_LOG(X)
+#endif
 
+#if !defined(NO_STREAMS)
+#define POWER_LOG(X) systemConfig.statsOutStream << X << std::endl;
+#else
+#define POWER_LOG(X)
+#endif
+
+#if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) && !defined(NO_STREAMS) // compiler should declare this
+#define VERILOG_LOG(X) systemConfig.verilogOutStream << X << std::endl;
+#else
+#define VERILOG_LOG(X)
+#endif
+
+#if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) && !defined(NO_STREAMS) // compiler should declare this
+#define M5_TIMING(X) ds->getTimingStream() << X << std::endl;
+#define M5_TIMING2(X) memory->ds->getTimingStream() << X << std::endl;
+#define M5_TIMING3(X) memory->ds->getTimingStream() << X;
+#else
+#define M5_TIMING(X)
+#define M5_TIMING2(X)
+#define M5_TIMING3(X)
+#endif
+	
 #if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) // compiler should declare this
 #define M5_TIMING_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #define M5_DEBUG(X) X;
@@ -154,28 +181,20 @@ namespace DRAMsimII
 #define M5_DEBUG(X)
 #endif
 
-#if defined(DEBUG) && defined(SSTDEBUG) && !defined(NDEBUG) // compiler should declare this
-#define SST_TIMING_LOG(X) systemConfig.timingOutStream << X << std::endl;
-#define SST_DEBUG(X) X;
-#else
-#define SST_TIMING_LOG(X)
-#define SST_DEBUG(X)
-#endif
-
-#if defined(DEBUG) && defined(DEBUG_TRANSACTION) && !defined(NDEBUG) // compiler should declare this
+#if defined(DEBUG) && defined(DEBUG_TRANSACTION) && !defined(NDEBUG) && !defined(NO_STREAMS) // compiler should declare this
 #define DEBUG_TRANSACTION_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #else
 #define DEBUG_TRANSACTION_LOG(X)
 #endif
 
-	
-#if defined(DEBUG) && defined(DEBUG_COMMAND) && !defined(NDEBUG)
+
+#if defined(DEBUG) && defined(DEBUG_COMMAND) && !defined(NDEBUG) && !defined(NO_STREAMS)
 #define DEBUG_COMMAND_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #else
 #define DEBUG_COMMAND_LOG(X)
 #endif
 
-#if defined(DEBUG) && defined(DEBUGDRAMSIM) && !defined(NDEBUG)
+#if defined(DEBUG) && defined(DEBUGDRAMSIM) && !defined(NDEBUG) && !defined(NO_STREAMS)
 #define DEBUG_TIMING_LOG(X) systemConfig.timingOutStream << X << std::endl;
 #define DEBUG_LOG(X) cerr << X << endl;
 #else
@@ -195,10 +214,10 @@ namespace DRAMsimII
 
 
 	//	typedef boost::int64_t tick;
-//#define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
-//#define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)
-// x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
-//#define PHYSICAL_ADDRESS_MAX static_cast<PhysicalAddress>(boost::integer_traits<PhysicalAddress>::const_max)
+	//#define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
+	//#define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)
+	// x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
+	//#define PHYSICAL_ADDRESS_MAX static_cast<PhysicalAddress>(boost::integer_traits<PhysicalAddress>::const_max)
 
 #define PI 3.1415926535897932384626433832795
 

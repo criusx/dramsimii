@@ -4,35 +4,11 @@ import re
 
 conf = Configure(env)
 
-#if not conf.CheckLib('boost_serialization'):
-#	print 'Boost serialization library not found, please install this.'
-#	print 'e.g. sudo apt-get install "libboost-serialization*"'
-#	Exit(1)
-if not conf.CheckLib('boost_iostreams'):
-	print 'Boost iostreams library not found, please install this.'
-	print 'e.g. sudo apt-get install "libboost-iostreams*"'
-	Exit(1)
 if not conf.CheckCXXHeader('boost/circular_buffer.hpp'):
 	print 'Need Boost 1.35 or newer with the circular buffer library.'
 	print 'The circular buffer header files may also be copied from a newer Boost instance to an older one.'
 	Exit(1)
-if not conf.CheckLib('boost_filesystem'):
-	print 'Boost filesystem library not found, please install this.'
-	print 'e.g. sudo apt-get install "libboost-filesystem*"'
-	Exit(1)
-if not conf.CheckLib('boost_program_options'):
-	print 'Boost program options library not found, please install this.'
-	print 'e.g. sudo apt-get install libboost-program-options-dev*"'
-	Exit(1)
-if not conf.CheckLib('xml2'):
-	print 'libxml2 not found, please install this.'
-	print 'e.g. sudo apt-get install "libxml2-*"'
-	Exit(1)
 
-try:
-	env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
-except ValueError:
-	pass
 
 try:
 	if 'fast' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
@@ -77,23 +53,15 @@ Source('Bank.cc')
 Source('command.cc')
 Source('Channel.cc')
 Source('event.cc')
-Source('fbdAMB.cc')
-Source('fbdChannel.cc')
-Source('fbdFrame.cc')
-Source('fbdSystem.cc')
-Source('InputStream.cc')
 Source('m5-dramSystem.cc')
 Source('powerConfig.cc')
 Source('Rank.cc')
 Source('Settings.cc')
-Source('SettingsXML.cc')
-Source('simulationParameters.cc')
 Source('Statistics.cc')
 Source('System.cc')
 Source('SystemConfiguration.cc')
 Source('TimingSpecification.cc')
 Source('transaction.cc')
-Source('cache/cache.cc')
 
 env = conf.Finish()
 

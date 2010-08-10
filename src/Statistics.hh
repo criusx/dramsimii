@@ -125,8 +125,6 @@ namespace DRAMsimII
 		const unsigned channels;
 		const unsigned ranks;
 		const unsigned banks;
-		const unsigned cacheHitLatency;								///< the latency caused when a transaction hits in the cache
-		const bool usingDimmCache;
 		unsigned validTransactionCount;
 		unsigned startNumber;
 		unsigned endNumber;

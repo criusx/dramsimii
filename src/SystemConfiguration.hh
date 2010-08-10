@@ -32,7 +32,6 @@ namespace DRAMsimII
 	protected:
 		CommandOrderingAlgorithm commandOrderingAlgorithm;				///< describes how to place commands into the per bank command queues
 		TransactionOrderingAlgorithm transactionOrderingAlgorithm;		///< the algorithm that describes how to place transactions into the queue
-		SystemConfigurationType configType;								///< whether the system is standard or FBD
 		unsigned refreshTime;											///< the frequency at which refresh commands are scheduled
 		RefreshPolicy refreshPolicy;									///< determines how refreshes are handled
 		unsigned columnSize;											///< the size of each column, in bytes
@@ -68,7 +67,6 @@ namespace DRAMsimII
 		Address::AddressMappingScheme getAddressMappingScheme() const { return addressMappingScheme; }
 		CommandOrderingAlgorithm getCommandOrderingAlgorithm() const { return commandOrderingAlgorithm; }
 		TransactionOrderingAlgorithm getTransactionOrderingAlgorithm() const { return transactionOrderingAlgorithm; }
-		SystemConfigurationType getConfigType() const { return configType; }
 		unsigned getRankCount() const { return rankCount; }
 		unsigned getBankCount() const { return bankCount; }
 		unsigned getChannelCount() const { return channelCount; }

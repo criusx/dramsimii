@@ -82,9 +82,9 @@ nextStats(rhs.nextStats)
 
 
 System::~System()
-{
-	systemConfig.statsOutStream << "----Runtime: {" << time / systemConfig.getDatarate() << "} duration{" << time - lastStatsTime << "}" << endl;
+{	
 	printStats();
+	STATS_LOG("----Runtime: {" << time / systemConfig.getDatarate() << "} duration{" << time - lastStatsTime << "}");
 }
 
 
@@ -202,7 +202,12 @@ void System::resetToTime(const tick time)
 //////////////////////////////////////////////////////////////////////
 bool System::moveToTime(const tick endTime)
 {
-	std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
+	//std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
+	for (vector<Channel>::iterator i = channel.begin(), end = channel.end();
+		i < end; i++)
+	{
+		i->moveToTime(endTime);
+	}
 	//#pragma omp parallel for private(i)
 	// 	for (i = channel.size() - 1; i >= 0; i--)
 	// 	{
@@ -253,7 +258,7 @@ unsigned System::findOldestChannel() const
 //////////////////////////////////////////////////////////////////////
 void System::printStatistics()
 {
-	systemConfig.statsOutStream << statistics;
+	STATS_LOG(statistics);
 	statistics.clear();
 
 	for (vector<Channel>::iterator h = channel.begin(), hEnd = channel.end();
@@ -278,7 +283,7 @@ void System::doPowerCalculation()
 
 	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i != end; ++i)
 	{
-		i->doPowerCalculation(systemConfig.powerOutStream);
+		POWER_LOG(i->doPowerCalculation())
 	}
 }
 
@@ -303,115 +308,6 @@ void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outpu
 		i->getPendingTransactions(outputQueue);
 }
 
-//////////////////////////////////////////////////////////////////////
-/// @brief automatically runs the simulations according to the set parameters
-/// @details runs either until the trace file runs out or the request count reaches zero\n
-/// will print power and general stats at regular intervals\n
-/// pulls data from either a trace file or generates random requests according to parameters
-/// @author Joe Gross
-//////////////////////////////////////////////////////////////////////
-void System::runSimulations(const unsigned requestCount)
-{
-	unsigned outstandingTransacitonCounter = 0;
-
-	Transaction *inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
-
-	resetToTime(inputTransaction->getArrivalTime());
-
-	std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> > outstandingTransactions;
-
-	std::queue<std::pair<unsigned, tick> > finishedTransactions;
-
-	//bool running = true;
-
-	if (inputTransaction)
-	{		
-		tick newTime = inputTransaction->getArrivalTime();// = (rand() % 65536) + 65536;
-
-		resetToTime(newTime);
-
-		for (tick i = (requestCount > 0) ? requestCount : simParameters.getRequestCount(); (i > 0) && (inputTransaction != NULL);)
-		{				
-			moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
-
-			if (this->pendingTransactionCount() > 0)
-			{
-				getPendingTransactions(finishedTransactions);
-
-				while (!finishedTransactions.empty())
-				{
-					if (outstandingTransactions.find(finishedTransactions.front().first) == outstandingTransactions.end())
-						assert(outstandingTransactions.find(finishedTransactions.front().first) != outstandingTransactions.end());
-
-					delete outstandingTransactions[finishedTransactions.front().first].first;
-
-					outstandingTransactions.erase(finishedTransactions.front().first);
-
-					finishedTransactions.pop();
-				}
-
-			}
-
-			// attempt to enqueue external transactions
-			// as internal transactions (REFRESH) are enqueued automatically
-			if (time >= inputTransaction->getArrivalTime())
-			{
-				if (!isFull(inputTransaction->getAddress().getChannel()))
-				{
-#ifndef NDEBUG
-					bool result =
-#endif
-						enqueue(inputTransaction);
-
-					assert(result);
-
-					Transaction *duplicateTrans = new Transaction(*inputTransaction);
-
-					outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(duplicateTrans, inputTransaction);
-
-					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
-#ifndef NDEBUG
-					bool foundOne = false;
-
-					if (outstandingTransacitonCounter % 5000 == 0)
-					{
-						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(), end = outstandingTransactions.end(); j != end; ++j)
-						{
-							tick diff = time - j->second.first->getEnqueueTime();
-							if (diff > 20000)
-							{
-								foundOne = true;
-								//assert(time - i->second.first->getEnqueueTime() < 10000);
-								std::cerr << j->first << " @ " << diff << std::endl;
-							}
-						}
-					}
-
-					if (foundOne)
-						cerr << "-----------------------------" << endl;
-#endif
-					//if (!inputTransaction)
-					//	running = false;
-
-					i--;
-				}
-			}
-		}
-
-		delete inputTransaction;
-		
-	}
-	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(),
-		end = outstandingTransactions.end();
-		i != end; ++i)
-	{
-		delete i->second.first;
-		delete i->second.second;
-	}
-	//	moveToTime(channel[0].getTime() + 64000000);
-}
-
-
 //////////////////////////////////////////////////////////////////////////
 /// @brief function to determine if there are any commands or transactions pending in this system
 /// @return true if there are any transactions or commands in the queues, false otherwise
@@ -432,8 +328,8 @@ bool System::isEmpty() const
 //////////////////////////////////////////////////////////////////////////
 bool System::operator==(const System &rhs) const
 {
-	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
-		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
+	return systemConfig == rhs.systemConfig && channel == rhs.channel &&
+		statistics == rhs.statistics && time == rhs.time &&
 		nextStats == rhs.nextStats;
 }
 
@@ -446,17 +342,6 @@ bool System::operator==(const System &rhs) const
 //////////////////////////////////////////////////////////////////////
 ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 {
-
-	os << "SYS[";
-	switch(thisSystem.systemConfig.getConfigType())
-	{
-	case BASELINE_CONFIG:
-		os << "BASE] ";
-		break;
-	default:
-		os << "UNKN] ";
-		break;
-	}
 	os << "RC[" << thisSystem.systemConfig.getRankCount() << "] ";
 	os << "BC[" << thisSystem.systemConfig.getBankCount() << "] ";
 	os << "ALG[";
@@ -482,29 +367,9 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 		break;
 	}
 	
-	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] "
-		<< "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] "<< thisSystem.systemConfig;
-
 	return os;
 }
 
-ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::SystemConfigurationType ct)
-{
-	switch (ct)
-	{
-	case BASELINE_CONFIG:
-		os << "baseline";
-		break;
-	case FBD_CONFIG:
-		os << "fbd";
-		break;
-	default:
-		os << "unknown";
-		break;
-	}
-
-	return os;
-}
 ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::RefreshPolicy rp)
 {
 	switch (rp)

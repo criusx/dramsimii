@@ -134,19 +134,9 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 
 			if (currentTransaction->isRead())
 			{
-				// read hit
-				if (usingDimmCache &&currentTransaction->isHit())
-				{
-					cacheLatency += cacheHitLatency;
-
-					dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
-				}
-				// read miss
-				else
-				{
+				
 					bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
-				}
-
+				
 				assert(currentTransaction->getLatency() > 4);
 				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) +
 					currentTransaction->getAddress().getRank() * banks +
@@ -157,17 +147,8 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 			}			
 			else if (currentTransaction->isWrite())
 			{
-				// write hit
-				if (usingDimmCache && currentTransaction->isHit())
-				{
 					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
-				}
-				// write miss
-				else
-				{
-					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
-				}
-
+				
 				// 64bit bus for most DDRx architectures
 				/// @todo use #DQ * length to calculate bytes Tx, Rx
 				writeCount++;
@@ -349,10 +330,6 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	os << "----Row Hit/Miss Counts {" << hitCount << "} {" << missCount << "}" << endl;
 
-
-	uint64_t hits = 0, misses = 0;
-
-	uint64_t readHits = 0, readMisses = 0;
 
 	os << "----Utilization";
 	for (unsigned i = 0; i < statsLog.channels; ++i)

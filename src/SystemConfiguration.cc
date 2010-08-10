@@ -53,7 +53,6 @@ using std::endl;
 SystemConfiguration::SystemConfiguration(const Settings& settings):
 commandOrderingAlgorithm(settings.commandOrderingAlgorithm),
 transactionOrderingAlgorithm(settings.transactionOrderingAlgorithm),
-configType(settings.systemType),
 refreshTime(settings.dataRate * settings.refreshTime),
 refreshPolicy(settings.refreshPolicy),
 columnSize(settings.columnSize),
@@ -87,7 +86,6 @@ epoch(settings.epoch)
 SystemConfiguration::SystemConfiguration(const SystemConfiguration &rhs):
 commandOrderingAlgorithm(rhs.commandOrderingAlgorithm),
 transactionOrderingAlgorithm(rhs.transactionOrderingAlgorithm),
-configType(rhs.configType),
 refreshTime(rhs.refreshTime),
 refreshPolicy(rhs.refreshPolicy),
 columnSize(rhs.columnSize),
@@ -121,7 +119,6 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	}
 	commandOrderingAlgorithm = rhs.commandOrderingAlgorithm;
 	transactionOrderingAlgorithm = rhs.transactionOrderingAlgorithm;
-	configType = rhs.configType;
 	refreshTime = rhs.refreshTime;
 	refreshPolicy = rhs.refreshPolicy;
 	columnSize = rhs.columnSize;
@@ -153,7 +150,6 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& rhs) const
 {
 	return (commandOrderingAlgorithm == rhs.commandOrderingAlgorithm &&
 		transactionOrderingAlgorithm == rhs.transactionOrderingAlgorithm &&
-		configType == rhs.configType &&
 		refreshTime == rhs.refreshTime &&
 		refreshPolicy == rhs.refreshPolicy &&
 		columnSize == rhs.columnSize &&

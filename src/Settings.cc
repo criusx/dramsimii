@@ -42,13 +42,12 @@ namespace DRAMsimII
 /// @brief blank settings constructor
 //////////////////////////////////////////////////////////////////////////
 Settings::Settings():
-	epoch(UINT_MAX),
+epoch(UINT_MAX),
 	refreshPolicy(NO_REFRESH),
 	dramType(DDR),
 	dataRate(800000000),
 	commandOrderingAlgorithm(STRICT_ORDER),
 	transactionOrderingAlgorithm((TransactionOrderingAlgorithm)STRICT),
-	systemType(BASELINE_CONFIG),
 	perBankQueueDepth(),
 	columnSize(0),
 	rowSize(0),
@@ -115,6 +114,136 @@ Settings::Settings():
 	IDD4R(UINT_MAX),
 	IDD5(UINT_MAX)
 {}
+
+
+//////////////////////////////////////////////////////////////////////////
+/// @brief sets a parameter based on a name and value
+/// @details looks for and attempts to parse a parameter name and value
+/// using the name and value passed in
+/// @return true if the parameter was recognized and the value converted
+/// false otherwise
+//////////////////////////////////////////////////////////////////////////
+bool Settings::setKeyValue(const string &nodeName, const string &value)
+{
+	string nodeValue = value;
+	//bool result = true;
+	boost::algorithm::to_lower(nodeValue);
+
+	const FileIOToken token = dramTokenizer(nodeName);
+
+	switch (token)
+	{
+
+	case refresh_policy_token:
+		if (nodeValue == "none" || nodeValue == "no refresh")
+			refreshPolicy = NO_REFRESH;
+		else if (nodeValue == "bankconcurrent")
+			refreshPolicy = BANK_CONCURRENT;
+		else if (nodeValue == "bankstaggeredhidden")
+			refreshPolicy = BANK_STAGGERED_HIDDEN;
+		else if (nodeValue == "refreshonechanallrankallbank")
+			refreshPolicy = ONE_CHANNEL_ALL_RANK_ALL_BANK;
+		else
+			return false;
+		break;
+	case system_configuration_type_token:
+		// TODO: if baseline, then normal system, if FBD, then make a FBD system
+
+		break;
+	case transaction_ordering_policy_token:
+		if (nodeValue == "strict")
+			transactionOrderingAlgorithm = (TransactionOrderingAlgorithm)STRICT;
+		else if (nodeValue == "riff")
+			transactionOrderingAlgorithm = (TransactionOrderingAlgorithm)RIFF;
+		else
+			transactionOrderingAlgorithm = (TransactionOrderingAlgorithm)STRICT;						
+		break;
+	case command_ordering_algorithm_token:
+		if (nodeValue == "strict")
+			commandOrderingAlgorithm = STRICT_ORDER;
+		else if (nodeValue == "bankroundrobin" || nodeValue == "brr")
+			commandOrderingAlgorithm = BANK_ROUND_ROBIN;
+		else if (nodeValue == "rankroundrobin" || nodeValue == "rrr")
+			commandOrderingAlgorithm = RANK_ROUND_ROBIN;
+		else if (nodeValue == "cprh" || nodeValue == "commandpairrankhop" || nodeValue == "command_pair_rank_hop" || nodeValue == "commandpairrankhopping")
+			commandOrderingAlgorithm = COMMAND_PAIR_RANK_HOPPING;
+		else if (nodeValue == "firstavailableage" || nodeValue == "firstavailable" || nodeValue == "frsta")
+			commandOrderingAlgorithm = FIRST_AVAILABLE_AGE;
+		else if (nodeValue == "firstavailableriff" || nodeValue == "frstr")
+			commandOrderingAlgorithm = FIRST_AVAILABLE_RIFF;
+		else if (nodeValue == "firstavailablequeue" || nodeValue == "frstq")
+			commandOrderingAlgorithm = FIRST_AVAILABLE_QUEUE;
+		else 
+		{
+			cerr << "Unrecognized ordering algorithm: " << nodeValue << endl;
+			commandOrderingAlgorithm = FIRST_AVAILABLE_AGE;
+		}
+		break;
+	case addr_mapping_scheme_token:
+		if (nodeValue == "burgerbase")
+			addressMappingScheme = Address::BURGER_BASE_MAP;
+		else if (nodeValue == "closepagebaseline")
+			addressMappingScheme = Address::CLOSE_PAGE_BASELINE;
+		else if (nodeValue == "intel845g")
+		{
+			if (channelCount > 1)
+			{
+				cerr << "error: Intel 845G doesn't support multiple channels, resetting to SDRAM Base Map" << endl;
+				addressMappingScheme = Address::SDRAM_BASE_MAP;
+			}
+			else
+			{
+				addressMappingScheme = Address::INTEL845G_MAP;
+			}				
+		}
+		else if (nodeValue == "sdrambase" || nodeValue == "sdbas")
+			addressMappingScheme = Address::SDRAM_BASE_MAP;
+		else if (nodeValue == "sdramhiperf" || nodeValue == "sdhipf")
+			addressMappingScheme = Address::SDRAM_HIPERF_MAP;
+		else if (nodeValue == "closepagehighlocality" || nodeValue == "highlocality" || nodeValue == "hiloc")
+			addressMappingScheme = Address::CLOSE_PAGE_HIGH_LOCALITY;
+		else if (nodeValue == "closepagelowlocality" || nodeValue == "lowlocality"  || nodeValue == "loloc")
+			addressMappingScheme = Address::CLOSE_PAGE_LOW_LOCALITY;
+		else if (nodeValue == "closepagebaselineopt"  || nodeValue == "cpbopt")
+			addressMappingScheme = Address::CLOSE_PAGE_BASELINE_OPT;
+		else
+			addressMappingScheme = Address::SDRAM_HIPERF_MAP;
+		break;
+	case row_buffer_management_policy_token:
+		if (nodeValue == "openpage" || nodeValue == "open")
+			rowBufferManagementPolicy = OPEN_PAGE;
+		else if (nodeValue == "closepage" || nodeValue == "clos")
+			rowBufferManagementPolicy = CLOSE_PAGE;
+		else if (nodeValue == "closepageaggressive" || nodeValue == "closepageoptimized" || nodeValue == "cpa")
+			rowBufferManagementPolicy = CLOSE_PAGE_AGGRESSIVE;
+		else if (nodeValue == "openpageaggressive" || nodeValue == "opa")
+			rowBufferManagementPolicy = OPEN_PAGE_AGGRESSIVE;
+		else
+			return false;
+		break;
+	case dram_type_token:
+		if (nodeValue == "ddr2")
+			dramType = DDR2;
+		else if (nodeValue == "ddr")
+			dramType = DDR;
+		else if (nodeValue == "ddr3")
+			dramType = DDR3;
+		else if (nodeValue == "drdram")
+			dramType = DRDRAM;
+		else
+			dramType = DDR2;
+		break;
+	default:
+		cerr << nodeName << " was not recognized" << endl;
+		return false;
+		break;
+		//result = false;
+		break;
+	}
+
+
+	return true;
+}
 
 ostream &DRAMsimII::operator<<(ostream &os, const CommandOrderingAlgorithm coa)
 {
