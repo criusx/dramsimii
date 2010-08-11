@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef DRAMSYSTEM
-#define DRAMSYSTEM
-#pragma once
+#ifndef SYSTEM_HH
+#define SYSTEM_HH
 
 #include "globals.hh"
 #include "SystemConfiguration.hh"

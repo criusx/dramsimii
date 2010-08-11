@@ -202,7 +202,6 @@ void System::resetToTime(const tick time)
 //////////////////////////////////////////////////////////////////////
 bool System::moveToTime(const tick endTime)
 {
-	//std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
 	for (vector<Channel>::iterator i = channel.begin(), end = channel.end();
 		i < end; i++)
 	{

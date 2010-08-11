@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <boost/random.hpp>
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
@@ -54,7 +53,6 @@ epoch(UINT_MAX),
 	channelWidth(0),
 	columnCount(0),
 	rowCount(0),
-	cacheLineSize(0),
 	historyQueueDepth(0),
 	completionQueueDepth(0),
 	transactionQueueDepth(0),
@@ -69,7 +67,6 @@ epoch(UINT_MAX),
 	readWriteGrouping(true),
 	autoPrecharge(false),
 	clockGranularity(0),
-	cachelinesPerRow(0),
 	channelCount(0U),
 	dimmCount(0U),
 	rankCount(0U),
@@ -125,9 +122,12 @@ epoch(UINT_MAX),
 //////////////////////////////////////////////////////////////////////////
 bool Settings::setKeyValue(const string &nodeName, const string &value)
 {
-	string nodeValue = value;
-	//bool result = true;
-	boost::algorithm::to_lower(nodeValue);
+	string nodeValue;
+	
+	for (std::string::const_iterator i = value.begin(), end = value.end(); i < end; i++)
+	{
+		nodeValue += tolower(*i);
+	}
 
 	const FileIOToken token = dramTokenizer(nodeName);
 
@@ -231,7 +231,7 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		else if (nodeValue == "drdram")
 			dramType = DRDRAM;
 		else
-			dramType = DDR2;
+			dramType = DDR3;
 		break;
 	default:
 		cerr << nodeName << " was not recognized" << endl;

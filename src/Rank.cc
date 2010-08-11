@@ -314,7 +314,7 @@ void Rank::issueREF(const tick currentTime)
 	lastRefreshTime = currentTime;
 
 	// FIXME: should this not count as a RAS + PRE command to all banks?
-	//std::for_each(bank.begin(), bank.end(), boost::mem_fun_ref(&Bank::issueREF));
+	
 	for (vector<Bank>::iterator i = bank.begin(), end = bank.end(); i < end; i++)
 	{
 		i->issueREF();

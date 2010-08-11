@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef BANK_C_H
-#define BANK_C_H
-#pragma once
+#ifndef BANK_HH
+#define BANK_HH
 
 #include "globals.hh"
 #include "command.hh"

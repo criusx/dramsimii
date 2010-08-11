@@ -27,7 +27,7 @@
 #include <functional>
 #include <algorithm>
 #include <map>
-#include <boost/algorithm/string/case_conv.hpp>
+#include <cctype>
 
 namespace DRAMsimII
 {
@@ -52,7 +52,6 @@ namespace DRAMsimII
 		unsigned channelWidth;
 		unsigned columnCount;
 		unsigned rowCount;
-		unsigned cacheLineSize;
 		unsigned historyQueueDepth;
 		unsigned completionQueueDepth;
 		unsigned transactionQueueDepth;
@@ -67,7 +66,6 @@ namespace DRAMsimII
 		bool readWriteGrouping;
 		bool autoPrecharge;
 		unsigned clockGranularity;
-		unsigned cachelinesPerRow;
 		unsigned channelCount;
 		unsigned dimmCount;
 		unsigned rankCount;
@@ -119,10 +117,12 @@ namespace DRAMsimII
 		// converts a string to a file_io_token
 		static FileIOToken dramTokenizer(const std::string & value)
 		{
-			std::string lowerValue = value;
-			//std::transform(lowerValue.begin(),lowerValue.end(),lowerValue.begin(),std::ptr_fun((int (*)( int))std::tolower));
-			//std::transform(lowerValue.begin(), lowerValue.end(), lowerValue.begin(), std::tolower);
-			boost::algorithm::to_lower(lowerValue);
+			std::string lowerValue;
+			
+			for (std::string::const_iterator i = value.begin(), end = value.end(); i < end; i++)
+			{
+				lowerValue += tolower(*i);
+			}
 
 			FileIOToken first = unknown_token;
 			
@@ -138,16 +138,7 @@ namespace DRAMsimII
 		static std::map<FileIOToken, std::string> lookupSetup()
 		{
 			std::map<FileIOToken, std::string> theMap;
-
-			theMap[cache_associativity_token] = "associativity";
-			theMap[cache_blocksize_token] = "blockSize";
-			theMap[cache_size_token] = "cacheSize";
-			theMap[cache_hitlatency_token] = "hitLatency";
-			theMap[cache_replacementpolicy_token] = "replacementPolicy";
-			theMap[cache_nmrutrackingcount_token] = "nmruTrackingCount";
-			theMap[using_cache_token] = "usingCache";
-			theMap[fixed_cache_latency_token] = "fixedLatency";
-
+					
 			theMap[clock_granularity_token] = "clockGranularity";
 			theMap[channel_count_token] = "channels";
 			theMap[dimm_count_token] = "dimms";
@@ -187,7 +178,6 @@ namespace DRAMsimII
 			theMap[transaction_ordering_policy_token] = "transactionOrderingAlgorithm";
 			theMap[per_bank_queue_depth_token] = "perBankQueueDepth";
 			theMap[system_configuration_type_token] = "systemConfigurationType";
-			theMap[cacheline_size_token] = "cacheLineSize";
 			theMap[history_queue_depth_token] = "historyQueueDepth";
 			theMap[completion_queue_depth_token] = "completionQueueDepth";
 			theMap[transaction_queue_depth_token] = "transactionQueueDepth";
@@ -240,19 +230,11 @@ namespace DRAMsimII
 			std::map<std::string, FileIOToken> theMap;
 
 			// should all be lower case
-			theMap["hitlatency"] = cache_hitlatency_token;
-			theMap["associativity"] = cache_associativity_token;
-			theMap["blocksize"] = cache_blocksize_token;
-			theMap["cachesize"] = cache_size_token;
-			theMap["replacementpolicy"] = cache_replacementpolicy_token;
-			theMap["nmrutrackingcount"] = cache_nmrutrackingcount_token;
-			theMap["usingcache"] = using_cache_token;
-			theMap["fixedlatency"] = fixed_cache_latency_token;
-
 			theMap["type"]=dram_type_token;
 			theMap["dbreporting"]=dbreporting_token;
 			theMap["datarate"]=datarate_token;
 			theMap["dramspec"]=dram_type_token;
+			theMap["dramtype"]=dram_type_token;
 			theMap["tbufferdelay"]=t_buffer_delay_token;
 			theMap["inputtype"]=input_type_token;
 			theMap["infileformat"] = input_type_token;
@@ -326,8 +308,6 @@ namespace DRAMsimII
 			theMap["columnsize"] = col_size_token;
 			theMap["row_size" ] = row_size_token;
 			theMap["rowsize"] = row_size_token;
-			theMap["cacheline_size"] = cacheline_size_token;
-			theMap["cachelinesize"] = cacheline_size_token;
 			theMap["per_bank_queue_depth" ] = per_bank_queue_depth_token;
 			theMap["perbankqueuedepth"] = per_bank_queue_depth_token;
 			theMap["t_cmd" ] = t_cmd_token;
@@ -375,8 +355,6 @@ namespace DRAMsimII
 			theMap["readwritegrouping"] = read_write_grouping_token;
 			theMap["seniority_age_limit" ] = seniority_age_limit_token;
 			theMap["seniorityagelimit"] = seniority_age_limit_token;
-			theMap["cachelines_per_row" ] = cachelines_per_row_token;
-			theMap["cachelinesperrow"] = cachelines_per_row_token;
 			theMap["history_queue_depth" ] = history_queue_depth_token;
 			theMap["historyqueuedepth"] = history_queue_depth_token;
 			theMap["decodewindow"] = decode_window_token;
@@ -463,9 +441,12 @@ namespace DRAMsimII
 			}				
 			else
 			{
-				std::string lowerNodeName = nodeName;
-				//std::transform(lowerNodeName.begin(),lowerNodeName.end(),lowerNodeName.begin(),std::ptr_fun((int (*)( int))std::tolower));
-				boost::algorithm::to_lower(lowerNodeName);
+				std::string lowerNodeName;
+				
+				for (std::string::const_iterator i = nodeName.begin(), end = nodeName.end(); i < end; i++)
+				{
+					lowerNodeName += tolower(*i);
+				}
 
 				std::map<std::string, FileIOToken>::iterator result = tokenizeMap.find(lowerNodeName);
 

@@ -19,7 +19,6 @@
 #include <sstream>
 #include "SystemConfiguration.hh"
 
-
 #ifdef WIN32
 #include <io.h> 
 #endif
@@ -28,9 +27,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/trim.hpp>
-#include <boost/lexical_cast.hpp>
 #include <sstream>
 #include <iostream>
 #include <iomanip>
@@ -57,7 +53,6 @@ refreshTime(settings.dataRate * settings.refreshTime),
 refreshPolicy(settings.refreshPolicy),
 columnSize(settings.columnSize),
 rowSize(settings.rowSize),
-cachelineSize(settings.cacheLineSize),
 seniorityAgeLimit(settings.seniorityAgeLimit),
 dramType(settings.dramType),
 rowBufferManagementPolicy(settings.rowBufferManagementPolicy),
@@ -67,7 +62,6 @@ postedCAS(settings.postedCAS),
 readWriteGrouping(settings.readWriteGrouping),
 autoPrecharge(settings.autoPrecharge),
 clockGranularity(settings.clockGranularity),
-cachelinesPerRow(settings.cachelinesPerRow),
 channelCount(settings.channelCount),
 dimmCount(settings.dimmCount),
 rankCount(settings.rankCount),
@@ -90,7 +84,6 @@ refreshTime(rhs.refreshTime),
 refreshPolicy(rhs.refreshPolicy),
 columnSize(rhs.columnSize),
 rowSize(rhs.rowSize),
-cachelineSize(rhs.cachelineSize),
 seniorityAgeLimit(rhs.seniorityAgeLimit),
 dramType(rhs.dramType),
 rowBufferManagementPolicy(rhs.rowBufferManagementPolicy),
@@ -100,7 +93,6 @@ postedCAS(rhs.postedCAS),
 readWriteGrouping(rhs.readWriteGrouping),
 autoPrecharge(rhs.autoPrecharge),
 clockGranularity(rhs.clockGranularity),
-cachelinesPerRow(rhs.cachelinesPerRow),
 channelCount(rhs.channelCount),
 dimmCount(rhs.dimmCount),
 rankCount(rhs.rankCount),
@@ -125,7 +117,6 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	rowSize = rhs.rowSize;
 	rowCount = rhs.rowCount;
 	columnCount = rhs.columnCount;
-	cachelineSize = rhs.cachelineSize;
 	seniorityAgeLimit = rhs.seniorityAgeLimit;
 	dramType = rhs.dramType;
 	rowBufferManagementPolicy = rhs.rowBufferManagementPolicy;
@@ -135,7 +126,6 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	readWriteGrouping = rhs.readWriteGrouping;
 	autoPrecharge = rhs.autoPrecharge;
 	clockGranularity = rhs.clockGranularity;
-	cachelinesPerRow = rhs.cachelinesPerRow;
 	channelCount = rhs.channelCount;
 	dimmCount = rhs.dimmCount;
 	rankCount = rhs.rankCount;
@@ -154,7 +144,6 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& rhs) const
 		refreshPolicy == rhs.refreshPolicy &&
 		columnSize == rhs.columnSize &&
 		rowSize == rhs.rowSize &&
-		cachelineSize == rhs.cachelineSize &&
 		seniorityAgeLimit == rhs.seniorityAgeLimit &&
 		dramType == rhs.dramType &&
 		rowBufferManagementPolicy == rhs.rowBufferManagementPolicy &&
@@ -164,7 +153,6 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& rhs) const
 		readWriteGrouping == rhs.readWriteGrouping &&
 		autoPrecharge == rhs.autoPrecharge &&
 		clockGranularity == rhs.clockGranularity &&
-		cachelinesPerRow == rhs.cachelinesPerRow &&
 		channelCount == rhs.channelCount &&
 		dimmCount == rhs.dimmCount &&
 		rankCount == rhs.rankCount &&

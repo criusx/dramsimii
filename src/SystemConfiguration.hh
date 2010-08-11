@@ -36,7 +36,6 @@ namespace DRAMsimII
 		RefreshPolicy refreshPolicy;									///< determines how refreshes are handled
 		unsigned columnSize;											///< the size of each column, in bytes
 		unsigned rowSize;												///< bytes per row (across one rank)
-		unsigned cachelineSize;											///< 32/64/128 etc
 		unsigned seniorityAgeLimit;										///< the oldest a command may be before it takes top priority
 		DRAMType dramType;
 		RowBufferPolicy rowBufferManagementPolicy;						///< row buffer management policy? OPEN/CLOSE, etc
@@ -46,7 +45,6 @@ namespace DRAMsimII
 		bool readWriteGrouping;											///< whether or not reads and writes should be grouped closely
 		bool autoPrecharge;												///< is CAS+P an available command for close page
 		int clockGranularity;
-		unsigned cachelinesPerRow;										///< dependent variable
 		unsigned channelCount;											///< How many logical channels are there ?
 		unsigned dimmCount;
 		unsigned rankCount;												///< How many ranks are there per channel ?
@@ -74,7 +72,6 @@ namespace DRAMsimII
 		unsigned getRowCount() const { return rowCount; }
 		unsigned getColumnCount() const { return columnCount; }
 		unsigned getColumnSize() const { return columnSize; }
-		unsigned getCachelineSize() const { return cachelineSize; }
 		unsigned getRefreshTime() const { return refreshTime; }
 		unsigned getSeniorityAgeLimit() const { return seniorityAgeLimit; }
 		unsigned getEpoch() const { return epoch; }

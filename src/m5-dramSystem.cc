@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
 #include <sstream>
 #include <stdlib.h>
 #include <cmath>
@@ -40,10 +38,6 @@ using DRAMsimII::PhysicalAddress;
 using DRAMsimII::Transaction;
 using DRAMsimII::System;
 using DRAMsimII::Address;
-using boost::lexical_cast;
-using boost::is_any_of;
-using boost::token_compress_on;
-using boost::split;
 using ::Packet;
 
 //#define TESTNEW
@@ -220,7 +214,6 @@ outstandingPackets(0)
 	settings.setKeyValue("transactionOrderingAlgorithm",p->transactionOrderingAlgorithm);
 	settings.perBankQueueDepth = p->perBankQueueDepth;
 	settings.setKeyValue("transactionOrderingAlgorithm",p->transactionOrderingAlgorithm);
-	settings.cacheLineSize = p->cacheLineSize;
 	settings.historyQueueDepth = p->historyQueueDepth;
 	settings.completionQueueDepth = p->completionQueueDepth;
 	settings.transactionQueueDepth = p->transactionQueueDepth;
@@ -345,11 +338,6 @@ M5dramSystem::~M5dramSystem()
 {	
 	M5_TIMING("M5dramSystem destructor");
 
-#ifdef TRACE_GENERATE
-	traceOutStream.flush();
-	boost::iostreams::close(traceOutStream);	
-	//traceOutStream.close();
-#endif
 	cerr.flush();
 	delete ds;
 }
@@ -361,11 +349,9 @@ void M5dramSystem::serialize(ostream &os)
 {
 	gzFile compressedMem;
 	string filename = name() + ".physmem";
-	string dsFilename = name() + ".ds2";
-
+	
 	SERIALIZE_SCALAR(filename);
-	SERIALIZE_SCALAR(dsFilename);
-
+	
 	// write memory file
 	string thefile = Checkpoint::dir() + "/" + filename.c_str();
 
@@ -407,11 +393,10 @@ void M5dramSystem::unserialize(Checkpoint *cp, const std::string &section)
 	const int chunkSize = 16384;
 
 
-	string filename, dsFilename;
+	string filename;
 
 	UNSERIALIZE_SCALAR(filename);
-	UNSERIALIZE_SCALAR(dsFilename);
-
+	
 	filename = cp->cptDir + "/" + filename;
 
 	// mmap memoryfile
@@ -505,38 +490,6 @@ bool M5dramSystem::MemoryPort::recvTiming(PacketPtr packet)
 		M5_TIMING2(" s[0x" << hex << packet->getSize() << "]");
 #endif
 	//////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////
-#ifdef TRACE_GENERATE
-	{
-		if (packet->memInhibitAsserted()) 
-		{
-			delete packet;
-			return true;
-		}
-		if (packet->isRead() || packet->isWrite())
-		{
-			memory->traceOutStream << std::hex << packet->getAddr() << " " << (packet->isWrite() ? "W" : "R") << " " << std::fixed <<  curTick * 1E9 / Clock::Frequency << " " << std::hex << (packet->req->hasPC() ? packet->req->getPC() : 0) <<  endl;
-		}
-
-		bool needsResponse = packet->needsResponse();
-		recvAtomic(packet);
-		// turn packet around to go back to requester if response expected
-		if (needsResponse) 
-		{
-			assert(packet->isResponse());
-			schedSendTiming(packet, curTick + 1);
-		}
-		else 
-		{
-			delete packet;
-		}
-
-		return true;
-	}	
-#endif
-	//////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////
-
 
 	// everything that reaches the memory system should be a request of some sort
 	assert(packet->isRequest());

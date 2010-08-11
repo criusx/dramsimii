@@ -17,6 +17,7 @@
 #include "Statistics.hh"
 #include "Channel.hh"
 #include "globals.hh"
+
 #ifdef M5
 #include "base/statistics.hh"
 #include "base/stats/types.hh"
@@ -57,7 +58,6 @@ burstOf4Count(0),
 columnDepth(log2(settings.columnSize)),
 readCount(0),
 writeCount(0),
-dimmCacheBandwidthData(settings.channelCount),
 bandwidthData(settings.channelCount),
 timePerEpoch((float)settings.epoch / settings.dataRate),
 rowBufferAccesses(settings.channelCount, vector<pair<unsigned,unsigned> >(settings.rankCount * settings.dimmCount)),
@@ -68,7 +68,6 @@ commandExecution(),
 commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
-cacheLatency(0),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount),
@@ -94,7 +93,6 @@ burstOf4Count(UINT_MAX),
 columnDepth(UINT_MAX),
 readCount(0),
 writeCount(0),
-dimmCacheBandwidthData(0),
 bandwidthData(0),
 timePerEpoch(0),
 rowBufferAccesses(0, vector<pair<unsigned,unsigned> >(0)),
@@ -105,7 +103,6 @@ commandExecution(),
 commandTurnaround(),
 transactionDecodeDelay(),
 transactionExecution(),
-cacheLatency(0),
 pcOccurrence(),
 workingSet(),
 aggregateBankUtilization(0),
@@ -286,27 +283,15 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	}
 	os << endl;
 #endif
-
-	os << "----DIMM Cache Latency {" << statsLog.cacheLatency << "}" << endl;
-
+		
 	os << "----Working Set {" << statsLog.workingSet.size() << "}" << endl;
 
 	os << "----Bandwidth {" << setprecision(10) << (float)statsLog.getReadBytesTransferred() / statsLog.timePerEpoch << "} {" << (float)statsLog.getWriteBytesTransferred() / statsLog.timePerEpoch << "}" << endl;
-
-	os << "----DIMM Cache Bandwidth {" << setprecision(10) << (float)statsLog.getDIMMReadBytesTransferred() / statsLog.timePerEpoch << "} {" << (float)statsLog.getDIMMWriteBytesTransferred() / statsLog.timePerEpoch << "}" << endl;
-
+		
 	os << "----Per Channel Bandwidth ";
 
 	unsigned currentChannel = 0;
 	for (vector<pair<unsigned,unsigned> >::const_iterator i = statsLog.getBandwidthData().begin(); i != statsLog.getBandwidthData().end(); ++i)
-	{
-		os << "ch[" << currentChannel++ << "] R{" << i->first << "} W{" << i->second << "} ";
-	}
-	os << endl;
-
-	currentChannel = 0;
-	os << "----Per Channel DIMM Cache Bandwidth ";
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = statsLog.getDimmCacheBandwidthData().begin(); i != statsLog.getDimmCacheBandwidthData().end(); ++i)
 	{
 		os << "ch[" << currentChannel++ << "] R{" << i->first << "} W{" << i->second << "} ";
 	}
@@ -438,11 +423,6 @@ void Statistics::clear()
 		i->first = i->second = 0;
 	}
 
-	for (vector<pair<unsigned, unsigned> >::iterator i = dimmCacheBandwidthData.begin(); i != dimmCacheBandwidthData.end(); ++i)
-	{
-		i->first = i->second = 0;
-	}
-
 	for (vector<vector<pair<unsigned,unsigned> > >::iterator h = rowBufferAccesses.begin(); h != rowBufferAccesses.end(); ++h)
 	{
 		for (vector<pair<unsigned,unsigned> >::iterator i = h->begin(); i != h->end(); ++i)
@@ -480,7 +460,6 @@ bool Statistics::operator==(const Statistics& rhs) const
 		transactionDecodeDelay == rhs.transactionDecodeDelay && transactionExecution == rhs.transactionExecution &&
 		channels == rhs.channels && ranks == rhs.ranks && banks == rhs.banks && aggregateBankUtilization == rhs.aggregateBankUtilization &&
 		pcOccurrence == rhs.pcOccurrence && workingSet == rhs.workingSet && readCount == rhs.readCount && writeCount == rhs.writeCount &&
-		bandwidthData == rhs.bandwidthData && dimmCacheBandwidthData == rhs.dimmCacheBandwidthData &&
-		/*readBytesTransferred == rhs.readBytesTransferred && writeBytesTransferred == rhs.writeBytesTransferred &&*/ issuedAtTFAW == rhs.issuedAtTFAW);
+		bandwidthData == rhs.bandwidthData && issuedAtTFAW == rhs.issuedAtTFAW);
 }
 

@@ -14,14 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef QUEUE_H
-#define QUEUE_H
-#pragma once
+#ifndef QUEUE_HH
+#define QUEUE_HH
 
 #include <iostream>
 #include <cassert>
 #include <vector>
-
 
 namespace DRAMsimII
 {
@@ -31,7 +29,6 @@ namespace DRAMsimII
 
 	template <typename T>
 	std::ostream& operator<<(std::ostream&, const Queue<T>&);
-
 
 	/// @brief the queue template class, rhs circular queue
 	/// @details push/pop are O(1) operations, while random insertions are O(n) operations

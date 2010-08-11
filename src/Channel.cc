@@ -675,8 +675,6 @@ ostream &Channel::doPowerCalculation(ostream& os)
 				
 		double WRschPct = k->getWriteCycles() / (double)(time - powerModel.getLastCalculation());
 
-		// using a write-through cache, no help for writes
-
 		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
 
 		os << " rk[" << k->getRankId() << "] prechargeTime{" << k->getPrechargeTime(time) << "} rasCount{" << thisRankRasCount << 
@@ -2350,15 +2348,6 @@ void Channel::executeCommand(Command *thisCommand)
 		// for the CAS write command
 		//thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst() + timingSpecification.tWR());
 		assert(wasActivated);
-		/// @TODO is currently write-through, so writes hitting in the cache don't matter
-#if 0
-		if (satisfied && systemConfig.isUsingDimmCache() && 0)
-		{
-			thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCacheAccess() + timingSpecification.tBurst());
-			thisCommand->getHost()->setCompletionTime(thisCommand->getCompletionTime());
-		}
-		else
-#endif
 		{
 			thisCommand->setCompletionTime(time + timingSpecification.tCMD() + timingSpecification.tCWD() + timingSpecification.tBurst());
 

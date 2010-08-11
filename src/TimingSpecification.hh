@@ -14,14 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef DRAMTIMINGSPECIFICATION
-#define DRAMTIMINGSPECIFICATION
-#pragma once
+#ifndef TIMINGSPECIFICATION_HH
+#define TIMINGSPECIFICATION_HH
 
 #include "globals.hh"
 #include "Settings.hh"
-
-#include <map>
 
 namespace DRAMsimII
 {
@@ -52,8 +49,7 @@ namespace DRAMsimII
 		int t_int_burst;	///< internal prefetch length of DRAM devices, 4 for DDR2, 8 for DDR3
 		int t_buffer_delay;	///< the delay a transaction experiences before it can be converted to a series of commands
 		int t_refi;			///< refresh interval, should send one refresh every n ticks to a rank
-		int t_cache_access;	///< the time it takes to perform a lookup in the cache
-
+	
 	public:
 		// constructors		
 		explicit TimingSpecification(const Settings& settings);
@@ -79,8 +75,7 @@ namespace DRAMsimII
 		int tRTRS() const { return t_rtrs; }
 		int tRC() const { return t_rc; }
 		int tOST() const { return t_ost; }
-		int tCacheAccess() const { return t_cache_access; }
-
+	
 		// friends
 		friend std::ostream &operator<<( std::ostream&, const TimingSpecification&);
 

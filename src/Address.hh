@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef ADDRESSES_H
-#define ADDRESSES_H
+#ifndef ADDRESS_HH
+#define ADDRESS_HH
 #pragma once
 
 #include "globals.hh"

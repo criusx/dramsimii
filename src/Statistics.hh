@@ -60,8 +60,6 @@ namespace DRAMsimII
 		template <typename T>
 		class WeightedAverage
 		{
-			//typedef boost::uint64_t uint64_t;
-
 			uint64_t count;
 			T total;
 
@@ -133,7 +131,6 @@ namespace DRAMsimII
 		unsigned columnDepth;
 		unsigned readCount;
 		unsigned writeCount;
-		std::vector<std::pair<unsigned,unsigned> > dimmCacheBandwidthData;		///< per channel count of bytes read and written
 		std::vector<std::pair<unsigned,unsigned> > bandwidthData;		///< per channel count of bytes read and written
 		float timePerEpoch;												///< the number of seconds that have elapsed per epoch
 		std::vector<std::vector<std::pair<unsigned,unsigned> > > rowBufferAccesses;												///< the number of row hits this epoch
@@ -144,7 +141,6 @@ namespace DRAMsimII
 		std::tr1::unordered_map<tick,unsigned> commandTurnaround;		///< stores the finish time - enqueue time stats for commands
 		std::tr1::unordered_map<tick,unsigned> transactionDecodeDelay;	///< stores the decode time - enqueue time stats for transactions
 		std::tr1::unordered_map<tick,unsigned> transactionExecution;	///< stores the finish time - start time stats for transactions
-		tick cacheLatency;													///< the latency due to transactions that were serviced by the cache
 		// still some bugs supporting 64-bit numbers
 		std::map<PhysicalAddress, DelayCounter> pcOccurrence;	///< stores the PC address, number of times it was seen and total latency
 		std::map<PhysicalAddress, unsigned> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
@@ -168,20 +164,7 @@ namespace DRAMsimII
 		// accessors
 		const std::vector<std::vector<std::pair<unsigned,unsigned> > > &getRowBufferAccesses() const { return rowBufferAccesses; }
 		const std::vector<std::pair<unsigned,unsigned> >& getBandwidthData() const { return bandwidthData;}
-		const std::vector<std::pair<unsigned,unsigned> >& getDimmCacheBandwidthData() const { return dimmCacheBandwidthData;}
-		unsigned getDIMMReadBytesTransferred() const 
-		{
-			unsigned value = 0;
-
-			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = dimmCacheBandwidthData.begin(), end = dimmCacheBandwidthData.end();
-				i != end; ++i)
-			{
-				value += i->first;
-			}
-
-			return value;
-		}
-
+		
 		unsigned getReadBytesTransferred() const
 		{
 			unsigned value = 0;
@@ -194,20 +177,7 @@ namespace DRAMsimII
 
 			return value;
 		}
-
-		unsigned getDIMMWriteBytesTransferred() const
-		{
-			unsigned value = 0;
-
-			for (std::vector<std::pair<unsigned,unsigned> >::const_iterator i = dimmCacheBandwidthData.begin(), end = dimmCacheBandwidthData.end();
-				i != end; ++i)
-			{
-				value += i->second;
-			}
-
-			return value;
-		}
-
+			
 		unsigned getWriteBytesTransferred() const
 		{
 			unsigned value = 0;

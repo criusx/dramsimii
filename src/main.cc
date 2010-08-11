@@ -42,6 +42,13 @@ int main(int argc,char **argv, char *envp[])
 			cerr << '"';		
 	}
 	cerr << endl;
+	std::string b = "ASDFasdfASDfasdf";
+	std::string a;
+
+	for (std::string::const_iterator i = b.begin(), end = b.end(); i < end; i++)
+	{
+		a += tolower(*i);
+	}
 #if 0
 	const Settings settings(argc, argv);	
 #endif
@@ -53,8 +60,8 @@ int main(int argc,char **argv, char *envp[])
 	//DRAMsimII::unitTests(settings);
 #endif
 	{
-		System ds(settings); 
-		ds.runSimulations();
+		//System ds(settings); 
+		//ds.runSimulations();
 	}
 	//_CrtDumpMemoryLeaks();
 	return 0;

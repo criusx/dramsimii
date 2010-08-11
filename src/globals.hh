@@ -63,7 +63,6 @@ namespace DRAMsimII
 	void unitTests(const Settings &settings);
 
 	// overloaded insertion operator functions for printing various aspects of the dram system
-	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Bank&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Channel&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command&);
@@ -76,8 +75,7 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::RefreshPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionOrderingAlgorithm);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::OutputFileType);
-	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Cache::ReplacementPolicy);
-
+	
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)
 	{
@@ -203,22 +201,13 @@ namespace DRAMsimII
 #endif
 
 #ifdef _MSC_VER
-	//typedef boost::uint64_t PhysicalAddress;
 	typedef unsigned __int64 PhysicalAddress;
 	typedef __int64 tick;
 #else
 	typedef uint64_t PhysicalAddress;
 	typedef int64_t tick;
 #endif
-
-
-
-	//	typedef boost::int64_t tick;
-	//#define TICK_MAX static_cast<tick>(boost::integer_traits<tick>::const_max)
-	//#define TICK_MIN static_cast<tick>(boost::integer_traits<tick>::const_min)
-	// x86-64 defines long mode as having a physical address space of 64-bits, although most current implementations use only 48
-	//#define PHYSICAL_ADDRESS_MAX static_cast<PhysicalAddress>(boost::integer_traits<PhysicalAddress>::const_max)
-
+	
 #define PI 3.1415926535897932384626433832795
 
 #define POOL_SIZE 64

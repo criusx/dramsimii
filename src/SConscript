@@ -9,6 +9,12 @@ if not conf.CheckCXXHeader('boost/circular_buffer.hpp'):
 	print 'The circular buffer header files may also be copied from a newer Boost instance to an older one.'
 	Exit(1)
 
+#try:
+#	env.Replace(CCFLAGS = env._dict['CCFLAGS'].remove('-Werror'))
+#except ValueError:
+#	pass
+
+#env.Append(CCFLAGS = ['-Wunused-macros'])
 
 try:
 	if 'fast' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
@@ -24,7 +30,7 @@ try:
 		env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
-		CCFLAGS = ['-I/usr/include/libxml2', '-march=k8-sse3', '-mtune=k8-sse3'],
+		CCFLAGS = ['-march=k8-sse3', '-mtune=k8-sse3'],
 		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5', '__STDC_LIMIT_MACROS'])
 	elif 'prof' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
