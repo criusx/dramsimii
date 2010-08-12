@@ -33,32 +33,80 @@ namespace DRAMsimII
 	private:
 		class CircularBuffer
 		{
+		protected:
 			std::vector<tick> buffer;
 
-			std::vector<tick>::iterator back, front;
-			const std::vector<tick>::iterator begin, end;
-
-			tick last() const { return *back; }
-
-			tick insert(const tick value)
+			std::vector<tick>::iterator _back, _front;
+			//const std::vector<tick>::iterator begin, end;
+		public:
+			void reset(const tick value)
 			{
-				*front = value;
-				front++;
-				if (front == end)
-					front = begin; 
-				if (front == back) 
-					back++; 
-				if (back == end) 
-					back = begin;
+				for (std::vector<tick>::iterator i = buffer.begin(), end = buffer.end(); i < end; i++)
+					*i = value;
+			}
+			tick back() const { return *_back; }
+
+			tick front() const { return *_front; }
+
+			void push_front(const tick value)
+			{
+				_front++;
+
+				if (_front == buffer.end())
+					_front = buffer.begin(); 
+
+				*_front = value;
+
+				_back++; 
+
+				if (_back == buffer.end()) 
+					_back = buffer.begin();
 			}
 
 			CircularBuffer():
-			buffer(4),
-				back(buffer.begin()),
-				front(buffer.begin()),
-				begin(buffer.begin()),
-				end(buffer.end())
-			{}
+			buffer(4,-250),
+				_back(buffer.begin()),
+				_front(buffer.begin())
+			{
+				while (_front + 1 != buffer.end())
+					_front++;
+			}
+
+			tick operator[](const unsigned i) const { return buffer[i]; }
+
+			CircularBuffer &operator=(const CircularBuffer &rhs)
+			{
+				buffer = rhs.buffer;
+
+				//begin = buffer.begin();
+				//end = buffer.end();
+				_front = buffer.begin();
+				while (_front + 1 != buffer.end())
+					_front++;
+				_back = buffer.begin();
+				return *this;
+			}
+
+			CircularBuffer(const CircularBuffer &rhs):
+			buffer(rhs.buffer),
+				_front(buffer.begin()),
+				_back(buffer.begin())
+			{
+				while (_front + 1 != buffer.end())
+					_front++;
+			}
+
+			bool operator==(const CircularBuffer &rhs) const
+			{
+				for (unsigned i = 0; i < 4; i++)
+					if (buffer[i] != rhs[i])
+						return false;
+
+				if (*_front != rhs.front() || *_back != rhs.back())
+					return false;
+
+				return true;
+			}
 		};
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
@@ -99,7 +147,6 @@ namespace DRAMsimII
 
 	public:
 
-		//boost::circular_buffer<tick> lastActivateTimes; ///< RAS activation history to ensure tFAW is met
 		CircularBuffer lastActivateTimes;
 		std::vector<Bank> bank;							///< the banks within this rank
 
