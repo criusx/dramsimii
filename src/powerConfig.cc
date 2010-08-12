@@ -168,14 +168,14 @@ PowerConfig& PowerConfig::operator =(const PowerConfig &rhs)
 	return *this;
 }
 
-std::ostream& DRAMsimII::operator<<(std::ostream& in, const PowerConfig& pc)
+std::ostream& DRAMsimII::operator<<(std::ostream& os, const PowerConfig& pc)
 {
 	using std::endl;
 
-	in << "PowerConfig" << endl;
-	in << "VDD" << pc.VDD << endl;
-	in << "VDDmax" << pc.VDDmax << endl;
-	in << "IDD0" << pc.IDD0 << endl;
-	in << "IDD2p" << pc.IDD2P << endl;
-	return in;
+	os << "PowerConfig" << endl;
+	os << "VDD" << pc.VDD << endl;
+	os << "VDDmax" << pc.VDDmax << endl;
+	os << "IDD0" << pc.IDD0 << endl;
+	os << "IDD2p" << pc.IDD2P << endl;
+	return os;
 }

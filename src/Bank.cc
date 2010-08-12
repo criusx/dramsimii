@@ -570,8 +570,8 @@ bool Bank::operator==(const Bank& rhs) const
 //////////////////////////////////////////////////////////////////////////
 /// @brief insertion operator to serialize the object in summary
 //////////////////////////////////////////////////////////////////////////
-std::ostream& DRAMsimII::operator<<(std::ostream& in, const Bank& pc)
+std::ostream& DRAMsimII::operator<<(std::ostream& os, const Bank& pc)
 {
-	return in << "PBQ" << endl << pc.perBankQueue << "last RAS [" << pc.lastRASTime << "] act[" <<
+	return os << "PBQ" << endl << pc.perBankQueue << "last RAS [" << pc.lastRASTime << "] act[" <<
 		pc.activated << "] open row[" << pc.openRowID << "]" << endl;	
 }

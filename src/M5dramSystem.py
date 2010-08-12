@@ -41,13 +41,8 @@ class M5dramSystem(PhysicalMemory):
 	commandOrderingAlgorithm = Param.String("firstAvailableAge","")
 	transactionOrderingAlgorithm = Param.String("RIFF","")
 	perBankQueueDepth = Param.Int(8,"")
-	cacheLineSize = Param.Int(64,"")
-	historyQueueDepth = Param.Int(16,"")
-	completionQueueDepth = Param.Int(32,"")
 	transactionQueueDepth = Param.Int(16,"")
 	decodeWindow = Param.Int(16,"")
-	eventQueueDepth = Param.Int(8,"")
-	refreshQueueDepth = Param.Int(8,"")
 	readWriteGrouping = Param.Bool(True,"")
 	autoPrecharge = Param.Bool(True,"")
 

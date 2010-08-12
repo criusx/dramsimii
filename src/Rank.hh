@@ -25,14 +25,41 @@
 
 #include <vector>
 
-#include <boost/circular_buffer.hpp>
-
 namespace DRAMsimII
 {
 	/// @brief represents a logical rank 
 	class Rank
 	{
 	private:
+		class CircularBuffer
+		{
+			std::vector<tick> buffer;
+
+			std::vector<tick>::iterator back, front;
+			const std::vector<tick>::iterator begin, end;
+
+			tick last() const { return *back; }
+
+			tick insert(const tick value)
+			{
+				*front = value;
+				front++;
+				if (front == end)
+					front = begin; 
+				if (front == back) 
+					back++; 
+				if (back == end) 
+					back = begin;
+			}
+
+			CircularBuffer():
+			buffer(4),
+				back(buffer.begin()),
+				front(buffer.begin()),
+				begin(buffer.begin()),
+				end(buffer.end())
+			{}
+		};
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
 		const SystemConfiguration& systemConfig; ///< reference to system configuration information
@@ -72,7 +99,8 @@ namespace DRAMsimII
 
 	public:
 
-		boost::circular_buffer<tick> lastActivateTimes; ///< RAS activation history to ensure tFAW is met
+		//boost::circular_buffer<tick> lastActivateTimes; ///< RAS activation history to ensure tFAW is met
+		CircularBuffer lastActivateTimes;
 		std::vector<Bank> bank;							///< the banks within this rank
 
 		// functions

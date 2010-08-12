@@ -74,7 +74,6 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const RowBufferPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::RefreshPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionOrderingAlgorithm);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::OutputFileType);
 	
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)

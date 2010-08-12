@@ -409,30 +409,3 @@ ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::TransactionOrdering
 	}
 	return os;
 }
-
-ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::OutputFileType ot)
-{
-	switch (ot)
-	{
-	case COUT:
-		os << "cout";
-		break;
-	case GZ:
-		os << "gz";
-		break;
-	case BZ:
-		os << "bz2";
-		break;
-	case UNCOMPRESSED:
-		os << "uncompressed";
-		break;
-	case NONE:
-		os << "none";
-		break;
-	default:
-		os << "unknown";
-		break;
-	}
-
-	return os;
-}

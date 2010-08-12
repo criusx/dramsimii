@@ -33,7 +33,6 @@ using namespace DRAMsimII;
 namespace DRAMsimII
 {
 	map<string, FileIOToken> Settings::tokenizeMap = Settings::createTokenizer();
-	map<FileIOToken, string> Settings::lookupMap = Settings::lookupSetup();
 }
 
 
@@ -53,12 +52,12 @@ epoch(UINT_MAX),
 	channelWidth(0),
 	columnCount(0),
 	rowCount(0),
-	historyQueueDepth(0),
-	completionQueueDepth(0),
+	//historyQueueDepth(0),
+	//completionQueueDepth(0),
 	transactionQueueDepth(0),
-	eventQueueDepth(0),
-	refreshQueueDepth(0),
-	refreshTime(0),
+	//eventQueueDepth(0),
+	//refreshQueueDepth(0),
+	//refreshTime(0),
 	seniorityAgeLimit(0),
 	decodeWindow(UINT_MAX),
 	rowBufferManagementPolicy(OPEN_PAGE),
@@ -145,10 +144,6 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			refreshPolicy = ONE_CHANNEL_ALL_RANK_ALL_BANK;
 		else
 			return false;
-		break;
-	case system_configuration_type_token:
-		// TODO: if baseline, then normal system, if FBD, then make a FBD system
-
 		break;
 	case transaction_ordering_policy_token:
 		if (nodeValue == "strict")

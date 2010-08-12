@@ -49,7 +49,7 @@ using std::endl;
 SystemConfiguration::SystemConfiguration(const Settings& settings):
 commandOrderingAlgorithm(settings.commandOrderingAlgorithm),
 transactionOrderingAlgorithm(settings.transactionOrderingAlgorithm),
-refreshTime(settings.dataRate * settings.refreshTime),
+//refreshTime(settings.dataRate * settings.refreshTime),
 refreshPolicy(settings.refreshPolicy),
 columnSize(settings.columnSize),
 rowSize(settings.rowSize),

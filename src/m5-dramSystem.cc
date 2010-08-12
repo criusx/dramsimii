@@ -214,12 +214,8 @@ outstandingPackets(0)
 	settings.setKeyValue("transactionOrderingAlgorithm",p->transactionOrderingAlgorithm);
 	settings.perBankQueueDepth = p->perBankQueueDepth;
 	settings.setKeyValue("transactionOrderingAlgorithm",p->transactionOrderingAlgorithm);
-	settings.historyQueueDepth = p->historyQueueDepth;
-	settings.completionQueueDepth = p->completionQueueDepth;
 	settings.transactionQueueDepth = p->transactionQueueDepth;
 	settings.decodeWindow = p->decodeWindow;
-	settings.eventQueueDepth = p->eventQueueDepth;
-	settings.refreshQueueDepth = p->refreshQueueDepth;
 	settings.readWriteGrouping = p->readWriteGrouping;
 	settings.autoPrecharge = p->autoPrecharge;
 	//timing parameters
@@ -240,7 +236,6 @@ outstandingPackets(0)
 	settings.tWR = p->tWR;
 	settings.tWTR = p->tWTR;
 	settings.tAL = p->tAL;
-	settings.refreshTime = p->refreshTime;
 	settings.tREFI = p->tREFI;
 	settings.seniorityAgeLimit = p->seniorityAgeLimit;
 	// power settings
@@ -741,13 +736,14 @@ void M5dramSystem::TickEvent::process()
 
 	// move memory channels to the current time
 	memory->moveToTime(currentMemCycle);
-
+#if 0
 	if (!memory->movement)
 	{
 		cerr << "no r/w bytes, outstanding: " << memory->outstandingPackets << ", ";
 		cerr << (memory->transactionLookupTable.empty() ? "is empty," : "has outstanding transactions,");
 		cerr << (memory->ds->isEmpty() ? " reports empty" : " reports not empty") << endl;
 	}
+#endif
 
 	// deschedule yourself
 	if (memory->tickEvent.scheduled())

@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef ENUMTYPES_H
-#define ENUMTYPES_H
-#pragma once
+#ifndef ENUMTYPES_HH
+#define ENUMTYPES_HH
 
 namespace DRAMsimII
 {
@@ -56,17 +55,7 @@ namespace DRAMsimII
 		RIFF, ///< read and instruction fetch first
 		STRICT ///< FIFO
 	};
-
-	enum OutputFileType
-	{
-		COUT, ///< print to stdout
-		GZ, ///< print to a gzip file
-		BZ, ///< print to a bzip2 file
-		UNCOMPRESSED, ///< just write to a normal file
-		NONE ///< don't print diagnostic messages
-	};
-
-
+	
 	enum DRAMType
 	{
 		DDR,
@@ -103,26 +92,18 @@ namespace DRAMsimII
 		col_size_token,
 		command_ordering_algorithm_token,
 		comment_token,
-		completion_queue_depth_token,
 		cpu_to_memory_clock_ratio,
 		datarate_token,
-		debug_token,
 		decode_window_token,
-		deprecated_ignore_token,
 		dimm_count_token,
 		dm_per_dram_token,
 		dq_per_dram_token,
 		dqs_per_dram_token,
 		dram_type_token,
-		dbreporting_token,
-		event_queue_depth_token,
 		epoch_token,
 		frequency_spec_token,
-		help_token,
-		history_queue_depth_token,
 		input_file_token,
 		input_type_token,
-		ordering_algorithm_token,
 		output_file_token,
 		output_file_dir_token,
 		output_file_type_token,
@@ -132,21 +113,14 @@ namespace DRAMsimII
 		p_dq_wr_oth_token,
 		per_bank_queue_depth_token,
 		posted_cas_token,
-		random_distribution_token,
 		rank_count_token,
-		read_percentage_token,
 		read_write_grouping_token,
 		refresh_policy_token,
-		refresh_time_token,
-		request_count_token,
-		refresh_queue_depth_token,
 		riff_token,
 		row_buffer_management_policy_token,
 		row_count_token,
 		row_size_token,
 		seniority_age_limit_token,
-		short_burst_ratio_token,
-		system_configuration_type_token,
 		t_al_token,
 		t_buffer_delay_token,
 		t_burst_token,
@@ -160,7 +134,6 @@ namespace DRAMsimII
 		t_rc_token,
 		t_rcd_token,
 		t_rfc_token,
-		t_rl_token,
 		t_refi_token,
 		t_rp_token,
 		t_rrd_token,
@@ -170,7 +143,6 @@ namespace DRAMsimII
 		t_wtr_token,
 		transaction_ordering_policy_token,
 		transaction_queue_depth_token,
-		trace_file_token,
 		unknown_token,
 		// power config tokens
 		vdd_token,
@@ -186,11 +158,5 @@ namespace DRAMsimII
 		idd5_token
 	};
 
-	enum FrameType
-	{
-		COMMAND,				// contains only commands, A, B, C
-		COMMAND_AND_DATA,		// contains a command in the A slot and data in the B, C slots
-		SYNC					// a sync command
-	};
 }
 #endif
