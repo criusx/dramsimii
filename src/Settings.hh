@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef DRAMSETTINGS
-#define DRAMSETTINGS
+#ifndef SETTINGS_HH
+#define SETTINGS_HH
 
 #include "InputStream.hh"
 #include "Address.hh"
@@ -50,7 +50,6 @@ namespace DRAMsimII
 		// command data
 		unsigned epoch;
 		std::string inFile;
-		std::string sessionID;
 		InputStream::DistributionType arrivalDistributionModel;
 		InputStream::InputType inFileType;
 		std::string outFile;
@@ -64,7 +63,6 @@ namespace DRAMsimII
 		unsigned dataRate; // frequency
 		CommandOrderingAlgorithm commandOrderingAlgorithm;
 		TransactionOrderingAlgorithm transactionOrderingAlgorithm;
-		SystemConfigurationType systemType;
 		unsigned perBankQueueDepth;
 		unsigned columnSize;
 		unsigned rowSize;
@@ -72,20 +70,14 @@ namespace DRAMsimII
 		unsigned columnCount;
 		unsigned rowCount;
 		unsigned cacheLineSize;
-		unsigned historyQueueDepth;
-		unsigned completionQueueDepth;
 		unsigned transactionQueueDepth;
-		unsigned eventQueueDepth;
-		unsigned refreshQueueDepth;
-		unsigned refreshTime;
 		unsigned seniorityAgeLimit;
 		unsigned decodeWindow;
-		RowBufferPolicy rowBufferManagementPolicy;
-		Address::AddressMappingScheme addressMappingScheme;
+		RowBufferManagementPolicy rowBufferManagementPolicy;
+		Address::AddressMappingPolicy addressMappingPolicy;
 		bool postedCAS;
 		bool readWriteGrouping;
 		bool autoPrecharge;
-		bool dbReporting;
 		unsigned clockGranularity;
 		unsigned cachelinesPerRow;
 		unsigned channelCount;
@@ -156,8 +148,6 @@ namespace DRAMsimII
 		static FileIOToken dramTokenizer(const std::string & value)
 		{
 			std::string lowerValue = value;
-			//std::transform(lowerValue.begin(),lowerValue.end(),lowerValue.begin(),std::ptr_fun((int (*)( int))std::tolower));
-			//std::transform(lowerValue.begin(), lowerValue.end(), lowerValue.begin(), std::tolower);
 			boost::algorithm::to_lower(lowerValue);
 
 			FileIOToken first = unknown_token;
@@ -185,7 +175,7 @@ namespace DRAMsimII
 			theMap[channel_count_token] = "channels";
 			theMap[dimm_count_token] = "dimms";
 			theMap[channel_width_token] = "channelWidth";
-			theMap[addr_mapping_scheme_token] = "physicalAddressMappingPolicy";
+			theMap[address_mapping_policy_token] = "physicalAddressMappingPolicy";
 			theMap[row_buffer_management_policy_token] = "rowBufferPolicy";
 			theMap[rank_count_token] = "ranks";
 			theMap[bank_count_token] = "banks";
@@ -214,17 +204,12 @@ namespace DRAMsimII
 			theMap[average_interarrival_cycle_count] = "averageInterarrivalCycleCount";
 			theMap[t_al_token] = "tAL";
 			theMap[refresh_policy_token] = "autoRefreshPolicy";
-			theMap[refresh_time_token] = "refreshTime";
 			theMap[t_refi_token] = "tREFI";
 			theMap[command_ordering_algorithm_token] = "commandOrderingAlgorithm";
 			theMap[transaction_ordering_policy_token] = "transactionOrderingAlgorithm";
 			theMap[per_bank_queue_depth_token] = "perBankQueueDepth";
-			theMap[system_configuration_type_token] = "systemConfigurationType";
 			theMap[cacheline_size_token] = "cacheLineSize";
-			theMap[history_queue_depth_token] = "historyQueueDepth";
-			theMap[completion_queue_depth_token] = "completionQueueDepth";
 			theMap[transaction_queue_depth_token] = "transactionQueueDepth";
-			theMap[event_queue_depth_token] = "eventQueueDepth";
 			theMap[refresh_queue_depth_token] = "refreshQueueDepth";
 			theMap[seniority_age_limit_token] = "seniorityAgeLimit";
 			theMap[read_write_grouping_token] = "readWriteGrouping";
@@ -257,7 +242,6 @@ namespace DRAMsimII
 			theMap[cpu_to_memory_clock_ratio] = "cpuToMemoryClockRatio";
 			theMap[epoch_token] = "epoch";
 			theMap[output_file_type_token] = "outFile/@type";
-			theMap[dbreporting_token] = "outFile/@dbreporting";
 			theMap[dram_type_token] = "dramspec/@type";
 			theMap[input_type_token] = "inputFile/@type";
 			theMap[random_distribution_token] = "inputFile";
@@ -283,7 +267,6 @@ namespace DRAMsimII
 			theMap["fixedlatency"] = fixed_cache_latency_token;
 
 			theMap["type"]=dram_type_token;
-			theMap["dbreporting"]=dbreporting_token;
 			theMap["datarate"]=datarate_token;
 			theMap["dramspec"]=dram_type_token;
 			theMap["tbufferdelay"]=t_buffer_delay_token;
@@ -298,12 +281,12 @@ namespace DRAMsimII
 			theMap["rowbufferpolicy"] = row_buffer_management_policy_token;
 			theMap["auto_precharge"] = auto_precharge_token;
 			theMap["autoprecharge"] = auto_precharge_token;
-			theMap["pa_mapping_policy"] = addr_mapping_scheme_token;
-			theMap["physicaladdressmappingpolicy"] = addr_mapping_scheme_token;
-			theMap["addr_mapping_scheme"] = addr_mapping_scheme_token;
-			theMap["addressmappingscheme"] = addr_mapping_scheme_token;
-			theMap["addressmappingpolicy"] = addr_mapping_scheme_token;
-			theMap["physicaladdressmappingpolicy"] = addr_mapping_scheme_token;
+			theMap["pa_mapping_policy"] = address_mapping_policy_token;
+			theMap["physicaladdressmappingpolicy"] = address_mapping_policy_token;
+			theMap["addr_mapping_scheme"] = address_mapping_policy_token;
+			theMap["addressmappingscheme"] = address_mapping_policy_token;
+			theMap["addressmappingpolicy"] = address_mapping_policy_token;
+			theMap["physicaladdressmappingpolicy"] = address_mapping_policy_token;
 			theMap["transaction_ordering_policy"] = transaction_ordering_policy_token;
 			theMap["transactionorderingpolicy"] = transaction_ordering_policy_token;
 			theMap["command_ordering_algorithm"] = command_ordering_algorithm_token;
@@ -332,8 +315,6 @@ namespace DRAMsimII
 			theMap["cputomemoryclockratio"] = cpu_to_memory_clock_ratio;
 			theMap["refresh_policy"] = refresh_policy_token;
 			theMap["refreshpolicy"] = refresh_policy_token;
-			theMap["refresh_time"] = refresh_time_token;
-			theMap["refreshtime"] = refresh_time_token;
 			theMap["riff"] = riff_token;
 			theMap["posted_cas"] = posted_cas_token;
 			theMap["postedcas"] = posted_cas_token;
@@ -383,8 +364,6 @@ namespace DRAMsimII
 			theMap["trcd"] = t_rcd_token;
 			theMap["t_cas" ] = t_cas_token;
 			theMap["tcas"] = t_cas_token;
-			theMap["t_cac"] = deprecated_ignore_token;
-			theMap["tcac"] = deprecated_ignore_token;
 			theMap["t_rp" ] = t_rp_token;
 			theMap["trp"] = t_rp_token;
 			theMap["t_rcd" ] = t_rcd_token;
@@ -410,18 +389,9 @@ namespace DRAMsimII
 			theMap["seniorityagelimit"] = seniority_age_limit_token;
 			theMap["cachelines_per_row" ] = cachelines_per_row_token;
 			theMap["cachelinesperrow"] = cachelines_per_row_token;
-			theMap["history_queue_depth" ] = history_queue_depth_token;
-			theMap["historyqueuedepth"] = history_queue_depth_token;
 			theMap["decodewindow"] = decode_window_token;
-			theMap["completion_queue_depth" ] = completion_queue_depth_token;
-			theMap["completionqueuedepth"] = completion_queue_depth_token;
 			theMap["transaction_queue_depth"] = transaction_queue_depth_token;
 			theMap["transactionqueuedepth"] = transaction_queue_depth_token;
-			theMap["refresh_queue_depth" ] = refresh_queue_depth_token;
-			theMap["refreshqueuedepth"] = refresh_queue_depth_token;
-			theMap["event_queue_depth"] = event_queue_depth_token;
-			theMap["eventqueuedepth"] = event_queue_depth_token;
-			theMap["systemconfigurationtype"] = system_configuration_type_token;
 			theMap["idd0"] = idd0_token;
 			theMap["idd1"] = idd1_token;
 			theMap["idd2p"] = idd2p_token;
@@ -491,7 +461,7 @@ namespace DRAMsimII
 			}
 			else if (nodeName.length() > 1 && nodeName.at(0) == '/' && nodeName.at(1) == '/')
 			{
-				token = comment_token;
+				token = unknown_token;
 				return true;
 			}				
 			else
@@ -540,10 +510,10 @@ namespace DRAMsimII
 		void serialize( Archive & ar,const unsigned int version)
 		{
 			ar & settingsOutputFile & epoch & inFile & sessionID & arrivalDistributionModel & inFileType & outFile & outFileType & outFileDir & requestCount &
-				refreshPolicy & dramType & dataRate & commandOrderingAlgorithm & transactionOrderingAlgorithm & systemType & perBankQueueDepth &
+				refreshPolicy & dramType & dataRate & commandOrderingAlgorithm & transactionOrderingAlgorithm & perBankQueueDepth &
 				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & historyQueueDepth & completionQueueDepth &
 				transactionQueueDepth & eventQueueDepth & refreshQueueDepth & refreshTime & seniorityAgeLimit & rowBufferManagementPolicy &
-				addressMappingScheme & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount &
+				addressMappingPolicy & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount &
 				rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS & tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI &
 				tRFC & tRP & tRRD & tRTP & tWR & tCMD & tInternalBurst & tBufferDelay & cpuToMemoryClockRatio & PdqRD & PdqWR & PdqRDoth &
 				PdqWRoth & DQperDRAM & DQSperDRAM & DMperDRAM & frequencySpec & maxVCC & VDD & IDD0 & IDD1 & IDD2P & IDD2N & IDD3P & IDD3N & IDD4W &

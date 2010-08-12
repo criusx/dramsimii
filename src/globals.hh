@@ -78,8 +78,7 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandOrderingAlgorithm);
-	std::ostream& operator<<(std::ostream&, const RowBufferPolicy);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::SystemConfigurationType);
+	std::ostream& operator<<(std::ostream&, const RowBufferManagementPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::RefreshPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionOrderingAlgorithm);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::OutputFileType);

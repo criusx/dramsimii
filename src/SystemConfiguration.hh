@@ -45,16 +45,14 @@ namespace DRAMsimII
 	protected:
 		CommandOrderingAlgorithm commandOrderingAlgorithm;				///< describes how to place commands into the per bank command queues
 		TransactionOrderingAlgorithm transactionOrderingAlgorithm;		///< the algorithm that describes how to place transactions into the queue
-		SystemConfigurationType configType;								///< whether the system is standard or FBD
-		unsigned refreshTime;											///< the frequency at which refresh commands are scheduled
 		RefreshPolicy refreshPolicy;									///< determines how refreshes are handled
 		unsigned columnSize;											///< the size of each column, in bytes
 		unsigned rowSize;												///< bytes per row (across one rank)
 		unsigned cachelineSize;											///< 32/64/128 etc
 		unsigned seniorityAgeLimit;										///< the oldest a command may be before it takes top priority
 		DRAMType dramType;
-		RowBufferPolicy rowBufferManagementPolicy;						///< row buffer management policy? OPEN/CLOSE, etc
-		Address::AddressMappingScheme addressMappingScheme;						///< addr mapping scheme for physical to DRAM addr
+		RowBufferManagementPolicy rowBufferManagementPolicy;						///< row buffer management policy? OPEN/CLOSE, etc
+		Address::AddressMappingPolicy addressMappingScheme;						///< addr mapping scheme for physical to DRAM addr
 		double datarate;												///< the operating frequency of the system
 		bool postedCAS;													///< TRUE/FALSE, so the CAS command may be stored and run later
 		bool readWriteGrouping;											///< whether or not reads and writes should be grouped closely
@@ -71,7 +69,6 @@ namespace DRAMsimII
 		const unsigned epoch;											///< the amount of time between stats aggregation and reporting
 		double shortBurstRatio;
 		double readPercentage;											///< the percentage of transactions that are reads
-		std::string sessionID;											///< a unique identifier for this run
 		std::string timingFile;
 		std::string powerFile;
 		std::string statsFile;		
@@ -88,11 +85,10 @@ namespace DRAMsimII
 		~SystemConfiguration();
 
 		// accessors
-		RowBufferPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
-		Address::AddressMappingScheme getAddressMappingScheme() const { return addressMappingScheme; }
+		RowBufferManagementPolicy getRowBufferManagementPolicy() const { return rowBufferManagementPolicy; }
+		Address::AddressMappingPolicy getAddressMappingScheme() const { return addressMappingScheme; }
 		CommandOrderingAlgorithm getCommandOrderingAlgorithm() const { return commandOrderingAlgorithm; }
 		TransactionOrderingAlgorithm getTransactionOrderingAlgorithm() const { return transactionOrderingAlgorithm; }
-		SystemConfigurationType getConfigType() const { return configType; }
 		unsigned getRankCount() const { return rankCount; }
 		unsigned getBankCount() const { return bankCount; }
 		unsigned getChannelCount() const { return channelCount; }
@@ -101,7 +97,6 @@ namespace DRAMsimII
 		unsigned getColumnCount() const { return columnCount; }
 		unsigned getColumnSize() const { return columnSize; }
 		unsigned getCachelineSize() const { return cachelineSize; }
-		unsigned getRefreshTime() const { return refreshTime; }
 		unsigned getSeniorityAgeLimit() const { return seniorityAgeLimit; }
 		unsigned getEpoch() const { return epoch; }
 		double getDatarate() const { return datarate; }
@@ -113,7 +108,6 @@ namespace DRAMsimII
 		double getShortBurstRatio() const { return shortBurstRatio; }
 		double getReadPercentage() const { return readPercentage; }
 		double Frequency() const { return datarate; }
-		const std::string &getSessionID() const { return sessionID; }
 		unsigned getDecodeWindow() const { return decodeWindow; }
 		bool fileExists(std::stringstream& fileName) const;
 		bool createNewFile(const std::string& fileName) const;

@@ -125,7 +125,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyK')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyM')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -179,7 +179,7 @@ benchmarks = []
 #benchmarks += ['calculix']
 #benchmarks += ['milc']
 benchmarks += ['lbm']
-benchmarks += ['mcf']
+#benchmarks += ['mcf']
 #benchmarks += ['stream']
 #benchmarks += ['bzip2']
 #benchmarks += ['sjeng']
@@ -201,7 +201,8 @@ benchmarks += ['mcf']
 #benchmarks += ['x264']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'
-benchmarkScriptExtension = '_4.rcS'
+#benchmarkScriptExtension = '_4.rcS'
+benchmarkScriptExtension = '.rcS'
 
 # options for the run
 channels = []
@@ -209,8 +210,8 @@ channels += [2]
 #channels += [1]
 dimms = []
 #dimms += [1]
-#dimms += [2]
-dimms += [4]
+dimms += [2]
+#dimms += [4]
 ranks = []
 #ranks += [1]
 ranks += [2]
@@ -381,7 +382,7 @@ def main():
 
                                                                                for uc in ['true', 'false']:
                                                                                    if isPowerOf2(size * 1024 / blkSz / assoc):
-                                                                                       currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1792MB --mp "' + \
+                                                                                       currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=768MB --mp "' + \
                                                                                                                  fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
                                                                                                                                                 amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
                                                                                                                                                 output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \
