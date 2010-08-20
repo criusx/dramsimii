@@ -140,7 +140,7 @@ namespace DRAMsimII
 		unsigned nmruTrackingCount;
 		bool usingCache;
 		bool fixedCacheLatency;
-	
+
 		bool setKeyValue(const std::string &nodeName, const std::string &nodeValue);
 		bool setKeyValue(const char* nodeName, const std::string &nodeValue) { std::string name(nodeName); return setKeyValue(name, nodeValue); }
 
@@ -151,7 +151,7 @@ namespace DRAMsimII
 			boost::algorithm::to_lower(lowerValue);
 
 			FileIOToken first = unknown_token;
-			
+
 			if (!tokenize(lowerValue,first))
 				std::cerr << "warn: unknown token: " << std::endl;
 
@@ -479,7 +479,7 @@ namespace DRAMsimII
 				}
 				else
 					std::cerr << lowerNodeName << " failed" << std::endl;
-					return false;
+				return false;
 			}
 		}
 
@@ -509,10 +509,10 @@ namespace DRAMsimII
 		template<class Archive>
 		void serialize( Archive & ar,const unsigned int version)
 		{
-			ar & settingsOutputFile & epoch & inFile & sessionID & arrivalDistributionModel & inFileType & outFile & outFileType & outFileDir & requestCount &
+			ar & settingsOutputFile & epoch & inFile & arrivalDistributionModel & inFileType & outFile & outFileType & outFileDir & requestCount &
 				refreshPolicy & dramType & dataRate & commandOrderingAlgorithm & transactionOrderingAlgorithm & perBankQueueDepth &
-				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & historyQueueDepth & completionQueueDepth &
-				transactionQueueDepth & eventQueueDepth & refreshQueueDepth & refreshTime & seniorityAgeLimit & rowBufferManagementPolicy &
+				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & 
+				transactionQueueDepth & seniorityAgeLimit & rowBufferManagementPolicy &
 				addressMappingPolicy & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity & cachelinesPerRow & channelCount &
 				rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS & tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI &
 				tRFC & tRP & tRRD & tRTP & tWR & tCMD & tInternalBurst & tBufferDelay & cpuToMemoryClockRatio & PdqRD & PdqWR & PdqRDoth &

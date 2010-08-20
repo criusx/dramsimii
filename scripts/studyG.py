@@ -34,7 +34,7 @@ getJobId = 'qmgr -c "print server next_job_number"'
 def submitCommand(commandLine, name):
 
     global count
-    suffixes = ["N", "C"]
+    suffixes = ["C", "N"]
     #os.system(commandLine)
     submitCommand = submitString % (commandLine, outputDir, outputDir, name)
     #print commandLine
@@ -125,7 +125,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyM')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyN')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -178,14 +178,14 @@ requests = [5000000]
 benchmarks = []
 #benchmarks += ['calculix']
 #benchmarks += ['milc']
-benchmarks += ['lbm']
+#benchmarks += ['lbm']
 #benchmarks += ['mcf']
 #benchmarks += ['stream']
 #benchmarks += ['bzip2']
 #benchmarks += ['sjeng']
 #benchmarks += ['xalancbmk']
 #benchmarks += ['GemsFDTD']
-
+benchmarks += ['gups']
 #benchmarks += ['blackscholes']
 #benchmarks += ['bodytrack']
 #benchmarks += ['canneal']
@@ -215,7 +215,7 @@ dimms += [2]
 ranks = []
 #ranks += [1]
 ranks += [2]
-ranks += [4]
+#ranks += [4]
 banks = [16]
 tFAW = [28]
 
@@ -382,7 +382,7 @@ def main():
 
                                                                                for uc in ['true', 'false']:
                                                                                    if isPowerOf2(size * 1024 / blkSz / assoc):
-                                                                                       currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=768MB --mp "' + \
+                                                                                       currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1200MB --mp "' + \
                                                                                                                  fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
                                                                                                                                                 amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
                                                                                                                                                 output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \
