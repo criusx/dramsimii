@@ -639,7 +639,7 @@ Transaction *InputStream::getNextRandomRequest(const unsigned transactionID)
 		if (rankLocality < rngGenerator())
 		{
 			// choose a rank that's not this one
-			nextRank = (nextRank + 1 + (rngIntGenerator() % (systemConfig.getRankCount() - 1))) % systemConfig.getRankCount();
+			nextRank = (nextRank + 1 + (rngIntGenerator() % (systemConfig.getRankCount() * systemConfig.getDimmCount()- 1))) % (systemConfig.getRankCount() * systemConfig.getDimmCount());
 		}
 		// else choose the same rank again
 
@@ -727,7 +727,7 @@ Transaction *InputStream::getNextRandomRequest(const unsigned transactionID)
 		nextAddress.setAddress(nextChannel,nextRank,nextBank,nextRow,nextColumn);
 
 		assert(nextAddress.getChannel() < systemConfig.getChannelCount());
-		assert(nextAddress.getRank() < systemConfig.getRankCount());
+		assert(nextAddress.getRank() < systemConfig.getRankCount() * systemConfig.getDimmCount());
 		assert(nextAddress.getBank() < systemConfig.getBankCount());
 		assert(nextAddress.getRow() < systemConfig.getRowCount());
 		assert(nextAddress.getColumn() < systemConfig.getColumnCount());

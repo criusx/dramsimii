@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef ENUMTYPES_H
-#define ENUMTYPES_H
-#pragma once
+#ifndef ENUMTYPES_HH
+#define ENUMTYPES_HH
 
 namespace DRAMsimII
 {
@@ -29,19 +28,13 @@ namespace DRAMsimII
 		ONE_CHANNEL_ALL_RANK_ALL_BANK // standard refresh, close banks, issue refresh command to activate/precharge a bank based upon the DRAM refresh counter
 	};
 
-	enum RowBufferPolicy
+	enum RowBufferManagementPolicy
 	{
 		AUTO_PAGE, // same as OPEN PAGE, but close page after timer expires
 		OPEN_PAGE, // keep page open indefinitely
 		OPEN_PAGE_AGGRESSIVE, // improve upon simple open page
 		CLOSE_PAGE, // close a row after an operation
 		CLOSE_PAGE_AGGRESSIVE // improve upon regular close page
-	};
-
-	enum SystemConfigurationType
-	{
-		BASELINE_CONFIG, // direct control. 1 or 2 ranks in DDR3
-		FBD_CONFIG // fully buffered DIMMS
 	};
 
 	/// we can define various algorithms previously explored by Rixner, McKee et al. here.
@@ -97,7 +90,7 @@ namespace DRAMsimII
 		NANOSECOND,
 		PICOSECOND,
 		SECOND,
-		addr_mapping_scheme_token,
+		address_mapping_policy_token,
 		auto_precharge_token,
 		average_interarrival_cycle_count,
 		bank_count_token,
@@ -108,6 +101,9 @@ namespace DRAMsimII
 		cache_size_token,
 		cache_replacementpolicy_token,
 		cache_nmrutrackingcount_token,
+		using_cache_token,
+		fixed_cache_latency_token,
+		//
 		cachelines_per_row_token,
 		cacheline_size_token,
 		channel_count_token,
@@ -116,27 +112,18 @@ namespace DRAMsimII
 		col_count_token,
 		col_size_token,
 		command_ordering_algorithm_token,
-		comment_token,
-		completion_queue_depth_token,
 		cpu_to_memory_clock_ratio,
 		datarate_token,
-		debug_token,
 		decode_window_token,
-		deprecated_ignore_token,
 		dimm_count_token,
 		dm_per_dram_token,
 		dq_per_dram_token,
 		dqs_per_dram_token,
 		dram_type_token,
-		dbreporting_token,
-		event_queue_depth_token,
 		epoch_token,
 		frequency_spec_token,
-		help_token,
-		history_queue_depth_token,
 		input_file_token,
 		input_type_token,
-		ordering_algorithm_token,
 		output_file_token,
 		output_file_dir_token,
 		output_file_type_token,
@@ -151,7 +138,6 @@ namespace DRAMsimII
 		read_percentage_token,
 		read_write_grouping_token,
 		refresh_policy_token,
-		refresh_time_token,
 		request_count_token,
 		refresh_queue_depth_token,
 		riff_token,
@@ -160,7 +146,6 @@ namespace DRAMsimII
 		row_size_token,
 		seniority_age_limit_token,
 		short_burst_ratio_token,
-		system_configuration_type_token,
 		t_al_token,
 		t_buffer_delay_token,
 		t_burst_token,
@@ -186,8 +171,6 @@ namespace DRAMsimII
 		transaction_queue_depth_token,
 		trace_file_token,
 		unknown_token,
-		using_cache_token,
-		fixed_cache_latency_token,
 		// power config tokens
 		vdd_token,
 		max_vcc_token,
@@ -200,13 +183,6 @@ namespace DRAMsimII
 		idd4r_token,
 		idd4w_token,
 		idd5_token
-	};
-
-	enum FrameType
-	{
-		COMMAND,				// contains only commands, A, B, C
-		COMMAND_AND_DATA,		// contains a command in the A slot and data in the B, C slots
-		SYNC					// a sync command
 	};
 }
 #endif

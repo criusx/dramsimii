@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cd /benchmarks/445.gobmk/data/all/input
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+i=4
+while [ $i -gt 0 ]
+do
+	/benchmarks/445.gobmk/exe/gobmk_base.alpha-gcc410-glibc236 --quiet --mode gtp < /benchmarks/445.gobmk/data/test/input/connection.tst&
+	i=$(($i-1))
+done
+wait
+/sbin/m5 exit

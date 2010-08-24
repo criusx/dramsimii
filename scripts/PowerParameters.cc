@@ -276,8 +276,7 @@ PowerCalculations PowerParameters::calculateSystemPower(const char* newLine, con
 	currentRank++;
 
 	PowerCalculations pc;
-
-	
+		
 	const double duration = max(regexMatch<double>(currentRank->c_str(),"duration\\{([0-9]+)\\}"), 0.000001);
 
 	// calculate SRAM power from the DIMM caches
@@ -348,37 +347,32 @@ PowerCalculations PowerParameters::calculateSystemPower(const char* newLine, con
 	{
 		try
 		{			
-			//cerr << *currentRank << endl;
-			//unsigned currentRankID = regexMatch<unsigned>(currentRank->c_str(),"^\\[([0-9]+)\\]");
-
-
-			// because each rank on any dimm will report the same hit and miss counts
-			//if ((currentRankID % ranksPerDimm) == 0)
-
 
 			//double duration = regexMatch<float>(currentRank->c_str(),"duration\\{([0-9]+)\\}");
 			double thisRankRasCount = regexMatch<double>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
-			//double thisRankAdjustedRasCount = regexMatch<double>(currentRank->c_str(),"adjRasCount\\{([0-9]+)\\}");
+			int val = regexMatch<int>(currentRank->c_str(),"rasCount\\{([0-9]+)\\}");
+			
+			pc.rasCount += val;
+			
 			double readCycles = regexMatch<double>(currentRank->c_str(),"read\\{([0-9]+)\\}");
+			val = regexMatch<unsigned>(currentRank->c_str(),"read\\{([0-9]+)\\}") / 8;
+			
+			pc.readCount += val;
 			double writeCycles = regexMatch<double>(currentRank->c_str(),"write\\{([0-9]+)\\}");
 			//double readHits = regexMatch<double>(currentRank->c_str(),"readHits\\{([0-9]+)\\}");
 			//totalReadHits += readHits;
 			double prechargeTime = regexMatch<float>(currentRank->c_str(),"prechargeTime\\{([0-9]+)\\}");
-
-
+			
 			double percentActive = 1.0 - (prechargeTime / max((double)(duration), 0.00000001));
-			//double percentActiveAdjusted = percentActive * (1 - readHits / (readCycles / tBurst));
-
+			
 			assert(percentActive >= 0.0 && percentActive <= 1.0);
-			//assert(percentActiveAdjusted >= 0.0 && percentActiveAdjusted <= 1.0);
-
+			
 			// background power analysis
 			// activate-standby
 			double PschACT_STBY = pDsActStby * percentActive * (1 - CKE_LO_ACT);
 			pc.PsysACT_STBY += devicesPerRank * voltageScaleFactor * frequencyScaleFactor * PschACT_STBY;
 			//assert(readHits <= readCycles / 8);
-			//cerr << pc.PsysACT_STBYAdjusted << " " << pc.PsysACT_STBY << endl;
-
+			
 			// precharge-standby
 			double PschPRE_STBY = pDsPreStby * (1.0 - percentActive) * (1 - CKE_LO_PRE);
 			pc.PsysPRE_STBY += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschPRE_STBY;
@@ -390,8 +384,7 @@ PowerCalculations PowerParameters::calculateSystemPower(const char* newLine, con
 			// activate-powerdown
 			double PschACT_PDN = pDsActPdn * percentActive * CKE_LO_ACT;
 			pc.PsysACT_PDN += devicesPerRank * frequencyScaleFactor * voltageScaleFactor * PschACT_PDN;
-			//cerr << pc.PsysACT_PDN << " " << pc.PsysACT_PDNAdjusted << endl;
-
+			
 			// activate power analysis
 			double tRRDsch = ((double)duration) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
 			double PschACT = pDsAct * tRc / tRRDsch;

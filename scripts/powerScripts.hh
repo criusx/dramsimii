@@ -11,10 +11,21 @@ protected:
 	std::list<string> filesGenerated;
 
 	unsigned writing;
+
+	vector<unsigned> rasCounts;
+
+	unsigned rasCountBuffer;
+
+	vector<unsigned> readCounts;
+
+	unsigned readCountBuffer;
+
 	vector<vector<double> > values;
+
 	vector<double> valueBuffer;
 	
 	vector<pair<double, double> > energyValues;
+
 	pair<double, double> energyValueBuffer;
 
 	unsigned scaleFactor;
@@ -53,6 +64,8 @@ protected:
 public:
 	PowerScripts(list<pair<string, string> > &_powerParams):
 	  writing(0),
+		  rasCountBuffer(0),
+		  readCountBuffer(0),
 		  scaleFactor(1),
 		  scaleIndex(0),
 		  channelCount(0),
@@ -95,6 +108,8 @@ public:
 
 	  double getAverageInUseTime() const { return averageInUseTime.average();}
 
+	  double getEpochTime() const { return epochTime; }
+
 	  const vector<vector<double> > &getValues() const { return values; }
 
 	  const vector<pair<double,double> > &getEnergyValues() const { return energyValues; }
@@ -107,6 +122,10 @@ public:
 
 	  const PowerParameters &getPowerParameters() const { return powerParameters; }
 
+	  const vector<unsigned> &getRasCounts() const { return rasCounts; }
+
+	  const vector<unsigned> &getReadCounts() const { return readCounts; }
+
 protected:
 	void processLine(char *newLine);
 
@@ -116,17 +135,19 @@ protected:
 
 	void powerGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const;
 
-	void bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const;
-
-	void bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const;
-
-	void comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const;
-
 	void energyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const;
 
 	void bigEnergyGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const;
 
-	void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<double, double> > &alternateValues, bool isThumbnail) const;
+	void bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateRuntime, bool isThumbnail) const;
+
+	void bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateRuntime, bool isThumbnail) const;
+
+	void comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateEpochTime, bool isThumbnail) const;
+
+	void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<double, double> > &alternateValues, const double alternateEpochTime, bool isThumbnail) const;
+
+	void rasCountReadCountGraph(const bf::path &outFilename, opstream &p, const PowerScripts &theoreticalPower, bool isThumbnail) const;
 
 	// the scripts to generate the graphs
 	static const string totalPowerScript;
@@ -137,6 +158,7 @@ protected:
 	static const string bigPowerScript;
 	static const string comparativePowerScript;
 	static const string bigEnergyScript;
+	static const string rasCountReadCountGraphScript;
 };
 
 #endif

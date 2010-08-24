@@ -147,22 +147,23 @@ const std::string cumulativeTransactionGraphScript = "set yrange [0:1]\n\
 													 set ylabel 'Percent of Transactions with At Most this Latency'\n\
 													 plot '-' using 1:2 t 'Cumulative Latency Distribution' with lines lw 2.00\n";
 
-
 const std::string bandwidthGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
 										 set xlabel 'Time (s)' offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
 										 set xrange [0:*]\n\
-										 set title 'System Bandwidth'\n\
 										 set size 1.0, 0.66\n\
 										 set origin 0.0, 0.33\n\
 										 set style data histograms\n\
 										 set style histogram rowstacked title offset 0,0,0\n\
-										 set ylabel 'Bandwidth (bytes per second)'\n\
+										 set ylabel 'Bandwidth (MB/s)'\n\
 										 plot \
 										 '-' using 1 axes x2y1 title 'Read Bytes', \
 										 '-' using 1 axes x2y1 title 'Write Bytes', \
 										 '-' using 1 axes x2y1 title 'Cache Read Bytes', \
-										 '-' using 1 axes x2y1 title 'Cache Write Bytes', \
+										 '-' using 1 axes x2y1 title 'Cache Write Bytes',\
+										 '-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
+#if 0
 										 '-' using 1:2 axes x1y1 title 'Average Bandwidth' with lines\n";
+#endif
 
 const std::string pcVsLatencyGraphScript = "set logscale y \n\
 										   set yrange [1 : *] noreverse nowriteback\n\
