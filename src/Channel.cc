@@ -58,7 +58,7 @@ powerModel(_settings),
 channelID(UINT_MAX),
 rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
 finishedTransactions(),
-cache(_settings.dimmCount, Cache(_settings)),
+cache(_settings.dimmCount, Cache(_settings, _stats)),
 lastCprhLocation(0)
 {
 	setupCprhValues();
@@ -602,7 +602,7 @@ Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 void Channel::doPowerCalculation(ostream& os)
 {	
 	double PsysRD = 0.0;
-	double PsysRdAdjusted = 0.0;
+	//double PsysRdAdjusted = 0.0;
 	double PsysWR = 0.0;
 
 	double PsysACT_STBY = 0.0;
@@ -612,7 +612,7 @@ void Channel::doPowerCalculation(ostream& os)
 	double PsysACT = 0.0;
 	//double PsysACTAdjusted = 0.0;
 
-	float tRRDschAdjusted = 0.0F;
+	//float tRRDschAdjusted = 0.0F;
 
 	uint64_t totalReadHits = 0;
 

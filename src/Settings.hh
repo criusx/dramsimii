@@ -481,7 +481,7 @@ public:
 			}
 			else
 				std::cerr << lowerNodeName << " failed" << std::endl;
-			return false;
+					return false;
 		}
 	}
 
@@ -511,10 +511,10 @@ public:
 	template<class Archive>
 	void serialize(Archive & ar, const unsigned int version)
 	{
-		ar & settingsOutputFile & epoch & inFile & arrivalDistributionModel & inFileType & outFile & outFileType
+			ar & settingsOutputFile & epoch & inFile & arrivalDistributionModel & inFileType & outFile & outFileType & outFileDir & requestCount &
 				& outFileDir & requestCount & refreshPolicy & dramType & dataRate & commandOrderingAlgorithm
-				& transactionOrderingAlgorithm & perBankQueueDepth & columnSize & rowSize & channelWidth & columnCount
-				& rowCount & cacheLineSize & transactionQueueDepth & seniorityAgeLimit & rowBufferManagementPolicy
+				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & 
+				transactionQueueDepth & seniorityAgeLimit & rowBufferManagementPolicy &
 				& addressMappingPolicy & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity
 				& cachelinesPerRow & channelCount & rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS
 				& tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI & tRFC & tRP & tRRD & tRTP & tWR & tCMD

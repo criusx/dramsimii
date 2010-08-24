@@ -44,7 +44,7 @@ namespace DRAMsimII
 		protected:
 			std::vector<tick> buffer;
 
-			std::vector<tick>::iterator _back, _front;
+			std::vector<tick>::iterator _front, _back;
 			//const std::vector<tick>::iterator begin, end;
 		public:
 			void reset(const tick value)
@@ -73,8 +73,8 @@ namespace DRAMsimII
 
 			CircularBuffer():
 			buffer(4,-250),
-				_back(buffer.begin()),
-				_front(buffer.begin())
+				_front(buffer.begin()),
+				_back(buffer.begin())
 			{
 				while (_front + 1 != buffer.end())
 					_front++;
