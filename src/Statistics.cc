@@ -459,22 +459,9 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		{
 			os << "----M5 Stat: {" << info->name << "}";
 
-			//std::cerr << "----M5 Stat: {" << info->name << "}" << std::endl;
-
 			Stats::ScalarInfoProxy<Stats::Scalar> *val = (Stats::ScalarInfoProxy<Stats::Scalar> *)info;
-			Stats::Result res = val->result();
-			//std::cerr << res << std::endl;
-			os << " {" << res << "}";
-#if 0
-			std::vector<Stats::Result>::const_iterator start = ((Stats::ScalarInfoProxy<Stats::Scalar> *)info)->result().begin();
-			std::vector<Stats::Result>::const_iterator end = ((Stats::ScalarInfoProxy<Stats::Scalar> *)info)->result().end();
-			while (start != end)
-			{
-				os << " {" << *start << "}";
-				start++;
-			}
-			os << endl;
-#endif
+			os << " {" << val->result() << "}" << endl;
+
 		}
 		if ((info->name.find("dcache.overall_hits") != string::npos) ||
 			(info->name.find("dcache.overall_misses") != string::npos) ||

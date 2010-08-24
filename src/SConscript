@@ -45,7 +45,7 @@ try:
 
 		#env.Append(CPPDEFINES = ['TRACE_GENERATE']
 		#env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['-fprofile-generate'])
-		env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
+		#env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
 		CCFLAGS = ['-I/usr/include/libxml2', '-march=k8-sse3', '-mtune=k8-sse3'],

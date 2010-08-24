@@ -67,8 +67,8 @@ def submitCommand(commandLine, name):
             f = open(scriptToRun, 'w+')
             f.write("#!/bin/sh\n")
             f.write("export PBS_JOBID=" + nextId + "\n")
-            #f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
-            f.write("export M5_PATH=$HOME/m5_system_2.0b3\n")
+            f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
+            #f.write("export M5_PATH=$HOME/m5_system_2.0b3\n")
             f.write("mkdir -p " + outputDir + "/" + nextId + suffixes[i] + "\n")
             f.write("cd " + outputDir + "/" + nextId + suffixes[i] + "\n")
 	        #export M5_PATH=$HOME/benchmarks/parsec-2.1
@@ -125,7 +125,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyN')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyO')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -185,13 +185,13 @@ benchmarks = []
 #benchmarks += ['sjeng']
 #benchmarks += ['xalancbmk']
 #benchmarks += ['GemsFDTD']
-benchmarks += ['gups']
+#benchmarks += ['gups']
 #benchmarks += ['blackscholes']
 #benchmarks += ['bodytrack']
 #benchmarks += ['canneal']
 #benchmarks += ['dedup']
 #benchmarks += ['facesim']
-#benchmarks += ['ferret']
+benchmarks += ['ferret']
 #benchmarks += ['fluidanimate']
 #benchmarks += ['freqmine']
 #benchmarks += ['rtview']
@@ -202,7 +202,8 @@ benchmarks += ['gups']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'
 #benchmarkScriptExtension = '_4.rcS'
-benchmarkScriptExtension = '.rcS'
+#benchmarkScriptExtension = '.rcS'
+benchmarkScriptExtension = '_4c_simmedium.rcS'
 
 # options for the run
 channels = []
@@ -227,8 +228,8 @@ associativity += [16]
 associativity += [32]
 cacheSizes = []
 cacheSizes += [8192]
-#cacheSizes += [16384]
-cacheSizes += [24576]
+cacheSizes += [16384]
+#cacheSizes += [24576]
 blockSize = []
 blockSize += [64]
 blockSize += [128]

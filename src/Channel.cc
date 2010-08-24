@@ -58,7 +58,7 @@ powerModel(_settings),
 channelID(UINT_MAX),
 rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
 finishedTransactions(),
-cache(_settings.dimmCount, Cache(_settings)),
+cache(_settings.dimmCount, Cache(_settings, _stats)),
 lastCprhLocation(0)
 {
 	setupCprhValues();
