@@ -12,6 +12,7 @@ public:
 	double sramActivePower, sramIdlePower;
 	double energy, dimmEnergy;
 	double inUseTime;
+	int rasCount, readCount;
 
 	PowerCalculations():
 	PsysACT_STBY(0.0),
@@ -25,7 +26,9 @@ public:
 		sramIdlePower(0.0),
 		energy(0.0),
 		dimmEnergy(0.0),
-		inUseTime(0.0)
+		inUseTime(0.0),
+		rasCount(0U),
+		readCount(0U)
 	{};
 };
 

@@ -170,6 +170,8 @@ namespace DRAMsimII
 		std::map<PhysicalAddress, unsigned> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
 		std::vector<tick> bankLatencyUtilization;	///< the latency due to each bank per unit time
+
+		std::unordered_map<unsigned,unsigned> tagList, setList, blockList;
 	
 	public:
 
@@ -184,11 +186,15 @@ namespace DRAMsimII
 		inline void setValidTransactionCount(int vtc) {validTransactionCount = vtc;}
 		inline void reportTFawCommand() { issuedAtTFAW++; }
 		void reportRowBufferAccess(const Transaction *currentTransaction, bool isHit);
-		void reportRasReduction(const Command *);
-
+		void reportTagSetBlock(unsigned tag, unsigned set, unsigned block)
+		{
+			tagList[tag]++;
+			setList[set]++;
+			blockList[block]++;
+		}
+		
 		// accessors
 		const std::vector<std::vector<std::pair<unsigned,unsigned> > > &getRowBufferAccesses() const { return rowBufferAccesses; }
-		const std::vector<std::vector<unsigned> >& getRowReduction() const { return rasReduction;}
 		const std::vector<std::pair<unsigned,unsigned> >& getBandwidthData() const { return bandwidthData;}
 		const std::vector<std::pair<unsigned,unsigned> >& getDimmCacheBandwidthData() const { return dimmCacheBandwidthData;}
 		unsigned getDIMMReadBytesTransferred() const 

@@ -1,9 +1,9 @@
 #!/bin/sh
 
-cd /benchmarks/470.lbm/data/test/input
-echo "LBM Test"
+cd /benchmarks/470.lbm/data/ref/input
+echo "LBM Ref"
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-/benchmarks/470.lbm/exe/lbm_base.alpha-gcc410-glibc236 5 reference.dat 0 1 100_100_130_cf_a.of
-echo "LBM Done"
+/benchmarks/470.lbm/exe/lbm_base.alpha-gcc410-glibc236 5 reference.dat 0 0 100_100_130_ldc.of
+echo "LBM Ref Done"
 /sbin/m5 exit

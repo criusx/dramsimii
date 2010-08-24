@@ -42,7 +42,7 @@ unsigned Address::columnHighAddressDepth;
 unsigned Address::rowLowAddressDepth;
 unsigned Address::rowHighAddressDepth;
 unsigned Address::rankCount;
-Address::AddressMappingScheme Address::mappingScheme;
+Address::AddressMappingPolicy Address::mappingScheme;
 
 Address::Address():
 virtualAddress(UINT_MAX),
@@ -117,7 +117,7 @@ void Address::initialize(const Settings &_settings)
 	columnAddressDepth  = log2(_settings.columnCount);
 	//FIXME: shouldn't this already be set appropriately?
 	columnSizeDepth	= log2(_settings.dramType == DRDRAM ? 16 : _settings.columnSize);
-	mappingScheme = _settings.addressMappingScheme;
+	mappingScheme = _settings.addressMappingPolicy;
 	unsigned cachelineDepth = log2(_settings.cacheLineSize);
 	assert(cachelineDepth > columnSizeDepth);
 	columnLowAddressDepth = cachelineDepth - columnSizeDepth;
@@ -814,7 +814,7 @@ std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address& thisAddres
 		"] col[" << setbase(16) << thisAddress.column << "]";
 }
 
-std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address::AddressMappingScheme &mappingScheme)
+std::ostream &DRAMsimII::operator <<(std::ostream &os, const Address::AddressMappingPolicy &mappingScheme)
 {	
 	switch (mappingScheme)
 	{

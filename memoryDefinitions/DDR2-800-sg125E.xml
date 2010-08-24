@@ -33,15 +33,10 @@
 		<!--may be strict, RIFF-->
 		<transactionOrderingAlgorithm>RIFF</transactionOrderingAlgorithm>
 		<perBankQueueDepth>8</perBankQueueDepth>
-		<!--sets FBD mode otherwise-->
-		<systemConfigurationType>baseline</systemConfigurationType>
+		<!-- this is used for address mapping policies-->
 		<cacheLineSize>64</cacheLineSize>
-		<historyQueueDepth>16</historyQueueDepth>
-		<completionQueueDepth>32</completionQueueDepth>
 		<transactionQueueDepth>16</transactionQueueDepth>
 		<decodeWindow>16</decodeWindow>
-		<eventQueueDepth>8</eventQueueDepth>
-		<refreshQueueDepth>8</refreshQueueDepth>
 		<!--attempts to sweep through and group reads and writes together in time-->
 		<readWriteGrouping>true</readWriteGrouping>
 		<!--able to issue CAS+Pre commands, effective with close page, unavailable in open page RBMP -->
@@ -84,7 +79,6 @@
 		<tAL>8</tAL>
 		<!--autoRefreshPolicy>none</autoRefreshPolicy-->
 		<!--given in us-->
-		<refreshTime>64000</refreshTime>
 		<!--average periodic refresh time, look at Micron app note TN-46-09 -->
 		<tREFI>6240</tREFI>
 		<!-- used to determine how long a refresh transaction may be deprioritized relative to normal transactions -->
@@ -128,7 +122,7 @@
 		<readPercentage>.85</readPercentage>
 		<averageInterarrivalCycleCount>4</averageInterarrivalCycleCount>
 		<!-- type may be gz, bz, cout, uncompressed, none -->
-		<outFile type="gz" dbreporting="false">standardOutFile.gz</outFile>
+		<outFile type="gz" >standardOutFile.gz</outFile>
 		<!-- the directory that the output files will be written to -->
 		<outFileDirectory>.</outFileDirectory>
 		<requestCount>4294967296</requestCount>

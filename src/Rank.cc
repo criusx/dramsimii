@@ -50,7 +50,7 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(settings.bankCount - 1),
 banksPrecharged(/*settings.rowBufferManagementPolicy == OPEN_PAGE ? 0 : settings.bankCount */ 0),
-lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
+lastActivateTimes(), // make the queue hold four (tFAW)
 bank(sysConfig.getBankCount(),Bank(settings, timing, sysConfig, stats))
 {}
 
@@ -147,7 +147,7 @@ CASWLength(0),
 rankID(UINT_MAX),
 lastBankID(0),
 banksPrecharged(0),
-lastActivateTimes(4, 4, -100), // make the queue hold four (tFAW)
+lastActivateTimes(), // make the queue hold four (tFAW)
 bank(newBank)
 {}
 
@@ -171,11 +171,7 @@ void Rank::setRankID(const unsigned channelID, const unsigned rankID)
 /// @brief this logically issues a RAS command and updates all variables to reflect this
 //////////////////////////////////////////////////////////////////////////
 void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
-{
-	//////////////////////////////////////////////////////////////////////////
-	bank[currentCommand->getAddress().getBank()].setAllHits(true);
-	//////////////////////////////////////////////////////////////////////////
-
+{	
 	// see if this was held due to tFAW (or at least tied with other restrictions)
 	if (currentTime - lastActivateTimes.back() == timing.tFAW())
 		statistics.reportTFawCommand();
@@ -208,14 +204,7 @@ void Rank::issueRAS(const tick currentTime, const Command *currentCommand)
 /// @brief issue a precharge command to this rank
 //////////////////////////////////////////////////////////////////////////
 void Rank::issuePRE(const tick currentTime, const Command *currentCommand)
-{
-	//////////////////////////////////////////////////////////////////////////
-	if (bank[currentCommand->getAddress().getBank()].isAllHits() && currentCommand->isBasicPrecharge())
-	{
-		statistics.reportRasReduction(currentCommand);
-	}
-	//////////////////////////////////////////////////////////////////////////
-
+{	
 	// update the bank to reflect this change also
 	Bank &currentBank = bank[currentCommand->getAddress().getBank()];
 	currentBank.issuePRE(currentTime, currentCommand);
@@ -434,8 +423,9 @@ void Rank::resetToTime(const tick time)
 
 	nextActivateTime = time;
 	nextRefreshTime = time + timing.tRP();
-	for (boost::circular_buffer<tick>::iterator i = lastActivateTimes.begin(); i != lastActivateTimes.end(); ++i)
-		*i = time - timing.tFAW();
+	//for (boost::circular_buffer<tick>::iterator i = lastActivateTimes.begin(); i != lastActivateTimes.end(); ++i)
+	//	*i = time - timing.tFAW();
+	lastActivateTimes.reset(time - timing.tFAW());
 	for (vector<Bank>::iterator i = bank.begin(); i != bank.end(); ++i)
 		i->resetToTime(time);
 
