@@ -116,15 +116,17 @@ void Address::initialize(const Settings &_settings)
 	rowAddressDepth  = log2(_settings.rowCount);
 	columnAddressDepth  = log2(_settings.columnCount);
 	//FIXME: shouldn't this already be set appropriately?
-	columnSizeDepth	= log2(_settings.dramType == DRDRAM ? 16 : _settings.columnSize);
+	columnSizeDepth	= log2(_settings.columnSize);
 	mappingScheme = _settings.addressMappingPolicy;
 	unsigned cachelineDepth = log2(_settings.cacheLineSize);
-	assert(cachelineDepth > columnSizeDepth);
+	assert(cachelineDepth >= columnSizeDepth);
 	columnLowAddressDepth = cachelineDepth - columnSizeDepth;
+	assert(columnAddressDepth >= columnLowAddressDepth);
 	columnHighAddressDepth = columnAddressDepth - columnLowAddressDepth;
 	assert(rowAddressDepth > 3);
 	rowLowAddressDepth = 3;
 	rowHighAddressDepth = rowAddressDepth - 3;
+	cerr << columnLowAddressDepth << " " << columnHighAddressDepth << " " << cachelineDepth << " " << columnSizeDepth << " " << _settings.columnSize << endl;
 }
 
 void Address::initialize(const SystemConfiguration &systemConfig)
@@ -135,7 +137,7 @@ void Address::initialize(const SystemConfiguration &systemConfig)
 	rowAddressDepth  = log2(systemConfig.getRowCount());
 	columnAddressDepth  = log2(systemConfig.getColumnCount());
 	//FIXME: shouldn't this already be set appropriately?
-	columnSizeDepth	= log2(systemConfig.getDRAMType() == DRDRAM ? 16 : systemConfig.getColumnSize());
+	columnSizeDepth	= log2(systemConfig.getColumnSize());
 	mappingScheme = systemConfig.getAddressMappingScheme();
 	unsigned cachelineDepth = log2(systemConfig.getCachelineSize());
 	assert(cachelineDepth > columnSizeDepth);

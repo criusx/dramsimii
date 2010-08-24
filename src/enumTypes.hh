@@ -70,7 +70,6 @@ namespace DRAMsimII
 		DDR,
 		DDR2,
 		DDR3,
-		DRDRAM,
 		SDRAM
 	};
 

@@ -16,7 +16,6 @@
 
 #ifndef STATISTICS_HH
 #define STATISTICS_HH
-#pragma once
 
 #include "globals.hh"
 #include "transaction.hh"
@@ -170,8 +169,7 @@ namespace DRAMsimII
 		std::map<PhysicalAddress, unsigned> workingSet;		///< stores all the addresses seen in an epoch to calculate the working set
 		std::vector<unsigned> aggregateBankUtilization; ///< the bank usage per bank
 		std::vector<tick> bankLatencyUtilization;	///< the latency due to each bank per unit time
-
-		std::unordered_map<unsigned,unsigned> tagList, setList, blockList;
+		std::tr1::unordered_map<unsigned,unsigned> tagList, setList, blockList;
 	
 	public:
 

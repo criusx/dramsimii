@@ -176,12 +176,7 @@ t_cache_access(settings.hitLatency)
 		t_wr = settings.tWR;	
 		t_ost = 0;					// does not exist in SDRAM
 		break;
-
-	case DRDRAM:
-		cerr << "DRDRAM not yet supported." << endl;
-		exit(-12);
-		break;
-
+		
 	default:
 		break;
 	}	

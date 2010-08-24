@@ -508,11 +508,9 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			else if (nodeValue == "ddr")
 				dramType = DDR;
 			else if (nodeValue == "ddr3")
-				dramType = DDR3;
-			else if (nodeValue == "drdram")
-				dramType = DRDRAM;
+				dramType = DDR3;		
 			else
-				dramType = DDR2;
+				dramType = DDR3;
 			break;
 		case input_type_token:
 			if (nodeValue == "k6" || nodeValue == "K6")

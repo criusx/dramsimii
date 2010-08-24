@@ -512,7 +512,7 @@ public:
 	void serialize(Archive & ar, const unsigned int version)
 	{
 			ar & settingsOutputFile & epoch & inFile & arrivalDistributionModel & inFileType & outFile & outFileType & outFileDir & requestCount &
-				& outFileDir & requestCount & refreshPolicy & dramType & dataRate & commandOrderingAlgorithm
+				& outFileDir & requestCount & refreshPolicy & dramType & dataRate & commandOrderingAlgorithm &
 				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & 
 				transactionQueueDepth & seniorityAgeLimit & rowBufferManagementPolicy &
 				& addressMappingPolicy & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity
