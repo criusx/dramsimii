@@ -93,7 +93,7 @@ nextStats(settings.epoch)
 		"] rk[" << settings.rankCount * settings.dimmCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
 		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
 		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] PC[" << (settings.postedCAS ? "T" : "F") << "] AMP[" << settings.addressMappingScheme << "] COA[" << settings.commandOrderingAlgorithm <<
+		"] PC[" << (settings.postedCAS ? "T" : "F") << "] AMP[" << settings.addressMappingPolicy << "] COA[" << settings.commandOrderingAlgorithm <<
 		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
 		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
 		"cache[" << cacheSize << "] " <<
@@ -460,7 +460,7 @@ void System::runSimulations(const unsigned requestCount)
 					{
 						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(), end = outstandingTransactions.end(); j != end; ++j)
 						{
-							unsigned diff = time - j->second.first->getEnqueueTime();
+							tick diff = time - j->second.first->getEnqueueTime();
 							if (diff > 20000)
 							{
 								foundOne = true;
@@ -530,16 +530,7 @@ bool System::operator==(const System &rhs) const
 ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 {
 
-	os << "SYS[";
-	switch(thisSystem.systemConfig.getConfigType())
-	{
-	case BASELINE_CONFIG:
-		os << "BASE] ";
-		break;
-	default:
-		os << "UNKN] ";
-		break;
-	}
+	
 	os << "RC[" << thisSystem.systemConfig.getRankCount() << "] ";
 	os << "BC[" << thisSystem.systemConfig.getBankCount() << "] ";
 	os << "ALG[";
@@ -571,23 +562,6 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 	return os;
 }
 
-ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::SystemConfigurationType ct)
-{
-	switch (ct)
-	{
-	case BASELINE_CONFIG:
-		os << "baseline";
-		break;
-	case FBD_CONFIG:
-		os << "fbd";
-		break;
-	default:
-		os << "unknown";
-		break;
-	}
-
-	return os;
-}
 ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::RefreshPolicy rp)
 {
 	switch (rp)

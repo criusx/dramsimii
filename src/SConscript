@@ -44,7 +44,7 @@ try:
 		#env.Append(CCFLAGS = ['-march=amdfam10', '-mtune=amdfam10'])
 
 		#env.Append(CPPDEFINES = ['TRACE_GENERATE']
-		env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['-fprofile-generate'])
+		#env.Append(CCFLAGS = ['-fprofile-generate'], LINKFLAGS = ['-fprofile-generate'])
 		#env.Append(CCFLAGS = ['-fprofile-use'], LINKFLAGS = ['-fprofile-use'])
 	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
 		env.Append(
@@ -77,10 +77,6 @@ Source('Bank.cc')
 Source('command.cc')
 Source('Channel.cc')
 Source('event.cc')
-Source('fbdAMB.cc')
-Source('fbdChannel.cc')
-Source('fbdFrame.cc')
-Source('fbdSystem.cc')
 Source('InputStream.cc')
 Source('m5-dramSystem.cc')
 Source('powerConfig.cc')

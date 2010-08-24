@@ -82,6 +82,10 @@ parser.add_option("--revert", action="store_true")
 
 parser.add_option("--nopre", action="store_true")
 
+parser.add_option("--benchmarkName", default="")
+
+parser.add_option("--memsize", default=None)
+
 # more options
 execfile(os.path.join(config_root, "common", "Options.py"))
 
@@ -99,8 +103,8 @@ drive_mem_mode = 'atomic'
 # system under test can be any CPU
 (TestCPUClass, test_mem_mode, FutureClass) = Simulation.setCPUClass(options)
 
-TestCPUClass.clock = '3.2GHz'
-DriveCPUClass.clock = '3.2GHz'
+TestCPUClass.clock = '5GHz'
+DriveCPUClass.clock = '5GHz'
 
 if options.benchmark:
     try:
@@ -120,10 +124,15 @@ np = options.num_cpus
 if buildEnv['TARGET_ISA'] == "alpha":
     if options.revert:
         print "info: using PhysicalMemory"
+        test_sys = makeLinuxAlphaSystem(test_mem_mode, bm[0])
     else:
         print "info: using DRAMsimII"
-        drive_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig)
-    test_sys = makeLinuxAlphaSystem(test_mem_mode, bm[0])
+        if options.memsize is not None:
+            sc = SysConfig(mem=options.memsize)
+        else:
+            sc = SysConfig(mem="512MB")
+        test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, sc, options.mp, options.DRAMsimConfig, options.benchmarkName)
+
 elif buildEnv['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])
 elif buildEnv['TARGET_ISA'] == "sparc":

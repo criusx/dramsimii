@@ -147,22 +147,23 @@ const std::string cumulativeTransactionGraphScript = "set yrange [0:1]\n\
 													 set ylabel 'Percent of Transactions with At Most this Latency'\n\
 													 plot '-' using 1:2 t 'Cumulative Latency Distribution' with lines lw 2.00\n";
 
-
 const std::string bandwidthGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
-										 set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+										 set xlabel 'Time (s)' offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
 										 set xrange [0:*]\n\
-										 set title 'System Bandwidth'\n\
 										 set size 1.0, 0.66\n\
 										 set origin 0.0, 0.33\n\
 										 set style data histograms\n\
 										 set style histogram rowstacked title offset 0,0,0\n\
-										 set ylabel 'Bandwidth (bytes per second)'\n\
+										 set ylabel 'Bandwidth (MB/s)'\n\
 										 plot \
 										 '-' using 1 axes x2y1 title 'Read Bytes', \
 										 '-' using 1 axes x2y1 title 'Write Bytes', \
 										 '-' using 1 axes x2y1 title 'Cache Read Bytes', \
-										 '-' using 1 axes x2y1 title 'Cache Write Bytes', \
+										 '-' using 1 axes x2y1 title 'Cache Write Bytes',\
+										 '-' u 1:2 axes x1y1 notitle with points pointsize 0.01\n";
+#if 0
 										 '-' using 1:2 axes x1y1 title 'Average Bandwidth' with lines\n";
+#endif
 
 const std::string pcVsLatencyGraphScript = "set logscale y \n\
 										   set yrange [1 : *] noreverse nowriteback\n\
@@ -213,15 +214,15 @@ const std::string cacheGraph2 = "set yrange [0 : *] noreverse nowriteback\n\
 								plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 
 const std::string cacheGraph3 = "set yrange [0 : *] noreverse nowriteback\n\
-								set xlabel 'Time (s)' offset character .05, 0, 0 font \"\" textcolor lt -1 rotate by 90\n\
+								set xlabel 'Time (s)' offset character .05, 0, 0 textcolor lt -1 rotate by 90\n\
 								set ylabel 'Miss Rate'\n\
 								set y2label 'Access Count'\n\
 								set yrange [0:1] noreverse nowriteback\n\
-								set title 'L2 Cache' offset character 0, -1, 0 font '' norotate\n\
+								set title 'L2 Cache' offset character 0, -1, 0 norotate\n\
 								plot  '-' using 1:2 title 'Access Count' axes x2y2 with impulses, '-' using 1:2 title 'Miss Rate' with lines lw 1.0\n";
 
 const std::string otherIPCGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
-										set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+										set xlabel 'Time (s)' offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
 										set ylabel 'Instructions Per Cycle'\n\
 										set y2label\n\
 										unset logscale y2\n\
@@ -231,7 +232,7 @@ const std::string otherIPCGraphScript = "set yrange [0 : *] noreverse nowritebac
 										'-' using 1:2 title 'Moving Average IPC' with lines\n";
 
 const std::string averageTransactionLatencyScript = "set yrange [1 : *] noreverse nowriteback\n\
-													set xlabel 'Time (s)' offset character .05, 0,0 font ' textcolor lt -1 rotate by 90\n\
+													set xlabel 'Time (s)' offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
 													set ylabel 'Latency (ns)'\n\
 													#set logscale y\n\
 													set logscale y2\n\
@@ -247,7 +248,7 @@ const std::string averageTransactionLatencyScript = "set yrange [1 : *] norevers
 
 const std::string rowReuseRateGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
 											set y2range [1 : *] noreverse nowriteback\n\
-											set xlabel 'Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+											set xlabel 'Time (s)' offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
 											set ylabel 'Reuse Rate'\n\
 											set y2label 'Accesses'\n\
 											set y2tics\n\

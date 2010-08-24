@@ -92,6 +92,22 @@ private:
 
 	uint64_t l2MshrMissLatencyBuffer;
 
+	vector<uint64_t> l3MshrMissLatency;
+
+	uint64_t l3MshrMissLatencyBuffer;
+
+	vector<uint64_t> l3MissLatency;
+
+	uint64_t l3MissLatencyBuffer;
+
+	vector<uint64_t> l3Hits;
+
+	uint64_t l3HitBuffer;
+
+	vector<uint64_t> l3Misses;
+
+	uint64_t l3MissBuffer;
+
 	vector<pair<uint64_t, uint64_t> > bandwidthValues;
 
 	pair<uint64_t, uint64_t> bandwidthValuesBuffer;
@@ -117,11 +133,17 @@ private:
 	uint64_t workingSetSizeBuffer;
 
 	bool foundCommandline;
+
 	unsigned ipcLinesWritten;
+
 	double epochTime;
+
+	double baseEpochTime;
+
 	double periodInNs;
 
 	unsigned tRC;
+
 	unsigned tRAS;
 
 	unsigned channelCount;
@@ -137,6 +159,8 @@ private:
 
 	bool usingCache;
 
+	double runTime;
+
 public:
 
 
@@ -149,7 +173,7 @@ public:
 	uint64_t getTotalLatency() const { return totalLatency; }
 	uint64_t getTotalCount() const { return totalCount; }
 	string getRawCommandLine() const { return rawCommandLine; }
-	double getRunTime() const { return (double)epochCounter * epochTime; }
+	double getRunTime() const { return runTime; }
 	bool isUsingCache() const { return usingCache; }
 	double getAverageIpcValue() const 
 	{
@@ -199,6 +223,10 @@ public:
 		  l2MshrHitBuffer(0ULL),
 		  l2MshrMissBuffer(0ULL),
 		  l2MshrMissLatencyBuffer(0ULL),
+		  l3MshrMissLatencyBuffer(0),
+		  l3MissLatencyBuffer(0),
+		  l3HitBuffer(0),
+		  l3MissBuffer(0),
 		  bandwidthValuesBuffer(0ULL, 0ULL),
 		  cacheBandwidthValuesBuffer(0ULL, 0ULL),
 		  cacheHitMissBuffer(0, 0),
@@ -206,7 +234,8 @@ public:
 		  workingSetSizeBuffer(0),
 		  foundCommandline(false),
 		  ipcLinesWritten(0),
-		  epochTime(0.0F),
+		  epochTime(0.0),
+		  baseEpochTime(0.0),
 		  periodInNs(0.0F),
 		  tRC(0),
 		  tRAS(0),
@@ -216,7 +245,8 @@ public:
 		  epochCounter(0),
 		  totalLatency(0.0),
 		  totalCount(0.0),
-		  usingCache(false)
+		  usingCache(false),
+		  runTime(0.0)
 	  {
 		  transactionCount.reserve(MAXIMUM_VECTOR_SIZE);
 		  hitMissValues.reserve(MAXIMUM_VECTOR_SIZE);
@@ -233,6 +263,10 @@ public:
 		  l2MshrHits.reserve(MAXIMUM_VECTOR_SIZE);
 		  l2MshrMisses.reserve(MAXIMUM_VECTOR_SIZE);
 		  l2MshrMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
+		  l3MshrMissLatency.reserve(MAXIMUM_VECTOR_SIZE);
+		  l3MissLatency.reserve(MAXIMUM_VECTOR_SIZE);
+		  l3Hits.reserve(MAXIMUM_VECTOR_SIZE);
+		  l3Misses.reserve(MAXIMUM_VECTOR_SIZE);
 		  bandwidthValues.reserve(MAXIMUM_VECTOR_SIZE);
 		  cacheBandwidthValues.reserve(MAXIMUM_VECTOR_SIZE);
 		  cacheHitMiss.reserve(MAXIMUM_VECTOR_SIZE);
@@ -274,8 +308,12 @@ protected:
 	void transactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 
 	void zoomedTransactionLatencyDistributionGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	
+public:
 
-	void bandwidthGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
+	void bandwidthGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const;
+
+protected:
 
 	void cacheGraph(const bf::path &outFilename, opstream &p, bool isThumbnail);
 

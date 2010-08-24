@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -47,8 +47,7 @@ totalRASCount(0),
 CASCount(0),
 totalCASCount(0),
 CASWCount(0),
-totalCASWCount(0),
-allHits(false)
+totalCASWCount(0)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,8 +75,7 @@ totalRASCount(rhs.totalRASCount),
 CASCount(rhs.CASCount),
 totalCASCount(rhs.totalCASCount),
 CASWCount(rhs.CASWCount),
-totalCASWCount(rhs.totalCASWCount),
-allHits(rhs.allHits)
+totalCASWCount(rhs.totalCASWCount)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,8 +103,7 @@ totalRASCount(rhs.totalRASCount),
 CASCount(rhs.CASCount),
 totalCASCount(rhs.totalCASCount),
 CASWCount(rhs.CASWCount),
-totalCASWCount(rhs.totalCASWCount),
-allHits(rhs.allHits)
+totalCASWCount(rhs.totalCASWCount)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -134,8 +131,7 @@ totalRASCount(0),
 CASCount(0),
 totalCASCount(0),
 CASWCount(0),
-totalCASWCount(0),
-allHits(false)
+totalCASWCount(0)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -233,8 +229,6 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 	// calculate when the next few commands can happen
 	nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR());
 
-	// if there is a write, because it is write-through then the activate needed to happen
-	allHits = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -552,7 +546,6 @@ Bank& Bank::operator =(const Bank& rhs)
 	totalCASCount = rhs.totalCASCount;		
 	CASWCount = rhs.CASWCount;			
 	totalCASWCount = rhs.totalCASWCount;	
-	allHits = rhs.allHits;
 	nextPrechargeTime = rhs.nextPrechargeTime;
 	nextWriteTime = rhs.nextWriteTime;
 	nextReadTime = rhs.nextReadTime;

@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -68,8 +68,7 @@ namespace DRAMsimII
 		unsigned totalCASCount;			///< the number of CAS commands
 		unsigned CASWCount;				///< the total number of CAS+W commands in this epoch
 		unsigned totalCASWCount;		///< the number of CASW commands
-		bool allHits;					///< whether every CAS was a read and hit in the cache, the RAS can be eliminated
-
+	
 	public:
 		// functions
 		void issueRAS(const tick currentTime, const Command *currentCommand);
@@ -93,8 +92,7 @@ namespace DRAMsimII
 
 		unsigned getOpenRowID() const { return openRowID; }
 		bool isActivated() const { return activated; }
-		bool isAllHits() const { return allHits; }
-
+		
 		unsigned getRASCount() const { return RASCount; }
 		unsigned getCASCount() const { return CASCount; }
 		unsigned getCASWCount() const { return CASWCount; }
@@ -121,10 +119,7 @@ namespace DRAMsimII
 		bool hasNoReadWrite() const;
 		bool isHighUtilization() const { return perBankQueue.size() > (perBankQueue.depth() / 2);}
 		void collapse();
-
-		// mutators
-		void setAllHits(const bool value) { allHits = value; }
-
+			
 		// constructors
 		explicit Bank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics& stats);
 		Bank(const Bank&, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics& stats);

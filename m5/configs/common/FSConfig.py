@@ -40,7 +40,7 @@ class MemBus(Bus):
     badaddr_responder = BadAddr()
     default = Self.badaddr_responder.pio
 
-def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename=""):
+def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename="", benchmarkName=None):
     class BaseTsunami(Tsunami):
         ethernet = NSGigE(pci_bus=0, pci_dev=1, pci_func=0)
         ide = IdeController(disks=[Parent.disk0, Parent.disk2],
@@ -51,10 +51,15 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settin
         mdesc = SysConfig()
     self.readfile = mdesc.script()
     self.iobus = Bus(bus_id=0)
-    self.membus = MemBus(bus_id=1, clock='2600MHz')
-    self.bridge = Bridge(delay='5ns', nack_delay='1ns')
+    self.membus = MemBus(bus_id=1, clock='4000MHz')
+    self.bridge = Bridge(delay='2ns', nack_delay='1ns')
 
-    outFile = '' if mdesc.scriptname == None else mdesc.scriptname.split('.')[0]
+    if mdesc.scriptname != None:
+        outFile = mdesc.scriptname.split('.')[0]
+    elif benchmarkName != None:
+        outFile = benchmarkName
+    else:
+        outFile = ''
 
     self.physmem = M5dramSystem(extraParameters=extraParameters,
                                     settingsFile=settingsFilename,

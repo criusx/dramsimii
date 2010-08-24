@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -51,12 +51,6 @@ int main(int argc,char **argv, char *envp[])
 	//cerr << PHYSICAL_ADDRESS_MAX << endl;
 	//DRAMsimII::unitTests(settings);
 #endif
-	if (settings.systemType == FBD_CONFIG)
-	{
-		//fbdSystem fbds(settings);
-		//fbds.runSimulations();
-	}
-	else
 	{
 		System ds(settings); 
 		ds.runSimulations();

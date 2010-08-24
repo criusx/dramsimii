@@ -41,24 +41,21 @@ class M5dramSystem(PhysicalMemory):
 	commandOrderingAlgorithm = Param.String("firstAvailableAge","")
 	transactionOrderingAlgorithm = Param.String("RIFF","")
 	perBankQueueDepth = Param.String("8","")
-	systemConfigurationType = Param.String("baseline","")
 	cacheLineSize = Param.String("64","")
-	historyQueueDepth = Param.String("16","")
-	completionQueueDepth = Param.String("32","")
 	transactionQueueDepth = Param.String("16","")
 	decodeWindow = Param.String("16","")
-	eventQueueDepth = Param.String("8","")
-	refreshQueueDepth = Param.String("8","")
 	readWriteGrouping = Param.String("true","")
-	autoPrecharge = Param.String("true","");
+	autoPrecharge = Param.String("true","")
 
 	# cache parameters
-	associativity = Param.String("8","");
-	cacheSize = Param.String("8192","");
-	blockSize = Param.String("64","");
-	hitLatency = Param.String("5","");
-	replacementPolicy = Param.String("nmru","");
-	nmruTrackingCount = Param.String("4","");
+	associativity = Param.String("8","")
+	cacheSize = Param.String("8192","")
+	blockSize = Param.String("64","")
+	hitLatency = Param.String("5","")
+	replacementPolicy = Param.String("nmru","")
+	nmruTrackingCount = Param.String("4","")
+	usingCache = Param.String("true","")
+	fixedLatency = Param.String("false","")
 
 	# timing parameters
 	tBufferDelay = Param.Int(2,"delay from Transaction to Commands")

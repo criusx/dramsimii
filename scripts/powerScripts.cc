@@ -90,6 +90,17 @@ const string PowerScripts::bigEnergyScript = "set key outside center bottom hori
 											 set y2label \"Cumulative Energy (mJ)\"\n\
 											 set xlabel \"Time (s)\"\n";
 
+
+const std::string PowerScripts::rasCountReadCountGraphScript = "set format x\n\
+												 set autoscale xfixmax\n\
+												 set xlabel 'Execution Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+												 set ylabel 'Count'\n\
+												 #set logscale y\n\
+												 plot '-' using 1:2 t 'RAS Count (with DIMM Cache)' with lines lw 2.00,\
+												 '-' using 1:2 t 'RAS Count (without DIMM Cache)' with lines lw 2.00,\
+												 '-' using 1:2 t 'Read Count (with DIMM Cache)' with lines lw 2.00,\
+												 '-' using 1:2 t 'Read Count (without DIMM Cache)' with lines lw 2.00\n";
+
 bool PowerScripts::processStatsForFile(const string &file)
 {
 	givenfilename = file;
@@ -141,6 +152,10 @@ void PowerScripts::processLine(char *newLine)
 
 				energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
 
+				rasCounts.reserve(MAXIMUM_VECTOR_SIZE);
+
+				readCounts.reserve(MAXIMUM_VECTOR_SIZE);
+
 				// setup the buffer to be the same size as the value array
 				valueBuffer.resize(channelCount * POWER_VALUES_PER_CHANNEL);
 
@@ -164,7 +179,7 @@ void PowerScripts::processLine(char *newLine)
 				if (position == NULL)
 					return;
 				position++;
-				epochTime = lexical_cast<float> (position);
+				baseEpochTime = epochTime = lexical_cast<float> (position);
 			}
 		}
 	}
@@ -181,10 +196,8 @@ void PowerScripts::processLine(char *newLine)
 			//cerr << PsysRD <<endl;
 			//cerr << PsysWR <<endl;
 
-			//cerr << PsysRdAdjusted <<endl;
 			//cerr << PsysPRE_PDN <<endl;
 			//cerr << PsysACT_PDN <<endl;
-			//cerr << PsysACTAdjusted <<endl;
 			unsigned currentChannel = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
 
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBY;
@@ -208,26 +221,30 @@ void PowerScripts::processLine(char *newLine)
 			totalEnergy.first += pc.dimmEnergy;
 			totalEnergy.second += pc.energy;
 
+			rasCountBuffer += pc.rasCount;
+
+			readCountBuffer += pc.readCount;
+
 			if (currentChannel + 1 == channelCount)
 			{
 				pushStats();
-			}
+			}			
 		}
 		catch (std::exception &ex)
 		{
-
 		}
-
-
 	}
 }
 
 void PowerScripts::pushStats()
 {
 	epochCount++;
+	
 	// look to dump the buffer into the array
 	scaleIndex = (scaleIndex + 1) % scaleFactor;
 
+	runTime += baseEpochTime;
+	
 	// when the scale buffer is full
 	if (scaleIndex == 0)
 	{
@@ -236,14 +253,20 @@ void PowerScripts::pushStats()
 		for (vector<double>::size_type i = 0; i < limit; ++i)
 		{
 			values[i].push_back(valueBuffer[i] / scaleFactor);
-			valueBuffer[i] = 0;
+			valueBuffer[i] = 0;			
 		}
 
 		energyValues.push_back(pair<double, double> (
 			energyValueBuffer.first / scaleFactor,
 			energyValueBuffer.second / scaleFactor));
-
+		
 		energyValueBuffer.first = energyValueBuffer.second = 0.0F;
+
+		rasCounts.push_back(rasCountBuffer / scaleFactor);
+
+		readCounts.push_back(readCountBuffer / scaleFactor);
+
+		rasCountBuffer = readCountBuffer = 0;
 	}
 
 	if (values.front().size() >= MAXIMUM_VECTOR_SIZE)
@@ -278,16 +301,26 @@ void PowerScripts::compressStats()
 			(energyValues[2 * j].second
 			+ energyValues[2 * j + 1].second)
 			/ 2.0F);
+
+		readCounts[j] = (readCounts[2 * j] + readCounts[2 * j + 1]) / 2;
+
+		rasCounts[j] = (rasCounts[2 * j] + rasCounts[2 * j + 1]) / 2;
 	}
 
 	energyValues.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+	readCounts.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+	rasCounts.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 	assert(energyValues.size() == MAXIMUM_VECTOR_SIZE / 2);
 
 	// double scaleFactor since each entry now represents twice what it did before
 	scaleFactor *= 2;
 	epochTime *= 2;
+#ifndef NDEBUG
 	cerr << "scaleFactor at " << scaleFactor << endl;
+#endif
 }
 
 void PowerScripts::generateGraphs(const bf::path &outputDir)
@@ -328,21 +361,21 @@ void PowerScripts::generateGraphs(const bf::path &outputDir)
 	//////////////////////////////////////////////////////////////////////////
 	// make the big power graph
 	outFilename = outputDir / ("bigPower." + extension);
-	bigPowerGraph(outFilename,p3, values, false);
+	bigPowerGraph(outFilename,p3, values, runTime, false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("bigPower","Power"));
 	outFilename = outputDir / ("bigPower-thumb." + thumbnailExtension);
-	bigPowerGraph(outFilename,p3, values, true);
+	bigPowerGraph(outFilename,p3, values, runTime, true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
 	// make the other big power graph
 	outFilename = outputDir / ("bigPower2." + extension);
-	bigPowerGraph2(outFilename,p3,values, false);
+	bigPowerGraph2(outFilename,p3,values, runTime, false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("bigPower2","Combined Power"));
 	outFilename = outputDir / ("bigPower2-thumb." + thumbnailExtension);
-	bigPowerGraph2(outFilename,p3,values, true);
+	bigPowerGraph2(outFilename,p3,values, runTime, true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
@@ -453,41 +486,51 @@ void PowerScripts::generateJointGraphs(const bf::path &outputDir, PowerScripts &
 	//////////////////////////////////////////////////////////////////////////
 	// make the big power graph
 	path outFilename = outputDir / ("bigAlternatePower." + extension);
-	bigPowerGraph(outFilename,p3,alternatePower.getValues(), false);
+	bigPowerGraph(outFilename,p3,alternatePower.getValues(), alternatePower.getRunTime(), false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("bigAlternatePower","Theoretical Power"));
 	outFilename = outputDir / ("bigAlternatePower-thumb." + thumbnailExtension);
-	bigPowerGraph(outFilename,p3,alternatePower.getValues(), true);
+	bigPowerGraph(outFilename,p3,alternatePower.getValues(), alternatePower.getRunTime(), true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
 	// make the other big power graph
 	outFilename = outputDir / ("comparativePower." + extension);
-	comparativePowerGraph(outFilename,p3,alternatePower.getValues(), false);
+	comparativePowerGraph(outFilename,p3,alternatePower.getValues(), alternatePower.getEpochTime(), false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("comparativePower","Comparative Power"));
 	outFilename = outputDir / ("comparativePower-thumb." + thumbnailExtension);
-	comparativePowerGraph(outFilename,p3,alternatePower.getValues(), true);
+	comparativePowerGraph(outFilename,p3,alternatePower.getValues(), alternatePower.getEpochTime(), true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
 	// make the other big power graph
 	outFilename = outputDir / ("bigTheoreticalPower2." + extension);
-	bigPowerGraph2(outFilename,p3,alternatePower.getValues(),false);
+	bigPowerGraph2(outFilename,p3,alternatePower.getValues(), alternatePower.getRunTime(), false);
 	filesGenerated.push_back(outFilename.native_directory_string());
 	graphs.push_back(pair<string, string> ("bigTheoreticalPower2","Combined Theoretical Power"));
 	outFilename = outputDir / ("bigTheoreticalPower2-thumb." + thumbnailExtension);
-	bigPowerGraph2(outFilename,p3,alternatePower.getValues(),true);
+	bigPowerGraph2(outFilename,p3,alternatePower.getValues(), alternatePower.getRunTime(), true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
 	// the cumulative energy graph
 	outFilename = outputDir / ("cumulativeEnergy." + extension);
-	cumulativeEnergyGraph(outFilename,p4,alternatePower.getEnergyValues(), false);
+	cumulativeEnergyGraph(outFilename,p4,alternatePower.getEnergyValues(), alternatePower.getEpochTime(), false);
 	graphs.push_back(pair<string, string> ("cumulativeEnergy","Cumulative Energy"));
 	filesGenerated.push_back(outFilename.native_directory_string());
 	outFilename = outputDir / ("cumulativeEnergy-thumb." + thumbnailExtension);
-	cumulativeEnergyGraph(outFilename,p4,alternatePower.getEnergyValues(), true);
+	cumulativeEnergyGraph(outFilename,p4,alternatePower.getEnergyValues(), alternatePower.getEpochTime(), true);
+	//////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////
+	// the cumulative energy graph
+	outFilename = outputDir / ("rasCountReadCount." + extension);
+	rasCountReadCountGraph(outFilename,p4,alternatePower, false);
+	graphs.push_back(pair<string, string> ("rasCountReadCount","RAS Count / Read Count"));
+	filesGenerated.push_back(outFilename.native_directory_string());
+	outFilename = outputDir / ("rasCountReadCount-thumb." + thumbnailExtension);
+	rasCountReadCountGraph(outFilename,p4,alternatePower, true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
@@ -708,11 +751,11 @@ void PowerScripts::bigEnergyGraph(const bf::path &outFilename, opstream &p, bool
 		p << i * epochTime << " " << cumulativeEnergy << endl;
 	}
 
-	p << "e" << endl << "0 0" << endl << values.front().size() * epochTime << " 1E-5" << endl << "e" << endl
+	p << "e" << endl << "0 0" << endl << runTime << " 1E-5" << endl << "e" << endl
 		<< "unset output" << endl;
 }
 
-void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const
+void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateRuntime, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -733,8 +776,6 @@ void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const
 		}
 	}
 
-	//p << "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
-	p << "'-' u 1:2 axes x1y1 t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
 	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 	for (vector<vector<double> >::const_iterator i = alternateValues.begin(), end = alternateValues.end(); 
 		i < end; ++i)
@@ -745,48 +786,32 @@ void PowerScripts::bigPowerGraph(const bf::path &outFilename, opstream &p, const
 		}
 		p << "e" << endl;
 	}
-
-	CumulativePriorMovingAverage cumulativePower;
-
-	for (vector<unsigned>::size_type i = 0; i < alternateValues.back().size(); ++i)
-	{
-		double total = 0;
-
-		for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
-			total += alternateValues[j][i];
-		cumulativePower.add(1.0, total);
-		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
-	}
-	p << "e" << endl;
-	p << "0 0" << endl << alternateValues.back().size() * epochTime << " 1e-5" << endl << "e" << endl
+		
+	p << "0 0" << endl << alternateRuntime << " 1e-5" << endl << "e" << endl
 		<< "unset output" << endl;
 }
 
-void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const
+void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateRuntime, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-	//p << "set title \"{ Power vs. Time}\\n{ "
-	//	<< commandLine
-	//	<< "}\"  offset character 0, -1, 0 font \"Arial,15\" norotate\n";
-	printTitle("Theoretical Power vs. Time", commandLine, p);
+	vector<string> cl2;
+	cl2.push_back(commandLine.front());
+	printTitle("Power vs. Time", cl2, p);
 
 	p << bigPowerScript << endl;
 	p << "plot ";
 
-	unsigned channelCount = alternateValues.size() / POWER_VALUES_PER_CHANNEL;
+	const unsigned powerValues = usingCache ? POWER_VALUES_PER_CHANNEL : POWER_VALUES_PER_CHANNEL - 1;
 
-	for (unsigned b = 0; b < POWER_VALUES_PER_CHANNEL; b++)
+	for (unsigned b = 0; b < powerValues; b++)
 	{
-		p << "'-' using 1 axes x2y1 title \"P_{sys}("
-			<< powerTypes[b] << ")\",";
+		p << "'-' using 1 axes x2y1 title \"P_{sys}(" << powerTypes[b] << ")\",";
 	}
 
-	//p << "'-' u 1:2 axes x2y1 notitle with points pointsize 0.01,";
-	p << "'-' u 1:2 axes x1y1 t \"Cumulative Average\" w lines lw 6.00 lt rgb \"#225752\",";
 	p << "'-' u 1:2 axes x1y1 notitle with points pointsize 0.01" << endl;
 
-	for (int i = 0; i < POWER_VALUES_PER_CHANNEL; i++)
+	for (int i = 0; i < powerValues; i++)
 	{
 		for (int j = 0; j < alternateValues.front().size(); j++)
 		{
@@ -798,25 +823,13 @@ void PowerScripts::bigPowerGraph2(const bf::path &outFilename, opstream &p, cons
 		}
 		p << "e" << endl;
 	}
-
-	CumulativePriorMovingAverage cumulativePower;
-
-	for (vector<unsigned>::size_type i = 0; i < alternateValues.back().size(); ++i)
-	{
-		double total = 0;
-
-		for (vector<unsigned>::size_type j = 0; j < alternateValues.size(); ++j)
-			total += alternateValues[j][i];
-		cumulativePower.add(1.0, total);
-		p << i * epochTime << " " << cumulativePower.getAverage() << endl;
-	}
-	p << "e" << endl;
-	p << "0 0" << endl << alternateValues.front().size() * epochTime << " 1e-5" << endl << "e" << endl
+	
+	p << "0 0" << endl << alternateRuntime << " 1e-5" << endl << "e" << endl
 		<< "unset output" << endl;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, bool isThumbnail) const
+void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &p, const vector<vector<double> > &alternateValues, const double alternateEpochTime, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -864,7 +877,7 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 		}
 
 		p << time << " " << total << endl;
-		time += epochTime;
+		time += alternateEpochTime;
 	}
 
 	p << "e" << endl;
@@ -874,7 +887,7 @@ void PowerScripts::comparativePowerGraph(const bf::path &outFilename, opstream &
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<double,double> > &alternateValues, bool isThumbnail) const
+void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<double,double> > &alternateValues, const double alternateEpochTime, bool isThumbnail) const
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -895,8 +908,6 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 		time += epochTime;
 	}
 
-	//cerr << "normal " << totalPower << endl;	
-
 	p << "e" << endl;
 
 	time = 0.0;
@@ -909,10 +920,63 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 
 		p << time << " " << totalPower << endl;
 
+		time += alternateEpochTime;
+	}
+
+	p << "e" << endl << "unset output" << endl;
+}
+
+void PowerScripts::rasCountReadCountGraph(const bf::path &outFilename, opstream &p, const PowerScripts &theoreticalPower, bool isThumbnail) const
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	printTitle("Read Count / RAS Count", commandLine, p);
+
+	p << rasCountReadCountGraphScript;
+
+	double time = 0.0;
+
+	for (vector<unsigned>::const_iterator i = theoreticalPower.getRasCounts().begin(), end = theoreticalPower.getRasCounts().end();
+		i < end; ++i)
+	{
+		p << time << " " << *i << endl;
+
+		time += theoreticalPower.getEpochTime();
+	}
+
+	p << "e" << endl;
+	time = 0.0;
+
+	for (vector<unsigned>::const_iterator i = rasCounts.begin(), end = rasCounts.end();
+		i < end; ++i)
+	{
+		p << time << " " << *i << endl;
+
 		time += epochTime;
 	}
 
-	//cerr << "alt " << totalPower << endl;
+	p << "e" << endl;
+	time = 0.0;
 
-	p << "e" << endl << "unset output" << endl;
+	for (vector<unsigned>::const_iterator i = theoreticalPower.getReadCounts().begin(), end = theoreticalPower.getReadCounts().end();
+		i < end; ++i)
+	{
+		p << time << " " << *i << endl;
+
+		time += theoreticalPower.getEpochTime();
+	}
+
+	p << "e" << endl;
+	time = 0.0;
+
+	for (vector<unsigned>::const_iterator i = readCounts.begin(), end = readCounts.end();
+		i < end; ++i)
+	{
+		p << time << " " << *i << endl;
+
+		time += epochTime;
+	}
+
+	p << "e" << endl;
+
+	p << "unset output" << endl;
 }

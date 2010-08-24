@@ -33,21 +33,16 @@
 		<!--may be strict, RIFF-->
 		<transactionOrderingAlgorithm>RIFF</transactionOrderingAlgorithm>
 		<perBankQueueDepth>8</perBankQueueDepth>
-		<!--sets FBD mode otherwise-->
-		<systemConfigurationType>baseline</systemConfigurationType>
+		<!-- this is used for address mapping policies-->
 		<cacheLineSize>64</cacheLineSize>
-		<historyQueueDepth>16</historyQueueDepth>
-		<completionQueueDepth>32</completionQueueDepth>
 		<transactionQueueDepth>16</transactionQueueDepth>
 		<decodeWindow>16</decodeWindow>
-		<eventQueueDepth>8</eventQueueDepth>
-		<refreshQueueDepth>8</refreshQueueDepth>
 		<!--attempts to sweep through and group reads and writes together in time-->
 		<readWriteGrouping>true</readWriteGrouping>
 		<!--able to issue CAS+Pre commands, effective with close page, unavailable in open page RBMP -->
 		<autoPrecharge>true</autoPrecharge>
 		<cache>
-			<usingCache>true</usingCache>
+			<usingCache fixedLatency="false">true</usingCache>
 			<associativity>8</associativity>
 			<!-- size is given in kiB and determines the number of sets -->
 			<cacheSize>8192</cacheSize>
@@ -84,7 +79,6 @@
 		<tAL>8</tAL>
 		<!--autoRefreshPolicy>none</autoRefreshPolicy-->
 		<!--given in us-->
-		<refreshTime>64000</refreshTime>
 		<!--average periodic refresh time, look at Micron app note TN-46-09 -->
 		<tREFI>6240</tREFI>
 		<!-- used to determine how long a refresh transaction may be deprioritized relative to normal transactions -->
@@ -109,17 +103,17 @@
 		<!--one bank Activate-to-Read-to-Precharge current-->
 		<IDD1>110</IDD1>
 		<!--maximum precharge power-down standby current-->
-		<IDD2P>7</IDD2P>
+		<IDD2P>25</IDD2P>
 		<!--maximum precharge standby current-->
-		<IDD2N>60</IDD2N>
+		<IDD2N>50</IDD2N>
 		<!--maximum active power-down standby current-->
-		<IDD3P>50</IDD3P>
+		<IDD3P>25</IDD3P>
 		<!--maximum active standby current-->
-		<IDD3N>60</IDD3N>
+		<IDD3N>50</IDD3N>
 		<!--maximum read burst current-->
-		<IDD4R>190</IDD4R>
+		<IDD4R>130</IDD4R>
 		<!--maximum write burst current-->
-		<IDD4W>210</IDD4W>
+		<IDD4W>130</IDD4W>
 		<!--maximum burst refresh current-->
 		<IDD5A>235</IDD5A>
 	</power>
@@ -128,7 +122,7 @@
 		<readPercentage>.85</readPercentage>
 		<averageInterarrivalCycleCount>4</averageInterarrivalCycleCount>
 		<!-- type may be gz, bz, cout, uncompressed, none -->
-		<outFile type="gz" dbreporting="false">standardOutFile.gz</outFile>
+		<outFile type="gz" >standardOutFile.gz</outFile>
 		<!-- the directory that the output files will be written to -->
 		<outFileDirectory>.</outFileDirectory>
 		<requestCount>4294967296</requestCount>

@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE( test_transactions)
 	s.rowCount = 1024;
 	s.columnCount = 16384;
 	s.dramType = DDR2;
-	s.addressMappingScheme = Address::CLOSE_PAGE_BASELINE;
+	s.addressMappingPolicy = Address::CLOSE_PAGE_BASELINE;
 	Address::initialize(s);
 	Address addr(0x00fdbca3);
 	Address addr2(0x0000f0d0);
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE( test_commands)
 	s.rowCount = 1024;
 	s.columnCount = 16384;
 	s.dramType = DDR2;
-	s.addressMappingScheme = Address::CLOSE_PAGE_BASELINE;
+	s.addressMappingPolicy = Address::CLOSE_PAGE_BASELINE;
 	Address::initialize(s);
 	Address addr(0x00fdfbca);
 	Address addr2(0x0000f0ad0);
@@ -612,15 +612,15 @@ DRAMsimII::TransactionOrderingAlgorithm &operator++(DRAMsimII::TransactionOrderi
 	return lhs;
 }
 
-DRAMsimII::RowBufferPolicy &operator++(DRAMsimII::RowBufferPolicy &lhs, int)
+DRAMsimII::RowBufferManagementPolicy &operator++(DRAMsimII::RowBufferManagementPolicy &lhs, int)
 {
-	lhs = (RowBufferPolicy)((int)lhs + 1);
+	lhs = (RowBufferManagementPolicy)((int)lhs + 1);
 	return lhs;
 }
 
-DRAMsimII::Address::AddressMappingScheme &operator++(DRAMsimII::Address::AddressMappingScheme &lhs, int)
+DRAMsimII::Address::AddressMappingPolicy &operator++(DRAMsimII::Address::AddressMappingPolicy &lhs, int)
 {
-	lhs = (Address::AddressMappingScheme)((int)lhs + 1);
+	lhs = (Address::AddressMappingPolicy)((int)lhs + 1);
 	return lhs;
 }
 

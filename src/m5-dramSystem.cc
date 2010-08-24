@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -218,14 +218,9 @@ outstandingPackets(0)
 	settings.setKeyValue("commandOrderingAlgorithm",p->commandOrderingAlgorithm);
 	settings.setKeyValue("transactionOrderingAlgorithm",p->transactionOrderingAlgorithm);
 	settings.setKeyValue("perBankQueueDepth",p->perBankQueueDepth);
-	settings.setKeyValue("systemConfigurationType",p->systemConfigurationType);
 	settings.setKeyValue("cacheLineSize",p->cacheLineSize);
-	settings.setKeyValue("historyQueueDepth",p->historyQueueDepth);
-	settings.setKeyValue("completionQueueDepth",p->completionQueueDepth);
 	settings.setKeyValue("transactionQueueDepth",p->transactionQueueDepth);
 	settings.setKeyValue("decodeWindow",p->decodeWindow);
-	settings.setKeyValue("eventQueueDepth",p->eventQueueDepth);
-	settings.setKeyValue("refreshQueueDepth",p->refreshQueueDepth);
 	settings.setKeyValue("readWriteGrouping",p->readWriteGrouping);
 	settings.setKeyValue("autoPrecharge",p->autoPrecharge);
 	// timing parameters
@@ -246,7 +241,6 @@ outstandingPackets(0)
 	settings.setKeyValue("tWR",lexical_cast<string>(p->tWR));
 	settings.setKeyValue("tWTR",lexical_cast<string>(p->tWTR));
 	settings.setKeyValue("tAL",lexical_cast<string>(p->tAL));
-	settings.setKeyValue("refreshTime",lexical_cast<string>(p->refreshTime));
 	settings.setKeyValue("tREFI",lexical_cast<string>(p->tREFI));
 	settings.setKeyValue("seniorityAgeLimit",lexical_cast<string>(p->seniorityAgeLimit));
 	// power settings

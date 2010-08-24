@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -51,7 +51,6 @@ namespace DRAMsimII
 	class Transaction;
 	class System;
 	class Channel;
-	class fbdFrame;
 	class SystemConfiguration;
 	class TimingSpecification;
 	class InputStream;
@@ -59,10 +58,8 @@ namespace DRAMsimII
 	class PowerConfig;
 	class Bank;
 	class Rank;
-	class BusEvent;
 	class Cache;
 	class Statistics;
-	class DIMM;
 
 	void unitTests(const Settings &settings);
 	
@@ -74,16 +71,13 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Event&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::fbdFrame&);	
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandOrderingAlgorithm);
-	std::ostream& operator<<(std::ostream&, const RowBufferPolicy);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::SystemConfigurationType);
+	std::ostream& operator<<(std::ostream&, const RowBufferManagementPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::RefreshPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionOrderingAlgorithm);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::OutputFileType);
-	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Cache::ReplacementPolicy);
 
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)

@@ -192,11 +192,6 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 	}
 }
 
-void Statistics::reportRasReduction(const Command *currentCommand)
-{
-	rasReduction[currentCommand->getAddress().getChannel()][currentCommand->getAddress().getRank()]++;
-}
-
 //////////////////////////////////////////////////////////////////////////
 /// @brief tells of a row buffer hit when setting up commands
 //////////////////////////////////////////////////////////////////////////
@@ -223,7 +218,7 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 	{
 		if (!currentCommand->isRefresh())
 		{
-			assert(currentCommand->getLatency() < 2147483648);
+			assert(currentCommand->getLatency() < 2147483648 || (currentCommand->isPrecharge() && currentCommand->getEnqueueTime() == 0));
 			commandDelay[currentCommand->getDelayTime()]++;
 			commandExecution[currentCommand->getExecuteTime()]++;
 			commandTurnaround[currentCommand->getLatency()]++;		
@@ -445,6 +440,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 	for (;i != end;++i)
 	{
 		Info *info = *i;
+		//std::cerr << info->name << std::endl;
 		if (info->name.find("ipc_total") != string::npos)
 		{
 			os << "----IPC";
@@ -459,21 +455,35 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 			}
 			os << endl;
 		}
+		if (info->name.find("l3cache.prefetcher.num_hwpf_issued") != string::npos)
+		{
+			os << "----M5 Stat: {" << info->name << "}";
+
+			Stats::ScalarInfoProxy<Stats::Scalar> *val = (Stats::ScalarInfoProxy<Stats::Scalar> *)info;
+			os << " {" << val->result() << "}" << endl;
+
+		}
 		if ((info->name.find("dcache.overall_hits") != string::npos) ||
 			(info->name.find("dcache.overall_misses") != string::npos) ||
 			(info->name.find("dcache.overall_miss_latency") != string::npos) ||
 			(info->name.find("icache.overall_hits") != string::npos) ||
 			(info->name.find("icache.overall_misses") != string::npos) ||
 			(info->name.find("icache.overall_miss_latency") != string::npos) ||
-			(info->name.find("l2.overall_hits") != string::npos) ||
-			(info->name.find("l2.overall_misses") != string::npos) ||
-			(info->name.find("l2.overall_mshr_hits") != string::npos) ||
-			(info->name.find("l2.overall_mshr_misses") != string::npos) ||
-			(info->name.find("l2.overall_mshr_miss_latency") != string::npos) ||
-			(info->name.find("l2.overall_miss_latency") != string::npos))
+			(info->name.find("l2cache.overall_hits") != string::npos) ||
+			(info->name.find("l2cache.overall_misses") != string::npos) ||
+			(info->name.find("l2cache.overall_mshr_hits") != string::npos) ||
+			(info->name.find("l2cache.overall_mshr_misses") != string::npos) ||
+			(info->name.find("l2cache.overall_mshr_miss_latency") != string::npos) ||
+			(info->name.find("l2cache.overall_miss_latency") != string::npos) ||
+			(info->name.find("l3cache.overall_hits") != string::npos) ||
+			(info->name.find("l3cache.overall_misses") != string::npos) ||
+			(info->name.find("l3cache.overall_miss_latency") != string::npos) ||
+			
+			(info->name.find("l3cache.overall_mshr_miss_latency") != string::npos))
 		{
-			{
-				os << "----M5 Stat: {" << info->name << "}";
+			os << "----M5 Stat: {" << info->name << "}";
+
+				//std::cerr << "----M5 Stat: {" << info->name << "}" << std::endl;
 
 				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().begin();
 				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().end();
@@ -483,7 +493,6 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 					start++;
 				}
 				os << endl;
-			}
 		}		
 	}		
 #endif

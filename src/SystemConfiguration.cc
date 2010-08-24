@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -73,8 +73,6 @@ namespace bf = boost::filesystem;
 SystemConfiguration::SystemConfiguration(const Settings& settings):
 commandOrderingAlgorithm(settings.commandOrderingAlgorithm),
 transactionOrderingAlgorithm(settings.transactionOrderingAlgorithm),
-configType(settings.systemType),
-refreshTime(settings.dataRate * settings.refreshTime),
 refreshPolicy(settings.refreshPolicy),
 columnSize(settings.columnSize),
 rowSize(settings.rowSize),
@@ -82,7 +80,7 @@ cachelineSize(settings.cacheLineSize),
 seniorityAgeLimit(settings.seniorityAgeLimit),
 dramType(settings.dramType),
 rowBufferManagementPolicy(settings.rowBufferManagementPolicy),
-addressMappingScheme(settings.addressMappingScheme),
+addressMappingScheme(settings.addressMappingPolicy),
 datarate(settings.dataRate),
 postedCAS(settings.postedCAS),
 readWriteGrouping(settings.readWriteGrouping),
@@ -99,9 +97,9 @@ decodeWindow(settings.decodeWindow),
 epoch(settings.epoch),
 shortBurstRatio(settings.shortBurstRatio),
 readPercentage(settings.readPercentage),
-sessionID(settings.sessionID),
 outType(settings.outFileType),
-usingDimmCache(settings.usingCache)
+usingDimmCache(settings.usingCache),
+fixedCacheLatency(settings.fixedCacheLatency)
 {
 	Address::initialize(settings);
 
@@ -254,8 +252,6 @@ usingDimmCache(settings.usingCache)
 SystemConfiguration::SystemConfiguration(const SystemConfiguration &rhs):
 commandOrderingAlgorithm(rhs.commandOrderingAlgorithm),
 transactionOrderingAlgorithm(rhs.transactionOrderingAlgorithm),
-configType(rhs.configType),
-refreshTime(rhs.refreshTime),
 refreshPolicy(rhs.refreshPolicy),
 columnSize(rhs.columnSize),
 rowSize(rhs.rowSize),
@@ -280,12 +276,12 @@ decodeWindow(rhs.decodeWindow),
 epoch(rhs.epoch),
 shortBurstRatio(rhs.shortBurstRatio),
 readPercentage(rhs.readPercentage),
-sessionID(rhs.sessionID),
 timingFile(rhs.timingFile),
 powerFile(rhs.powerFile),
 statsFile(rhs.statsFile),
 outType(rhs.outType),
-usingDimmCache(rhs.usingDimmCache)
+usingDimmCache(rhs.usingDimmCache),
+fixedCacheLatency(rhs.fixedCacheLatency)
 {
 	setupStreams();
 }
@@ -341,8 +337,6 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	powerFile = rhs.powerFile;
 	timingFile = rhs.timingFile;
 	transactionOrderingAlgorithm = rhs.transactionOrderingAlgorithm;
-	configType = rhs.configType;
-	refreshTime = rhs.refreshTime;
 	refreshPolicy = rhs.refreshPolicy;
 	columnSize = rhs.columnSize;
 	rowSize = rhs.rowSize;
@@ -367,7 +361,6 @@ SystemConfiguration& SystemConfiguration::operator =(const DRAMsimII::SystemConf
 	assert(decodeWindow >= 1);
 	shortBurstRatio = rhs.shortBurstRatio;
 	readPercentage = rhs.readPercentage;
-	sessionID = rhs.sessionID;
 	verilogFile = rhs.verilogFile;
 
 	return *this;
@@ -377,8 +370,6 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& rhs) const
 {
 	return (commandOrderingAlgorithm == rhs.commandOrderingAlgorithm &&
 		transactionOrderingAlgorithm == rhs.transactionOrderingAlgorithm &&
-		configType == rhs.configType &&
-		refreshTime == rhs.refreshTime &&
 		refreshPolicy == rhs.refreshPolicy &&
 		columnSize == rhs.columnSize &&
 		rowSize == rhs.rowSize &&
@@ -402,8 +393,7 @@ bool SystemConfiguration::operator ==(const SystemConfiguration& rhs) const
 		decodeWindow == rhs.decodeWindow &&
 		epoch == rhs.epoch &&
 		AlmostEqual<double>(shortBurstRatio,rhs.shortBurstRatio) &&
-		AlmostEqual<double>(readPercentage,rhs.readPercentage) &&
-		sessionID == rhs.sessionID);
+		AlmostEqual<double>(readPercentage,rhs.readPercentage));
 }
 
 ostream &DRAMsimII::operator<<(ostream &os, const SystemConfiguration &this_a)

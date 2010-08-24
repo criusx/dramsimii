@@ -8,17 +8,7 @@ void StatsScripts::addressLatencyDistributionPerChannelGraph(const bf::path &out
 {
 	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
-#if 0	
-	p << "set multiplot layout " << channelDistribution[channelID].size() << ", 1 title \"";
 
-
-	for (vector<string>::const_iterator i = commandLine.begin(), end = commandLine.end();
-		i < end; ++i)
-	{
-		p << "{/*1.5" << i << "};";
-	}
-
-#endif
 	p << subAddrDistroA;
 
 	printTitle("", commandLine, p, channelDistribution[channelID].size());
@@ -62,8 +52,7 @@ void StatsScripts::addressLatencyDistributionPerChannelGraph(const bf::path &out
 			}
 			p << "e" << endl;
 		}
-		p << channelDistribution[channelID][rankID][0].size()
-			* epochTime << " " << "0.2" << endl << "e" << endl;
+		p << runTime << " " << "0.2" << endl << "e" << endl;
 	}
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
@@ -114,8 +103,7 @@ void StatsScripts::addressDistributionPerChannelGraph(const bf::path &outFilenam
 			}
 			p << "e" << endl;
 		}
-		p << channelDistribution[channelID][rankID][0].size()
-			* epochTime << " " << "0.2" << endl << "e" << endl;
+		p << runTime << " " << "0.2" << endl << "e" << endl;
 	}
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
@@ -218,7 +206,7 @@ void StatsScripts::overallAddressDistributionGraph(const bf::path &outFilename, 
 		}
 		p << "e" << endl;
 	}
-	p << channelDistribution[0][0][0].size() * epochTime << " " << "0.2"
+	p << runTime << " " << "0.2"
 		<< endl << "e" << endl;
 	p << "unset multiplot" << endl << "unset output" << endl;
 }
@@ -328,7 +316,7 @@ void StatsScripts::zoomedTransactionLatencyDistributionGraph(const bf::path &out
 }
 
 
-void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool isThumbnail)
+void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool isThumbnail) const
 {
 	p << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '"
 		<< outFilename.native_directory_string() << "'" << endl;
@@ -338,34 +326,39 @@ void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool
 		i != end; ++i)
 	{
 		if (i->first > 0 || i->second > 0)
+		{
 			allZeros = false;
+			break;
+		}
 	}
 	if (allZeros)
 		p << "set yrange [0:1]" << endl;
 
-	printTitle("", commandLine, p, 2);
+	printTitle("System Bandwidth", commandLine, p, 2);
 	p << bandwidthGraphScript << endl;
 
 	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
 		bandwidthValues.begin(); i != bandwidthValues.end(); ++i)
-		p << 1.0 * i->first << endl;
+		p << i->first / 1.0E6 << endl;
 	p << "e" << endl;
 
 	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
 		bandwidthValues.begin(); i != bandwidthValues.end(); ++i)
-		p << 1.0 * i->second << endl;
+		p << i->second / 1.0E6 << endl;
 	p << "e" << endl;
 
 	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
 		cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); ++i)
-		p << 1.0 * i->first << endl;
+		p << i->first / 1.0E6 << endl;
 	p << "e" << endl;
 
 	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
 		cacheBandwidthValues.begin(); i != cacheBandwidthValues.end(); ++i)
-		p << 1.0 * i->second << endl;
+		p << i->second / 1.0E6 << endl;
 	p << "e" << endl;
 
+	p << runTime << " " << 1.0E-4 << endl << "e" << endl;
+#if 0
 	float time = 0.0F;
 	PriorMovingAverage bandwidthTotal(WINDOW);
 	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =
@@ -374,14 +367,15 @@ void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool
 	{
 		bandwidthTotal.append(1.0F * (float) (i->first + i->second + j->first
 			+ j->second));
-		p << time << " " << bandwidthTotal.getAverage() << endl;
+		p << time << " " << bandwidthTotal.getAverage() / 1.0E6 << endl;
 		time += epochTime;
 	}
 	p << "e" << endl;
+#endif
 
 	p << smallIPCGraphScript << endl;
 
-	time = 0.0F;
+	float time = 0.0F;
 	for (vector<double>::const_iterator i = ipcValues.begin(); i
 		!= ipcValues.end(); ++i)
 	{
@@ -706,6 +700,16 @@ void StatsScripts::generateJointGraphs(const bf::path &outputDir, const StatsScr
 		"DIMM Cache Hit/Miss"));
 	outFilename = outputDir / ("cacheHitRate-thumb." + thumbnailExtension);
 	cacheHitMissGraph(outFilename,p0,alternateStats.getCacheHitMiss(), true);	
+	//////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////
+	// make the bandwidth graph
+	outFilename = outputDir / ("bandwidthDIMM." + extension);
+	alternateStats.bandwidthGraph(outFilename, p0, false);
+	filesGenerated.push_back(outFilename.native_directory_string());
+	graphs.push_back(pair<string, string> ("bandwidthDIMM", "Bandwidth with DIMM Cache"));
+	outFilename = outputDir / ("bandwidthDIMM-thumb." + thumbnailExtension);
+	alternateStats.bandwidthGraph(outFilename, p0, true);
 	//////////////////////////////////////////////////////////////////////////
 
 	p0 << endl << "exit" << endl;
@@ -1075,12 +1079,20 @@ void StatsScripts::processLine(char *newLine)
 			l2MshrMissLatencyBuffer = atof(secondOpeningBrace);
 		else if (strcmp(firstOpeningBrace, "system.l2.overall_mshr_misses") == 0)
 			l2MshrMissBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l3cache.overall_mshr_miss_latency") == 0)
+			l3MshrMissLatencyBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l3cache.overall_miss_latency") == 0)
+			l3MissLatencyBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l3cache.overall_hits") == 0)
+			l3HitBuffer = atoi(secondOpeningBrace);
+		else if (strcmp(firstOpeningBrace, "system.l3cache.overall_misses") == 0)
+			l3MissBuffer = atoi(secondOpeningBrace);
 		else
 			cerr << "missed something: " << newLine << endl;
 	}
 	else if (starts_with(newLine, "----Epoch"))
 	{
-		epochTime = lexical_cast<float> (strchr(newLine, ' ') + 1);
+		baseEpochTime = epochTime = lexical_cast<float> (strchr(newLine, ' ') + 1);
 		foundEpoch = true;
 	}	
 	else
@@ -1436,6 +1448,8 @@ void StatsScripts::pushStats()
 	// look to dump the buffers into arrays
 	scaleIndex = (scaleIndex + 1) % scaleFactor;
 
+	runTime += baseEpochTime;
+
 	// when the scale buffer is full
 	if (scaleIndex == 0)
 	{
@@ -1516,6 +1530,18 @@ void StatsScripts::pushStats()
 			/ scaleFactor);
 		l2MshrMissLatencyBuffer = 0;
 
+		l3MshrMissLatency.push_back(l3MshrMissLatencyBuffer / scaleFactor);
+		l3MshrMissLatencyBuffer = 0;
+
+		l3MshrMissLatency.push_back(l3MshrMissLatencyBuffer / scaleFactor);
+		l3MshrMissLatencyBuffer = 0;
+
+		l3Hits.push_back(l3HitBuffer / scaleFactor);
+		l3HitBuffer = 0;
+
+		l3Misses.push_back(l3MissBuffer / scaleFactor);
+		l3MissBuffer = 0;
+
 		bandwidthValues.push_back(pair<uint64_t, uint64_t> (
 			bandwidthValuesBuffer.first / scaleFactor,
 			bandwidthValuesBuffer.second / scaleFactor));
@@ -1558,7 +1584,9 @@ void StatsScripts::compressStats()
 	// double the scale factor
 	scaleFactor *= 2;
 
+#ifndef NDEBUG
 	cerr << "scaleFactor at " << scaleFactor << endl;
+#endif
 
 	// scale all the arrays by half
 	for (unsigned epoch = 0; epoch
@@ -1659,6 +1687,14 @@ void StatsScripts::compressStats()
 		l2MshrMissLatency[epoch] = (l2MshrMissLatency[2
 			* epoch] + l2MshrMissLatency[2 * epoch
 			+ 1]) / 2;
+
+		l3MshrMissLatency[epoch] = (l3MshrMissLatency[2 * epoch] + l3MshrMissLatency[2 * epoch + 1]) / 2;
+
+		l3MissLatency[epoch] = (l3MissLatency[2 * epoch] + l3MissLatency[2 * epoch + 1]) / 2;
+
+		l3Hits[epoch] = (l3Hits[2 * epoch] + l3Hits[2 * epoch + 1]) / 2;
+
+		l3Misses[epoch] = (l3Misses[2 * epoch] + l3Misses[2 * epoch + 1]) / 2;
 
 		bandwidthValues[epoch].first
 			= (bandwidthValues[2 * epoch].first

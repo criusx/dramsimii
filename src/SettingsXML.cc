@@ -1,4 +1,4 @@
-// Copyright (C) 2008 University of Maryland.
+// Copyright (C) 2010 University of Maryland.
 // This file is part of DRAMsimII.
 //
 // DRAMsimII is free software: you can redistribute it and/or modify
@@ -98,8 +98,7 @@ namespace opt = boost::program_options;
 /// and print any errors that occur
 //////////////////////////////////////////////////////////////////////////
 Settings::Settings(int argc, char **argv):
-systemType(BASELINE_CONFIG),
-addressMappingScheme(Address::SDRAM_BASE_MAP),
+addressMappingPolicy(Address::SDRAM_BASE_MAP),
 cachelinesPerRow(0),
 tInternalBurst(0)
 {
@@ -152,7 +151,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "rows", (const xmlChar *)lexical_cast<string>(rowCount).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "columns", (const xmlChar *)lexical_cast<string>(columnCount).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "channelWidth", (const xmlChar *)lexical_cast<string>(channelWidth).c_str());
-	xmlNewChild(node, NULL, BAD_CAST "physicalAddressMappingPolicy", (const xmlChar *)lexical_cast<string>(addressMappingScheme).c_str());
+	xmlNewChild(node, NULL, BAD_CAST "physicalAddressMappingPolicy", (const xmlChar *)lexical_cast<string>(addressMappingPolicy).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "rowBufferPolicy", (const xmlChar *)lexical_cast<string>(rowBufferManagementPolicy).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "rowSize", (const xmlChar *)lexical_cast<string>(rowSize).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "columnSize", (const xmlChar *)lexical_cast<string>(columnSize).c_str());
@@ -161,14 +160,9 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "commandOrderingAlgorithm", (const xmlChar *)lexical_cast<string>(commandOrderingAlgorithm).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "transactionOrderingAlgorithm", (const xmlChar *)lexical_cast<string>(transactionOrderingAlgorithm).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "perBankQueueDepth", (const xmlChar *)lexical_cast<string>(perBankQueueDepth).c_str());
-	xmlNewChild(node, NULL, BAD_CAST "systemConfigurationType", (const xmlChar *)lexical_cast<string>(systemType).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "cacheLineSize", (const xmlChar *)lexical_cast<string>(cacheLineSize).c_str());
-	xmlNewChild(node, NULL, BAD_CAST "historyQueueDepth", (const xmlChar *)lexical_cast<string>(historyQueueDepth).c_str());
-	xmlNewChild(node, NULL, BAD_CAST "completionQueueDepth", (const xmlChar *)lexical_cast<string>(completionQueueDepth).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "transactionQueueDepth", (const xmlChar *)lexical_cast<string>(transactionQueueDepth).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "decodeWindow", (const xmlChar *)lexical_cast<string>(decodeWindow).c_str());
-	xmlNewChild(node, NULL, BAD_CAST "eventQueueDepth", (const xmlChar *)lexical_cast<string>(eventQueueDepth).c_str());
-	xmlNewChild(node, NULL, BAD_CAST "refreshQueueDepth", (const xmlChar *)lexical_cast<string>(refreshQueueDepth).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "readWriteGrouping", (const xmlChar *)(readWriteGrouping ? "true" : "false"));
 	xmlNewChild(node, NULL, BAD_CAST "autoPrecharge", (const xmlChar *)(autoPrecharge ? "true" : "false"));
 
@@ -181,6 +175,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "replacementPolicy", (const xmlChar *)lexical_cast<string>(replacementPolicy).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "hitLatency", (const xmlChar *)lexical_cast<string>(nmruTrackingCount).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "usingCache", (const xmlChar *)(usingCache ? "true" : "false"));
+	xmlNewChild(node, NULL, BAD_CAST "fixedCacheLatency", (const xmlChar *)(fixedCacheLatency ? "true" : "false"));
 
 	// create the timing parameter section
 	node = xmlNewChild(rootNode, NULL, BAD_CAST "timing", NULL);
@@ -201,7 +196,6 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewChild(node, NULL, BAD_CAST "tWR", (const xmlChar *)lexical_cast<string>(tWR).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "tWTR", (const xmlChar *)lexical_cast<string>(tWTR).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "tAL", (const xmlChar *)lexical_cast<string>(tAL).c_str());
-	xmlNewChild(node, NULL, BAD_CAST "refreshTime", (const xmlChar *)lexical_cast<string>(refreshTime).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "tREFI", (const xmlChar *)lexical_cast<string>(tREFI).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "seniorityAgeLimit", (const xmlChar *)lexical_cast<string>(seniorityAgeLimit).c_str());
 
@@ -243,8 +237,7 @@ bool Settings::loadSettings(vector<string> &settingsList)
 	xmlNewProp(node2, BAD_CAST "type", (const xmlChar *)lexical_cast<string>(inFileType).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "cpuToMemoryClockRatio", (const xmlChar *)lexical_cast<string>(cpuToMemoryClockRatio).c_str());
 	xmlNewChild(node, NULL, BAD_CAST "epoch", (const xmlChar *)lexical_cast<string>(epoch).c_str());
-
-
+	
 	int len;
 	xmlChar *buffer;
 	xmlDocDumpFormatMemoryEnc(doc, &buffer, &len, "UTF-8", 1);
@@ -411,9 +404,12 @@ bool Settings::loadSettingsFromFile(int argc, char **argv)
 							assert(result);
 						}
 
-						xmlFree(attr);
-
-						attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"dbreporting");
+						xmlFree(attr);					
+					}
+					else if (nodeName == "usingCache")
+					{
+						xmlChar *attr = xmlTextReaderGetAttribute(reader, (xmlChar *)"fixedLatency");
+						string type = (const char *)attr;
 
 						if (attr)
 						{
@@ -421,12 +417,12 @@ bool Settings::loadSettingsFromFile(int argc, char **argv)
 #ifndef NDEBUG
 							bool result =
 #endif
-								setKeyValue("dbreporting",type);
+								setKeyValue("fixedLatency",type);
 							assert(result);
 						}
 
 						xmlFree(attr);
-					}					
+					}
 				}
 				break;
 			case XML_TEXT_NODE:				
@@ -497,13 +493,6 @@ bool Settings::loadSettingsFromFile(int argc, char **argv)
 	xmlFreeDoc(doc);
 
 	xmlCleanupParser();
-
-	boost::mt19937 generator(std::time(0));
-	// Define a uniform random number distribution which produces "double"
-	// values between 0 and 1 (0 inclusive, 1 exclusive).
-	boost::uniform_int<> uni_dist(0,INT_MAX);
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > uni(generator, uni_dist);	
-	sessionID = lexical_cast<string>(uni());
 
 	return true;
 }
