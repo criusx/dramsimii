@@ -670,7 +670,9 @@ void Channel::doPowerCalculation(ostream& os)
 		double tRRDsch = ((double)(time - powerModel.getLastCalculation())) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
 
 #ifndef NDEBUG
+#ifdef DEBUG_RRD
 		cerr << "rrd " << tRRDsch << " " << powerModel.gettRC() << endl;
+#endif
 #endif
 		double PschACT = powerModel.getPdsACT() * powerModel.gettRC() / tRRDsch;
 
@@ -2365,7 +2367,7 @@ void Channel::executeCommand(Command *thisCommand)
 						{
 							bool success = cache[readCommand->getAddress().getDimm()].timingAccess(readCommand,time);
 							assert(success);
-#ifndef NDEBUG
+#if !defined(NDEBUG) && defined(CACHE_HIT)
 							std::cout << (success ? "|" : ".");
 #endif
 							readCommand->setStartTime(time);
@@ -2412,7 +2414,7 @@ void Channel::executeCommand(Command *thisCommand)
 				satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
 				commandHit = satisfied;
 				thisCommand->getHost()->setHit(satisfied);			
-#ifndef NDEBUG
+#if !defined(NDEBUG) && defined(CACHE_HIT)
 				std::cout << (satisfied ? "|" : ".");
 #endif
 			}
@@ -2456,7 +2458,7 @@ void Channel::executeCommand(Command *thisCommand)
 				cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
 
 			thisCommand->getHost()->setHit(satisfied);
-#ifndef NDEBUG
+#if !defined(NDEBUG) && defined(DEBUG_HIT)
 			std::cout << (satisfied ? "|" : ".");
 #endif
 		}

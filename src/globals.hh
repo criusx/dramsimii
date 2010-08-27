@@ -145,6 +145,10 @@ namespace DRAMsimII
 
 //#define DEBUG_FLAG_2
 
+	//#define DEBUG_RRD
+
+	//#define CACHE_HIT
+
 
 #if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) // compiler should declare this
 #define M5_TIMING_LOG(X) systemConfig.timingOutStream << X << std::endl;
