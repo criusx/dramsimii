@@ -41,7 +41,6 @@
 
 #include "blk.hh"
 #include "base.hh"
-//#include "../Statistics.hh"
 #include "../globals.hh"
 #include "../command.hh"
 

@@ -169,6 +169,16 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				hitLatency = 6;
 			else if (associativity == 32)
 				hitLatency = 7;
+			else if (associativity == 64)
+				hitLatency = 8;
+			else if (associativity == 128)
+				hitLatency = 9;
+			else if (associativity == 256)
+				hitLatency = 10;
+			else if (associativity == 512)
+				hitLatency = 11;
+			else if (associativity == 1024)
+				hitLatency = 12;
 			else
 			{
 				cerr << "error: unknown associativity, cannot set hit latency accordingly" << endl;

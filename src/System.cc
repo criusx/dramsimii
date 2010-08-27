@@ -337,6 +337,7 @@ unsigned System::findOldestChannel() const
 void System::printStatistics()
 {
 	systemConfig.statsOutStream << statistics;
+	cerr << statistics;
 	statistics.clear();
 
 	for (vector<Channel>::iterator h = channel.begin(), hEnd = channel.end();
