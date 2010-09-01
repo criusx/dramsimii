@@ -107,34 +107,6 @@ totalCASWCount(rhs.totalCASWCount)
 {}
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief deserialization constructor
-//////////////////////////////////////////////////////////////////////////
-Bank::Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics &stats):
-timing(timingVal),
-systemConfig(systemConfigVal),
-statistics(stats),
-perBankQueue(0),
-lastRASTime(0),
-lastCASTime(0),
-lastCASWTime(0),
-lastPrechargeTime(0),
-lastCASLength(0),
-lastCASWLength(0),
-nextActivateTime(0),
-nextReadTime(0),
-nextWriteTime(0),
-nextPrechargeTime(0),
-openRowID(0),
-activated(0),
-RASCount(0),
-totalRASCount(0),
-CASCount(0),
-totalCASCount(0),
-CASWCount(0),
-totalCASWCount(0)
-{}
-
-//////////////////////////////////////////////////////////////////////////
 /// @brief this logically issues a RAS command and updates all variables to reflect this
 //////////////////////////////////////////////////////////////////////////
 void Bank::issueRAS(const tick currentTime, const Command *currentCommand)

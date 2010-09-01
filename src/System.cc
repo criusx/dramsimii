@@ -45,6 +45,7 @@ using std::endl;
 using std::ostream;
 using std::min;
 using std::stringstream;
+using std::pair;
 using boost::lexical_cast;
 using namespace DRAMsimII;
 
@@ -53,14 +54,10 @@ using namespace DRAMsimII;
 /// @author Joe Gross
 /// @param settings the settings that define what the system should look like
 //////////////////////////////////////////////////////////////////////
-System::System(const Settings &settings):
-systemConfig(settings),
-simParameters(settings),
-statistics(settings, channel),
-channel(systemConfig.getChannelCount(), Channel(settings, systemConfig, statistics)),
-inputStream(settings, systemConfig, channel),
-time(0),
-nextStats(settings.epoch)
+System::System(const Settings &settings) :
+	systemConfig(settings), simParameters(settings), statistics(settings, channel), channel(
+			systemConfig.getChannelCount(), Channel(settings, systemConfig, statistics)), inputStream(settings,
+			systemConfig, channel), time(0), nextStats(settings.epoch)
 {
 	//Address::initialize(settings);
 
@@ -71,11 +68,11 @@ nextStats(settings.epoch)
 		if (settings.inFileType == InputStream::RANDOM)
 			commandLine = "Random";
 		else if (settings.inFileType == InputStream::MASE_TRACE || settings.inFileType == InputStream::DRAMSIM)
-		{			
+		{
 			size_t begin = settings.inFile.find_last_of('/');
 			size_t end = settings.inFile.find_last_of('.');
 			if (begin != string::npos && end != string::npos)
-				commandLine = settings.inFile.substr(begin + 1,end - begin - 1);
+				commandLine = settings.inFile.substr(begin + 1, end - begin - 1);
 			else
 				commandLine = settings.inFile;
 		}
@@ -84,48 +81,54 @@ nextStats(settings.epoch)
 	assert(systemConfig.statsOutStream.is_complete());
 
 	// else printing to these streams goes nowhere
-	string cacheSize = (settings.cacheSize >= 1024) ? lexical_cast<string>(settings.cacheSize / 1024) + "MB" : lexical_cast<string>(settings.cacheSize) + "kB";
+	string cacheSize = (settings.cacheSize >= 1024) ? lexical_cast<string> (settings.cacheSize / 1024) + "MB"
+			: lexical_cast<string> (settings.cacheSize) + "kB";
 
 	stringstream printCommandLine;
 
-	printCommandLine << "----Command Line: " << commandLine << " ch[" << settings.channelCount << 
-		"] dimm[" << settings.dimmCount <<
-		"] rk[" << settings.rankCount * settings.dimmCount << "] bk[" << settings.bankCount << "] row[" << settings.rowCount <<
-		"] col[" << settings.columnCount << "] [x" << settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS <<
-		"] t_{CAS}[" << settings.tCAS << "] t_{RCD}[" << settings.tRCD << "] t_{RC}[" << settings.tRC <<
-		"] PC[" << (settings.postedCAS ? "T" : "F") << "] AMP[" << settings.addressMappingPolicy << "] COA[" << settings.commandOrderingAlgorithm <<
-		"] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 <<
-		"M] PBQ[" << settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " <<
-		"cache[" << cacheSize << "] " <<
-		"blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets[" <<
-		settings.cacheSize* 1024  / settings.blockSize / settings.associativity << "]" << " policy[" <<
-		settings.replacementPolicy << ((settings.replacementPolicy == Cache::NMRU) ? lexical_cast<string>(settings.nmruTrackingCount) : string("")) << "] " << 
-		"usingCache[" << (settings.usingCache ? "T" : "F") << "]";
+	printCommandLine << "----Command Line: " << commandLine << " ch[" << settings.channelCount << "] dimm["
+			<< settings.dimmCount << "] rk[" << settings.rankCount * settings.dimmCount << "] bk["
+			<< settings.bankCount << "] row[" << settings.rowCount << "] col[" << settings.columnCount << "] [x"
+			<< settings.DQperDRAM << "] t_{RAS}[" << settings.tRAS << "] t_{CAS}[" << settings.tCAS << "] t_{RCD}["
+			<< settings.tRCD << "] t_{RC}[" << settings.tRC << "] PC[" << (settings.postedCAS ? "T" : "F")
+			<< "] AMP[" << settings.addressMappingPolicy << "] COA[" << settings.commandOrderingAlgorithm
+			<< "] RBMP[" << settings.rowBufferManagementPolicy << "] DR[" << settings.dataRate / 1E6 << "M] PBQ["
+			<< settings.perBankQueueDepth << "] t_{FAW}[" << settings.tFAW << "] " << "cache[" << cacheSize << "] "
+			<< "blkSz[" << settings.blockSize << "] assoc[" << settings.associativity << "] sets["
+			<< settings.cacheSize * 1024 / settings.blockSize / settings.associativity << "]" << " policy["
+			<< settings.replacementPolicy << ((settings.replacementPolicy == Cache::NMRU) ? lexical_cast<string> (
+			settings.nmruTrackingCount) : string("")) << "] " << "usingCache[" << (settings.usingCache ? "T" : "F")
+			<< "]";
 
 	systemConfig.statsOutStream << printCommandLine.str() << endl;
 
-	systemConfig.powerOutStream << printCommandLine.str() <<
-		"IDD0[" << settings.IDD0 << "] IDD1[" << settings.IDD1 << "] IDD2N[" << settings.IDD2N << "] IDD2P[" << settings.IDD2P << "] IDD3N[" << settings.IDD3N <<
-		"] IDD3P[" << settings.IDD3P << "] IDD4R[" << settings.IDD4R << "] IDD4W[" << settings.IDD4W << "] VDD[" << settings.VDD << "] VDDmax[" << settings.maxVCC <<
-		"] spedFreq[" << settings.frequencySpec << "] ChannelWidth[" << settings.channelWidth * 8 << "] DQPerDRAM[" << settings.DQperDRAM << "] tBurst[" << settings.tBurst << "]" << endl;
+	systemConfig.powerOutStream << printCommandLine.str() << "IDD0[" << settings.IDD0 << "] IDD1[" << settings.IDD1
+			<< "] IDD2N[" << settings.IDD2N << "] IDD2P[" << settings.IDD2P << "] IDD3N[" << settings.IDD3N
+			<< "] IDD3P[" << settings.IDD3P << "] IDD4R[" << settings.IDD4R << "] IDD4W[" << settings.IDD4W
+			<< "] VDD[" << settings.VDD << "] VDDmax[" << settings.maxVCC << "] spedFreq[" << settings.frequencySpec
+			<< "] ChannelWidth[" << settings.channelWidth * 8 << "] DQPerDRAM[" << settings.DQperDRAM << "] tBurst["
+			<< settings.tBurst << "]" << endl;
 
 #ifndef NDEBUG 
 	systemConfig.timingOutStream << printCommandLine.str() << endl;
 #endif
 
+	systemConfig.statsOutStream << "----Epoch " << setprecision(5) << (float) settings.epoch
+			/ (float) settings.dataRate << endl;
 
-	systemConfig.statsOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
+	systemConfig.powerOutStream << "----Epoch " << setprecision(5) << (float) settings.epoch
+			/ (float) settings.dataRate << endl;
 
-	systemConfig.powerOutStream << "----Epoch " << setprecision(5) << (float)settings.epoch / (float)settings.dataRate << endl;
-	
-	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() * systemConfig.getDimmCount() << "]+++-" << endl;	
+	systemConfig.powerOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount()
+			* systemConfig.getDimmCount() << "]+++-" << endl;
 
-	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount() * systemConfig.getDimmCount() << "]+++-" << endl;
+	systemConfig.statsOutStream << "-+++ch[" << channel.size() << "]rk[" << systemConfig.getRankCount()
+			* systemConfig.getDimmCount() << "]+++-" << endl;
 
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
 	{
-		channel[i].setChannelID(i);		
+		channel[i].setChannelID(i);
 	}
 }
 
@@ -134,42 +137,21 @@ nextStats(settings.epoch)
 /// @details will copy channel 0 into all the other channels via copy constructor
 /// and then use the assignment operator to copy the contents over
 //////////////////////////////////////////////////////////////////////////
-System::System(const System &rhs):
-systemConfig(rhs.systemConfig),
-simParameters(rhs.simParameters),
-statistics(rhs.statistics),
-channel(systemConfig.getChannelCount(), Channel(rhs.channel[0],systemConfig, statistics)),
-inputStream(rhs.inputStream,systemConfig,channel),
-time(0),
-nextStats(rhs.nextStats)
+System::System(const System &rhs) :
+	systemConfig(rhs.systemConfig), simParameters(rhs.simParameters), statistics(rhs.statistics), channel(
+			systemConfig.getChannelCount(), Channel(rhs.channel[0], systemConfig, statistics)), inputStream(
+			rhs.inputStream, systemConfig, channel), time(0), nextStats(rhs.nextStats)
 {
 	Address::initialize(systemConfig);
 	channel = rhs.channel;
 }
 
-//////////////////////////////////////////////////////////////////////////
-/// @brief deserialization constructor
-//////////////////////////////////////////////////////////////////////////
-System::System(const SystemConfiguration &sysConfig, const std::vector<Channel> &rhsChan, const SimulationParameters &simParams,
-			   const Statistics &stats, const InputStream &inputStr):
-systemConfig(sysConfig),
-simParameters(simParams),
-statistics(stats),
-channel((unsigned)rhsChan.size(),Channel(rhsChan[0],sysConfig,statistics)),
-inputStream(inputStr),
-time(0),
-nextStats(0)
-{
-	Address::initialize(systemConfig);
-	channel = rhsChan;
-}
-
 System::~System()
 {
-	systemConfig.statsOutStream << "----Runtime: {" << time / systemConfig.getDatarate() << "} duration{" << time - lastStatsTime << "}" << endl;
+	systemConfig.statsOutStream << "----Runtime: {" << time / systemConfig.getDatarate() << "} duration{" << time
+			- lastStatsTime << "}" << endl;
 	printStats();
 }
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief returns the time at which the next event happens
@@ -207,7 +189,7 @@ tick System::nextTick() const
 void System::checkStats()
 {
 	if (time >= nextStats)
-	{		
+	{
 		printStats();
 		lastStatsTime = time;
 	}
@@ -216,14 +198,13 @@ void System::checkStats()
 		nextStats += systemConfig.getEpoch();
 }
 
-void System::printStats() 
+void System::printStats()
 {
 	DEBUG_TIMING_LOG("aggregate stats");
 	doPowerCalculation();
 
 	printStatistics();
 }
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief updates the system time to be the same as that of the oldest channel
@@ -235,7 +216,7 @@ void System::updateSystemTime()
 	time = currentChan->getTime();
 	currentChan++;
 
-	for (;currentChan != channel.end(); ++currentChan)
+	for (; currentChan != channel.end(); ++currentChan)
 	{
 		if (currentChan->getTime() < time)
 			time = currentChan->getTime();
@@ -285,7 +266,7 @@ void System::resetToTime(const tick time)
 //////////////////////////////////////////////////////////////////////
 bool System::moveToTime(const tick endTime)
 {
-	std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime),endTime));
+	std::for_each(channel.begin(), channel.end(), boost::bind2nd(boost::mem_fun_ref(&Channel::moveToTime), endTime));
 	//#pragma omp parallel for private(i)
 	// 	for (i = channel.size() - 1; i >= 0; i--)
 	// 	{
@@ -298,15 +279,14 @@ bool System::moveToTime(const tick endTime)
 
 	if (time >= nextStats)
 	{
-		std::pair<unsigned,unsigned> rwBytes = statistics.getReadWriteBytes();
-		result =  rwBytes.first + rwBytes.second > 0;
+		std::pair<unsigned, unsigned> rwBytes = statistics.getReadWriteBytes();
+		result = rwBytes.first + rwBytes.second > 0;
 	}
 
 	checkStats();
 
 	return result;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief goes through each channel to find the channel whose time is the least
@@ -336,14 +316,19 @@ unsigned System::findOldestChannel() const
 //////////////////////////////////////////////////////////////////////
 void System::printStatistics()
 {
+	using std::setw;
 	systemConfig.statsOutStream << statistics;
-	cerr << statistics;
+	pair<unsigned, unsigned> hitsMisses = statistics.getDimmCacheHitsMisses();
+	std::pair<std::pair<unsigned, unsigned>, unsigned> list = statistics.getTagSetBlockCount(time);
+	cerr << "\rhits: " << setw(10) << hitsMisses.first << "\tmisses: " << setw(10) << hitsMisses.second << "\tratio: "
+			<< setw(10) << (double) hitsMisses.first / (hitsMisses.first + hitsMisses.second) << "\ttags: " << setw(
+			10) << list.first.first << "\tsets: " << setw(10) << list.first.second << "\tblocks: " << setw(10)
+			<< list.second;
 	statistics.clear();
 
-	for (vector<Channel>::iterator h = channel.begin(), hEnd = channel.end();
-		h != hEnd; ++h)
+	for (vector<Channel>::iterator h = channel.begin(), hEnd = channel.end(); h != hEnd; ++h)
 	{
-		h->resetStats();		
+		h->resetStats();
 	}
 }
 
@@ -381,7 +366,7 @@ unsigned System::pendingTransactionCount() const
 //////////////////////////////////////////////////////////////////////////
 /// @brief move all the pending, finished transactions into a new queue 
 //////////////////////////////////////////////////////////////////////////
-void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outputQueue)
+void System::getPendingTransactions(std::queue<std::pair<unsigned, tick> > &outputQueue)
 {
 	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i != end; ++i)
 		i->getPendingTransactions(outputQueue);
@@ -402,21 +387,22 @@ void System::runSimulations(const unsigned requestCount)
 
 	resetToTime(inputTransaction->getArrivalTime());
 
-	std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> > outstandingTransactions;
+	std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> > outstandingTransactions;
 
 	std::queue<std::pair<unsigned, tick> > finishedTransactions;
 
 	//bool running = true;
 
 	if (inputTransaction)
-	{		
+	{
 		tick newTime = inputTransaction->getArrivalTime();// = (rand() % 65536) + 65536;
 
 		resetToTime(newTime);
 
-		for (tick i = (requestCount > 0) ? requestCount : simParameters.getRequestCount(); (i > 0) && (inputTransaction != NULL);)
-		{				
-			moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()),time + 1));
+		for (tick i = (requestCount > 0) ? requestCount : simParameters.getRequestCount(); (i > 0)
+				&& (inputTransaction != NULL);)
+		{
+			moveToTime(max(min(nextTick(), inputTransaction->getArrivalTime()), time + 1));
 
 			if (this->pendingTransactionCount() > 0)
 			{
@@ -424,7 +410,8 @@ void System::runSimulations(const unsigned requestCount)
 
 				while (!finishedTransactions.empty())
 				{
-					if (outstandingTransactions.find(finishedTransactions.front().first) == outstandingTransactions.end())
+					if (outstandingTransactions.find(finishedTransactions.front().first)
+							== outstandingTransactions.end())
 						assert(outstandingTransactions.find(finishedTransactions.front().first) != outstandingTransactions.end());
 
 					delete outstandingTransactions[finishedTransactions.front().first].first;
@@ -445,13 +432,14 @@ void System::runSimulations(const unsigned requestCount)
 #ifndef NDEBUG
 					bool result =
 #endif
-						enqueue(inputTransaction);
+							enqueue(inputTransaction);
 
 					assert(result);
 
 					Transaction *duplicateTrans = new Transaction(*inputTransaction);
 
-					outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *, Transaction*>(duplicateTrans, inputTransaction);
+					outstandingTransactions[inputTransaction->getOriginalTransaction()] = std::pair<Transaction *,
+							Transaction*>(duplicateTrans, inputTransaction);
 
 					inputTransaction = inputStream.getNextIncomingTransaction(outstandingTransacitonCounter++);
 #ifndef NDEBUG
@@ -459,7 +447,9 @@ void System::runSimulations(const unsigned requestCount)
 
 					if (outstandingTransacitonCounter % 5000 == 0)
 					{
-						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator j = outstandingTransactions.begin(), end = outstandingTransactions.end(); j != end; ++j)
+						for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::const_iterator
+								j = outstandingTransactions.begin(), end = outstandingTransactions.end(); j
+								!= end; ++j)
 						{
 							tick diff = time - j->second.first->getEnqueueTime();
 							if (diff > 20000)
@@ -483,18 +473,16 @@ void System::runSimulations(const unsigned requestCount)
 		}
 
 		delete inputTransaction;
-		
+
 	}
-	for (std::tr1::unordered_map<unsigned,std::pair<Transaction *, Transaction *> >::iterator i = outstandingTransactions.begin(),
-		end = outstandingTransactions.end();
-		i != end; ++i)
+	for (std::tr1::unordered_map<unsigned, std::pair<Transaction *, Transaction *> >::iterator i =
+			outstandingTransactions.begin(), end = outstandingTransactions.end(); i != end; ++i)
 	{
 		delete i->second.first;
 		delete i->second.second;
 	}
 	//	moveToTime(channel[0].getTime() + 64000000);
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief function to determine if there are any commands or transactions pending in this system
@@ -516,9 +504,9 @@ bool System::isEmpty() const
 //////////////////////////////////////////////////////////////////////////
 bool System::operator==(const System &rhs) const
 {
-	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters &&
-		statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time &&
-		nextStats == rhs.nextStats;
+	return systemConfig == rhs.systemConfig && channel == rhs.channel && simParameters == rhs.simParameters
+			&& statistics == rhs.statistics && inputStream == rhs.inputStream && time == rhs.time && nextStats
+			== rhs.nextStats;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -530,12 +518,10 @@ bool System::operator==(const System &rhs) const
 //////////////////////////////////////////////////////////////////////
 ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 {
-
-	
 	os << "RC[" << thisSystem.systemConfig.getRankCount() << "] ";
 	os << "BC[" << thisSystem.systemConfig.getBankCount() << "] ";
 	os << "ALG[";
-	switch(thisSystem.systemConfig.getCommandOrderingAlgorithm())
+	switch (thisSystem.systemConfig.getCommandOrderingAlgorithm())
 	{
 	case STRICT_ORDER:
 		os << "STR ] ";
@@ -556,9 +542,10 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 		os << "UNKN] ";
 		break;
 	}
-	
-	os << "BLR[" << setprecision(0) << floor(100*(thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5) << "] "
-		<< "RP[" << (int)(100*thisSystem.systemConfig.getReadPercentage()) << "] "<< thisSystem.systemConfig;
+
+	os << "BLR[" << setprecision(0) << floor(100 * (thisSystem.systemConfig.getShortBurstRatio() + 0.0001) + .5)
+			<< "] " << "RP[" << (int) (100 * thisSystem.systemConfig.getReadPercentage()) << "] "
+			<< thisSystem.systemConfig;
 
 	return os;
 }

@@ -37,124 +37,74 @@
 #include <ostream>
 #include <iostream>
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/vector.hpp>
-
 namespace DRAMsimII
 {
-	/// @brief represents a DRAM system, the memory controller(s) and associated channels
-	/// @details contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks
-	/// statistics, ability to read input streams, handle asynchronous requests, return requests at certain times
-	/// @author Joe Gross
-	class System
+/// @brief represents a DRAM system, the memory controller(s) and associated channels
+/// @details contains a representation for a DRAM system, with the memory controller(s), channels, ranks, banks
+/// statistics, ability to read input streams, handle asynchronous requests, return requests at certain times
+/// @author Joe Gross
+class System
+{
+protected:
+	// members
+	const SystemConfiguration systemConfig; ///< stores the parameters for the DRAM system, including channel/rank/bank/row counts
+	SimulationParameters simParameters; ///< has all the necessary parameters for the simulation run
+	Statistics statistics; ///< keeps running statistics about the simulation
+	std::vector<Channel> channel; ///< represents the independent channels
+	InputStream inputStream; ///< provides an interface to the input trace for the simulation
+
+	tick time; ///< master clock, usually set to the oldest channel's time
+	tick lastStatsTime; ///< the time at which stats were last printed
+	tick nextStats; ///< the next time at which stats should be collected
+
+	//functions
+	unsigned findOldestChannel() const;
+	void updateSystemTime();
+
+	void checkStats();
+	void printStats();
+	virtual void doPowerCalculation();
+	virtual void printStatistics();
+
+public:
+
+	// functions
+	bool moveToTime(const tick endTime);
+	bool enqueue(Transaction* trans);
+	virtual tick nextTick() const;
+	void runSimulations(const unsigned requestCount = 0);
+	unsigned pendingTransactionCount() const;
+	void getPendingTransactions(std::queue<std::pair<unsigned, tick> > &);
+
+	// accessors
+	bool isFull(const unsigned channelNumber) const
 	{
-	protected:
-		// members
-		const SystemConfiguration systemConfig;		///< stores the parameters for the DRAM system, including channel/rank/bank/row counts		
-		SimulationParameters simParameters;		///< has all the necessary parameters for the simulation run
-		Statistics statistics;					///< keeps running statistics about the simulation
-		std::vector<Channel> channel;			///< represents the independent channels
-		InputStream inputStream;				///< provides an interface to the input trace for the simulation
+		return channel[channelNumber].isFull();
+	} ///< returns true if this channel has no more room
+	double Frequency() const
+	{
+		return systemConfig.Frequency();
+	} ///< accessor to get the frequency of the DRAM system
+	tick getTime() const
+	{
+		return time;
+	}
+	void resetToTime(const tick time);
+	boost::iostreams::filtering_ostream &getTimingStream()
+	{
+		return systemConfig.timingOutStream;
+	}
+	bool isEmpty() const;
 
-		tick time;								///< master clock, usually set to the oldest channel's time
-		tick lastStatsTime;						///< the time at which stats were last printed
-		tick nextStats;							///< the next time at which stats should be collected
+	// constructors
+	explicit System(const Settings& settings);
+	explicit System(const System& rhs);
+	~System();
 
-		//functions
-		unsigned findOldestChannel() const;	
-		void updateSystemTime();
+	// friends
+	friend std::ostream &operator<<(std::ostream &, const System &);
+	bool operator==(const System &rhs) const;
 
-		void checkStats();
-		void printStats();
-		virtual void doPowerCalculation();
-		virtual void printStatistics();			
-		
-	public:		
-
-		// functions
-		bool moveToTime(const tick endTime);
-		bool enqueue(Transaction* trans);
-		virtual tick nextTick() const;
-		void runSimulations(const unsigned requestCount = 0);
-		unsigned pendingTransactionCount() const;
-		void getPendingTransactions(std::queue<std::pair<unsigned,tick> > &);
-
-		// accessors
-		bool isFull(const unsigned channelNumber) const { return channel[channelNumber].isFull(); } ///< returns true if this channel has no more room
-		double Frequency() const { return systemConfig.Frequency(); }	///< accessor to get the frequency of the DRAM system
-		tick getTime() const { return time; }
-		void resetToTime(const tick time);
-		boost::iostreams::filtering_ostream &getTimingStream() { return systemConfig.timingOutStream; }
-		bool isEmpty() const;
-
-		// constructors	
-		explicit System(const Settings& settings);
-		explicit System(const System& rhs);
-		~System();
-		
-		// friends
-		friend std::ostream &operator<<(std::ostream &, const System &);	
-		bool operator==(const System &rhs) const;
-
-	private:
-		// serialization
-		friend class boost::serialization::access;
-
-		explicit System(Settings &settings, const SystemConfiguration &systemConfig);
-
-		// deserialization constructor
-		explicit System(const SystemConfiguration &sysConfig, const std::vector<Channel> &chan, const SimulationParameters &simParams,
-			const Statistics &stats, const InputStream &inputStr);
-
-		template<class Archive>
-		void serialize(Archive& ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & time & nextStats;
-			}
-
-		}
-
-		template<class Archive>
-		friend inline void save_construct_data(Archive &ar, const System *t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				const SystemConfiguration* const sysConfig = &(t->systemConfig);
-				ar << sysConfig;
-				const std::vector<Channel>* const channel = &(t->channel);
-				ar << channel;
-				const SimulationParameters* const simParameters = &(t->simParameters);			
-				ar << simParameters;
-				const Statistics* const statistics = &(t->statistics);
-				ar << statistics;
-				const InputStream* const inputStream = &(t->inputStream);
-				ar << inputStream;
-			}
-		}
-
-		template<class Archive>
-		friend inline void load_construct_data(Archive & ar, System * t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				SystemConfiguration *sysConfig;
-				ar >> sysConfig;
-				std::vector<Channel> *channel;
-				ar >> channel;
-				SimulationParameters *simParameters;
-				ar >> simParameters;
-				Statistics *statistics;
-				ar >> statistics;
-				InputStream *inputStream;
-				ar >> inputStream;
-
-				new(t)DRAMsimII::System(*sysConfig, *channel, *simParameters, *statistics, *inputStream);
-			}
-
-		}
-	};
+};
 }
 #endif

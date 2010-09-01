@@ -25,9 +25,6 @@
 #include <vector>
 #include <boost/random.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/vector.hpp>
 
 namespace DRAMsimII
 {
@@ -127,70 +124,6 @@ namespace DRAMsimII
 
 	private:
 		double ascii2multiplier(const std::string &input) const;
-
-
-		// serialization
-		friend class boost::serialization::access;
-
-		InputStream(const SystemConfiguration &systemConfig, const std::vector<Channel> &systemChannel, unsigned, DistributionType arrivalDistributionModel, std::string filename);
-
-		template<class Archive>
-		void serialize(Archive& ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & type & channelLocality & rankLocality & bankLocality & time & rowLocality & readPercentage &
-				shortBurstRatio & arrivalThreshold & cpuToMemoryRatio & averageInterarrivalCycleCount;
-			}
-
-			//ar & traceFile;
-			//ar & serialization::make_nvp("rng",randomNumberGenerator & rngDistributionModel & rngIntDistributionModel & rngGenerator & rngIntGenerator;
-		}
-
-		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const InputStream* t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				const SystemConfiguration* const sysConfig = &(t->systemConfig);
-				ar << sysConfig;
-				const std::vector<Channel>* const channel = &(t->channel);
-				ar << channel;
-				ar << t->interarrivalDistributionModel;
-				ar << t->averageInterarrivalCycleCount;
-
-				//std::basic_istream<char,std::char_traits<char>>::pos_type location = t->traceFile.tellg();
-				//ar << location;
-
-				ar << t->traceFilename;			
-			}
-
-		}
-
-		template <class Archive>
-		friend inline void load_construct_data(Archive& ar, InputStream* t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				SystemConfiguration *sysConfig;
-				ar >> sysConfig;
-				std::vector<Channel> *channel;
-				ar >> channel;
-				DistributionType interarrivalDistributionModel;
-				ar >> interarrivalDistributionModel;
-				//std::basic_istream<char,std::char_traits<char>>::pos_type location;
-				//ar >> location;
-				unsigned avgInterarrivalCycles;
-				ar >> avgInterarrivalCycles;
-				std::string filename;
-				ar >> filename;
-
-				new(t)InputStream(*sysConfig, *channel, avgInterarrivalCycles, interarrivalDistributionModel, filename);
-				
-				//t->traceFile.seekg(location);
-			}
-
-		}
 	};
 
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);

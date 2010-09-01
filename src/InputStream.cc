@@ -77,6 +77,7 @@ cpuToMemoryRatio(settings.dataRate * 1E-9),
 averageInterarrivalCycleCount(max(settings.averageInterarrivalCycleCount,(const unsigned)1)),
 interarrivalDistributionModel(settings.arrivalDistributionModel),
 traceFilename(settings.inFile),
+traceFile(),
 randomNumberGenerator(std::time(0)),
 rngDistributionModel(0,1),
 rngIntDistributionModel(0u,16383u),
@@ -147,58 +148,6 @@ arrivalGenerator(randomNumberGenerator, gaussianDistribution)
 }
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief deserialization constructor
-//////////////////////////////////////////////////////////////////////////
-InputStream::InputStream(const SystemConfiguration &systemConfig, const vector<Channel> &systemChannel, unsigned avgInterarrivalCycles, DistributionType arrivalDistributionModel, string filename):
-systemConfig(systemConfig),
-channel(systemChannel),
-averageInterarrivalCycleCount(avgInterarrivalCycles),
-interarrivalDistributionModel(arrivalDistributionModel),
-randomNumberGenerator(std::time(0)),
-rngDistributionModel(0,1),
-rngIntDistributionModel(0u,16383u),
-gaussianDistribution(averageInterarrivalCycleCount, 8),
-rngGenerator(randomNumberGenerator, rngDistributionModel),
-rngIntGenerator(randomNumberGenerator, rngIntDistributionModel),
-arrivalGenerator(randomNumberGenerator, gaussianDistribution)
-{
-	using namespace boost::algorithm;
-	using boost::iostreams::file_source;
-	if (interarrivalDistributionModel == UNIFORM_DISTRIBUTION)
-		arrivalThreshold = 1.0 - (1.0 / (float)averageInterarrivalCycleCount);
-	else if (interarrivalDistributionModel == GAUSSIAN_DISTRIBUTION)
-		arrivalThreshold = 1.0 - (1.0 / boxMuller((float)averageInterarrivalCycleCount, 10));
-	if (arrivalThreshold > 1.0F)
-		arrivalThreshold = 1.0F / arrivalThreshold;
-
-	if (!traceFilename.empty() && (type != RANDOM))
-	{
-		//traceFile.open(settings.inFile.c_str());
-
-		if (!traceFile.good())
-		{
-			boost::filesystem::path cwd(boost::filesystem::current_path());
-			cwd = cwd / "traceFiles" / traceFilename;
-			string inFileWithPath = cwd.string();
-#ifndef WIN32
-			if (ends_with(traceFilename,"gz"))
-				traceFile.push(gzip_decompressor());
-			else if (ends_with(traceFilename,"bz2") || ends_with(traceFilename,"bz"))
-				traceFile.push(bzip2_decompressor());
-#endif
-
-			traceFile.push(file_source(inFileWithPath.c_str()));
-
-			if (!traceFile.is_complete())
-			{
-				cerr << "Unable to open trace file \"" << traceFilename << "\"" << endl;
-				exit(-9);
-			}
-		}
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor
 //////////////////////////////////////////////////////////////////////////
 InputStream::InputStream(const InputStream& rhs):
@@ -216,7 +165,8 @@ arrivalThreshold(rhs.arrivalThreshold),
 cpuToMemoryRatio(rhs.cpuToMemoryRatio),
 averageInterarrivalCycleCount(rhs.averageInterarrivalCycleCount),
 interarrivalDistributionModel(rhs.interarrivalDistributionModel),
-// TODO: serialize tracefile position
+traceFilename(),
+traceFile(),
 randomNumberGenerator(rhs.randomNumberGenerator),
 rngDistributionModel(rhs.rngDistributionModel),
 rngIntDistributionModel(rhs.rngIntDistributionModel),
@@ -241,7 +191,8 @@ arrivalThreshold(rhs.arrivalThreshold),
 cpuToMemoryRatio(rhs.cpuToMemoryRatio),
 averageInterarrivalCycleCount(rhs.averageInterarrivalCycleCount),
 interarrivalDistributionModel(rhs.interarrivalDistributionModel),
-// TODO: serialize tracefile position
+traceFilename(rhs.traceFilename),
+//traceFile(rhs.traceFile),
 randomNumberGenerator(rhs.randomNumberGenerator),
 rngDistributionModel(rhs.rngDistributionModel),
 rngIntDistributionModel(rhs.rngIntDistributionModel),
@@ -251,11 +202,14 @@ rngIntGenerator(rhs.rngIntGenerator),
 arrivalGenerator(rhs.arrivalGenerator)
 {}
 
+//////////////////////////////////////////////////////////////////////
+/// @brief destructor
+/// @details closes the tracefile if it is open
+//////////////////////////////////////////////////////////////////////
 InputStream::~InputStream()
 {
 	boost::iostreams::close(traceFile,std::ios_base::in);
 }
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief generates a number using a Poisson random variable
@@ -713,6 +667,7 @@ Transaction *InputStream::getNextRandomRequest(const unsigned transactionID)
 		case UNIFORM_DISTRIBUTION:
 		case LOGNORMAL_DISTRIBUTION:
 		case NORMAL_DISTRIBUTION:
+		default:
 			nextTime = (int)std::abs(arrivalGenerator());
 			break;
 

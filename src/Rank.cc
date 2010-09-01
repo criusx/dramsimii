@@ -121,35 +121,6 @@ bank((unsigned)sysConfig.getBankCount(), Bank(rhs.bank[0], timing, sysConfig, st
 	bank = rhs.bank;
 }
 
-Rank::Rank(const TimingSpecification &timingSpec, const std::vector<Bank>& newBank, Statistics& stats, SystemConfiguration& sysConfig):
-timing(timingSpec),
-systemConfig(sysConfig),
-statistics(stats),
-lastRefreshTime(-1ll * timingSpec.tRFC()),
-lastPrechargeAnyBankTime(-100),
-lastCASTime(-100),
-lastCASWTime(-100),
-otherLastCASTime(-100),
-otherLastCASWTime(-100),
-prechargeTime(0),
-totalPrechargeTime(0),
-nextActivateTime(0),
-nextReadTime(0),
-nextWriteTime(0),
-nextRefreshTime(0),
-lastCalculationTime(0),
-lastCASLength(0),
-lastCASWLength(0),
-otherLastCASLength(0),
-otherLastCASWLength(0),
-CASLength(0),
-CASWLength(0),
-rankID(UINT_MAX),
-lastBankID(0),
-banksPrecharged(0),
-lastActivateTimes(), // make the queue hold four (tFAW)
-bank(newBank)
-{}
 
 void Rank::setRankID(const unsigned channelID, const unsigned rankID)
 {

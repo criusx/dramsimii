@@ -59,6 +59,7 @@ channelID(UINT_MAX),
 rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
 finishedTransactions(),
 cache(_settings.dimmCount, Cache(_settings, _stats)),
+cprhSequence(),
 lastCprhLocation(0)
 {
 	setupCprhValues();
@@ -140,28 +141,6 @@ lastCprhLocation(rhs.lastCprhLocation)
 		refreshCounter[i] = new Transaction(*rhs.refreshCounter[i]);
 	}	
 }
-
-//////////////////////////////////////////////////////////////////////////
-/// deserialization constructor
-/// @brief the constructor to build copies of a channel once it's been deserialized, needs further initialization before it's ready
-/// @author Joe Gross
-//////////////////////////////////////////////////////////////////////////
-Channel::Channel(const Settings& settings, const SystemConfiguration& sysConf, Statistics &stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
-time(0),
-lastCommandIssueTime(-1ll * settings.tCMD),
-lastCommand(NULL),
-timingSpecification(timing),
-transactionQueue(0),
-refreshCounter(0),
-systemConfig(sysConf),
-statistics(stats),
-powerModel(power),
-channelID(UINT_MAX),
-rank(newRank),
-finishedTransactions(),
-cache(),
-lastCprhLocation(0)
-{}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor, reassigns the ordinal to each rank as they are duplicated

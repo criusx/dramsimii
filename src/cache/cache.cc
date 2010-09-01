@@ -661,7 +661,7 @@ LRUBlk *Cache::accessBlock(const Addr addr, int &lat, int context_src, tick curT
 	//cout << set << " "<< tag << endl;
 	LRUBlk *blk = sets[set].findBlk(tag);
 
-	statistics.reportTagSetBlock(tag,set,extractBlkOffset(addr));
+	statistics.reportTagSetBlock(tag,set,extractBlkOffset(addr), curTick);
 
 	lat = hitLatency;
 

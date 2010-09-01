@@ -28,10 +28,6 @@
 #include "queue.hh"
 #include "Statistics.hh"
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/serialization.hpp>
-
 namespace DRAMsimII
 {
 	/// @brief this class logically represents a bank
@@ -131,53 +127,6 @@ namespace DRAMsimII
 
 		friend std::ostream& operator<<(std::ostream& , const Bank&);
 
-	private:
-
-		// friends
-		friend class boost::serialization::access;
-
-		explicit Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics &stats);
-
-		// serialization
-		template<class Archive>
-		void serialize( Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & perBankQueue & lastRASTime & lastCASTime & lastCASWTime & lastPrechargeTime & lastCASLength &
-					lastCASWLength & openRowID & activated & RASCount & totalRASCount & CASCount & totalCASCount & CASWCount & totalCASWCount;
-			}
-		}
-
-		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMsimII::Bank* t, const unsigned  version)
-		{
-			if (version == 0)
-			{
-				const DRAMsimII::TimingSpecification* const timing = &(t->timing);
-				ar << timing;
-				const DRAMsimII::SystemConfiguration* const systemConfig = &(t->systemConfig);
-				ar << systemConfig;		
-				const DRAMsimII::Statistics* const stats = &(t->statistics);
-				ar << stats;
-			}
-		}
-
-		template <class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMsimII::Bank *t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				DRAMsimII::TimingSpecification* timing;	
-				ar >> timing;
-				DRAMsimII::SystemConfiguration* systemConfig;	
-				ar >> systemConfig;
-				DRAMsimII::Statistics* stats;
-				ar >> stats;
-
-				::new(t)DRAMsimII::Bank(*timing,*systemConfig,*stats);
-			}
-		}
 	};
 
 }

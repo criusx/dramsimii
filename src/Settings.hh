@@ -29,9 +29,6 @@
 #include <algorithm>
 #include <map>
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/list.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
 namespace DRAMsimII
@@ -505,24 +502,6 @@ public:
 	explicit Settings(int, char **);
 	explicit Settings();
 
-	// serialization
-	friend class boost::serialization::access;
-
-	template<class Archive>
-	void serialize(Archive & ar, const unsigned int version)
-	{
-			ar & settingsOutputFile & epoch & inFile & arrivalDistributionModel & inFileType & outFile & outFileType & outFileDir & requestCount &
-				& outFileDir & requestCount & refreshPolicy & dramType & dataRate & commandOrderingAlgorithm &
-				columnSize & rowSize & channelWidth & columnCount & rowCount & cacheLineSize & 
-				transactionQueueDepth & seniorityAgeLimit & rowBufferManagementPolicy &
-				& addressMappingPolicy & postedCAS & readWriteGrouping & autoPrecharge & clockGranularity
-				& cachelinesPerRow & channelCount & rankCount & bankCount & shortBurstRatio & readPercentage & tRTRS
-				& tAL & tBurst & tCAS & tCWD & tFAW & tRAS & tRC & tRCD & tREFI & tRFC & tRP & tRRD & tRTP & tWR & tCMD
-				& tInternalBurst & tBufferDelay & cpuToMemoryClockRatio & PdqRD & PdqWR & PdqRDoth & PdqWRoth
-				& DQperDRAM & DQSperDRAM & DMperDRAM & frequencySpec & maxVCC & VDD & IDD0 & IDD1 & IDD2P & IDD2N
-				& IDD3P & IDD3N & IDD4W & IDD4R & IDD5 & associativity & hitLatency & cacheSize & blockSize
-				& nmruTrackingCount & replacementPolicy & fixedCacheLatency;
-	}
 };
 }
 #endif

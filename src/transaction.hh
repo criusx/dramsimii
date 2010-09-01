@@ -24,8 +24,6 @@
 #include "event.hh"
 
 #include <boost/pool/pool.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
 
 namespace DRAMsimII
 {
@@ -92,24 +90,6 @@ namespace DRAMsimII
 		void operator delete(void *);
 		bool operator==(const Transaction& right) const;
 		bool operator!=(const Transaction& right) const;
-
-	private:
-		// serialization
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & boost::serialization::base_object<Event>(*this);
-				ar & const_cast<TransactionType&>(type);
-				ar & const_cast<unsigned&>(length);
-				ar & decodeTime;
-				ar & const_cast<unsigned&>(originalTransaction);
-			}
-
-		}
 	};
 
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction::TransactionType);

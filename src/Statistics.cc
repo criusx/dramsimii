@@ -45,76 +45,25 @@ using namespace DRAMsimII;
 /// @brief constructor based on a given set of Settings
 //////////////////////////////////////////////////////////////////////////
 Statistics::Statistics(const Settings& settings, const vector<Channel> &_cache):
-channel(_cache),
-channels(settings.channelCount),
-ranks(settings.rankCount * settings.dimmCount),
-banks(settings.bankCount),
-cacheHitLatency(settings.hitLatency + settings.tCMD + settings.tBurst),
-usingDimmCache(settings.usingCache),
-validTransactionCount(0),
-startNumber(0),
-endNumber(0),
-burstOf8Count(0),
-burstOf4Count(0),
-columnDepth(log2(settings.columnSize)),
-readCount(0),
-writeCount(0),
-dimmCacheBandwidthData(settings.channelCount),
-bandwidthData(settings.channelCount),
-timePerEpoch((float)settings.epoch / settings.dataRate),
-rowBufferAccesses(settings.channelCount, vector<pair<unsigned,unsigned> >(settings.rankCount * settings.dimmCount)),
-rasReduction(settings.channelCount, vector<unsigned>(settings.rankCount * settings.dimmCount)),
-issuedAtTFAW(0),
-commandDelay(),
-commandExecution(),
-commandTurnaround(),
-transactionDecodeDelay(),
-transactionExecution(),
-cacheLatency(0),
-pcOccurrence(),
-workingSet(),
-aggregateBankUtilization(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount),
-bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount)
+	channel(_cache), channels(settings.channelCount), ranks(settings.rankCount * settings.dimmCount), banks(
+			settings.bankCount), cacheHitLatency(settings.hitLatency + settings.tCMD + settings.tBurst),
+			usingDimmCache(settings.usingCache), validTransactionCount(0), startNumber(0), endNumber(0),
+			burstOf8Count(0), burstOf4Count(0), columnDepth(log2(settings.columnSize)), readCount(0), writeCount(0),
+			dimmCacheBandwidthData(settings.channelCount), bandwidthData(settings.channelCount), timePerEpoch(
+					(float) settings.epoch / settings.dataRate), rowBufferAccesses(settings.channelCount, vector<
+					pair<unsigned, unsigned> > (settings.rankCount * settings.dimmCount)), rasReduction(
+					settings.channelCount, vector<unsigned> (settings.rankCount * settings.dimmCount)),
+			issuedAtTFAW(0), commandDelay(), commandExecution(), commandTurnaround(), transactionDecodeDelay(),
+			transactionExecution(), cacheLatency(0), pcOccurrence(), workingSet(), aggregateBankUtilization(
+					settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount),
+			bankLatencyUtilization(settings.channelCount * settings.rankCount * settings.dimmCount
+					* settings.bankCount)
 {
-	bankLatencyUtilization.reserve(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount);
-	aggregateBankUtilization.reserve(settings.channelCount * settings.rankCount * settings.dimmCount * settings.bankCount);
+	bankLatencyUtilization.reserve(settings.channelCount * settings.rankCount * settings.dimmCount
+			* settings.bankCount);
+	aggregateBankUtilization.reserve(settings.channelCount * settings.rankCount * settings.dimmCount
+			* settings.bankCount);
 }
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief no arg constructor for deserialization, should not be called otherwise
-//////////////////////////////////////////////////////////////////////////
-Statistics::Statistics(const std::vector<Channel> &channel):
-channel(channel),
-channels(0),
-ranks(0),
-banks(0),
-cacheHitLatency(0),
-usingDimmCache(false),
-validTransactionCount(UINT_MAX),
-startNumber(UINT_MAX),
-endNumber(UINT_MAX),
-burstOf8Count(UINT_MAX),
-burstOf4Count(UINT_MAX),
-columnDepth(UINT_MAX),
-readCount(0),
-writeCount(0),
-dimmCacheBandwidthData(0),
-bandwidthData(0),
-timePerEpoch(0),
-rowBufferAccesses(0, vector<pair<unsigned,unsigned> >(0)),
-rasReduction(0, vector<unsigned>(0)),
-issuedAtTFAW(0),
-commandDelay(),
-commandExecution(),
-commandTurnaround(),
-transactionDecodeDelay(),
-transactionExecution(),
-cacheLatency(0),
-pcOccurrence(),
-workingSet(),
-aggregateBankUtilization(0),
-bankLatencyUtilization(0)
-{}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief collects transaction statistics once a transaction has finished
@@ -139,37 +88,41 @@ void Statistics::collectTransactionStats(const Transaction *currentTransaction)
 			if (currentTransaction->isRead())
 			{
 				// read hit
-				if (usingDimmCache &&currentTransaction->isHit())
+				if (usingDimmCache && currentTransaction->isHit())
 				{
 					cacheLatency += cacheHitLatency;
 
-					dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
+					dimmCacheBandwidthData[currentTransaction->getAddress().getChannel()].first
+							+= currentTransaction->getLength() * 8;
 				}
 				// read miss
 				else
 				{
-					bandwidthData[currentTransaction->getAddress().getChannel()].first += currentTransaction->getLength() * 8;
+					bandwidthData[currentTransaction->getAddress().getChannel()].first
+							+= currentTransaction->getLength() * 8;
 				}
 
 				assert(currentTransaction->getLatency() > 4);
-				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks) +
-					currentTransaction->getAddress().getRank() * banks +
-					currentTransaction->getAddress().getBank();
+				unsigned index = currentTransaction->getAddress().getChannel() * (ranks * banks)
+						+ currentTransaction->getAddress().getRank() * banks
+						+ currentTransaction->getAddress().getBank();
 				bankLatencyUtilization[index] += currentTransaction->getLatency();
 				aggregateBankUtilization[index]++;
 				readCount++;
-			}			
+			}
 			else if (currentTransaction->isWrite())
 			{
 				// write hit
 				if (usingDimmCache && currentTransaction->isHit())
 				{
-					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
+					bandwidthData[currentTransaction->getAddress().getChannel()].second
+							+= currentTransaction->getLength() * 8;
 				}
 				// write miss
 				else
 				{
-					bandwidthData[currentTransaction->getAddress().getChannel()].second += currentTransaction->getLength() * 8;
+					bandwidthData[currentTransaction->getAddress().getChannel()].second
+							+= currentTransaction->getLength() * 8;
 				}
 
 				// 64bit bus for most DDRx architectures
@@ -221,7 +174,7 @@ void Statistics::collectCommandStats(const Command *currentCommand)
 			assert(currentCommand->getLatency() < 2147483648 || (currentCommand->isPrecharge() && currentCommand->getEnqueueTime() == 0));
 			commandDelay[currentCommand->getDelayTime()]++;
 			commandExecution[currentCommand->getExecuteTime()]++;
-			commandTurnaround[currentCommand->getLatency()]++;		
+			commandTurnaround[currentCommand->getLatency()]++;
 		}
 	}
 }
@@ -243,9 +196,10 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	Statistics::WeightedAverage<double> averageLatency;
 	os << "----Transaction Latency";
-	for (unordered_map<tick, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue != statsLog.transactionExecution.end(); ++currentValue)
+	for (unordered_map<tick, unsigned>::const_iterator currentValue = statsLog.transactionExecution.begin(); currentValue
+			!= statsLog.transactionExecution.end(); ++currentValue)
 	{
-		averageLatency.add(currentValue->first,currentValue->second);
+		averageLatency.add(currentValue->first, currentValue->second);
 		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
 	os << endl;
@@ -280,11 +234,12 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	// transaction delay
 	os << "----Transaction Delay";
-	for (unordered_map<tick, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue != statsLog.transactionDecodeDelay.end(); ++currentValue)
+	for (unordered_map<tick, unsigned>::const_iterator currentValue = statsLog.transactionDecodeDelay.begin(); currentValue
+			!= statsLog.transactionDecodeDelay.end(); ++currentValue)
 	{
 		os << " {" << currentValue->first << "," << currentValue->second << "}";
 	}
-	os << endl; 
+	os << endl;
 
 #if 0
 	// command time
@@ -314,14 +269,18 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	os << "----Working Set {" << statsLog.workingSet.size() << "}" << endl;
 
-	os << "----Bandwidth {" << setprecision(10) << (float)statsLog.getReadBytesTransferred() / statsLog.timePerEpoch << "} {" << (float)statsLog.getWriteBytesTransferred() / statsLog.timePerEpoch << "}" << endl;
+	os << "----Bandwidth {" << setprecision(10) << (float) statsLog.getReadBytesTransferred() / statsLog.timePerEpoch
+			<< "} {" << (float) statsLog.getWriteBytesTransferred() / statsLog.timePerEpoch << "}" << endl;
 
-	os << "----DIMM Cache Bandwidth {" << setprecision(10) << (float)statsLog.getDIMMReadBytesTransferred() / statsLog.timePerEpoch << "} {" << (float)statsLog.getDIMMWriteBytesTransferred() / statsLog.timePerEpoch << "}" << endl;
+	os << "----DIMM Cache Bandwidth {" << setprecision(10) << (float) statsLog.getDIMMReadBytesTransferred()
+			/ statsLog.timePerEpoch << "} {" << (float) statsLog.getDIMMWriteBytesTransferred()
+			/ statsLog.timePerEpoch << "}" << endl;
 
 	os << "----Per Channel Bandwidth ";
 
 	unsigned currentChannel = 0;
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = statsLog.getBandwidthData().begin(); i != statsLog.getBandwidthData().end(); ++i)
+	for (vector<pair<unsigned, unsigned> >::const_iterator i = statsLog.getBandwidthData().begin(); i
+			!= statsLog.getBandwidthData().end(); ++i)
 	{
 		os << "ch[" << currentChannel++ << "] R{" << i->first << "} W{" << i->second << "} ";
 	}
@@ -329,23 +288,29 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	currentChannel = 0;
 	os << "----Per Channel DIMM Cache Bandwidth ";
-	for (vector<pair<unsigned,unsigned> >::const_iterator i = statsLog.getDimmCacheBandwidthData().begin(); i != statsLog.getDimmCacheBandwidthData().end(); ++i)
+	for (vector<pair<unsigned, unsigned> >::const_iterator i = statsLog.getDimmCacheBandwidthData().begin(); i
+			!= statsLog.getDimmCacheBandwidthData().end(); ++i)
 	{
 		os << "ch[" << currentChannel++ << "] R{" << i->first << "} W{" << i->second << "} ";
 	}
 	os << endl;
 
 	os << "----Average Transaction Latency Per PC Value";
-	for (std::map<PhysicalAddress, Statistics::DelayCounter>::const_iterator currentValue = statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); ++currentValue)
+	for (std::map<PhysicalAddress, Statistics::DelayCounter>::const_iterator currentValue =
+			statsLog.pcOccurrence.begin(); currentValue != statsLog.pcOccurrence.end(); ++currentValue)
 	{
-		os << " {" << std::hex << currentValue->first << "," << std::noshowpoint << (float)(*currentValue).second.getAccumulatedLatency() / (float)(*currentValue).second.getCount() << "," << std::dec << (*currentValue).second.getCount() << "}";
+		os << " {" << std::hex << currentValue->first << "," << std::noshowpoint
+				<< (float) (*currentValue).second.getAccumulatedLatency()
+						/ (float) (*currentValue).second.getCount() << "," << std::dec
+				<< (*currentValue).second.getCount() << "}";
 	}
 	os << endl;
 
 	unsigned hitCount = 0, missCount = 0;
-	for (vector<vector<pair<unsigned,unsigned> > >::const_iterator h = statsLog.getRowBufferAccesses().begin(); h != statsLog.rowBufferAccesses.end(); ++h)
+	for (vector<vector<pair<unsigned, unsigned> > >::const_iterator h = statsLog.getRowBufferAccesses().begin(); h
+			!= statsLog.rowBufferAccesses.end(); ++h)
 	{
-		for (vector<pair<unsigned,unsigned> >::const_iterator i = h->begin(); i != h->end(); ++i)
+		for (vector<pair<unsigned, unsigned> >::const_iterator i = h->begin(); i != h->end(); ++i)
 		{
 			hitCount += i->first;
 			missCount += i->second;
@@ -355,29 +320,24 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	os << "----DIMM Cache Per-DIMM Hit/Miss Counts ";
 	currentChannel = 0;
-	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
-		h != hEnd; ++h)
+	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end(); h != hEnd; ++h)
 	{
 		unsigned currentDimm = 0;
-		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
-			i != iEnd; ++i)
+		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end(); i != iEnd; ++i)
 		{
-			os << "ch[" << currentChannel << "] dimm[" << currentDimm++ <<
-				"] RHit{" << i->getReadHitsMisses().first << "} RMiss{" << i->getReadHitsMisses().second <<
-				"} WHit{" << i->getHitsMisses().first - i->getReadHitsMisses().first << "} WMiss{" 
-				<< i->getHitsMisses().second - i->getReadHitsMisses().second << "} ";
+			os << "ch[" << currentChannel << "] dimm[" << currentDimm++ << "] RHit{" << i->getReadHitsMisses().first
+					<< "} RMiss{" << i->getReadHitsMisses().second << "} WHit{" << i->getHitsMisses().first
+					- i->getReadHitsMisses().first << "} WMiss{" << i->getHitsMisses().second
+					- i->getReadHitsMisses().second << "} ";
 		}
 		currentChannel++;
 	}
 	os << endl;
 
-
 	uint64_t hits = 0, misses = 0;
-	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
-		h != hEnd; ++h)
+	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end(); h != hEnd; ++h)
 	{
-		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
-			i != iEnd; ++i)
+		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end(); i != iEnd; ++i)
 		{
 			hits += i->getHitsMisses().first;
 			misses += i->getHitsMisses().second;
@@ -387,11 +347,9 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 	hits = 0, misses = 0;
 	uint64_t readHits = 0, readMisses = 0;
-	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end();
-		h != hEnd; ++h)
+	for (vector<Channel>::const_iterator h = statsLog.channel.begin(), hEnd = statsLog.channel.end(); h != hEnd; ++h)
 	{
-		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end();
-			i != iEnd; ++i)
+		for (vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end(); i != iEnd; ++i)
 		{
 			readHits += i->getCumulativeReadHitsMisses().first;
 			readMisses += i->getCumulativeReadHitsMisses().second;
@@ -411,7 +369,8 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		{
 			for (unsigned k = 0; k < statsLog.banks; k++)
 			{
-				os << " (" << i << "," << j << "," << k << ") {" << statsLog.aggregateBankUtilization[i * statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << "}";
+				os << " (" << i << "," << j << "," << k << ") {" << statsLog.aggregateBankUtilization[i
+						* statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << "}";
 			}
 		}
 	}
@@ -424,13 +383,14 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 		{
 			for (unsigned k = 0; k < statsLog.banks; k++)
 			{
-				os << " (" << i << "," << j << "," << k << ") {" << statsLog.bankLatencyUtilization[i * statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << "}";
+				os << " (" << i << "," << j << "," << k << ") {" << statsLog.bankLatencyUtilization[i
+						* statsLog.ranks * statsLog.banks + j * statsLog.banks + k] << "}";
 			}
 		}
 	}
 	os << endl;
 
-	os << "----tFAW Limited Commands {" <<  statsLog.issuedAtTFAW << "}" << endl;
+	os << "----tFAW Limited Commands {" << statsLog.issuedAtTFAW << "}" << endl;
 #ifdef M5
 
 	using Stats::Info;
@@ -464,40 +424,55 @@ ostream &DRAMsimII::operator<<(ostream &os, const Statistics &statsLog)
 
 		}
 		if ((info->name.find("dcache.overall_hits") != string::npos) ||
-			(info->name.find("dcache.overall_misses") != string::npos) ||
-			(info->name.find("dcache.overall_miss_latency") != string::npos) ||
-			(info->name.find("icache.overall_hits") != string::npos) ||
-			(info->name.find("icache.overall_misses") != string::npos) ||
-			(info->name.find("icache.overall_miss_latency") != string::npos) ||
-			(info->name.find("l2cache.overall_hits") != string::npos) ||
-			(info->name.find("l2cache.overall_misses") != string::npos) ||
-			(info->name.find("l2cache.overall_mshr_hits") != string::npos) ||
-			(info->name.find("l2cache.overall_mshr_misses") != string::npos) ||
-			(info->name.find("l2cache.overall_mshr_miss_latency") != string::npos) ||
-			(info->name.find("l2cache.overall_miss_latency") != string::npos) ||
-			(info->name.find("l3cache.overall_hits") != string::npos) ||
-			(info->name.find("l3cache.overall_misses") != string::npos) ||
-			(info->name.find("l3cache.overall_miss_latency") != string::npos) ||
-			
-			(info->name.find("l3cache.overall_mshr_miss_latency") != string::npos))
+				(info->name.find("dcache.overall_misses") != string::npos) ||
+				(info->name.find("dcache.overall_miss_latency") != string::npos) ||
+				(info->name.find("icache.overall_hits") != string::npos) ||
+				(info->name.find("icache.overall_misses") != string::npos) ||
+				(info->name.find("icache.overall_miss_latency") != string::npos) ||
+				(info->name.find("l2cache.overall_hits") != string::npos) ||
+				(info->name.find("l2cache.overall_misses") != string::npos) ||
+				(info->name.find("l2cache.overall_mshr_hits") != string::npos) ||
+				(info->name.find("l2cache.overall_mshr_misses") != string::npos) ||
+				(info->name.find("l2cache.overall_mshr_miss_latency") != string::npos) ||
+				(info->name.find("l2cache.overall_miss_latency") != string::npos) ||
+				(info->name.find("l3cache.overall_hits") != string::npos) ||
+				(info->name.find("l3cache.overall_misses") != string::npos) ||
+				(info->name.find("l3cache.overall_miss_latency") != string::npos) ||
+
+				(info->name.find("l3cache.overall_mshr_miss_latency") != string::npos))
 		{
 			os << "----M5 Stat: {" << info->name << "}";
 
-				//std::cerr << "----M5 Stat: {" << info->name << "}" << std::endl;
+			//std::cerr << "----M5 Stat: {" << info->name << "}" << std::endl;
 
-				std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().begin();
-				std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().end();
-				while (start != end)
-				{
-					os << " {" << *start << "}";
-					start++;
-				}
-				os << endl;
-		}		
-	}		
+			std::vector<Stats::Result>::const_iterator start = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().begin();
+			std::vector<Stats::Result>::const_iterator end = ((Stats::FormulaInfoProxy<Stats::Formula> *)info)->result().end();
+			while (start != end)
+			{
+				os << " {" << *start << "}";
+				start++;
+			}
+			os << endl;
+		}
+	}
 #endif
 
 	return os;
+}
+
+std::pair<unsigned, unsigned> Statistics::getDimmCacheHitsMisses() const
+{
+	std::pair<unsigned, unsigned> hitsMisses;
+	for (std::vector<Channel>::const_iterator h = channel.begin(), hEnd = channel.end(); h != hEnd; ++h)
+	{
+		for (std::vector<Cache>::const_iterator i = h->getDimmCache().begin(), iEnd = h->getDimmCache().end(); i
+				!= iEnd; ++i)
+		{
+			hitsMisses.first += i->getCumulativeHitsMisses().first;
+			hitsMisses.second += i->getCumulativeHitsMisses().second;
+		}
+	}
+	return hitsMisses;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -508,27 +483,29 @@ void Statistics::clear()
 	using std::vector;
 
 	commandTurnaround.clear();
-	commandDelay.clear();	
+	commandDelay.clear();
 	commandExecution.clear();
 	transactionExecution.clear();
 	//adjustedTransactionExecution.clear();
 	transactionDecodeDelay.clear();
 	workingSet.clear();
-	issuedAtTFAW = /*readBytesTransferred = writeBytesTransferred =*/ readCount = writeCount = 0;
+	issuedAtTFAW = /*readBytesTransferred = writeBytesTransferred =*/readCount = writeCount = 0;
 
 	for (vector<pair<unsigned, unsigned> >::iterator i = bandwidthData.begin(); i != bandwidthData.end(); ++i)
 	{
 		i->first = i->second = 0;
 	}
 
-	for (vector<pair<unsigned, unsigned> >::iterator i = dimmCacheBandwidthData.begin(); i != dimmCacheBandwidthData.end(); ++i)
+	for (vector<pair<unsigned, unsigned> >::iterator i = dimmCacheBandwidthData.begin(); i
+			!= dimmCacheBandwidthData.end(); ++i)
 	{
 		i->first = i->second = 0;
 	}
 
-	for (vector<vector<pair<unsigned,unsigned> > >::iterator h = rowBufferAccesses.begin(); h != rowBufferAccesses.end(); ++h)
+	for (vector<vector<pair<unsigned, unsigned> > >::iterator h = rowBufferAccesses.begin(); h
+			!= rowBufferAccesses.end(); ++h)
 	{
-		for (vector<pair<unsigned,unsigned> >::iterator i = h->begin(); i != h->end(); ++i)
+		for (vector<pair<unsigned, unsigned> >::iterator i = h->begin(); i != h->end(); ++i)
 		{
 			i->first = i->second = 0;
 		}
@@ -547,7 +524,7 @@ void Statistics::clear()
 	}
 #ifdef M5
 	//async_statdump =
-	async_event = async_statreset = true;	
+	async_event = async_statreset = true;
 #endif // M5DEBUG
 }
 
@@ -556,14 +533,18 @@ void Statistics::clear()
 //////////////////////////////////////////////////////////////////////////
 bool Statistics::operator==(const Statistics& rhs) const
 {
-	return (validTransactionCount == rhs.validTransactionCount && startNumber == rhs.startNumber && endNumber == rhs.endNumber &&
-		burstOf8Count == rhs.burstOf8Count && burstOf4Count == rhs.burstOf4Count && columnDepth == rhs.columnDepth &&
-		/// @todo restore comparisons once tr1 implementations support this
-		commandDelay ==  rhs.commandDelay && commandExecution == rhs.commandExecution && commandTurnaround == rhs.commandTurnaround &&
-		transactionDecodeDelay == rhs.transactionDecodeDelay && transactionExecution == rhs.transactionExecution &&
-		channels == rhs.channels && ranks == rhs.ranks && banks == rhs.banks && aggregateBankUtilization == rhs.aggregateBankUtilization &&
-		pcOccurrence == rhs.pcOccurrence && workingSet == rhs.workingSet && readCount == rhs.readCount && writeCount == rhs.writeCount &&
-		bandwidthData == rhs.bandwidthData && dimmCacheBandwidthData == rhs.dimmCacheBandwidthData &&
-		/*readBytesTransferred == rhs.readBytesTransferred && writeBytesTransferred == rhs.writeBytesTransferred &&*/ issuedAtTFAW == rhs.issuedAtTFAW);
+	return (validTransactionCount == rhs.validTransactionCount && startNumber == rhs.startNumber && endNumber
+			== rhs.endNumber && burstOf8Count == rhs.burstOf8Count && burstOf4Count == rhs.burstOf4Count
+			&& columnDepth == rhs.columnDepth &&
+	/// @todo restore comparisons once tr1 implementations support this
+			commandDelay == rhs.commandDelay && commandExecution == rhs.commandExecution && commandTurnaround
+			== rhs.commandTurnaround && transactionDecodeDelay == rhs.transactionDecodeDelay && transactionExecution
+			== rhs.transactionExecution && channels == rhs.channels && ranks == rhs.ranks && banks == rhs.banks
+			&& aggregateBankUtilization == rhs.aggregateBankUtilization && pcOccurrence == rhs.pcOccurrence
+			&& workingSet == rhs.workingSet && readCount == rhs.readCount && writeCount == rhs.writeCount
+			&& bandwidthData == rhs.bandwidthData && dimmCacheBandwidthData == rhs.dimmCacheBandwidthData
+			&&
+			/*readBytesTransferred == rhs.readBytesTransferred && writeBytesTransferred == rhs.writeBytesTransferred &&*/issuedAtTFAW
+					== rhs.issuedAtTFAW);
 }
 
