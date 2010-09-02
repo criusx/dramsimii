@@ -1,23 +1,20 @@
+# -----------------------------------
+# generate trace file for dimm caches
+# -----------------------------------
+
 import sys
 
 freq = 4
 
 misstrace = sys.argv[1]
-ds2trace = sys.argv[2] 
-dimmcachetrace = sys.argv[3]
-addressmapping = sys.argv[4]
+dimmcachetrace = sys.argv[2]
+addressmapping = sys.argv[3]
 
 # open miss trace file from dinero for read
 try:
     fin = open(misstrace, 'r')
 except:
     print misstrace + ' does not exists'
-
-# open miss trace file for write in dramsimii foramt
-try:
-    fout = open(ds2trace, 'w')
-except:
-    print ds2trace + ' does not exists'
 
 # open miss trace file for write for dimm caches
 fout0 = open(dimmcachetrace + '.' + addressmapping + '.0', 'w')
@@ -38,23 +35,6 @@ for line in fin:
         req = line[0]
         addr = line[2:findspace]
         time = float(line[findspace:l-1]) / freq
-
-        # -----------------------------------
-        # format translation -- dinero to ds2
-        # -----------------------------------
-        #if req == '0':
-        #    print >>fout, "%s %s %f %s" %(addr, 'R', time, '0')
-        #elif req == '1':
-        #    print >>fout, "%s %s %f %s" %(addr, 'W', time, '0')
-
-        # ----------------------
-        # dinero miss trace file
-        # ----------------------
-        #print >>fout, "%s %s %f" %(req, addr, time)
-
-        # ---------------
-        # address mapping
-        # ---------------
 
         # format address to complete 36 bits notation
         addr_len = findspace - 2
@@ -126,22 +106,22 @@ for line in fin:
             i += 1
 
         # set channel id and rank id
-	if addressmapping == "SDRAM_HIPERF_MAP":
+	if addressmapping == "sdramhiperf":
             channelid = address_bin[29]
             rankid = address_bin[16:18]
-        elif addressmapping == "SDRAM_BASE_MAP":
+        elif addressmapping == "sdrambase":
             channelid = address_bin[29]
             rankid = address_bin[2:4]
-	elif addressmapping == "CLOSE_PAGE_BASELINE":
+	elif addressmapping == "closepagebaseline":
             channelid = address_bin[29]
             rankid = address_bin[23:25]
-	elif addressmapping == "CLOSE_PAGE_BASELINE_OPT":
+	elif addressmapping == "closepagebaselineopt":
             channelid = address_bin[29]
             rankid = address_bin[20:22]
-	elif addressmapping == "CLOSE_PAGE_LOW_LOCALITY":
+	elif addressmapping == "closepagelowlocality":
             channelid = address_bin[32]
             rankid = address_bin[30:32]
-	elif addressmapping == "CLOSE_PAGE_HIGH_LOCALITY":
+	elif addressmapping == "closepagehighlocality":
             channelid = address_bin[8]
             rankid = address_bin[2:4]
 
@@ -163,7 +143,6 @@ for line in fin:
         flag = 1
 
 fin.close()
-fout.close()
 fout0.close()
 fout1.close()
 fout2.close()
