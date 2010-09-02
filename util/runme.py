@@ -55,11 +55,11 @@ benchmark = sys.argv[1]
 # ----------------------------------------
 addressMappingPolicy = []
 addressMappingPolicy += ['sdramhiperf']
-addressMappingPolicy += ['sdrambase']
-addressMappingPolicy += ['closepagebaseline']
-addressMappingPolicy += ['closepagebaselineopt']
-addressMappingPolicy += ['closepagelowlocality']
-addressMappingPolicy += ['closepagehighlocality']
+#addressMappingPolicy += ['sdrambase']
+#addressMappingPolicy += ['closepagebaseline']
+#addressMappingPolicy += ['closepagebaselineopt']
+#addressMappingPolicy += ['closepagelowlocality']
+#addressMappingPolicy += ['closepagehighlocality']
 
 #for addressmapping in addressMappingPolicy:
 #    dinmiss_commandline = 'python dinMiss.py trace/' + benchmark + '-miss trace/' + benchmark + '-miss.din ' + addressmapping
@@ -96,32 +96,70 @@ associativity += ['16']
 associativity += ['32']
 associativity += ['64']
 
-dimmID = ['0', '1', '2', '3']
-
-result = 'stats/result.txt'
-fout = open(result, 'w')
 
 for addressmapping in addressMappingPolicy:
+    result = 'stats/' + benchmark + '.' + addressmapping + '.result.txt'
+    fout = open(result, 'w')
+
     for cachesize in cacheSize:
         for blocksize in blockSize:
             for assoc in associativity:
-                for dimmid in dimmID:
-                    dimmcache_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < trace/' + benchmark + '-miss.din.' + addressmapping + '.' + dimmid + ' > stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.' + dimmid
-                    os.system(dimmcache_commandline)
+                dimmcache0_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < trace/' + benchmark + '-miss.din.' + addressmapping + '.0  > stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.0'
+                dimmcache1_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < trace/' + benchmark + '-miss.din.' + addressmapping + '.1 > stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.1'
+                dimmcache2_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < trace/' + benchmark + '-miss.din.' + addressmapping + '.2 > stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.2'
+                dimmcache3_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < trace/' + benchmark + '-miss.din.' + addressmapping + '.3 > stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.3'
 
-                    stat = 'stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.' + dimmid
-                    f = open(stat, 'r')
+                os.system(dimmcache0_commandline)
+                os.system(dimmcache1_commandline)
+                os.system(dimmcache2_commandline)
+                os.system(dimmcache3_commandline)
 
-                    for line in f:
-                        if line.find('Demand Fetches\t') != -1:
-                            demandfetches = line[18:36]
+                stat0 = 'stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.0'
+                stat1 = 'stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.1'
+                stat2 = 'stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.2'
+                stat3 = 'stats/' + benchmark + '.' + addressmapping + '.' + cachesize + '.' + blocksize + '.' + assoc + '.3'
 
-                        if line.find('Demand miss rate') != -1:
-                            missrate = line[25:32]
+                f0 = open(stat0, 'r')
+                f1 = open(stat1, 'r')
+                f2 = open(stat2, 'r')
+                f3 = open(stat3, 'r')
 
-                            print >>fout, '%s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, dimmid, demandfetches, missrate)
-                            print '%s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, dimmid, demandfetches, missrate)
-                    f.close()
+                for line in f0:
+                    if line.find('Demand Fetches\t') != -1:
+                        demandfetches0 = line[18:36]
+
+                    if line.find('Demand miss rate') != -1:
+                        missrate0 = line[25:32]
+
+                for line in f1:
+                    if line.find('Demand Fetches\t') != -1:
+                        demandfetches1 = line[18:36]
+
+                    if line.find('Demand miss rate') != -1:
+                        missrate1 = line[25:32]
+
+                for line in f2:
+                    if line.find('Demand Fetches\t') != -1:
+                        demandfetches2 = line[18:36]
+
+                    if line.find('Demand miss rate') != -1:
+                        missrate2 = line[25:32]
+
+                for line in f3:
+                    if line.find('Demand Fetches\t') != -1:
+                        demandfetches3 = line[18:36]
+
+                    if line.find('Demand miss rate') != -1:
+                        missrate3 = line[25:32]
+
+                print >>fout, '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
+                print '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
+
+                f0.close()
+                f1.close()
+                f2.close()
+                f3.close()
+
 fout.close()
 
 
