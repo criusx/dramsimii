@@ -47,7 +47,6 @@ Settings::Settings():
 settingsOutputFile(""),
 epoch(UINT_MAX),
 inFile(""),
-sessionID(""),
 arrivalDistributionModel(InputStream::NORMAL_DISTRIBUTION),
 inFileType(InputStream::MASE_TRACE),
 outFile(""),
@@ -61,7 +60,6 @@ dramType(DDR),
 dataRate(800000000),
 commandOrderingAlgorithm(STRICT_ORDER),
 transactionOrderingAlgorithm((TransactionOrderingAlgorithm)STRICT),
-systemType(BASELINE_CONFIG),
 perBankQueueDepth(),
 columnSize(0),
 rowSize(0),
@@ -69,20 +67,14 @@ channelWidth(0),
 columnCount(0),
 rowCount(0),
 cacheLineSize(0),
-historyQueueDepth(0),
-completionQueueDepth(0),
 transactionQueueDepth(0),
-eventQueueDepth(0),
-refreshQueueDepth(0),
-refreshTime(0),
 seniorityAgeLimit(0),
 decodeWindow(UINT_MAX),
 rowBufferManagementPolicy(OPEN_PAGE),
-addressMappingScheme(Address::BURGER_BASE_MAP),
+addressMappingPolicy(Address::BURGER_BASE_MAP),
 postedCAS(false),
 readWriteGrouping(true),
 autoPrecharge(false),
-dbReporting(false),
 clockGranularity(0),
 cachelinesPerRow(0),
 channelCount(0U),
@@ -177,6 +169,16 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				hitLatency = 6;
 			else if (associativity == 32)
 				hitLatency = 7;
+			else if (associativity == 64)
+				hitLatency = 8;
+			else if (associativity == 128)
+				hitLatency = 9;
+			else if (associativity == 256)
+				hitLatency = 10;
+			else if (associativity == 512)
+				hitLatency = 11;
+			else if (associativity == 1024)
+				hitLatency = 12;
 			else
 			{
 				cerr << "error: unknown associativity, cannot set hit latency accordingly" << endl;
@@ -236,9 +238,6 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		case output_file_dir_token:
 			outFileDir = value;
 			break;	
-		case dbreporting_token:
-			dbReporting = nodeValue == "true";
-			break;
 		case epoch_token:
 			epoch = lexical_cast<unsigned>(nodeValue);
 			break;
@@ -356,10 +355,7 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		case t_al_token:
 			tAL = lexical_cast<unsigned>(nodeValue);
 			break;
-		case refresh_queue_depth_token:
-			refreshQueueDepth = lexical_cast<unsigned>(nodeValue);
-			break;
-		case bank_count_token:
+			case bank_count_token:
 			bankCount = lexical_cast<unsigned>(nodeValue);
 			break;
 		case rank_count_token:
@@ -370,10 +366,10 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			break;
 		case channel_count_token:
 			channelCount = lexical_cast<unsigned>(nodeValue);
-			if (addressMappingScheme == Address::INTEL845G_MAP)
+			if (addressMappingPolicy == Address::INTEL845G_MAP)
 			{
 				cerr << "error: Intel 845G doesn't support multiple channels, resetting to SDRAM Base Map" << endl;
-				addressMappingScheme = Address::SDRAM_BASE_MAP;
+				addressMappingPolicy = Address::SDRAM_BASE_MAP;
 			}
 			break;
 		case short_burst_ratio_token:
@@ -385,20 +381,11 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		case per_bank_queue_depth_token:
 			perBankQueueDepth = lexical_cast<unsigned>(nodeValue);
 			break;
-		case event_queue_depth_token:
-			eventQueueDepth = lexical_cast<unsigned>(nodeValue);
-			break;
 		case transaction_queue_depth_token:
 			transactionQueueDepth = lexical_cast<unsigned>(nodeValue);
 			break;
 		case decode_window_token:
 			decodeWindow = lexical_cast<unsigned>(nodeValue);
-			break;
-		case completion_queue_depth_token:
-			completionQueueDepth = lexical_cast<unsigned>(nodeValue);
-			break;
-		case history_queue_depth_token:
-			historyQueueDepth = lexical_cast<unsigned>(nodeValue);
 			break;
 		case cacheline_size_token:
 			cacheLineSize = lexical_cast<unsigned>(nodeValue);
@@ -442,13 +429,6 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 		case read_write_grouping_token:
 			readWriteGrouping = nodeValue == "true";
 			break;
-		case refresh_time_token:
-			refreshTime = lexical_cast<unsigned>(nodeValue);
-			break;
-		case system_configuration_type_token:
-			// TODO: if baseline, then normal system, if FBD, then make a FBD system
-
-			break;
 		case transaction_ordering_policy_token:
 			if (nodeValue == "strict")
 				transactionOrderingAlgorithm = (TransactionOrderingAlgorithm)STRICT;
@@ -478,35 +458,35 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				commandOrderingAlgorithm = FIRST_AVAILABLE_AGE;
 			}
 			break;
-		case addr_mapping_scheme_token:
+		case address_mapping_policy_token:
 			if (nodeValue == "burgerbase")
-				addressMappingScheme = Address::BURGER_BASE_MAP;
+				addressMappingPolicy = Address::BURGER_BASE_MAP;
 			else if (nodeValue == "closepagebaseline")
-				addressMappingScheme = Address::CLOSE_PAGE_BASELINE;
+				addressMappingPolicy = Address::CLOSE_PAGE_BASELINE;
 			else if (nodeValue == "intel845g")
 			{
 				if (channelCount > 1)
 				{
 					cerr << "error: Intel 845G doesn't support multiple channels, resetting to SDRAM Base Map" << endl;
-					addressMappingScheme = Address::SDRAM_BASE_MAP;
+					addressMappingPolicy = Address::SDRAM_BASE_MAP;
 				}
 				else
 				{
-					addressMappingScheme = Address::INTEL845G_MAP;
+					addressMappingPolicy = Address::INTEL845G_MAP;
 				}				
 			}
 			else if (nodeValue == "sdrambase" || nodeValue == "sdbas")
-				addressMappingScheme = Address::SDRAM_BASE_MAP;
+				addressMappingPolicy = Address::SDRAM_BASE_MAP;
 			else if (nodeValue == "sdramhiperf" || nodeValue == "sdhipf")
-				addressMappingScheme = Address::SDRAM_HIPERF_MAP;
+				addressMappingPolicy = Address::SDRAM_HIPERF_MAP;
 			else if (nodeValue == "closepagehighlocality" || nodeValue == "highlocality" || nodeValue == "hiloc")
-				addressMappingScheme = Address::CLOSE_PAGE_HIGH_LOCALITY;
+				addressMappingPolicy = Address::CLOSE_PAGE_HIGH_LOCALITY;
 			else if (nodeValue == "closepagelowlocality" || nodeValue == "lowlocality"  || nodeValue == "loloc")
-				addressMappingScheme = Address::CLOSE_PAGE_LOW_LOCALITY;
+				addressMappingPolicy = Address::CLOSE_PAGE_LOW_LOCALITY;
 			else if (nodeValue == "closepagebaselineopt"  || nodeValue == "cpbopt")
-				addressMappingScheme = Address::CLOSE_PAGE_BASELINE_OPT;
+				addressMappingPolicy = Address::CLOSE_PAGE_BASELINE_OPT;
 			else
-				addressMappingScheme = Address::SDRAM_HIPERF_MAP;
+				addressMappingPolicy = Address::SDRAM_HIPERF_MAP;
 			break;
 		case auto_precharge_token:
 			autoPrecharge = nodeValue == "true";
@@ -538,11 +518,9 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 			else if (nodeValue == "ddr")
 				dramType = DDR;
 			else if (nodeValue == "ddr3")
-				dramType = DDR3;
-			else if (nodeValue == "drdram")
-				dramType = DRDRAM;
+				dramType = DDR3;		
 			else
-				dramType = DDR2;
+				dramType = DDR3;
 			break;
 		case input_type_token:
 			if (nodeValue == "k6" || nodeValue == "K6")
@@ -630,7 +608,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const CommandOrderingAlgorithm coa)
 	return os;
 }
 
-ostream &DRAMsimII::operator<<(ostream &os, const RowBufferPolicy rbp)
+ostream &DRAMsimII::operator<<(ostream &os, const RowBufferManagementPolicy rbp)
 {
 	switch (rbp)
 	{

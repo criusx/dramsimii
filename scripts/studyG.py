@@ -34,7 +34,7 @@ getJobId = 'qmgr -c "print server next_job_number"'
 def submitCommand(commandLine, name):
 
     global count
-    suffixes = ["N", "C"]
+    suffixes = ["C", "N"]
     #os.system(commandLine)
     submitCommand = submitString % (commandLine, outputDir, outputDir, name)
     #print commandLine
@@ -47,6 +47,7 @@ def submitCommand(commandLine, name):
         if line.startswith("set server"):
             m = re.search('next_job_number = ([0-9]+)', line)
             nextId = m.group(1)
+            
     if not os.path.exists(outputDir):
         os.makedirs(outputDir)
 
@@ -67,8 +68,8 @@ def submitCommand(commandLine, name):
             f = open(scriptToRun, 'w+')
             f.write("#!/bin/sh\n")
             f.write("export PBS_JOBID=" + nextId + "\n")
-            #f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
-            f.write("export M5_PATH=$HOME/m5_system_2.0b3\n")
+            f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
+            #f.write("export M5_PATH=$HOME/m5_system_2.0b3\n")
             f.write("mkdir -p " + outputDir + "/" + nextId + suffixes[i] + "\n")
             f.write("cd " + outputDir + "/" + nextId + suffixes[i] + "\n")
 	        #export M5_PATH=$HOME/benchmarks/parsec-2.1
@@ -125,7 +126,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyK')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyO')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -178,20 +179,20 @@ requests = [5000000]
 benchmarks = []
 #benchmarks += ['calculix']
 #benchmarks += ['milc']
-benchmarks += ['lbm']
-#benchmarks += ['mcf']
+#benchmarks += ['lbm']
+benchmarks += ['mcf']
 #benchmarks += ['stream']
 #benchmarks += ['bzip2']
 #benchmarks += ['sjeng']
 #benchmarks += ['xalancbmk']
 #benchmarks += ['GemsFDTD']
-
+#benchmarks += ['gups']
 #benchmarks += ['blackscholes']
 #benchmarks += ['bodytrack']
 #benchmarks += ['canneal']
 #benchmarks += ['dedup']
 #benchmarks += ['facesim']
-#benchmarks += ['ferret']
+benchmarks += ['ferret']
 #benchmarks += ['fluidanimate']
 #benchmarks += ['freqmine']
 #benchmarks += ['rtview']
@@ -201,7 +202,9 @@ benchmarks += ['lbm']
 #benchmarks += ['x264']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'
-benchmarkScriptExtension = '_4.rcS'
+#benchmarkScriptExtension = '_4.rcS'
+#benchmarkScriptExtension = '.rcS'
+benchmarkScriptExtension = '_4c_simmedium.rcS'
 
 # options for the run
 channels = []
@@ -209,12 +212,13 @@ channels += [2]
 #channels += [1]
 dimms = []
 #dimms += [1]
-#dimms += [2]
-dimms += [4]
+dimms += [2]
+#dimms += [4]
 ranks = []
+# ranks per dimm
 #ranks += [1]
 ranks += [2]
-ranks += [4]
+#ranks += [4]
 banks = [16]
 tFAW = [28]
 
@@ -226,11 +230,11 @@ associativity += [16]
 associativity += [32]
 cacheSizes = []
 cacheSizes += [8192]
-#cacheSizes += [16384]
-cacheSizes += [24576]
+cacheSizes += [16384]
+#cacheSizes += [24576]
 blockSize = []
 blockSize += [64]
-blockSize += [128]
+#blockSize += [128]
 blockSize += [256]
 #hitLatency = [5]
 replacementPolicies = []
@@ -381,7 +385,7 @@ def main():
 
                                                                                for uc in ['true', 'false']:
                                                                                    if isPowerOf2(size * 1024 / blkSz / assoc):
-                                                                                       currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1792MB --mp "' + \
+                                                                                       currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1200MB --mp "' + \
                                                                                                                  fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
                                                                                                                                                 amp=amp, coa=coa, pbqd=pbqd, rwg=rwg, rbmp=rbmp, \
                                                                                                                                                 output=outputDir, benchmark=benchmark, postedCas=pc, usingCache=uc, \

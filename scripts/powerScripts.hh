@@ -11,10 +11,21 @@ protected:
 	std::list<string> filesGenerated;
 
 	unsigned writing;
+
+	vector<unsigned> rasCounts;
+
+	unsigned rasCountBuffer;
+
+	vector<unsigned> readCounts;
+
+	unsigned readCountBuffer;
+
 	vector<vector<double> > values;
+
 	vector<double> valueBuffer;
 	
 	vector<pair<double, double> > energyValues;
+
 	pair<double, double> energyValueBuffer;
 
 	unsigned scaleFactor;
@@ -53,6 +64,8 @@ protected:
 public:
 	PowerScripts(list<pair<string, string> > &_powerParams):
 	  writing(0),
+		  rasCountBuffer(0),
+		  readCountBuffer(0),
 		  scaleFactor(1),
 		  scaleIndex(0),
 		  channelCount(0),
@@ -109,6 +122,10 @@ public:
 
 	  const PowerParameters &getPowerParameters() const { return powerParameters; }
 
+	  const vector<unsigned> &getRasCounts() const { return rasCounts; }
+
+	  const vector<unsigned> &getReadCounts() const { return readCounts; }
+
 protected:
 	void processLine(char *newLine);
 
@@ -130,6 +147,8 @@ protected:
 
 	void cumulativeEnergyGraph(const bf::path &outFilename, opstream &p, const vector<pair<double, double> > &alternateValues, const double alternateEpochTime, bool isThumbnail) const;
 
+	void rasCountReadCountGraph(const bf::path &outFilename, opstream &p, const PowerScripts &theoreticalPower, bool isThumbnail) const;
+
 	// the scripts to generate the graphs
 	static const string totalPowerScript;
 	static const string averagePowerScript;
@@ -139,6 +158,7 @@ protected:
 	static const string bigPowerScript;
 	static const string comparativePowerScript;
 	static const string bigEnergyScript;
+	static const string rasCountReadCountGraphScript;
 };
 
 #endif

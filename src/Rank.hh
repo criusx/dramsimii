@@ -27,18 +27,89 @@
 
 #include <vector>
 
-#include <boost/circular_buffer.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/serialization.hpp>
-#include <boost/serialization/vector.hpp>
-
 namespace DRAMsimII
 {
 	/// @brief represents a logical rank 
 	class Rank
 	{
 	private:
+		class CircularBuffer
+		{
+		protected:
+			std::vector<tick> buffer;
+
+			std::vector<tick>::iterator _front, _back;
+			//const std::vector<tick>::iterator begin, end;
+		public:
+			void reset(const tick value)
+			{
+				for (std::vector<tick>::iterator i = buffer.begin(), end = buffer.end(); i < end; i++)
+					*i = value;
+			}
+			tick back() const { return *_back; }
+
+			tick front() const { return *_front; }
+
+			void push_front(const tick value)
+			{
+				_front++;
+
+				if (_front == buffer.end())
+					_front = buffer.begin(); 
+
+				*_front = value;
+				
+				_back++; 
+				
+				if (_back == buffer.end()) 
+					_back = buffer.begin();
+			}
+
+			CircularBuffer():
+			buffer(4,-250),
+				_front(buffer.begin()),
+				_back(buffer.begin())
+			{
+				while (_front + 1 != buffer.end())
+					_front++;
+			}
+
+			tick operator[](const unsigned i) const { return buffer[i]; }
+
+			CircularBuffer &operator=(const CircularBuffer &rhs)
+			{
+				buffer = rhs.buffer;
+
+				//begin = buffer.begin();
+				//end = buffer.end();
+				_front = buffer.begin();
+				while (_front + 1 != buffer.end())
+					_front++;
+				_back = buffer.begin();
+				return *this;
+			}
+
+			CircularBuffer(const CircularBuffer &rhs):
+				buffer(rhs.buffer),
+				_front(buffer.begin()),
+				_back(buffer.begin())
+			{
+				while (_front + 1 != buffer.end())
+					_front++;
+			}
+
+			bool operator==(const CircularBuffer &rhs) const
+			{
+				for (unsigned i = 0; i < 4; i++)
+					if (buffer[i] != rhs[i])
+						return false;
+
+				if (*_front != rhs.front() || *_back != rhs.back())
+					return false;
+
+				return true;
+			}
+		};
 
 		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
 		const SystemConfiguration& systemConfig; ///< reference to system configuration information
@@ -78,7 +149,7 @@ namespace DRAMsimII
 
 	public:
 
-		boost::circular_buffer<tick> lastActivateTimes; ///< RAS activation history to ensure tFAW is met
+		CircularBuffer lastActivateTimes;				///< RAS activation history to ensure tFAW is met
 		std::vector<Bank> bank;							///< the banks within this rank
 
 		// functions
@@ -128,126 +199,6 @@ namespace DRAMsimII
 		Rank& operator=(const Rank &rs);
 		bool operator==(const Rank& right) const;
 		friend std::ostream& operator<<(std::ostream& os, const Rank& r);
-
-	private:
-		//serialization
-		explicit Rank(const TimingSpecification &timing, const std::vector<Bank> &newBank, Statistics &stats, SystemConfiguration &sysConfig);
-		explicit Rank();
-
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize( Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & lastRefreshTime & lastPrechargeAnyBankTime & lastCASTime & lastCASWTime & prechargeTime & totalPrechargeTime & lastCASLength &
-					lastCASWLength & rankID & lastBankID & banksPrecharged & lastActivateTimes & CASWLength & CASLength & otherLastCASTime & 
-					otherLastCASWTime & otherLastCASLength & otherLastCASWLength & nextActivateTime & nextReadTime & nextWriteTime & 
-					nextRefreshTime & lastCalculationTime;
-			}
-		}
-
-		template <class Archive>
-		friend inline void save_construct_data(Archive& ar, const DRAMsimII::Rank* t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				const DRAMsimII::TimingSpecification* const timing = &(t->timing);
-				ar << timing;
-				const DRAMsimII::SystemConfiguration* const sysConfig = &(t->systemConfig);
-				ar << sysConfig;
-				const std::vector<DRAMsimII::Bank>* const bank = &(t->bank);
-				ar << bank;	
-				const Statistics* const stats = &(t->statistics);
-				ar << stats;
-			}
-
-		}
-
-		template <class Archive>
-		friend inline void load_construct_data(Archive & ar, DRAMsimII::Rank *t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				DRAMsimII::TimingSpecification* timing;
-				ar >> timing;
-				DRAMsimII::SystemConfiguration* sysConfig;
-				ar >> sysConfig;
-				std::vector<DRAMsimII::Bank>* newBank;
-				ar >> newBank;
-				DRAMsimII::Statistics* stats;
-				ar >> stats;
-
-				::new(t)DRAMsimII::Rank(*timing, *newBank, *stats, *sysConfig);
-			}
-
-		}		
 	};
 }
-
-namespace boost
-{
-	template<class Archive, class U, class Allocator>
-	inline void serialize(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned version)
-	{
-		if (version == 0)
-		{
-			boost::serialization::split_free(ar,t,version);
-		}
-	}
-
-	template<class Archive, class U, class Allocator>
-	inline void save(Archive &ar, const boost::circular_buffer<U, Allocator> &t, const unsigned version)
-	{
-		if (version == 0)
-		{
-			//const circular_buffer<U>::size_type maxCount(t.capacity());
-			//ar << BOOST_SERIALIZATION_NVP(maxCount);
-			typename circular_buffer<U, Allocator>::capacity_type maxCount(t.capacity());
-			ar << (maxCount);
-
-			//const circular_buffer<U>::size_type count(t.size());
-			//ar << BOOST_SERIALIZATION_NVP(count);
-			typename circular_buffer<U, Allocator>::size_type count(t.size());
-			ar << (count);
-
-			for (typename circular_buffer<U, Allocator>::const_iterator i = t.begin(); i != t.end(); i++)
-				//for (boost::circular_buffer<U,Allocator>::size_type i = 0; i < t.size(); i++)
-			{
-				ar << *i;
-				//ar << t[i];
-			}
-		}
-
-	}
-
-	template<class Archive, class U, class Allocator>
-	inline void load(Archive &ar, boost::circular_buffer<U, Allocator> &t, const unsigned version)
-	{
-		if (version == 0)
-		{
-			//ar >> BOOST_SERIALIZATION_NVP(maxCount);
-			typename circular_buffer<U, Allocator>::capacity_type maxCount;
-			ar >> (maxCount);
-			t.set_capacity(maxCount);
-
-			//circular_buffer<U>::size_type count;
-			//ar >> BOOST_SERIALIZATION_NVP(count);
-			unsigned count;
-			ar >> (count);
-
-			while (count-- > 0)
-			{
-				U value;
-				ar >> value;
-				//t.push_front(value);
-				t.push_back(value);
-			}
-		}
-
-	}
-
-}
-
 #endif

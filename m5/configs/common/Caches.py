@@ -53,7 +53,7 @@ class L3Cache(BaseCache):
     latency = '12.25ns'
     num_cpus = 4
     mshrs = 24
-    tgts_per_mshr = 12
+    tgts_per_mshr = 12    
     prefetch_policy='ghb'
     prefetch_degree=3
     prefetcher_size=256

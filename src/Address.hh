@@ -14,14 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef ADDRESSES_H
-#define ADDRESSES_H
-#pragma once
+#ifndef ADDRESS_HH
+#define ADDRESS_HH
 
 #include "globals.hh"
-
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
 
 namespace DRAMsimII
 {
@@ -36,7 +32,7 @@ namespace DRAMsimII
 		// This section defines the address mapping scheme
 		// The scheme dictates how a memory address is converted
 		// to rank, bank, row, col, byte
-		enum AddressMappingScheme
+		enum AddressMappingPolicy
 		{
 			CLOSE_PAGE_BASELINE,			
 			SDRAM_BASE_MAP,
@@ -60,7 +56,7 @@ namespace DRAMsimII
 		static unsigned columnLowAddressDepth;	///< the number of bits to represent the lower portion of a column
 		static unsigned columnHighAddressDepth; ///< the number of bits to represent the upper portion of a column
 		static unsigned rankCount;				///< the number of ranks per DIMM
-		static AddressMappingScheme mappingScheme;	///< the mapping scheme to convert physical to logical addresses
+		static AddressMappingPolicy mappingScheme;	///< the mapping scheme to convert physical to logical addresses
 
 		unsigned virtualAddress;			///< the virtual address
 		PhysicalAddress physicalAddress;	///< the physical address
@@ -109,28 +105,14 @@ namespace DRAMsimII
 		void static initialize(const SystemConfiguration &systemConfig);
 		PhysicalAddress static maxAddress();
 
-		// friend		
-		friend class boost::serialization::access;
 		friend std::ostream &DRAMsimII::operator<<(std::ostream &os, const Address&);
 
 		// overloads
 		bool operator==(const Address& right) const;
 		bool operator!=(const Address& right) const;
 
-	private:
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & channelAddressDepth & rankAddressDepth & bankAddressDepth & rowAddressDepth 
-					& columnAddressDepth & columnSizeDepth & mappingScheme & 
-					virtualAddress & physicalAddress & channel & rank 
-					& bank & row & column & columnLowAddressDepth & columnHighAddressDepth & dimm;
-			}
-		}
 	};
-	std::ostream& operator<<(std::ostream&, const Address::AddressMappingScheme&);
+	std::ostream& operator<<(std::ostream&, const Address::AddressMappingPolicy&);
 
 }
 #endif

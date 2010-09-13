@@ -24,9 +24,6 @@
 #include "transaction.hh"
 #include "event.hh"
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
-
 namespace DRAMsimII
 {
 	/// @brief represents a DRAM command from the memory controller to the DRAMs
@@ -99,20 +96,6 @@ namespace DRAMsimII
 		bool operator!=(const Command& right) const;
 		void *operator new(size_t size);
 		void operator delete(void *);
-
-	private:
-		// serialization
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & boost::serialization::base_object<Event>(*this) & commandType & hostTransaction & length;
-			}
-
-		}
 	};	
 
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);

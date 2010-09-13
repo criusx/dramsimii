@@ -47,7 +47,6 @@ using std::setfill;
 #include <queue>
 
 #include "System.hh"
-#include "fbdSystem.hh"
 #include "Settings.hh"
 #include "globals.hh"
 

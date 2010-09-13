@@ -334,7 +334,7 @@ void StatsScripts::bandwidthGraph(const bf::path &outFilename, opstream &p, bool
 	if (allZeros)
 		p << "set yrange [0:1]" << endl;
 
-	printTitle("", "System Bandwidth\n" + commandLine, p, 2);
+	printTitle("System Bandwidth", commandLine, p, 2);
 	p << bandwidthGraphScript << endl;
 
 	for (vector<pair<uint64_t, uint64_t> >::const_iterator i =

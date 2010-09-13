@@ -58,7 +58,8 @@ powerModel(_settings),
 channelID(UINT_MAX),
 rank(_settings.rankCount * _settings.dimmCount, Rank(_settings, timingSpecification, _systemConfig, _stats)),
 finishedTransactions(),
-cache(_settings.dimmCount, Cache(_settings)),
+cache(_settings.dimmCount, Cache(_settings, _stats)),
+cprhSequence(),
 lastCprhLocation(0)
 {
 	setupCprhValues();
@@ -140,28 +141,6 @@ lastCprhLocation(rhs.lastCprhLocation)
 		refreshCounter[i] = new Transaction(*rhs.refreshCounter[i]);
 	}	
 }
-
-//////////////////////////////////////////////////////////////////////////
-/// deserialization constructor
-/// @brief the constructor to build copies of a channel once it's been deserialized, needs further initialization before it's ready
-/// @author Joe Gross
-//////////////////////////////////////////////////////////////////////////
-Channel::Channel(const Settings& settings, const SystemConfiguration& sysConf, Statistics &stats, const PowerConfig &power, const std::vector<Rank> &newRank, const TimingSpecification &timing):
-time(0),
-lastCommandIssueTime(-1ll * settings.tCMD),
-lastCommand(NULL),
-timingSpecification(timing),
-transactionQueue(0),
-refreshCounter(0),
-systemConfig(sysConf),
-statistics(stats),
-powerModel(power),
-channelID(UINT_MAX),
-rank(newRank),
-finishedTransactions(),
-cache(),
-lastCprhLocation(0)
-{}
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief copy constructor, reassigns the ordinal to each rank as they are duplicated
@@ -602,7 +581,7 @@ Transaction::TransactionType Channel::setReadWriteType(const int rankID) const
 void Channel::doPowerCalculation(ostream& os)
 {	
 	double PsysRD = 0.0;
-	double PsysRdAdjusted = 0.0;
+	//double PsysRdAdjusted = 0.0;
 	double PsysWR = 0.0;
 
 	double PsysACT_STBY = 0.0;
@@ -612,7 +591,7 @@ void Channel::doPowerCalculation(ostream& os)
 	double PsysACT = 0.0;
 	//double PsysACTAdjusted = 0.0;
 
-	float tRRDschAdjusted = 0.0F;
+	//float tRRDschAdjusted = 0.0F;
 
 	uint64_t totalReadHits = 0;
 
@@ -629,22 +608,12 @@ void Channel::doPowerCalculation(ostream& os)
 			thisRankRasCount += l->getRASCount();
 			l->accumulateAndResetCounts();
 		}
-
-		// what if the RAS could be reduced by specific caching
-		unsigned thisRankAdjustedRasCount = thisRankRasCount - statistics.getRowReduction()[getChannelID()][k->getRankId()]; 
-
-		if (thisRankRasCount < statistics.getRowReduction()[getChannelID()][k->getRankId()])
-			cerr << thisRankRasCount << " " << statistics.getRowReduction()[getChannelID()][k->getRankId()] << endl;
-#if 0
-		cerr << "!!! rasCount " << allBankRASCount << " reduxBy " << statistics.getRowReduction()[getChannelID()][k->getRankID()] << 
-			" reducedTo " << allBankRASCount - statistics.getRowReduction()[getChannelID()][k->getRankID()] << " totalReadHits " <<
-			statistics.getHitRate()[getChannelID()][k->getRankID()].first.first << endl;
+			
+#ifndef NDEBUG
 #endif
 		//totalReadHits += statistics.getHitRate()[getChannelID()][k->getRankId()].first.first;
 		totalReadHits += cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first;
-		BOOST_ASSERT(thisRankAdjustedRasCount >= 0);
-		//BOOST_ASSERT(thisRankAdjustedRasCount <= thisRankRasCount);
-
+		
 		// FIXME: assumes CKE is always high, so (1 - CKE_LOW_PRE%) = 1
 		double percentActive = 1.0 - (k->getPrechargeTime(time) / max((double)(time - powerModel.getLastCalculation()), 0.00000001));
 
@@ -680,41 +649,32 @@ void Channel::doPowerCalculation(ostream& os)
 		double tRRDsch = ((double)(time - powerModel.getLastCalculation())) / (thisRankRasCount > 0 ? thisRankRasCount : 0.00000001);
 
 #ifndef NDEBUG
+#ifdef DEBUG_RRD
 		cerr << "rrd " << tRRDsch << " " << powerModel.gettRC() << endl;
+#endif
 #endif
 		double PschACT = powerModel.getPdsACT() * powerModel.gettRC() / tRRDsch;
 
-		tRRDschAdjusted = ((float)(time - powerModel.getLastCalculation()) / thisRankAdjustedRasCount);
 #if 0
 		if (tRRDsch > 200.0F)
 			cerr << "t=" << time << ", last t=" << powerModel.getLastCalculation() << ", #RAS=" << perRankRASCount << endl;
 #endif
 		PsysACT += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * PschACT;
 
-		//PsysACTAdjusted += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDschAdjusted) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
-
+		
 		//PsysACTArray.push_back(PsysACT);
 
 		double RDschPct = k->getReadCycles() / (double)(time - powerModel.getLastCalculation());
-
-		double RDschPctAdjusted = (k->getReadCycles() - timingSpecification.tBurst() * 
-			cache[k->getRankId() / systemConfig.getRankCount()].getReadHitsMisses().first) /
-			(double)(time - powerModel.getLastCalculation());
-
-		BOOST_ASSERT(RDschPctAdjusted >= 0.0);
-
+		
 		PsysRD += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsRD() * RDschPct;
-
-		PsysRdAdjusted += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() *
-			powerModel.getPdsRD() * RDschPctAdjusted;
-
+				
 		double WRschPct = k->getWriteCycles() / (double)(time - powerModel.getLastCalculation());
 
 		// using a write-through cache, no help for writes
 
 		PsysWR += powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getPdsWR() * WRschPct;
 
-		os << " rk[" << k->getRankId() << "] prechargeTime{" << k->getPrechargeTime(time) << "} rasCount{" << thisRankRasCount << "} adjRasCount{" << thisRankAdjustedRasCount <<
+		os << " rk[" << k->getRankId() << "] prechargeTime{" << k->getPrechargeTime(time) << "} rasCount{" << thisRankRasCount << 
 			"} duration{" << time - powerModel.getLastCalculation() << "} read{" << k->getReadCycles() << 
 			"} readHits{" << k->getReadHits() <<
 			"} write{" << k->getWriteCycles() << "}";
@@ -736,77 +696,16 @@ void Channel::doPowerCalculation(ostream& os)
 
 	os << endl;
 
-	os << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysACT_STBY << "} mW EsysAdjusted {" << setprecision(5) <<
-		(PsysRD + PsysWR + PsysACT + PsysACT_STBY + PsysACT_PDN + PsysPRE_STBY + PsysPRE_PDN) * systemConfig.getEpoch() / systemConfig.getDatarate() << "/" <<
-		powerModel.getDevicesPerRank() * powerModel.getIDD1() * ((float)timingSpecification.tRC() / systemConfig.getDatarate()) * powerModel.getVDD() * totalReadHits << "} mJ" <<
-		endl;
-	//Pre(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
-
+	os << "-Psys(ACT_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysACT_STBY << "} mW " << endl;
+	
 	os << "-Psys(ACT) ch[" << channelID << "] {"<< setprecision(5) << PsysACT << "} mW" << endl;
-	//tRRD[" << tRRDsch << "]" <<
-	//<<Psys(ACT)adjusted {" << setprecision(5) << PsysACTAdjusted << "} mW" << 
-	//	endl;
-
+	
 	os << "-Psys(PRE_STBY) ch[" << channelID << "] {" << setprecision(5) << PsysPRE_STBY << "} mW" << endl;
-	//Pre(" << k->getPrechargeTime() << "/" << time - powerModel.getLastCalculation() << ")" << endl;
-
-	os << "-Psys(RD) ch[" << channelID << "] {" << setprecision(5) << PsysRD << "} mW Psys(RD)adjusted {" << 
-		setprecision(5) << PsysRdAdjusted << "} mW " << endl;
-	// 	cerr << PsysRD * systemConfig.getEpoch() / systemConfig.getDatarate() << " " <<
-	// 		powerModel.getIDD1() << " " <<  ((float)timingSpecification.tRC() / systemConfig.getDatarate()) << " " << powerModel.getVDD() << " " << totalReadHits << endl;
-
+	
+	os << "-Psys(RD) ch[" << channelID << "] {" << setprecision(5) << PsysRD << "} mW" << endl;
+	
 	os << "-Psys(WR) ch[" << channelID << "] {" << setprecision(5) << PsysWR << "} mW" << endl;
 
-
-	//////////////////////////////////////////////////////////////////////////
-	// do speculative power calcs that leave out cache hits
-
-
-	// no total power calcs for now
-#if 0
-	powerOutStream << "++++++++++++++++++++++ total ++++++++++++++++++++++" << endl;
-
-	PsysACTTotal = 0;
-
-	for (vector<Rank>::const_iterator k = rank.begin(); k != rank.end(); k++)
-	{
-		unsigned perRankRASCount = 1;
-
-		for (vector<Bank>::const_iterator l = k->bank.begin(); l != k->bank.end(); l++)
-		{
-			entireRAS += l->getTotalRASCount();
-			entireCAS += l->getTotalCASCount();
-			entireCASW += l->getTotalCASWCount();
-			perRankRASCount += l->getTotalRASCount();
-		}
-
-		float percentActive = 1.0F - (double)(k->getTotalPrechargeTime())/(double)time;
-
-		powerOutStream << "+Psys(ACT_STBY) ch[" << channelID << "] r[" << k->getRankID() << "] {" << setprecision(5) <<
-			powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * powerModel.getIDD3N() * powerModel.getVDDmax() * percentActive << "} mW P(" << k->getTotalPrechargeTime() << "/" << time  << ")" << endl;
-
-		float tRRDsch = ((double)time) / perRankRASCount;
-
-		powerOutStream << "+Psys(ACT) ch[" << channelID << "] r[" << k->getRankID() << "] {"<< setprecision(5) <<
-			powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT() << "} mW" << endl;
-
-		PsysACTTotal += powerModel.getDevicesPerRank() * ((double)powerModel.gettRC() / (double)tRRDsch) * powerModel.getVoltageScaleFactor() * powerModel.getPdsACT();
-	}
-
-	double RDschPct = entireCAS * timingSpecification.tBurst() / (double)(time);
-	double WRschPct = entireCAS * timingSpecification.tBurst() / (double)(time);
-
-	//cerr << RDschPct * 100 << "%\t" << WRschPct * 100 << "%"<< endl;
-
-	powerOutStream << "+Psys(ACT) ch[" << channelID << "] " << setprecision(5) <<
-		PsysACTTotal << " mW" << endl;
-
-	powerOutStream << "+Psys(RD) ch[" << channelID << "] {" << setprecision(5) <<
-		powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * (powerModel.getIDD4R() - powerModel.getIDD3N()) * RDschPct << "} mW" << endl;
-
-	powerOutStream << "+Psys(WR) ch[" << channelID << "] {" << setprecision(5) <<
-		powerModel.getDevicesPerRank() * powerModel.getVoltageScaleFactor() * powerModel.getFrequencyScaleFactor() * (powerModel.getIDD4W() - powerModel.getIDD3N()) * WRschPct << "} mW" << endl;
-#endif
 	powerModel.setLastCalculation(time);
 }
 
@@ -2447,7 +2346,7 @@ void Channel::executeCommand(Command *thisCommand)
 						{
 							bool success = cache[readCommand->getAddress().getDimm()].timingAccess(readCommand,time);
 							assert(success);
-#ifndef NDEBUG
+#if !defined(NDEBUG) && defined(CACHE_HIT)
 							std::cout << (success ? "|" : ".");
 #endif
 							readCommand->setStartTime(time);
@@ -2493,15 +2392,8 @@ void Channel::executeCommand(Command *thisCommand)
 			{
 				satisfied = cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
 				commandHit = satisfied;
-				thisCommand->getHost()->setHit(satisfied);
-				if (!satisfied)
-					currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
-				// end of the line on reuse
-				if (currentRank->bank[thisCommand->getAddress().getBank()].isAllHits() && thisCommand->isPrecharge())
-				{
-					statistics.reportRasReduction(thisCommand);
-				}
-#ifndef NDEBUG
+				thisCommand->getHost()->setHit(satisfied);			
+#if !defined(NDEBUG) && defined(CACHE_HIT)
 				std::cout << (satisfied ? "|" : ".");
 #endif
 			}
@@ -2544,10 +2436,8 @@ void Channel::executeCommand(Command *thisCommand)
 			bool satisfied = 
 				cache[thisCommand->getAddress().getDimm()].timingAccess(thisCommand, thisCommand->getStartTime());
 
-			currentRank->bank[thisCommand->getAddress().getBank()].setAllHits(false);
-
 			thisCommand->getHost()->setHit(satisfied);
-#ifndef NDEBUG
+#if !defined(NDEBUG) && defined(DEBUG_HIT)
 			std::cout << (satisfied ? "|" : ".");
 #endif
 		}

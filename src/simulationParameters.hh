@@ -21,10 +21,6 @@
 #include "globals.hh"
 #include "Settings.hh"
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/serialization.hpp>
-
 namespace DRAMsimII
 {
 	/// @brief the parameters for the simulation, including where the requests come from and how many requests to simulate
@@ -45,30 +41,6 @@ namespace DRAMsimII
 		friend std::ostream& operator<<(std::ostream& , const SimulationParameters&);
 		bool operator==(const SimulationParameters& right) const;
 
-		// serialization
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize( Archive & ar, const unsigned int version)
-		{
-			if (version == 0)
-			{
-				ar & requestCount & inputType;
-			}
-
-		}
-
-		template<class Archive>
-		friend void inline load_construct_data(Archive& ar, DRAMsimII::SimulationParameters* t, const unsigned version)
-		{
-			if (version == 0)
-			{
-				assert(&ar);
-				Settings settings;
-				::new(t)DRAMsimII::SimulationParameters(settings);
-			}
-
-		}
 	};
 }
 #endif

@@ -44,6 +44,7 @@
 #include "../globals.hh"
 #include "../command.hh"
 
+
 namespace DRAMsimII
 {
 	class Packet;
@@ -143,6 +144,8 @@ namespace DRAMsimII
 		const unsigned assoc;					///< the associativity of the cache
 		const unsigned hitLatency;				///< the hit latency
 
+		Statistics &statistics;							///< backward pointer to the stats engine
+
 		std::vector<CacheSet> sets;				///< The cache sets.
 		std::vector<LRUBlk> blks;				///< The cache blocks.
 		//std::vector<uint8_t> dataBlks;			///< The data blocks, 1 per cache block.
@@ -161,6 +164,7 @@ namespace DRAMsimII
 		std::pair<unsigned,unsigned> cumulativeHitsMisses; ///< hits and misses since the cache was created
 		std::pair<unsigned,unsigned> cumulativeReadHitsMisses; ///< read hits and misses since the cache was created
 		unsigned bandwidth;						///< bandwidth since the last reset to this cache
+		
 
 
 	public:
@@ -172,11 +176,11 @@ namespace DRAMsimII
 		* @param _hit_latency The latency in cycles for a hit.
 		*/
 		Cache(unsigned _numSets, unsigned _blkSize, unsigned _assoc,
-			unsigned _hit_latency, unsigned _nmruCount, ReplacementPolicy _replacementPolicy);
+			unsigned _hit_latency, unsigned _nmruCount, ReplacementPolicy _replacementPolicy, DRAMsimII::Statistics &stats);
 
 		Cache(const Cache&);
 
-		Cache(const DRAMsimII::Settings &);
+		Cache(const DRAMsimII::Settings &, Statistics& stats);
 
 		/**
 		* Destructor
@@ -280,9 +284,9 @@ namespace DRAMsimII
 		* @param addr The address to get the tag from.
 		* @return The tag of the address.
 		*/
-		inline Addr extractTag(Addr addr) const
+		inline unsigned extractTag(Addr addr) const
 		{
-			return (addr >> tagShift);
+			return (addr >> tagShift) & UINT_MAX;
 		}
 
 		/**
@@ -290,7 +294,7 @@ namespace DRAMsimII
 		* @param addr The address to get the set from.
 		* @return The set index of the address.
 		*/
-		inline Addr extractSet(Addr addr) const
+		inline unsigned extractSet(Addr addr) const
 		{
 			return ((addr >> setShift) & setMask);
 		}
@@ -300,7 +304,7 @@ namespace DRAMsimII
 		* @param addr The address to get the offset of.
 		* @return The block offset.
 		*/
-		inline Addr extractBlkOffset(Addr addr) const
+		inline unsigned extractBlkOffset(Addr addr) const
 		{
 			return (addr & blkMask);
 		}

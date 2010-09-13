@@ -25,33 +25,6 @@ using std::cerr;
 using std::endl;
 using namespace DRAMsimII;
 
-// no arg constructor for deserialization and unit testing
-TimingSpecification::TimingSpecification():
-t_al(-1),
-t_burst(-1),
-t_cas(-1),
-t_ccd(-1),
-t_cmd(-1),
-t_cwd(-1),
-t_faw(-1),
-t_ras(-1),
-t_rc(-1),
-t_rcd(-1),
-t_rfc(-1),
-t_rp(-1),
-t_rrd(-1),
-t_rtp(-1),
-t_rtrs(-1),
-t_wr(-1),
-t_wtr(-1),
-t_ost(0),
-t_int_burst(-1),
-t_buffer_delay(-1),
-t_refi(-1),
-t_cache_access(-1)
-{}
-
-
 TimingSpecification::TimingSpecification(const Settings& settings):
 t_buffer_delay(settings.tBufferDelay),
 t_refi(settings.tREFI),
@@ -176,12 +149,7 @@ t_cache_access(settings.hitLatency)
 		t_wr = settings.tWR;	
 		t_ost = 0;					// does not exist in SDRAM
 		break;
-
-	case DRDRAM:
-		cerr << "DRDRAM not yet supported." << endl;
-		exit(-12);
-		break;
-
+		
 	default:
 		break;
 	}	

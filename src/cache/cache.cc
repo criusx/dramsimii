@@ -40,6 +40,7 @@
 #include "base.hh"
 #include "cache.hh"
 #include "../Settings.hh"
+#include "../Statistics.hh"
 
 #include <boost/assert.hpp>
 
@@ -48,6 +49,8 @@ using DRAMsimII::CacheSet;
 using DRAMsimII::LRUBlk;
 using DRAMsimII::PacketList;
 using DRAMsimII::Command;
+using DRAMsimII::Statistics;
+using DRAMsimII::Settings;
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -57,11 +60,12 @@ using DRAMsimII::isPowerOf2;
 using DRAMsimII::floorLog2;
 
 // create and initialize a LRU/MRU cache structure
-Cache::Cache(unsigned _numSets, unsigned _blkSize, unsigned _assoc,unsigned _hit_latency, unsigned _nmruCount, ReplacementPolicy _replacementPolicy):
+Cache::Cache(unsigned _numSets, unsigned _blkSize, unsigned _assoc, unsigned _hit_latency, unsigned _nmruCount, ReplacementPolicy _replacementPolicy, Statistics &stats):
 numSets(_numSets),
 blkSize(_blkSize),
 assoc(_assoc),
 hitLatency(_hit_latency),
+statistics(stats),
 sets(numSets, CacheSet(_assoc)),
 blks(numSets * assoc),
 setShift(floorLog2(blkSize)),
@@ -161,6 +165,7 @@ numSets(rhs.numSets),
 blkSize(rhs.blkSize),
 assoc(rhs.assoc),
 hitLatency(rhs.hitLatency),
+statistics(rhs.statistics),
 sets(rhs.sets),
 blks(rhs.blks),
 setShift(rhs.setShift),
@@ -209,17 +214,22 @@ replacementPolicy(rhs.replacementPolicy)
 	}
 }
 
-Cache::Cache(const DRAMsimII::Settings &settings):
+Cache::Cache(const Settings &settings, Statistics& stats):
 numSets((settings.cacheSize * 1024)/ settings.blockSize / settings.associativity),
 blkSize(settings.blockSize),
 assoc(settings.associativity),
 hitLatency(settings.hitLatency),
+statistics(stats),
 sets(settings.usingCache ? settings.cacheSize * 1024 / settings.blockSize / settings.associativity : 0, CacheSet(settings.associativity)),
 blks(settings.usingCache ? numSets * assoc : 0),
 setShift(floorLog2(settings.blockSize)),
-tagShift(floorLog2((settings.cacheSize * 1024) / settings.blockSize / settings.associativity) + floorLog2(settings.blockSize)), 
+//setShift(floorLog2(settings.blockSize / 64)),
+tagShift(floorLog2((settings.cacheSize * 1024) / settings.blockSize / settings.associativity) + floorLog2(settings.blockSize)),
+//tagShift(floorLog2((settings.cacheSize * 1024) / settings.blockSize / 64 / settings.associativity) + floorLog2(settings.blockSize / 64)),
 setMask((settings.cacheSize * 1024) / settings.blockSize / settings.associativity - 1),
+//setMask((settings.cacheSize * 1024) / settings.blockSize / 64 / settings.associativity - 1),
 blkMask(settings.blockSize - 1),
+//blkMask(settings.blockSize / 64 - 1),
 writeAllocate(false),
 nmruCount(settings.nmruTrackingCount),
 replacementPolicy(settings.replacementPolicy)
@@ -645,11 +655,13 @@ LRUBlk *Cache::accessBlock(const Addr addr) const
 
 LRUBlk *Cache::accessBlock(const Addr addr, int &lat, int context_src, tick curTick)
 {
-	Addr tag = extractTag(addr);
+	unsigned tag = extractTag(addr);
 
 	unsigned set = extractSet(addr);
-
+	//cout << set << " "<< tag << endl;
 	LRUBlk *blk = sets[set].findBlk(tag);
+
+	statistics.reportTagSetBlock(tag,set,extractBlkOffset(addr), curTick);
 
 	lat = hitLatency;
 

@@ -147,7 +147,6 @@ const std::string cumulativeTransactionGraphScript = "set yrange [0:1]\n\
 													 set ylabel 'Percent of Transactions with At Most this Latency'\n\
 													 plot '-' using 1:2 t 'Cumulative Latency Distribution' with lines lw 2.00\n";
 
-
 const std::string bandwidthGraphScript = "set yrange [0 : *] noreverse nowriteback\n\
 										 set xlabel 'Time (s)' offset character .05, 0,0 textcolor lt -1 rotate by 90\n\
 										 set xrange [0:*]\n\

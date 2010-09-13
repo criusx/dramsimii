@@ -84,6 +84,8 @@ parser.add_option("--nopre", action="store_true")
 
 parser.add_option("--benchmarkName", default="")
 
+parser.add_option("--memsize", default=None)
+
 # more options
 execfile(os.path.join(config_root, "common", "Options.py"))
 
@@ -125,7 +127,11 @@ if buildEnv['TARGET_ISA'] == "alpha":
         test_sys = makeLinuxAlphaSystem(test_mem_mode, bm[0])
     else:
         print "info: using DRAMsimII"
-        test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, SysConfig(mem='512MB'), options.mp, options.DRAMsimConfig, options.benchmarkName)
+        if options.memsize is not None:
+            sc = SysConfig(mem=options.memsize)
+        else:
+            sc = SysConfig(mem="512MB")
+        test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, sc, options.mp, options.DRAMsimConfig, options.benchmarkName)
 
 elif buildEnv['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])

@@ -47,8 +47,7 @@ totalRASCount(0),
 CASCount(0),
 totalCASCount(0),
 CASWCount(0),
-totalCASWCount(0),
-allHits(false)
+totalCASWCount(0)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,8 +75,7 @@ totalRASCount(rhs.totalRASCount),
 CASCount(rhs.CASCount),
 totalCASCount(rhs.totalCASCount),
 CASWCount(rhs.CASWCount),
-totalCASWCount(rhs.totalCASWCount),
-allHits(rhs.allHits)
+totalCASWCount(rhs.totalCASWCount)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,37 +103,7 @@ totalRASCount(rhs.totalRASCount),
 CASCount(rhs.CASCount),
 totalCASCount(rhs.totalCASCount),
 CASWCount(rhs.CASWCount),
-totalCASWCount(rhs.totalCASWCount),
-allHits(rhs.allHits)
-{}
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief deserialization constructor
-//////////////////////////////////////////////////////////////////////////
-Bank::Bank(const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics &stats):
-timing(timingVal),
-systemConfig(systemConfigVal),
-statistics(stats),
-perBankQueue(0),
-lastRASTime(0),
-lastCASTime(0),
-lastCASWTime(0),
-lastPrechargeTime(0),
-lastCASLength(0),
-lastCASWLength(0),
-nextActivateTime(0),
-nextReadTime(0),
-nextWriteTime(0),
-nextPrechargeTime(0),
-openRowID(0),
-activated(0),
-RASCount(0),
-totalRASCount(0),
-CASCount(0),
-totalCASCount(0),
-CASWCount(0),
-totalCASWCount(0),
-allHits(false)
+totalCASWCount(rhs.totalCASWCount)
 {}
 
 //////////////////////////////////////////////////////////////////////////
@@ -233,8 +201,6 @@ void Bank::issueCASW(const tick currentTime, const Command *currentCommand)
 	// calculate when the next few commands can happen
 	nextPrechargeTime = max(nextPrechargeTime, currentTime + timing.tAL() + timing.tCWD() + timing.tBurst() + timing.tWR());
 
-	// if there is a write, because it is write-through then the activate needed to happen
-	allHits = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -552,7 +518,6 @@ Bank& Bank::operator =(const Bank& rhs)
 	totalCASCount = rhs.totalCASCount;		
 	CASWCount = rhs.CASWCount;			
 	totalCASWCount = rhs.totalCASWCount;	
-	allHits = rhs.allHits;
 	nextPrechargeTime = rhs.nextPrechargeTime;
 	nextWriteTime = rhs.nextWriteTime;
 	nextReadTime = rhs.nextReadTime;

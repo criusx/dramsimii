@@ -51,12 +51,6 @@ int main(int argc,char **argv, char *envp[])
 	//cerr << PHYSICAL_ADDRESS_MAX << endl;
 	//DRAMsimII::unitTests(settings);
 #endif
-	if (settings.systemType == FBD_CONFIG)
-	{
-		//fbdSystem fbds(settings);
-		//fbds.runSimulations();
-	}
-	else
 	{
 		System ds(settings); 
 		ds.runSimulations();

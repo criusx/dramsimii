@@ -64,7 +64,7 @@ lastCalculation(0)
 PowerConfig::~PowerConfig()
 {}
 
-// no arg constructor for unit testing and deserialization
+// no arg constructor for unit testing
 PowerConfig::PowerConfig():
 VDD(-1.0F),
 VDDmax(-1.0F),

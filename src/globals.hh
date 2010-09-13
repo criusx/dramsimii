@@ -51,7 +51,6 @@ namespace DRAMsimII
 	class Transaction;
 	class System;
 	class Channel;
-	class fbdFrame;
 	class SystemConfiguration;
 	class TimingSpecification;
 	class InputStream;
@@ -59,10 +58,8 @@ namespace DRAMsimII
 	class PowerConfig;
 	class Bank;
 	class Rank;
-	class BusEvent;
 	class Cache;
 	class Statistics;
-	class DIMM;
 
 	void unitTests(const Settings &settings);
 	
@@ -74,16 +71,13 @@ namespace DRAMsimII
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Event&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Address&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Transaction&);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::fbdFrame&);	
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::PowerConfig&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::InputStream&);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::CommandOrderingAlgorithm);
-	std::ostream& operator<<(std::ostream&, const RowBufferPolicy);
-	std::ostream& operator<<(std::ostream&, const DRAMsimII::SystemConfigurationType);
+	std::ostream& operator<<(std::ostream&, const RowBufferManagementPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::RefreshPolicy);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::TransactionOrderingAlgorithm);
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::OutputFileType);
-	//std::ostream& operator<<(std::ostream&, const DRAMsimII::Cache::ReplacementPolicy);
 
 	// will compute log2(n)=x for any n, where n=2**x
 	unsigned inline log2(unsigned input)
@@ -150,6 +144,10 @@ namespace DRAMsimII
 //#define DEBUG_MIN_PROTOCOL_GAP
 
 //#define DEBUG_FLAG_2
+
+	//#define DEBUG_RRD
+
+	//#define CACHE_HIT
 
 
 #if defined(DEBUG) && defined(M5DEBUG) && !defined(NDEBUG) // compiler should declare this

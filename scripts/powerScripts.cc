@@ -90,6 +90,17 @@ const string PowerScripts::bigEnergyScript = "set key outside center bottom hori
 											 set y2label \"Cumulative Energy (mJ)\"\n\
 											 set xlabel \"Time (s)\"\n";
 
+
+const std::string PowerScripts::rasCountReadCountGraphScript = "set format x\n\
+												 set autoscale xfixmax\n\
+												 set xlabel 'Execution Time (s)' offset character .05, 0,0 font '' textcolor lt -1 rotate by 90\n\
+												 set ylabel 'Count'\n\
+												 #set logscale y\n\
+												 plot '-' using 1:2 t 'RAS Count (with DIMM Cache)' with lines lw 2.00,\
+												 '-' using 1:2 t 'RAS Count (without DIMM Cache)' with lines lw 2.00,\
+												 '-' using 1:2 t 'Read Count (with DIMM Cache)' with lines lw 2.00,\
+												 '-' using 1:2 t 'Read Count (without DIMM Cache)' with lines lw 2.00\n";
+
 bool PowerScripts::processStatsForFile(const string &file)
 {
 	givenfilename = file;
@@ -141,6 +152,10 @@ void PowerScripts::processLine(char *newLine)
 
 				energyValues.reserve(channelCount * POWER_VALUES_PER_CHANNEL);
 
+				rasCounts.reserve(MAXIMUM_VECTOR_SIZE);
+
+				readCounts.reserve(MAXIMUM_VECTOR_SIZE);
+
 				// setup the buffer to be the same size as the value array
 				valueBuffer.resize(channelCount * POWER_VALUES_PER_CHANNEL);
 
@@ -181,10 +196,8 @@ void PowerScripts::processLine(char *newLine)
 			//cerr << PsysRD <<endl;
 			//cerr << PsysWR <<endl;
 
-			//cerr << PsysRdAdjusted <<endl;
 			//cerr << PsysPRE_PDN <<endl;
 			//cerr << PsysACT_PDN <<endl;
-			//cerr << PsysACTAdjusted <<endl;
 			unsigned currentChannel = regexMatch<unsigned>(newLine,"ch\\[([0-9]+)\\]");
 
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 0] += pc.PsysACT_STBY;
@@ -207,6 +220,10 @@ void PowerScripts::processLine(char *newLine)
 
 			totalEnergy.first += pc.dimmEnergy;
 			totalEnergy.second += pc.energy;
+
+			rasCountBuffer += pc.rasCount;
+
+			readCountBuffer += pc.readCount;
 
 			if (currentChannel + 1 == channelCount)
 			{
@@ -236,14 +253,20 @@ void PowerScripts::pushStats()
 		for (vector<double>::size_type i = 0; i < limit; ++i)
 		{
 			values[i].push_back(valueBuffer[i] / scaleFactor);
-			valueBuffer[i] = 0;
+			valueBuffer[i] = 0;			
 		}
 
 		energyValues.push_back(pair<double, double> (
 			energyValueBuffer.first / scaleFactor,
 			energyValueBuffer.second / scaleFactor));
-
+		
 		energyValueBuffer.first = energyValueBuffer.second = 0.0F;
+
+		rasCounts.push_back(rasCountBuffer / scaleFactor);
+
+		readCounts.push_back(readCountBuffer / scaleFactor);
+
+		rasCountBuffer = readCountBuffer = 0;
 	}
 
 	if (values.front().size() >= MAXIMUM_VECTOR_SIZE)
@@ -278,9 +301,17 @@ void PowerScripts::compressStats()
 			(energyValues[2 * j].second
 			+ energyValues[2 * j + 1].second)
 			/ 2.0F);
+
+		readCounts[j] = (readCounts[2 * j] + readCounts[2 * j + 1]) / 2;
+
+		rasCounts[j] = (rasCounts[2 * j] + rasCounts[2 * j + 1]) / 2;
 	}
 
 	energyValues.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+	readCounts.resize(MAXIMUM_VECTOR_SIZE / 2);
+
+	rasCounts.resize(MAXIMUM_VECTOR_SIZE / 2);
 
 	assert(energyValues.size() == MAXIMUM_VECTOR_SIZE / 2);
 
@@ -490,6 +521,16 @@ void PowerScripts::generateJointGraphs(const bf::path &outputDir, PowerScripts &
 	filesGenerated.push_back(outFilename.native_directory_string());
 	outFilename = outputDir / ("cumulativeEnergy-thumb." + thumbnailExtension);
 	cumulativeEnergyGraph(outFilename,p4,alternatePower.getEnergyValues(), alternatePower.getEpochTime(), true);
+	//////////////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////
+	// the cumulative energy graph
+	outFilename = outputDir / ("rasCountReadCount." + extension);
+	rasCountReadCountGraph(outFilename,p4,alternatePower, false);
+	graphs.push_back(pair<string, string> ("rasCountReadCount","RAS Count / Read Count"));
+	filesGenerated.push_back(outFilename.native_directory_string());
+	outFilename = outputDir / ("rasCountReadCount-thumb." + thumbnailExtension);
+	rasCountReadCountGraph(outFilename,p4,alternatePower, true);
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
@@ -883,4 +924,59 @@ void PowerScripts::cumulativeEnergyGraph(const bf::path &outFilename, opstream &
 	}
 
 	p << "e" << endl << "unset output" << endl;
+}
+
+void PowerScripts::rasCountReadCountGraph(const bf::path &outFilename, opstream &p, const PowerScripts &theoreticalPower, bool isThumbnail) const
+{
+	p << endl << "reset" << endl << (isThumbnail ? thumbnailTerminal : terminal) << basicSetup << "set output '" << outFilename.native_directory_string() << "'" << endl;
+	printTitle("Read Count / RAS Count", commandLine, p);
+
+	p << rasCountReadCountGraphScript;
+
+	double time = 0.0;
+
+	for (vector<unsigned>::const_iterator i = theoreticalPower.getRasCounts().begin(), end = theoreticalPower.getRasCounts().end();
+		i < end; ++i)
+	{
+		p << time << " " << *i << endl;
+
+		time += theoreticalPower.getEpochTime();
+	}
+
+	p << "e" << endl;
+	time = 0.0;
+
+	for (vector<unsigned>::const_iterator i = rasCounts.begin(), end = rasCounts.end();
+		i < end; ++i)
+	{
+		p << time << " " << *i << endl;
+
+		time += epochTime;
+	}
+
+	p << "e" << endl;
+	time = 0.0;
+
+	for (vector<unsigned>::const_iterator i = theoreticalPower.getReadCounts().begin(), end = theoreticalPower.getReadCounts().end();
+		i < end; ++i)
+	{
+		p << time << " " << *i << endl;
+
+		time += theoreticalPower.getEpochTime();
+	}
+
+	p << "e" << endl;
+	time = 0.0;
+
+	for (vector<unsigned>::const_iterator i = readCounts.begin(), end = readCounts.end();
+		i < end; ++i)
+	{
+		p << time << " " << *i << endl;
+
+		time += epochTime;
+	}
+
+	p << "e" << endl;
+
+	p << "unset output" << endl;
 }

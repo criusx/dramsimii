@@ -22,8 +22,6 @@
 #include "enumTypes.hh"
 #include "Settings.hh"
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/utility.hpp>
 #include <map>
 #include <string>
 
@@ -131,29 +129,8 @@ namespace DRAMsimII
 		friend std::ostream& operator<<(std::ostream& in, const PowerConfig& pc);
 
 	private:
-		//serialization
-		friend class boost::serialization::access;
 
 		PowerConfig();
-
-		template <class Archive>
-		void serialize( Archive & ar, const unsigned version)
-		{
-			if (version == 0)
-			{
-				ar & const_cast<float&>(VDD) & const_cast<float&>(VDDmax) &
-					const_cast<int&>(IDD0) & const_cast<int&>(IDD2P) & const_cast<int&>(IDD2N) & const_cast<int&>(IDD3P) & const_cast<int&>(IDD3N) &
-					const_cast<int&>(IDD4R) & const_cast<int&>(IDD4W) & const_cast<int&>(IDD5) & 
-					const_cast<double&>(PdsACT) & const_cast<double&>(PdsACT_STBY) & const_cast<double&>(PdsRD) & const_cast<double&>(PdsWR)&
-					const_cast<double&>(PdstermW) & const_cast<double&>(PdqRD) & const_cast<double&>(PdqWR) & const_cast<double&>(PdqRDoth) & const_cast<double&>(PdqWRoth) & 
-					const_cast<unsigned&>(DQperDRAM) & const_cast<unsigned&>(DQSperDRAM) & const_cast<unsigned&>(DMperDRAM) & const_cast<unsigned&>(frequency) & const_cast<unsigned&>(specFrequency) &
-					const_cast<unsigned&>(tBurst) & const_cast<unsigned&>(tRC) & const_cast<unsigned&>(tRAS) & const_cast<unsigned&>(DQperRank) & lastCalculation &
-					const_cast<double&>(frequencyScaleFactor) & const_cast<double&>(voltageScaleFactor) & const_cast<int&>(IDD1) &
-					const_cast<double&>(PdsACT_PDN) & const_cast<double&>(PdsPRE_PDN) & const_cast<double&>(PdsPRE_STBY);
-			}
-			
-		}
-
 	};
 }
 #endif
