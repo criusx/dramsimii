@@ -68,8 +68,8 @@ def submitCommand(commandLine, name):
             f = open(scriptToRun, 'w+')
             f.write("#!/bin/sh\n")
             f.write("export PBS_JOBID=" + nextId + "\n")
-            f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
-            #f.write("export M5_PATH=$HOME/m5_system_2.0b3\n")
+            #f.write("export M5_PATH=$HOME/benchmarks/parsec-2.1\n")
+            f.write("export M5_PATH=$HOME/m5_system_2.0b3\n")
             f.write("mkdir -p " + outputDir + "/" + nextId + suffixes[i] + "\n")
             f.write("cd " + outputDir + "/" + nextId + suffixes[i] + "\n")
 	        #export M5_PATH=$HOME/benchmarks/parsec-2.1
@@ -126,7 +126,7 @@ m5SEConfigFile = os.path.join(os.path.expanduser("~"), 'm5/configs/example/drams
 m5FsScript = os.path.join(os.path.expanduser("~"), 'dramsimii/m5/configs/example/fs.py')
 
 # the directory where the simulation outputs should be written
-outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyO')
+outputDir = os.path.join(os.path.expanduser("~"), 'results/Cypress/studyP')
 
 # the file that describes the base memory settings
 memorySettings = os.path.join(os.path.expanduser("~"), 'dramsimii/memoryDefinitions/DDR2-800-sg125E.xml')
@@ -144,10 +144,10 @@ fsCommandParameters = Template('channels $channels dimms $dimms ranks $ranks ban
 
 addressMappingPolicy = []
 addressMappingPolicy += ['sdramhiperf']
-#addressMappingPolicy += ['sdrambase']
-#addressMappingPolicy += ['closepagebaseline']
-#addressMappingPolicy += ['closepagelowlocality']
-#addressMappingPolicy += ['closepagehighlocality']
+addressMappingPolicy += ['sdrambase']
+addressMappingPolicy += ['closepagebaseline']
+addressMappingPolicy += ['closepagelowlocality']
+addressMappingPolicy += ['closepagehighlocality']
 addressMappingPolicy += ['closepagebaselineopt']
 
 commandOrderingAlgorithm = []
@@ -160,7 +160,7 @@ commandOrderingAlgorithm += ['firstAvailableAge']
 #commandOrderingAlgorithm += ['strict']
 
 rowBufferManagementPolicy = []
-rowBufferManagementPolicy += ['openpageaggressive']
+#rowBufferManagementPolicy += ['openpageaggressive']
 #rowBufferManagementPolicy += ['openpage']
 #rowBufferManagementPolicy += ['closepage']
 rowBufferManagementPolicy += ['closepageaggressive']
@@ -179,7 +179,7 @@ requests = [5000000]
 benchmarks = []
 #benchmarks += ['calculix']
 #benchmarks += ['milc']
-#benchmarks += ['lbm']
+benchmarks += ['lbm']
 benchmarks += ['mcf']
 #benchmarks += ['stream']
 #benchmarks += ['bzip2']
@@ -192,7 +192,7 @@ benchmarks += ['mcf']
 #benchmarks += ['canneal']
 #benchmarks += ['dedup']
 #benchmarks += ['facesim']
-benchmarks += ['ferret']
+#benchmarks += ['ferret']
 #benchmarks += ['fluidanimate']
 #benchmarks += ['freqmine']
 #benchmarks += ['rtview']
@@ -203,8 +203,8 @@ benchmarks += ['ferret']
 
 benchmarkScriptDir = '/home/joe/dramsimii/m5/configs/boot/'
 #benchmarkScriptExtension = '_4.rcS'
-#benchmarkScriptExtension = '.rcS'
-benchmarkScriptExtension = '_4c_simmedium.rcS'
+benchmarkScriptExtension = '.rcS'
+#benchmarkScriptExtension = '_4c_simmedium.rcS'
 
 # options for the run
 channels = []
@@ -244,6 +244,9 @@ replacementPolicies += ['nmru']
 nmruTrackingCounts = []
 #nmruTrackingCounts += [4]
 nmruTrackingCounts += [6]
+
+usingCache = ["true"]
+usingCache += ["false"]
 
 ###############################################################################
 
@@ -383,7 +386,7 @@ def main():
                                                                            for size in cacheSizes:
                                                                                currentCommandLine = []
 
-                                                                               for uc in ['true', 'false']:
+                                                                               for uc in usingCache:
                                                                                    if isPowerOf2(size * 1024 / blkSz / assoc):
                                                                                        currentCommandLine.append(m5FsCommandLine.substitute(benchmarkScript=scriptPath, benchmarkName=benchmark) + ' --memsize=1200MB --mp "' + \
                                                                                                                  fsCommandParameters.substitute(channels=channel, dimms=dimm, ranks=rank, banks=bank, \
