@@ -9,8 +9,8 @@ dintrace = sys.argv[2]
 
 # open m5 trace file for read
 try:
-    fin = open(m5trace, 'r')
-#    fin = gzip.open(m5trace, 'r')
+#    fin = open(m5trace, 'r')
+    fin = gzip.open(m5trace, 'r')
 except:
     print m5trace + "does not exists"
 
