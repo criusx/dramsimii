@@ -1,3 +1,15 @@
+# Copyright (c) 2010 ARM Limited
+# All rights reserved.
+#
+# The license below extends only to copyright in the software and shall
+# not be construed as granting a license to any other intellectual
+# property including but not limited to intellectual property relating
+# to a hardware implementation of the functionality of the software
+# licensed hereunder.  You may use the software subject to the license
+# terms below provided that you ensure that this notice is replicated
+# unmodified and in its entirety in all distributions of the software,
+# modified or unmodified, in source code or in binary form.
+#
 # Copyright (c) 2006-2007 The Regents of The University of Michigan
 # All rights reserved.
 #
@@ -56,7 +68,11 @@ parser = optparse.OptionParser()
 # System options
 parser.add_option("--kernel", action="store", type="string")
 parser.add_option("--script", action="store", type="string")
-
+if buildEnv['TARGET_ISA'] == "arm":
+    parser.add_option("--bare-metal", action="store_true",
+               help="Provide the raw system without the linux specific bits")
+    parser.add_option("--machine-type", action="store", type="choice",
+            choices=ArmMachineType.map.keys(), default="RealView_PBX")
 # Benchmark options
 parser.add_option("--dual", action="store_true",
                   help="Simulate two systems attached with an ethernet link")
@@ -117,7 +133,11 @@ else:
     if options.dual:
         bm = [SysConfig(), SysConfig()]
     else:
-        bm = [SysConfig()]
+	if options.memsize is not None:
+            bm = [SysConfig(mem=options.memsize)]
+        else:
+            bm = [SysConfig(mem="1024MB")]
+        #bm = [SysConfig()]
 
 np = options.num_cpus
 
@@ -126,12 +146,8 @@ if buildEnv['TARGET_ISA'] == "alpha":
         print "info: using PhysicalMemory"
         test_sys = makeLinuxAlphaSystem(test_mem_mode, bm[0])
     else:
-        print "info: using DRAMsimII"
-        if options.memsize is not None:
-            sc = SysConfig(mem=options.memsize)
-        else:
-            sc = SysConfig(mem="512MB")
-        test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, sc, options.mp, options.DRAMsimConfig, options.benchmarkName)
+        print "info: using DRAMsimII"        
+        test_sys = makeDramSimLinuxAlphaSystem(test_mem_mode, bm[0], options.mp, options.DRAMsimConfig, options.benchmarkName)
 
 elif buildEnv['TARGET_ISA'] == "mips":
     test_sys = makeLinuxMipsSystem(test_mem_mode, bm[0])
@@ -139,6 +155,9 @@ elif buildEnv['TARGET_ISA'] == "sparc":
     test_sys = makeSparcSystem(test_mem_mode, bm[0])
 elif buildEnv['TARGET_ISA'] == "x86":
     test_sys = makeLinuxX86System(test_mem_mode, np, bm[0])
+elif buildEnv['TARGET_ISA'] == "arm":
+    test_sys = makeLinuxArmSystem(test_mem_mode, bm[0],
+            bare_metal=options.bare_metal, machine_type=options.machine_type)
 else:
     fatal("incapable of building non-alpha or non-sparc full system!")
 
@@ -152,10 +171,14 @@ test_sys.cpu = [TestCPUClass(cpu_id=i) for i in xrange(np)]
 
 CacheConfig.config_cache(options, test_sys)
 
-if options.caches or options.l1cache or options.l2cache or options.l3cache:
+if options.caches or options.l2cache:
+    if bm[0]:
+        mem_size = bm[0].mem()
+    else:
+        mem_size = SysConfig().mem()
     test_sys.bridge.filter_ranges_a=[AddrRange(0, Addr.max)]
-    test_sys.bridge.filter_ranges_b=[AddrRange(0, size='8GB')]
-    test_sys.iocache = IOCache(addr_range=AddrRange(0, size='8GB'))
+    test_sys.bridge.filter_ranges_b=[AddrRange(mem_size)]
+    test_sys.iocache = IOCache(addr_range=mem_size)
     test_sys.iocache.cpu_side = test_sys.iobus.port
     test_sys.iocache.mem_side = test_sys.membus.port
 
@@ -175,6 +198,8 @@ if len(bm) == 2:
         drive_sys = makeSparcSystem(drive_mem_mode, bm[1])
     elif buildEnv['TARGET_ISA'] == 'x86':
         drive_sys = makeX86System(drive_mem_mode, np, bm[1])
+    elif buildEnv['TARGET_ISA'] == 'arm':
+        drive_sys = makeLinuxArmSystem(drive_mem_mode, bm[1])
     drive_sys.cpu = DriveCPUClass(cpu_id=0)
     drive_sys.cpu.connectMemPorts(drive_sys.membus)
     if options.fastmem:

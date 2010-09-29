@@ -35,31 +35,19 @@ from Caches import *
 
 def config_cache(options, system):
     if options.l2cache:
-        system.l2cache = L2Cache(size='2MB')
+        system.l2 = L2Cache(size='2MB')
         system.tol2bus = Bus()
-        system.l2cache.cpu_side = system.tol2bus.port
-        system.l2cache.mem_side = system.membus.port
-        system.l2cache.num_cpus = options.num_cpus
-
-    elif options.l3cache:
-        system.l3cache = L3Cache()
-        system.tol3bus = Bus()
-        system.l3cache.cpu_side = system.tol3bus.port
-        system.l3cache.mem_side = system.membus.port
-        system.l3cache.num_cpus = options.num_cpus
+        system.l2.cpu_side = system.tol2bus.port
+        system.l2.mem_side = system.membus.port
+        system.l2.num_cpus = options.num_cpus
 
     for i in xrange(options.num_cpus):
-        if options.l1cache:
-            system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
-            system.cpu[i].connectMemPorts(system.membus)
-
-        elif options.l2cache:
-            system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
+        if options.caches:
+            system.cpu[i].addPrivateSplitL1Caches(L1Cache(size = '32kB'),
+                                                  L1Cache(size = '64kB'))
+        if options.l2cache:
             system.cpu[i].connectMemPorts(system.tol2bus)
-
-        elif options.l3cache:
-            system.cpu[i].addTwoLevelCacheHierarchy(L1Cache(), L1Cache(), L2Cache())
-            system.cpu[i].connectMemPorts(system.tol3bus)
-
+        else:
+            system.cpu[i].connectMemPorts(system.membus)
 
     return system
