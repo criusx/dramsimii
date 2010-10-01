@@ -9,7 +9,6 @@ dintrace = sys.argv[2]
 
 # open m5 trace file for read
 try:
-#    fin = open(m5trace, 'r')
     fin = gzip.open(m5trace, 'r')
 except:
     print m5trace + "does not exists"
@@ -66,7 +65,7 @@ for line in fin:
                 elif hit != -1:
                     addr = line[writeback+9:hit-1]
 
-            time = line[colon-13:colon]
+            time = line[0:colon]
 
             if readreqifetch != -1 or readexreq != -1 or readreq != -1 or writeback != -1:
                 fout.write(req + ' ' + addr + ' ' + time + '\n')
