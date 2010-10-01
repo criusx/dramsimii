@@ -1,4 +1,5 @@
 # Copyright (c) 2006-2008 The Regents of The University of Michigan
+# Copyright (c) 2010 Advanced Micro Devices, Inc.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -190,8 +191,7 @@ def run(options, root, testsys, cpu_class):
             for i in xrange(np):
                 testsys.cpu[i].max_insts_any_thread = offset
 
-    m5.instantiate(root)
-
+    checkpoint_dir = None
     if options.checkpoint_restore != None:
         from os.path import isdir, exists
         from os import listdir
@@ -200,32 +200,18 @@ def run(options, root, testsys, cpu_class):
         if not isdir(cptdir):
             fatal("checkpoint dir %s does not exist!", cptdir)
 
-        if options.at_instruction:
-            checkpoint_dir = joinpath(cptdir, "cpt.%s.%s" % \
-                    (options.bench, options.checkpoint_restore))
+        if options.at_instruction or options.simpoint:
+            inst = options.checkpoint_restore
+            if options.simpoint:
+                # assume workload 0 has the simpoint
+                if testsys.cpu[0].workload[0].simpoint == 0:
+                    fatal('Unable to find simpoint')
+                inst += int(testsys.cpu[0].workload[0].simpoint)
+
+            checkpoint_dir = joinpath(cptdir,
+                                      "cpt.%s.%s" % (options.bench, inst))
             if not exists(checkpoint_dir):
                 fatal("Unable to find checkpoint directory %s", checkpoint_dir)
-
-            print "Restoring checkpoint ..."
-            m5.restoreCheckpoint(root, checkpoint_dir)
-            print "Done."
-        elif options.simpoint:
-            # assume workload 0 has the simpoint
-            if testsys.cpu[0].workload[0].simpoint == 0:
-                fatal('Unable to find simpoint')
-
-            options.checkpoint_restore += \
-                int(testsys.cpu[0].workload[0].simpoint)
-
-            checkpoint_dir = joinpath(cptdir, "cpt.%s.%d" % \
-                    (options.bench, options.checkpoint_restore))
-            if not exists(checkpoint_dir):
-                fatal("Unable to find checkpoint directory %s.%s",
-                      options.bench, options.checkpoint_restore)
-
-            print "Restoring checkpoint ..."
-            m5.restoreCheckpoint(root,checkpoint_dir)
-            print "Done."
         else:
             dirs = listdir(cptdir)
             expr = re.compile('cpt\.([0-9]*)')
@@ -244,10 +230,9 @@ def run(options, root, testsys, cpu_class):
 
             ## Adjust max tick based on our starting tick
             maxtick = maxtick - int(cpts[cpt_num - 1])
+            checkpoint_dir = joinpath(cptdir, "cpt.%s" % cpts[cpt_num - 1])
 
-            ## Restore the checkpoint
-            m5.restoreCheckpoint(root,
-                    joinpath(cptdir, "cpt.%s" % cpts[cpt_num - 1]))
+    m5.instantiate(checkpoint_dir)
 
     if options.standard_switch or cpu_class:
         if options.standard_switch:
@@ -292,6 +277,16 @@ def run(options, root, testsys, cpu_class):
     num_checkpoints = 0
     exit_cause = ''
 
+    # If we're taking and restoring checkpoints, use checkpoint_dir
+    # option only for finding the checkpoints to restore from.  This
+    # lets us test checkpointing by restoring from one set of
+    # checkpoints, generating a second set, and then comparing them.
+    if options.take_checkpoints and options.checkpoint_restore:
+        if m5.options.outdir:
+            cptdir = m5.options.outdir
+        else:
+            cptdir = getcwd()
+
     # Checkpoints being taken via the command line at <when> and at
     # subsequent periods of <period>.  Checkpoint instructions
     # received from the benchmark running are ignored and skipped in
@@ -314,7 +309,7 @@ def run(options, root, testsys, cpu_class):
 
             if exit_event.getCause() == \
                    "a thread reached the max instruction count":
-                m5.checkpoint(root, joinpath(cptdir, "cpt.%s.%d" % \
+                m5.checkpoint(joinpath(cptdir, "cpt.%s.%d" % \
                         (options.bench, checkpoint_inst)))
                 print "Checkpoint written."
                 num_checkpoints += 1
@@ -331,7 +326,7 @@ def run(options, root, testsys, cpu_class):
                 exit_event = m5.simulate(when - m5.curTick())
 
             if exit_event.getCause() == "simulate() limit reached":
-                m5.checkpoint(root, joinpath(cptdir, "cpt.%d"))
+                m5.checkpoint(joinpath(cptdir, "cpt.%d"))
                 num_checkpoints += 1
 
             sim_ticks = when
@@ -348,7 +343,7 @@ def run(options, root, testsys, cpu_class):
                     while exit_event.getCause() == "checkpoint":
                         exit_event = m5.simulate(sim_ticks - m5.curTick())
                     if exit_event.getCause() == "simulate() limit reached":
-                        m5.checkpoint(root, joinpath(cptdir, "cpt.%d"))
+                        m5.checkpoint(joinpath(cptdir, "cpt.%d"))
                         num_checkpoints += 1
 
             if exit_event.getCause() != "simulate() limit reached":
@@ -361,7 +356,7 @@ def run(options, root, testsys, cpu_class):
         exit_event = m5.simulate(maxtick)
 
         while exit_event.getCause() == "checkpoint":
-            m5.checkpoint(root, joinpath(cptdir, "cpt.%d"))
+            m5.checkpoint(joinpath(cptdir, "cpt.%d"))
             num_checkpoints += 1
             if num_checkpoints == max_checkpoints:
                 exit_cause = "maximum %d checkpoints dropped" % max_checkpoints
@@ -375,5 +370,5 @@ def run(options, root, testsys, cpu_class):
     print 'Exiting @ cycle %i because %s' % (m5.curTick(), exit_cause)
 
     if options.checkpoint_at_end:
-        m5.checkpoint(root, joinpath(cptdir, "cpt.%d"))
+        m5.checkpoint(joinpath(cptdir, "cpt.%d"))
 

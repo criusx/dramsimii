@@ -49,17 +49,11 @@ def config_cache(options, system):
         system.l3cache.num_cpus = options.num_cpus
 
     for i in xrange(options.num_cpus):
-        if options.l1cache:
-            system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
-            system.cpu[i].connectMemPorts(system.membus)
-
+	if options.l3cache:
+            system.cpu[i].addTwoLevelCacheHierarchy(L1Cache(), L1Cache(), L2Cache())
+            system.cpu[i].connectMemPorts(system.tol3bus)
         elif options.l2cache:
             system.cpu[i].addPrivateSplitL1Caches(L1Cache(), L1Cache())
             system.cpu[i].connectMemPorts(system.tol2bus)
-
-        elif options.l3cache:
-            system.cpu[i].addTwoLevelCacheHierarchy(L1Cache(), L1Cache(), L2Cache())
-            system.cpu[i].connectMemPorts(system.tol3bus)
-
 
     return system

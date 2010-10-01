@@ -1,3 +1,5 @@
+#!/usr/bin/python -O
+
 import sys
 
 freq = 4
