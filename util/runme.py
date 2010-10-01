@@ -40,7 +40,7 @@ print 'done'
 # ----------------------------------------------
 # generate miss trace file for ds2 and dinero l4
 # ----------------------------------------------
-dintods2_commandline = 'python dinToDs2.py ../traces/dinero_format/miss/' + benchmark + '-miss ../traces/ds2_format/' + benchmark + '-miss.trace ../traces/dinero_format/' + benchmark + '.l4.din'
+dintods2_commandline = 'dinToDs2.py ../traces/dinero_format/miss/' + benchmark + '-miss ../traces/ds2_format/' + benchmark + '-miss.trace ../traces/dinero_format/' + benchmark + '.l4.din'
 print 'command line: %s' %dintods2_commandline
 print 'generating traces for ds2 and dinero l4...'
 os.system(dintods2_commandline)
