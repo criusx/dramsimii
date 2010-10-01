@@ -1,3 +1,5 @@
+#!/usr/bin/python -O
+
 # m5 trace file to dinero trace file
 # usage: python m5ToDin.py <m5tracefile> <dintracefile>
 

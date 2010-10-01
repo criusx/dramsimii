@@ -1,3 +1,5 @@
+#!/usr/bin/python -O
+
 miss = 'lbm_1.din.miss'
 
 try:

@@ -1,3 +1,5 @@
+#!/usr/bin/python -O
+
 # -----------------------------------
 # generate trace file for dimm caches
 # -----------------------------------
