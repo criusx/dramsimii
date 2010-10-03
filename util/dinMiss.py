@@ -124,6 +124,9 @@ for line in fin:
 	elif addressmapping == "closepagehighlocality":
             channelid = address_bin[8]
             rankid = address_bin[2:4]
+        elif addressmapping == "mutien":
+            channelid = address_bin[24]
+            rankid = address_bin[16:18]
 
 	#print "%s %s %s %s %s" %(line, addr, address_bin, channelid, rankid)
 
