@@ -29,7 +29,7 @@
 from SysPaths import *
 
 class SysConfig:
-    def __init__(self, script=None, mem=None, disk=None):
+    def __init__(self, script = None, mem = None, disk = None):
         self.scriptname = script
         self.diskname = disk
         self.memsize = mem
@@ -103,7 +103,10 @@ Benchmarks = {
     'MutexTest':        [SysConfig('mutex-test.rcS', '128MB')],
 
     'bnAn': [SysConfig('/z/saidi/work/m5.newmem.head/configs/boot/bn-app.rcS',
-                       '128MB', '/z/saidi/work/bottleneck/bnimg.img')]
+                       '128MB', '/z/saidi/work/bottleneck/bnimg.img')],
+
+    'bzip2' :          [SysConfig('bzip2.rcS', '512MB')],
+    'shutdown':        [SysConfig('shutdown.rcS', '256MB')]
 }
 
 benchs = Benchmarks.keys()

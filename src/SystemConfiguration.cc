@@ -307,7 +307,10 @@ bool SystemConfiguration::createNewFile(const string& fileName) const
 		open(fileName.c_str(), O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
 	if (fs < 0)
+	{
+		//cerr << "Could not open file: " << fileName << endl;
 		return false;
+	}
 	else
 	{
 		close(fs);

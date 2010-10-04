@@ -1,9 +1,8 @@
 #!/bin/sh
 
-cd /benchmarks/401.bzip2/data/all/input
-echo bzip2
+echo "bzip2 Ref"
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-/benchmarks/401.bzip2/exe/bzip2_base.alpha-gcc410-glibc236 input.combined 1\
-echo Done.
+/benchmarks/401.bzip2/exe/bzip2.alpha /benchmarks/401.bzip2/data/all/input/input.combined
+echo "Done."
 /sbin/m5 exit
