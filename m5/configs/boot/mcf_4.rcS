@@ -6,7 +6,7 @@ echo "MCF Test"
 i=4
 while [ $i -gt 0 ]
 do
-	/benchmarks/429.mcf/exe/mcf_base.alpha-gcc410-glibc236 /benchmarks/429.mcf/data/test/input/inp.in&
+	/benchmarks/429.mcf/exe/mcf.alpha /benchmarks/429.mcf/data/test/input/inp.in&
 	i=$(($i-1))
 done
 wait

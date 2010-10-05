@@ -9,8 +9,8 @@ import gzip
 runtype = sys.argv[1]
 numcore = sys.argv[2]
 benchmark = sys.argv[3]
-#starttime = sys.argv[4]
 starttime = 2200000000000
+linesToBuffer = 16384
 
 dramsimDirectory = os.path.join(os.path.expanduser("~"), 'dramsimii')
 m5directory = os.path.join(os.path.expanduser("~"), 'm5')
@@ -20,10 +20,6 @@ m5Script = os.path.join(dramsimDirectory, 'm5/configs/example/fs.py')
 m5flags = '--trace-flags=Cache --trace-start=%d' % (starttime)
 m5scriptFlags = '--detailed -n %s --caches --l3cache -F 1000000000 -b %s' % (numcore, benchmark)
 
-#sedCommand0 = "sed -n -e 's/ReadReq (ifetch)/2/p' -e 's/ReadExReq/0/p' -e 's/ReadReq/0/p' -e 's/Writeback/1/p'"
-#sedCommand1 = "sed -e 's/ [a-z]*$//' -e 's/:.*://'"
-#sedCommand2 = "sed -n -e 's/\(.*\) \(.*\) \(.*\)/\2 \3 \1/p'"
-
 # ----
 # main
 # ----
@@ -31,16 +27,14 @@ if runtype == '-t':
 	# -------------------
 	# generate trace file
 	# -------------------
-	#tracefile_commandline = m5binary + m5flags + "p \"" |&grep l3cache|gzip > /home/mutien/Tools/dramsimii/benchmarks/' + benchmark + '/' + benchmark + 'Stream.gz'
 	commandline = "%s %s %s %s" % (m5binary, m5flags, m5Script, m5scriptFlags)
-
+	
+	proc = int(numcore)
+	
 	print 'commandline: %s' % commandline
 	print 'generating %s tracefile...' % benchmark
-	#p = Popen([tracefile_commandline], shell=True, executable="/bin/bash")
 	p = Popen([commandline], shell = True, executable = "/bin/zsh", stdout = PIPE)
-	#out, err = p.communicate()
-	#print out, err
-
+	
 	pattern = re.compile("([0-9]+): system.l3cache: (ReadReq (ifetch)|ReadExReq|ReadReq|Writeback) ([0-9a-f]+).*")
 	switchPattern = re.compile("Switched CPUS @ cycle = [0-9]+")
 
@@ -78,15 +72,13 @@ if runtype == '-t':
 
 				lines.append(value + " " + m.group(4) + " " + m.group(1) + "\n")
 
-				if (len(lines) > 16384):
+				if (len(lines) > linesToBuffer):
 					outfile.writelines(lines)
 					lines = []
 		elif switchPattern.match(newLine) is not None:
-			#print 'switching'
 			switched = True
 
 
-	print "Finished running, waiting to finish"
 	p.wait()
 	print '%s tracefile done...' % benchmark
 
