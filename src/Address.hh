@@ -34,6 +34,8 @@ namespace DRAMsimII
 		// to rank, bank, row, col, byte
 		enum AddressMappingPolicy
 		{
+			MUTIEN1,
+			MUTIEN2,
 			CLOSE_PAGE_BASELINE,			
 			SDRAM_BASE_MAP,
 			SDRAM_HIPERF_MAP,

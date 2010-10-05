@@ -6,7 +6,7 @@
 
 import sys
 
-freq = 4
+freqMultiplier = 4
 
 misstrace = sys.argv[1]
 dimmcachetrace = sys.argv[2]
@@ -36,11 +36,11 @@ for line in fin:
 
         req = line[0]
         addr = line[2:findspace]
-        time = float(line[findspace:l-1]) / freq
+        time = float(line[findspace:l - 1]) / freqMultiplier
 
         # format address to complete 36 bits notation
         addr_len = findspace - 2
-        
+
         if addr_len == 1:
             address = "00000000" + addr
         elif addr_len == 2:
@@ -58,7 +58,7 @@ for line in fin:
         elif addr_len == 8:
             address = "0" + addr
         else:
-            address = addr[addr_len-9:addr_len]
+            address = addr[addr_len - 9:addr_len]
 
         # hex to bin
         address_b = [0, 0, 0, 0, 0, 0, 0, 0, 0]

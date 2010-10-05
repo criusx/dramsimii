@@ -141,6 +141,12 @@ bool Address::reverseAddressTranslation()
 
 	switch (mappingScheme)
 	{
+	case MUTIEN1:
+		break;
+		
+	case MUTIEN2:
+		break;
+		
 	case SDRAM_HIPERF_MAP:
 
 		physicalAddress = (PhysicalAddress) columnLow << shift;

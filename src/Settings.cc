@@ -485,6 +485,10 @@ bool Settings::setKeyValue(const string &nodeName, const string &value)
 				addressMappingPolicy = Address::CLOSE_PAGE_LOW_LOCALITY;
 			else if (nodeValue == "closepagebaselineopt"  || nodeValue == "cpbopt")
 				addressMappingPolicy = Address::CLOSE_PAGE_BASELINE_OPT;
+			else if (nodeValue == "mutien1" || nodeValue == "Mu-Tien1")
+				addressMappingPolicy = Address::MUTIEN1;
+			else if (nodeValue == "mutien2" || nodeValue == "Mu-Tien2")
+				addressMappingPolicy = Address::MUTIEN2;
 			else
 				addressMappingPolicy = Address::SDRAM_HIPERF_MAP;
 			break;
