@@ -867,7 +867,7 @@ void M5dramSystem::TickEvent::process()
 	// move memory channels to the current time
 	memory->moveToTime(currentMemCycle);
 
-	if (!memory->movement)
+	if (!memory->movement && !memory->transactionLookupTable.empty())
 	{
 		cerr << "no r/w bytes, outstanding: " << memory->outstandingPackets << ", ";
 		cerr << (memory->transactionLookupTable.empty() ? "is empty," : "has outstanding transactions,");

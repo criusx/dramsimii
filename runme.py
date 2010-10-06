@@ -8,8 +8,16 @@ import gzip
 
 runtype = sys.argv[1]
 numcore = sys.argv[2]
-benchmark = sys.argv[3]
-starttime = 2200000000000
+benchmark = ''
+if len(sys.argv) > 3:
+	benchmark = "-b %s" % sys.argv[3]
+
+#starttime = 2800000000000
+#starttime = 75501953411000
+#for bootup
+#starttime = 4744140934800
+#for TPCC-UVA
+starttime = 24938083141000
 numberToSkip = 10000000000000
 linesToBuffer = 16384
 
@@ -19,7 +27,7 @@ m5binary = os.path.join(m5directory, 'build/ALPHA_FS/m5.opt')
 m5Script = os.path.join(dramsimDirectory, 'm5/configs/example/fs.py')
 
 m5flags = '--trace-flags=Cache --trace-start=%d' % (starttime)
-m5scriptFlags = '--detailed -n %s --caches --l3cache -F %d -b %s' % (numcore, numberToSkip, benchmark)
+m5scriptFlags = '--detailed -n %s --caches --l3cache -F %d %s' % (numcore, numberToSkip, benchmark)
 
 # ----
 # main
@@ -32,9 +40,9 @@ if runtype == '-t':
 	
 	proc = int(numcore)
 	
-	print 'commandline: %s' % commandline
-	print 'generating %s tracefile...' % benchmark
-	p = Popen([commandline], shell = True, executable = "/bin/zsh", stdout = PIPE)
+	print 'commandline: %s, tracefile: %s' % (commandline, benchmark)
+	
+	p = Popen([commandline], shell=True, executable="/bin/zsh", stdout=PIPE)
 	
 	pattern = re.compile("([0-9]+): system.l3cache: (ReadReq (ifetch)|ReadExReq|ReadReq|Writeback) ([0-9a-f]+).*")
 	switchPattern = re.compile("Switched CPUS @ cycle = [0-9]+")
@@ -67,16 +75,17 @@ if runtype == '-t':
 			if m is not None:
 				value = '2'
 				if m.group(2) == "ReadReq" or m.group(2) == "ReadExReq":
+					print m.group(2), m.group(3)
 					value = '0'
 				elif m.group(2) == "Writeback":
 					value = '1'
-
+			
 				lines.append(value + " " + m.group(4) + " " + m.group(1) + "\n")
 
 				if (len(lines) > linesToBuffer):
 					outfile.writelines(lines)
 					lines = []
-		elif switchPattern.match(newLine) is not None:
+		elif newLine.startswith("Switched"):
 			switched = True
 
 
