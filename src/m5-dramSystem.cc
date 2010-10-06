@@ -145,7 +145,7 @@ void M5dramSystem::moveToTime(const tick now)
 
 					ports[lastPortIndex]->doSendTiming(packet, static_cast<Tick>(currentValue.second * getCPURatio()));
 				assert(lastPortIndex == 0);
-#if 1
+#if 0
 				static tick returnCount;
 
 

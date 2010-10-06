@@ -320,10 +320,12 @@ void System::printStatistics()
 	systemConfig.statsOutStream << statistics;
 	pair<unsigned, unsigned> hitsMisses = statistics.getDimmCacheHitsMisses();
 	std::pair<std::pair<unsigned, unsigned>, unsigned> list = statistics.getTagSetBlockCount(time);
+#if 0
 	cerr << "\rhits: " << setw(10) << hitsMisses.first << "\tmisses: " << setw(10) << hitsMisses.second << "\tratio: "
 			<< setw(10) << (double) hitsMisses.first / (hitsMisses.first + hitsMisses.second) << "\ttags: " << setw(
 			10) << list.first.first << "\tsets: " << setw(10) << list.first.second << "\tblocks: " << setw(10)
 			<< list.second;
+#endif
 	statistics.clear();
 
 	for (vector<Channel>::iterator h = channel.begin(), hEnd = channel.end(); h != hEnd; ++h)

@@ -29,7 +29,7 @@
 from SysPaths import *
 
 class SysConfig:
-    def __init__(self, script=None, mem=None, disk=None):
+    def __init__(self, script = None, mem = None, disk = None):
         self.scriptname = script
         self.diskname = disk
         self.memsize = mem
@@ -142,7 +142,9 @@ Benchmarks = {
     'streamcluster_4':  [SysConfig('streamcluster_4c_simmedium.rcS', '256MB')],
     'swaptions_4':      [SysConfig('swaptions_4c_simmedium.rcS', '256MB')],
     'vips_4':           [SysConfig('vips_4c_simmedium.rcS', '256MB')],
-    'x264_4':           [SysConfig('x264_4c_simmedium.rcS', '256MB')]
+    'x264_4':           [SysConfig('x264_4c_simmedium.rcS', '256MB')],
+
+    'blank':            [SysConfig('blank.rcS', '1024MB')]
 }
 
 benchs = Benchmarks.keys()

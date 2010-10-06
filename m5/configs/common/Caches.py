@@ -47,7 +47,7 @@ class L2Cache(BaseCache):
     tgts_per_mshr = 12
 
 class L3Cache(BaseCache):
-    size = '8MB'
+    size = '16MB'
     assoc = 16
     block_size = 64
     latency = '12.25ns'

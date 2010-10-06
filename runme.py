@@ -10,6 +10,7 @@ runtype = sys.argv[1]
 numcore = sys.argv[2]
 benchmark = sys.argv[3]
 starttime = 2200000000000
+numberToSkip = 10000000000000
 linesToBuffer = 16384
 
 dramsimDirectory = os.path.join(os.path.expanduser("~"), 'dramsimii')
@@ -18,7 +19,7 @@ m5binary = os.path.join(m5directory, 'build/ALPHA_FS/m5.opt')
 m5Script = os.path.join(dramsimDirectory, 'm5/configs/example/fs.py')
 
 m5flags = '--trace-flags=Cache --trace-start=%d' % (starttime)
-m5scriptFlags = '--detailed -n %s --caches --l3cache -F 1000000000 -b %s' % (numcore, benchmark)
+m5scriptFlags = '--detailed -n %s --caches --l3cache -F %d -b %s' % (numcore, numberToSkip, benchmark)
 
 # ----
 # main
