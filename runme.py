@@ -8,26 +8,31 @@ import gzip
 
 runtype = sys.argv[1]
 numcore = sys.argv[2]
+benchmarkCommand = ''
 benchmark = ''
+benchmarkString = ''
+
 if len(sys.argv) > 3:
-	benchmark = "-b %s" % sys.argv[3]
+	benchmarkString = "-b %s" % sys.argv[3]
+	benchmark = sys.argv[3]
 
 #starttime = 2800000000000
 #starttime = 75501953411000
 #for bootup
 #starttime = 4744140934800
 #for TPCC-UVA
-starttime = 24938083141000
-numberToSkip = 10000000000000
-linesToBuffer = 16384
+#starttime = 24938083141000
+numberToSkip = 10000000000000000
+linesToBuffer = 32768
 
 dramsimDirectory = os.path.join(os.path.expanduser("~"), 'dramsimii')
 m5directory = os.path.join(os.path.expanduser("~"), 'm5')
 m5binary = os.path.join(m5directory, 'build/ALPHA_FS/m5.opt')
 m5Script = os.path.join(dramsimDirectory, 'm5/configs/example/fs.py')
 
-m5flags = '--trace-flags=Cache --trace-start=%d' % (starttime)
-m5scriptFlags = '--detailed -n %s --caches --l3cache -F %d %s' % (numcore, numberToSkip, benchmark)
+#m5flags = '--trace-flags=Cache --trace-start=%d' % (starttime)
+m5flags = ''
+m5scriptFlags = '--detailed -n %s --caches --l3cache -F %d %s --mp "outfiletype none"' % (numcore, numberToSkip, benchmarkString)
 
 # ----
 # main
@@ -37,14 +42,15 @@ if runtype == '-t':
 	# generate trace file
 	# -------------------
 	commandline = "%s %s %s %s" % (m5binary, m5flags, m5Script, m5scriptFlags)
-	
+
 	proc = int(numcore)
-	
+
 	print 'commandline: %s, tracefile: %s' % (commandline, benchmark)
-	
-	p = Popen([commandline], shell=True, executable="/bin/zsh", stdout=PIPE)
-	
-	pattern = re.compile("([0-9]+): system.l3cache: (ReadReq (ifetch)|ReadExReq|ReadReq|Writeback) ([0-9a-f]+).*")
+
+	p = Popen([commandline], shell = True, executable = "/bin/zsh", stdout = PIPE)
+	print "PID is %d" % p.pid
+
+	pattern = re.compile("([0-9]+): system.l3cache: (ReadReq \(ifetch\)|ReadExReq|ReadReq|Writeback) ([0-9a-f]+).*")
 	switchPattern = re.compile("Switched CPUS @ cycle = [0-9]+")
 
 	filename = "%s_%s.gz" % (benchmark, numcore)
@@ -73,19 +79,22 @@ if runtype == '-t':
 			m = pattern.match(newLine)
 
 			if m is not None:
-				value = '2'
-				if m.group(2) == "ReadReq" or m.group(2) == "ReadExReq":
-					print m.group(2), m.group(3)
-					value = '0'
+				if m.group(2) == "ReadReq (ifetch)":
+					value = '2'
 				elif m.group(2) == "Writeback":
 					value = '1'
-			
-				lines.append(value + " " + m.group(4) + " " + m.group(1) + "\n")
+				else:
+					value = '0'
+
+				inpvalue = value + " " + m.group(3) + " " + m.group(1) + "\n"
+				lines.append(inpvalue)
 
 				if (len(lines) > linesToBuffer):
 					outfile.writelines(lines)
 					lines = []
+
 		elif newLine.startswith("Switched"):
+			print "Switched to timing mode"
 			switched = True
 
 
