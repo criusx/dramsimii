@@ -116,8 +116,8 @@ Benchmarks = {
     'milc_4':           [SysConfig('milc_4.rcS', '2048MB')],
     'hmmer':            [SysConfig('hmmer.rcS', '768MB')],
     'hmmer_4':          [SysConfig('hmmer_4.rcS', '2048MB')],
-    'perl':            [SysConfig('perl.rcS', '768MB')],
-    'perl_4':          [SysConfig('perl_4.rcS', '1024MB')],
+    'perl':             [SysConfig('perl.rcS', '768MB')],
+    'perl_4':           [SysConfig('perl_4.rcS', '1024MB')],
     'shutdown':         [SysConfig('shutdown.rcS', '256MB')],
     'blackscholes':     [SysConfig('blackscholes_1c_simmedium.rcS', '256MB')],
     'bodytrack':        [SysConfig('bodytrack_1c_simmedium.rcS', '256MB')],
@@ -143,6 +143,8 @@ Benchmarks = {
     'swaptions_4':      [SysConfig('swaptions_4c_simmedium.rcS', '256MB')],
     'vips_4':           [SysConfig('vips_4c_simmedium.rcS', '256MB')],
     'x264_4':           [SysConfig('x264_4c_simmedium.rcS', '256MB')],
+    'xalancbmk':        [SysConfig('xalancbmk.rcS', '512MB')],
+    'xalancbmk_4':      [SysConfig('xalancbmk_4.rcS', '1024MB')],
 
     'blank':            [SysConfig('blank.rcS', '1024MB')]
 }

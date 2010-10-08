@@ -1,6 +1,7 @@
 #!/usr/bin/python -O
 
 from subprocess import Popen, PIPE, STDOUT
+import signal
 import sys
 import os
 import re
@@ -75,6 +76,9 @@ if runtype == '-t':
 		newLine = p.stdout.readline()
     		if not newLine: break
 
+    		if not newLine[0].isdigit():
+    			print newLine,
+
 		if switched == True:
 			m = pattern.match(newLine)
 
@@ -95,6 +99,8 @@ if runtype == '-t':
 
 		elif newLine.startswith("Switched"):
 			print "Switched to timing mode"
+			# m5's event handlers should be updated to setTraceFlag("Cache"); when the SIGUSR1 signal is detected
+			p.send_signal(signal.SIGUSR1)
 			switched = True
 
 

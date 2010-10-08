@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd /benchmarks/456.hmmer/data/ref/input
+echo "HMMER Ref"
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+/benchmarks/456.hmmer/exe/hmmer.alpha --fixed 0 --mean 325 --num 5000 --sd 200 --seed 0 retro.hmm
+echo done
+/sbin/m5 exit

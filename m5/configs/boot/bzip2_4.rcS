@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cd /benchmarks/401.bzip2/data/all/input
+echo "Bzip2 input.combined x4"
+/sbin/m5 resetstats
+/sbin/m5 switchcpu
+i=4
+while [ $i -gt 0 ]
+do
+	/benchmarks/401.bzip2/exe/bzip2.alpha /benchmarks/401.bzip2/data/all/input/input.combined&
+	i=$(($i-1))
+done
+wait
+echo Done.
+/sbin/m5 exit
