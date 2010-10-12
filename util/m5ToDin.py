@@ -42,30 +42,30 @@ for line in fin:
             if readreqifetch != -1:
                 req = '0'
                 if miss != -1:
-                    addr = line[readreqifetch+17:miss-1]
+                    addr = line[readreqifetch + 17:miss - 1]
                 elif hit != -1:
-                    addr = line[readreqifetch+17:hit-1]
+                    addr = line[readreqifetch + 17:hit - 1]
 
             elif readexreq != -1:
                 req = '0'
                 if miss != -1:
-                    addr = line[readexreq+10:miss-1]
+                    addr = line[readexreq + 10:miss - 1]
                 elif hit != -1:
-                    addr = line[readexreq+10:hit-1]
+                    addr = line[readexreq + 10:hit - 1]
 
             elif readreq != -1:
                 req = '0'
                 if miss != -1:
-                    addr = line[readreq+8:miss-1]
+                    addr = line[readreq + 8:miss - 1]
                 elif hit != -1:
-                    addr = line[readreq+8:hit-1]
+                    addr = line[readreq + 8:hit - 1]
 
             elif writeback != -1:
                 req = '1'
                 if miss != -1:
-                    addr = line[writeback+9:miss-1]
+                    addr = line[writeback + 9:miss - 1]
                 elif hit != -1:
-                    addr = line[writeback+9:hit-1]
+                    addr = line[writeback + 9:hit - 1]
 
             time = line[0:colon]
 

@@ -9,8 +9,8 @@ addressmapping = sys.argv[2]
 freq = 5
 
 # write to files
-fl3 = open('stats/' + benchmark + '/' + benchmark + '.l3.txt', 'w')
-                         
+fl3 = open('./stats/' + benchmark + '/' + benchmark + '.l3.txt', 'w')
+
 # find trace pattern
 pattern = re.compile("([0-9]+) ([0-9a-fA-F]+) ([0-9]+)")
 
@@ -64,6 +64,10 @@ elif addressmapping == 'amp3g': AMP = 42
 elif addressmapping == 'amp3h': AMP = 43
 elif addressmapping == 'amp3i': AMP = 44
 elif addressmapping == 'amp3j': AMP = 45
+else:
+    print "Unknown address mapping policy: %s" % addressmapping
+    system.exit(-1)
+    
 
 
 # ----
@@ -73,11 +77,11 @@ for line in sys.stdin:
     # print l3 miss rate stats
     l = len(line)
 
-    if line.find('Metrics\t') != -1: print >>fl3, line[:l-1]
-    if line.find('Demand Fetches\t') != -1: print >>fl3, line[:l-1]
-    if line.find('Fraction of total\t') != -1: print >>fl3, line[:l-1]
-    if line.find('Demand Misses\t') != -1: print >>fl3, line[:l-1]
-    if line.find('Demand miss rate\t') != -1: print >>fl3, line[:l-1]
+    if line.find('Metrics\t') != -1: print >> fl3, line[:l - 1]
+    if line.find('Demand Fetches\t') != -1: print >> fl3, line[:l - 1]
+    if line.find('Fraction of total\t') != -1: print >> fl3, line[:l - 1]
+    if line.find('Demand Misses\t') != -1: print >> fl3, line[:l - 1]
+    if line.find('Demand miss rate\t') != -1: print >> fl3, line[:l - 1]
 
     # get traces for each dimm cache
     m = pattern.match(line)
@@ -86,13 +90,14 @@ for line in sys.stdin:
         req = m.group(1)
         address = m.group(2)
         time = float(m.group(3)) / freq
-        
+
         addr = int(m.group(2), 16)
 
         #print bin(addr)
 
         # set channel id and rank id
         # original address mapping policies
+        
         if AMP == 0:
             channelid = (addr >> 6) & 0x01
             rankid = (addr >> 18) & 0x03
@@ -237,8 +242,8 @@ for line in sys.stdin:
             rankid = (addr >> 32) & 0x03
 
         # print traces for each dimm cache
-        print '%d %s %s 0' %(channelid*2+rankid/2, req, address) 
+        print '%d %s %s 0' % (channelid * 2 + rankid / 2, req, address)
         #print >>fout[channelid*2 + rankid/2], '%s %s 0' %(req, address) 
 
-for a in fout:
-     a.close()
+#for a in fout:
+#     a.close()

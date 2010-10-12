@@ -5,7 +5,7 @@ import sys
 freq = 4
 
 misstrace = sys.argv[1]
-ds2trace = sys.argv[2] 
+ds2trace = sys.argv[2]
 dintrace = sys.argv[3]
 
 # open miss trace file from dinero for read
@@ -38,14 +38,14 @@ for line in fin:
 
         req = line[0]
         addr = line[2:findspace]
-        time = float(line[findspace:l-1]) / freq
+        time = float(line[findspace:l - 1]) / freq
 
         if req == '0':
-            print >>fout0, "%s %s %f %s" %(addr, 'R', time, '0')
-            print >>fout1, "%s %s %f" %(req, addr, time) 
+            print >> fout0, "%s %s %f %s" % (addr, 'R', time, '0')
+            print >> fout1, "%s %s %f" % (req, addr, time)
         elif req == '1':
-            print >>fout0, "%s %s %f %s" %(addr, 'W', time, '0')
-            print >>fout1, "%s %s %f" %(req, addr, time) 
+            print >> fout0, "%s %s %f %s" % (addr, 'W', time, '0')
+            print >> fout1, "%s %s %f" % (req, addr, time)
 
     if line.find("Simulation begins") != -1:
         flag = 1
