@@ -1,79 +1,244 @@
 #!/usr/bin/python -O
 
-# -----------------------------------
-# generate trace file for dimm caches
-# -----------------------------------
-
 import sys
+import re
 
-freqMultiplier = 4
+benchmark = sys.argv[1]
+addressmapping = sys.argv[2]
 
-misstrace = sys.argv[1]
-dimmcachetrace = sys.argv[2]
-addressmapping = sys.argv[3]
+freq = 5
 
-# open miss trace file from dinero for read
-try:
-    fin = open(misstrace, 'r')
-except:
-    print misstrace + ' does not exists'
-
-# open miss trace file for write for dimm caches
-fout = []
-for a in range(4):
-     fout.append(open("%s.%s.%d" % (dimmcachetrace, addressmapping, a), 'w'))
-
+# write to files
+fl3 = open('stats/' + benchmark + '/' + benchmark + '.l3.txt', 'w')
+                         
+# find trace pattern
 pattern = re.compile("([0-9]+) ([0-9a-fA-F]+) ([0-9]+)")
 
-for line in fin:
 
-     m = pattern.match(line)
+# ------------------------
+# address mapping policies
+# ------------------------
+if addressmapping == 'sdramhiperf': AMP = 0
+elif addressmapping == 'sdrambase': AMP = 1
+elif addressmapping == 'closepagebaseline': AMP = 2
+elif addressmapping == 'closepagebaselineopt': AMP = 3
+elif addressmapping == 'closepagelowlocality': AMP = 4
+elif addressmapping == 'closepagehighlocality': AMP = 5
+elif addressmapping == 'amp0a': AMP = 6
+elif addressmapping == 'amp0b': AMP = 7
+elif addressmapping == 'amp0c': AMP = 8
+elif addressmapping == 'amp0d': AMP = 9
+elif addressmapping == 'amp0e': AMP = 10
+elif addressmapping == 'amp0f': AMP = 11
+elif addressmapping == 'amp0g': AMP = 12
+elif addressmapping == 'amp0h': AMP = 13
+elif addressmapping == 'amp0i': AMP = 14
+elif addressmapping == 'amp0j': AMP = 15
+elif addressmapping == 'amp1a': AMP = 16
+elif addressmapping == 'amp1b': AMP = 17
+elif addressmapping == 'amp1c': AMP = 18
+elif addressmapping == 'amp1d': AMP = 19
+elif addressmapping == 'amp1e': AMP = 20
+elif addressmapping == 'amp1f': AMP = 21
+elif addressmapping == 'amp1g': AMP = 22
+elif addressmapping == 'amp1h': AMP = 23
+elif addressmapping == 'amp1i': AMP = 24
+elif addressmapping == 'amp1j': AMP = 25
+elif addressmapping == 'amp2a': AMP = 26
+elif addressmapping == 'amp2b': AMP = 27
+elif addressmapping == 'amp2c': AMP = 28
+elif addressmapping == 'amp2d': AMP = 29
+elif addressmapping == 'amp2e': AMP = 30
+elif addressmapping == 'amp2f': AMP = 31
+elif addressmapping == 'amp2g': AMP = 32
+elif addressmapping == 'amp2h': AMP = 33
+elif addressmapping == 'amp2i': AMP = 34
+elif addressmapping == 'amp2j': AMP = 35
+elif addressmapping == 'amp3a': AMP = 36
+elif addressmapping == 'amp3b': AMP = 37
+elif addressmapping == 'amp3c': AMP = 38
+elif addressmapping == 'amp3d': AMP = 39
+elif addressmapping == 'amp3e': AMP = 40
+elif addressmapping == 'amp3f': AMP = 41
+elif addressmapping == 'amp3g': AMP = 42
+elif addressmapping == 'amp3h': AMP = 43
+elif addressmapping == 'amp3i': AMP = 44
+elif addressmapping == 'amp3j': AMP = 45
 
-     if m is not None:
 
-          time = float(m.group(3)) / freqMultiplier
+# ----
+# main
+# ----
+for line in sys.stdin:
+    # print l3 miss rate stats
+    l = len(line)
 
-          # hex to bin
-          address_h = int(m.group(2), 16)
+    if line.find('Metrics\t') != -1: print >>fl3, line[:l-1]
+    if line.find('Demand Fetches\t') != -1: print >>fl3, line[:l-1]
+    if line.find('Fraction of total\t') != -1: print >>fl3, line[:l-1]
+    if line.find('Demand Misses\t') != -1: print >>fl3, line[:l-1]
+    if line.find('Demand miss rate\t') != -1: print >>fl3, line[:l-1]
 
-          print bin(address_h)
+    # get traces for each dimm cache
+    m = pattern.match(line)
 
-             # set channel id and rank id
-          if addressmapping == "sdramhiperf":
-                 #channelid = address_bin[29]
-                 channelid = (address_h >> 28) & 0x01
-                 #rankid = address_bin[16:18]
-                 rankid = (address_h >> 15) & 0x03
-          elif addressmapping == "sdrambase":
-                 #channelid = address_bin[29]
-                 channelid = (address_h >> 28) & 0x01
-                 rankid = address_bin[2:4]
-                 rankid = (address_h >> 1) & 0x03
-          elif addressmapping == "closepagebaseline":
-                 #channelid = address_bin[29]
-                 channelid = (address_h >> 28) & 0x01
+    if m is not None:
+        req = m.group(1)
+        address = m.group(2)
+        time = float(m.group(3)) / freq
+        
+        addr = int(m.group(2), 16)
 
-                 rankid = address_bin[23:25]
-          elif addressmapping == "closepagebaselineopt":
-                 channelid = address_bin[29]
-                 rankid = address_bin[20:22]
-          elif addressmapping == "closepagelowlocality":
-                 channelid = address_bin[32]
-                 rankid = address_bin[30:32]
-          elif addressmapping == "closepagehighlocality":
-                 channelid = address_bin[8]
-                 rankid = address_bin[2:4]
-          elif addressmapping == "mutien":
-              channelid = address_bin[24]
-              rankid = address_bin[16:18]
+        #print bin(addr)
 
-	#print "%s %s %s %s %s" %(line, addr, address_bin, channelid, rankid)
+        # set channel id and rank id
+        # original address mapping policies
+        if AMP == 0:
+            channelid = (addr >> 6) & 0x01
+            rankid = (addr >> 18) & 0x03
+        elif AMP == 1:
+            channelid = (addr >> 6) & 0x01
+            rankid = (addr >> 32) & 0x03
+        elif AMP == 2:
+            channelid = (addr >> 6) & 0x01
+            rankid = (addr >> 11) & 0x03
+        elif AMP == 3:
+            channelid = (addr >> 6) & 0x01
+            rankid = (addr >> 14) & 0x03
+        elif AMP == 4:
+            channelid = (addr >> 3) & 0x01
+            rankid = (addr >> 4) & 0x03
+        elif AMP == 5:
+            channelid = (addr >> 27) & 0x01
+            rankid = (addr >> 32) & 0x03
+        # amp0*
+        elif AMP == 6:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 8) & 0x03
+        elif AMP == 7:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 12) & 0x03
+        elif AMP == 8:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 16) & 0x03
+        elif AMP == 9:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 20) & 0x03
+        elif AMP == 10:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 22) & 0x03
+        elif AMP == 11:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 24) & 0x03
+        elif AMP == 12:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 26) & 0x03
+        elif AMP == 13:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 28) & 0x03
+        elif AMP == 14:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 30) & 0x03
+        elif AMP == 15:
+            channelid = (addr >> 11) & 0x01
+            rankid = (addr >> 32) & 0x03
+        # amp1*
+        elif AMP == 16:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 8) & 0x03
+        elif AMP == 17:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 12) & 0x03
+        elif AMP == 18:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 16) & 0x03
+        elif AMP == 19:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 20) & 0x03
+        elif AMP == 20:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 22) & 0x03
+        elif AMP == 21:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 24) & 0x03
+        elif AMP == 22:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 26) & 0x03
+        elif AMP == 23:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 28) & 0x03
+        elif AMP == 24:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 30) & 0x03
+        elif AMP == 25:
+            channelid = (addr >> 15) & 0x01
+            rankid = (addr >> 32) & 0x03
+        # amp2*
+        elif AMP == 26:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 8) & 0x03
+        elif AMP == 27:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 12) & 0x03
+        elif AMP == 28:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 16) & 0x03
+        elif AMP == 29:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 20) & 0x03
+        elif AMP == 30:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 22) & 0x03
+        elif AMP == 31:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 24) & 0x03
+        elif AMP == 32:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 26) & 0x03
+        elif AMP == 33:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 28) & 0x03
+        elif AMP == 34:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 30) & 0x03
+        elif AMP == 35:
+            channelid = (addr >> 19) & 0x01
+            rankid = (addr >> 32) & 0x03
+        # amp3*
+        elif AMP == 36:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 8) & 0x03
+        elif AMP == 37:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 12) & 0x03
+        elif AMP == 38:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 16) & 0x03
+        elif AMP == 39:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 18) & 0x03
+        elif AMP == 40:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 20) & 0x03
+        elif AMP == 41:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 24) & 0x03
+        elif AMP == 42:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 26) & 0x03
+        elif AMP == 43:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 28) & 0x03
+        elif AMP == 44:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 30) & 0x03
+        elif AMP == 45:
+            channelid = (addr >> 23) & 0x01
+            rankid = (addr >> 32) & 0x03
 
-        # print files
-        rankid = rankid / 2
-        fout[channelid * 2 + rankid].write(req + ' ' + addr + ' 0' + '\n')
+        # print traces for each dimm cache
+        print '%d %s %s 0' %(channelid*2+rankid/2, req, address) 
+        #print >>fout[channelid*2 + rankid/2], '%s %s 0' %(req, address) 
 
-
-fin.close()
 for a in fout:
      a.close()
