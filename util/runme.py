@@ -11,7 +11,7 @@ os.system('mkdir stats/' + benchmark)
 # m5 to dinero trace file translator
 # ----------------------------------
 m5todin_commandline = 'python m5ToDin.py ../traces/m5_format/' + benchmark + 'Stream.gz ../traces/dinero_format/' + benchmark + '.din'
-print 'command line: %s' %m5todin_commandline
+print 'command line: %s' % m5todin_commandline
 print 'm5 to dinero trace file translation begins...'
 os.system(m5todin_commandline)
 print 'done'
@@ -20,8 +20,8 @@ print 'done'
 # ----------------------------------
 # run dineroIV to get l3 cache stats
 # ----------------------------------
-l3stats_commandline = './dineroIV -informat d -l1-usize 16M -l1-ubsize 64 -l1-uassoc 16 -l1-upfdist 3 < ../traces/dinero_format/' + benchmark +'.din > stats/' + benchmark + '/' + benchmark + '.l3.txt'
-print 'command line: %s' %l3stats_commandline
+l3stats_commandline = './dineroIV -informat d -l1-usize 16M -l1-ubsize 64 -l1-uassoc 16 -l1-upfdist 3 < ../traces/dinero_format/' + benchmark + '.din > stats/' + benchmark + '/' + benchmark + '.l3.txt'
+print 'command line: %s' % l3stats_commandline
 print 'getting l3 miss rate...'
 os.system(l3stats_commandline)
 print 'done'
@@ -31,7 +31,7 @@ print 'done'
 # run dineroIV-w-misstrace to generate L3 miss traces
 # ---------------------------------------------------
 l3miss_commandline = './dineroIV-w-misstrace -informat d -l1-usize 16M -l1-ubsize 64 -l1-uassoc 16 -l1-upfdist 3 < ../traces/dinero_format/' + benchmark + '.din > ../traces/dinero_format/miss/' + benchmark + '-miss'
-print 'command line: %s' %l3miss_commandline
+print 'command line: %s' % l3miss_commandline
 print 'generating l3 miss traces...'
 os.system(l3miss_commandline)
 print 'done'
@@ -41,7 +41,7 @@ print 'done'
 # generate miss trace file for ds2 and dinero l4
 # ----------------------------------------------
 dintods2_commandline = 'dinToDs2.py ../traces/dinero_format/miss/' + benchmark + '-miss ../traces/ds2_format/' + benchmark + '-miss.trace ../traces/dinero_format/' + benchmark + '.l4.din'
-print 'command line: %s' %dintods2_commandline
+print 'command line: %s' % dintods2_commandline
 print 'generating traces for ds2 and dinero l4...'
 os.system(dintods2_commandline)
 print 'done'
@@ -83,7 +83,7 @@ fout = open(result, 'w')
 blocksize = '64'
 assoc = '16'
 for cachesize in cacheSize:
-    l4stats_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < ../traces/dinero_format/' + benchmark +'.l4.din > stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
+    l4stats_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < ../traces/dinero_format/' + benchmark + '.l4.din > stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
     os.system(l4stats_commandline)
 
     stat = 'stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
@@ -92,11 +92,11 @@ for cachesize in cacheSize:
 
     for line in f:
         if line.find('Demand Fetches\t') != -1:
-            demandfetches = line[18:36]            
+            demandfetches = line[18:36]
         if line.find('Demand miss rate') != -1:
             missrate = line[25:32]
 
-    print >>fout, '%s %s %s %s %s' %(cachesize, blocksize, assoc, missrate, demandfetches)
+    print >> fout, '%s %s %s %s %s' % (cachesize, blocksize, assoc, missrate, demandfetches)
 
     f.close()
 
@@ -104,7 +104,7 @@ for cachesize in cacheSize:
 cachesize = '64M'
 assoc = '16'
 for blocksize in blockSize:
-    l4stats_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < ../traces/dinero_format/' + benchmark +'.l4.din > stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
+    l4stats_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < ../traces/dinero_format/' + benchmark + '.l4.din > stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
     os.system(l4stats_commandline)
 
     stat = 'stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
@@ -117,7 +117,7 @@ for blocksize in blockSize:
         if line.find('Demand miss rate') != -1:
             missrate = line[25:32]
 
-    print >>fout, '%s %s %s %s %s' %(cachesize, blocksize, assoc, missrate, demandfetches)
+    print >> fout, '%s %s %s %s %s' % (cachesize, blocksize, assoc, missrate, demandfetches)
 
     f.close()
 
@@ -125,7 +125,7 @@ for blocksize in blockSize:
 cachesize = '64M'
 blocksize = '16'
 for assoc in associativity:
-    l4stats_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < ../traces/dinero_format/' + benchmark +'.l4.din > stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
+    l4stats_commandline = './dineroIV -informat d -l1-usize ' + cachesize + ' -l1-ubsize ' + blocksize + ' -l1-uassoc ' + assoc + ' < ../traces/dinero_format/' + benchmark + '.l4.din > stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
     os.system(l4stats_commandline)
 
     stat = 'stats/' + benchmark + '.' + cachesize + '.' + blocksize + '.' + assoc
@@ -138,7 +138,7 @@ for assoc in associativity:
         if line.find('Demand miss rate') != -1:
             missrate = line[25:32]
 
-    print >>fout, '%s %s %s %s %s' %(cachesize, blocksize, assoc, missrate, demandfetches)
+    print >> fout, '%s %s %s %s %s' % (cachesize, blocksize, assoc, missrate, demandfetches)
 
     f.close()
 
@@ -168,7 +168,7 @@ addressMappingPolicy += ['mutien']
 
 for addressmapping in addressMappingPolicy:
     dinmiss_commandline = 'python dinMiss.py ../traces/dinero_format/miss/' + benchmark + '-miss ../traces/dinero_format/' + benchmark + '.dimm.din ' + addressmapping
-    print 'command line: %s' %dinmiss_commandline
+    print 'command line: %s' % dinmiss_commandline
     print 'generating miss traces for dimm caches...'
     os.system(dinmiss_commandline)
     print 'done'
@@ -258,8 +258,8 @@ for addressmapping in addressMappingPolicy:
             if line.find('Demand miss rate') != -1:
                 missrate3 = line[25:32]
 
-        print >>fout, '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
-        print '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
+        print >> fout, '%s %s %s %s %s %s %s %s %s %s %s %s' % (addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
+        print '%s %s %s %s %s %s %s %s %s %s %s %s' % (addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
 
         f0.close()
         f1.close()
@@ -318,8 +318,8 @@ for addressmapping in addressMappingPolicy:
             if line.find('Demand miss rate') != -1:
                 missrate3 = line[25:32]
 
-        print >>fout, '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
-        print '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
+        print >> fout, '%s %s %s %s %s %s %s %s %s %s %s %s' % (addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
+        print '%s %s %s %s %s %s %s %s %s %s %s %s' % (addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
 
         f0.close()
         f1.close()
@@ -378,8 +378,8 @@ for addressmapping in addressMappingPolicy:
             if line.find('Demand miss rate') != -1:
                 missrate3 = line[25:32]
 
-        print >>fout, '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
-        print '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
+        print >> fout, '%s %s %s %s %s %s %s %s %s %s %s %s' % (addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
+        print '%s %s %s %s %s %s %s %s %s %s %s %s' % (addressmapping, cachesize, blocksize, assoc, missrate0, missrate1, missrate2, missrate3, demandfetches0, demandfetches1, demandfetches2, demandfetches3)
 
         f0.close()
         f1.close()

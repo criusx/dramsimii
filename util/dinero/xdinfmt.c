@@ -51,7 +51,6 @@
 #include "cmdd4.h"
 #include "tracein.h"
 
-
 /*
  * Read in ASCII from standard input
  * Expect 3 significant fields per line:
@@ -68,12 +67,11 @@
  * Address and size are hexadecimal, with optional 0x or 0X prefix.
  */
 
-d4memref
-tracein_xdin()
+d4memref tracein_xdin()
 {
-	static double tcount = 1;	/* double to increase range */
+	static double tcount = 1; /* double to increase range */
 	static char badatype[] = "xdin format error on trace record %.0f: unknown atype: %s"
-				 "Consider -informat d for Dinero III input format\n";
+		"Consider -informat d for Dinero III input format\n";
 	static char badaddr[] = "xdin format error on trace record %.0f: non hex digit (code 0x%x) in address\n";
 	static char shortline[] = "xdin format error on trace record %.0f: short line\n";
 	static char badsize[] = "xdin format error on trace record %.0f: non hex digit (code 0x%x) in size\n";
@@ -85,25 +83,28 @@ tracein_xdin()
 	int c, cc;
 
 	/* skip initial whitespace */
-	do {
+	do
+	{
 		c = getchar();
 	} while (c == ' ' || c == '\t');
-	if (c == EOF) {
+	if (c == EOF)
+	{
 		r.address = 0;
 		r.size = 0;
 		r.accesstype = D4TRACE_END;
-		return r;		/* this will trigger normal termination */
+		return r; /* this will trigger normal termination */
 	}
 	if (c == '\n')
-		die (shortline, tcount);
+		die(shortline, tcount);
 
 	/* the accesstype is just 1 char */
-	switch (c) {
+	switch (c)
+	{
 	default:
 		errline[0] = c;
-		fgets (errline+1, sizeof(errline)-1, stdin);
-		errline[strlen(errline)-1] = '\n'; /* ensure trailing \n */
-		die (badatype, tcount, errline);
+		fgets(errline + 1, sizeof(errline) - 1, stdin);
+		errline[strlen(errline) - 1] = '\n'; /* ensure trailing \n */
+		die(badatype, tcount, errline);
 		/* no return */
 	case 'r':
 	case 'R':
@@ -132,57 +133,61 @@ tracein_xdin()
 	}
 	cc = getchar();
 	if (cc == '\n')
-		die (shortline, tcount);
-	if (cc != ' ' && cc != '\t') {
+		die(shortline, tcount);
+	if (cc != ' ' && cc != '\t')
+	{
 		errline[0] = c;
 		errline[1] = cc;
-		fgets (errline+2, sizeof(errline)-2, stdin);
-		errline[strlen(errline)-1] = '\n'; /* ensure trailing \n */
-		die (badatype, tcount, errline);
+		fgets(errline + 2, sizeof(errline) - 2, stdin);
+		errline[strlen(errline) - 1] = '\n'; /* ensure trailing \n */
+		die(badatype, tcount, errline);
 	}
 
 	/* skip whitespace between atype and address */
-	do {
+	do
+	{
 		c = getchar();
 	} while (c == ' ' || c == '\t');
 	if (c == '\n' || c == EOF)
-		die (shortline, tcount);
+		die(shortline, tcount);
 
 	/* now get the address */
 	if (!isxdigit(c))
-		die (badaddr, tcount, c);
+		die(badaddr, tcount, c);
 	addr = c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
-	c = getchar(); 
+	c = getchar();
 	if ((c == 'x' || c == 'X') && addr == 0)
-		c = getchar();	/* ignore leading 0x or 0X */
-	while (isxdigit(c)) {
+		c = getchar(); /* ignore leading 0x or 0X */
+	while (isxdigit(c))
+	{
 		addr *= 16;
 		addr += c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
 		c = getchar();
 	}
 	if (c != EOF && c != '\n' && c != ' ' && c != '\t')
-		die (badaddr, tcount, c);
+		die(badaddr, tcount, c);
 
 	/* skip whitespace between addr and size */
 	while (c == ' ' || c == '\t')
 		c = getchar();
 	if (c == EOF || c == '\n')
-		die (nosize, tcount);
-	
+		die(nosize, tcount);
+
 	/* now get the size */
 	if (!isxdigit(c))
-		die (badsize, tcount, c);
+		die(badsize, tcount, c);
 	size = c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
-	c = getchar(); 
+	c = getchar();
 	if ((c == 'x' || c == 'X') && size == 0)
-		c = getchar();	/* ignore leading 0x or 0X */
-	while (isxdigit(c)) {
+		c = getchar(); /* ignore leading 0x or 0X */
+	while (isxdigit(c))
+	{
 		size *= 16;
 		size += c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
 		c = getchar();
 	}
 	if (c != EOF && c != '\n' && c != ' ' && c != '\t')
-		die (badsize, tcount, c);
+		die(badsize, tcount, c);
 
 	/* skip rest of line */
 	while (c != '\n' && c != EOF)

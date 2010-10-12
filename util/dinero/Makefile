@@ -65,7 +65,7 @@ CUSTOM_NAME = d4custom # this is really just a placeholder
 
 CC = gcc
 DEBUG=-DNDEBUG
-CFLAGS = -O3 -g -Wall -Wcast-qual -Wshadow -Wpointer-arith -Wmissing-prototypes $(DEBUG) -I$(D4_SRC)
+CFLAGS = -O3 -g -Wall -Wcast-qual -Wshadow -Wpointer-arith -Wmissing-prototypes -march=k8-sse3 $(DEBUG) -I$(D4_SRC)
 LDFLAGS = 
 LIBS = -lm 
 RANLIB = ranlib
