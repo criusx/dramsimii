@@ -104,6 +104,7 @@ Benchmarks = {
 
     'bnAn': [SysConfig('/z/saidi/work/m5.newmem.head/configs/boot/bn-app.rcS',
                        '128MB', '/z/saidi/work/bottleneck/bnimg.img')],
+     # new benchmarks
     'astar' :           [SysConfig('astar.rcS', '512MB')],
     'astar_4':          [SysConfig('astar_4.rcS', '1024MB')],
     'bzip2' :           [SysConfig('bzip2.rcS', '512MB')],
@@ -116,8 +117,8 @@ Benchmarks = {
     'milc_4':           [SysConfig('milc_4.rcS', '2048MB')],
     'hmmer':            [SysConfig('hmmer.rcS', '768MB')],
     'hmmer_4':          [SysConfig('hmmer_4.rcS', '2048MB')],
-    'perl':            [SysConfig('perl.rcS', '768MB')],
-    'perl_4':          [SysConfig('perl_4.rcS', '1024MB')],
+    'perl':             [SysConfig('perl.rcS', '768MB')],
+    'perl_4':           [SysConfig('perl_4.rcS', '1024MB')],
     'shutdown':         [SysConfig('shutdown.rcS', '256MB')],
     'blackscholes':     [SysConfig('blackscholes_1c_simmedium.rcS', '256MB')],
     'bodytrack':        [SysConfig('bodytrack_1c_simmedium.rcS', '256MB')],
@@ -126,6 +127,7 @@ Benchmarks = {
     'facesim':          [SysConfig('facesim_1c_simmedium.rcS', '256MB')],
     'ferret':           [SysConfig('ferret_1c_simmedium.rcS', '256MB')],
     'fluidaniate':      [SysConfig('fluidanimate_1c_simmedium.rcS', '256MB')],
+    'freqmine':         [SysConfig('freqmine_1c_simlarge.rcS', '1024MB')],
     'raytrace':         [SysConfig('raytrace_1c_simmedium.rcS', '256MB')],
     'streamcluster':    [SysConfig('streamcluster_1c_simmedium.rcS', '256MB')],
     'swaptions':        [SysConfig('swaptions_1c_simmedium.rcS', '256MB')],
@@ -138,12 +140,14 @@ Benchmarks = {
     'facesim_4':        [SysConfig('facesim_4c_simmedium.rcS', '256MB')],
     'ferret_4':         [SysConfig('ferret_4c_simmedium.rcS', '1024MB')],
     'fluidaniate_4':    [SysConfig('fluidanimate_4c_simmedium.rcS', '256MB')],
+    'freqmine_4':       [SysConfig('freqmine_4c_simlarge.rcS', '1536MB')],
     'raytrace_4':       [SysConfig('raytrace_4c_simmedium.rcS', '256MB')],
     'streamcluster_4':  [SysConfig('streamcluster_4c_simmedium.rcS', '256MB')],
     'swaptions_4':      [SysConfig('swaptions_4c_simmedium.rcS', '256MB')],
     'vips_4':           [SysConfig('vips_4c_simmedium.rcS', '256MB')],
     'x264_4':           [SysConfig('x264_4c_simmedium.rcS', '256MB')],
-
+    'xalancbmk':        [SysConfig('xalancbmk.rcS', '512MB')],
+    'xalancbmk_4':      [SysConfig('xalancbmk_4.rcS', '1024MB')],
     'blank':            [SysConfig('blank.rcS', '1024MB')]
 }
 

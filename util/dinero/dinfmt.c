@@ -51,7 +51,6 @@
 #include "cmdd4.h"
 #include "tracein.h"
 
-
 /*
  * Read in ASCII from standard input
  * Expect ONE label and addr in hex per line.
@@ -65,10 +64,9 @@
  * all but the first tuple will be ignored.
  */
 
-d4memref
-tracein_din()
+d4memref tracein_din()
 {
-	static double tcount = 1;	/* double to increase range */
+	static double tcount = 1; /* double to increase range */
 	static char badlabel[] = "din format error on trace record %.0f: non hex digit (code 0x%x) in label\n";
 	static char badaddr[] = "din format error on trace record %.0f: non hex digit (code 0x%x) in address\n";
 	static char shortline[] = "din format error on trace record %.0f: short line\n";
@@ -81,81 +79,90 @@ tracein_din()
 	int countdigit = 0;
 
 	/* skip initial whitespace */
-	do {
+	do
+	{
 		c = getchar();
 	} while (c == ' ' || c == '\t');
-	if (c == EOF) {
+	if (c == EOF)
+	{
 		r.address = 0;
 		r.size = 0;
 		r.accesstype = D4TRACE_END;
-		return r;		/* this will trigger normal termination */
+		return r; /* this will trigger normal termination */
 	}
 	if (c == '\n')
-		die (shortline, tcount);
+		die(shortline, tcount);
 
 	/* typically the label is just 1 char */
 	if (!isxdigit(c))
-		die (badlabel, tcount, c);
+		die(badlabel, tcount, c);
 	atype = c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
 	c = getchar();
-	if (c != ' ' && c != '\t') {	/* rarely get rest of label */
+	if (c != ' ' && c != '\t')
+	{ /* rarely get rest of label */
 		if ((c == 'x' || c == 'X') && atype == 0)
-			c = getchar();	/* ignore leading 0x or 0X */
+			c = getchar(); /* ignore leading 0x or 0X */
 		if (c == '\n' || c == EOF)
-			die (shortline, tcount);
-		while (isxdigit(c)) {
+			die(shortline, tcount);
+		while (isxdigit(c))
+		{
 			atype *= 16;
 			atype += c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
 			c = getchar();
 		}
 		if (c == '\n' || c == EOF)
-			die (shortline, tcount);
+			die(shortline, tcount);
 		if (c != ' ' && c != '\t')
-			die (badlabel, tcount, c);
+			die(badlabel, tcount, c);
 	}
 
 	/* skip whitespace between label and address */
-	do {
+	do
+	{
 		c = getchar();
 	} while (c == ' ' || c == '\t');
 	if (c == '\n' || c == EOF)
-		die (shortline, tcount);
+		die(shortline, tcount);
 
 	/* now get the address */
 	if (!isxdigit(c))
-		die (badaddr, tcount, c);
+		die(badaddr, tcount, c);
 	addr = c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
-	c = getchar(); 
+	c = getchar();
 	if ((c == 'x' || c == 'X') && addr == 0)
-		c = getchar();	/* ignore leading 0x or 0X */
-	while (isxdigit(c)) {
+		c = getchar(); /* ignore leading 0x or 0X */
+	while (isxdigit(c))
+	{
 		addr *= 16;
 		addr += c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
 		c = getchar();
 	}
 	if (c != EOF && c != '\n' && c != ' ' && c != '\t')
-		die (badaddr, tcount, c);
+		die(badaddr, tcount, c);
 
 	/* skip whitespace between address and arrival time */
-	do {
+	do
+	{
 		c = getchar();
 	} while (c == ' ' || c == '\t');
 	if (c == '\n' || c == EOF)
-		die (shortline, tcount);
+		die(shortline, tcount);
 
 	/* now get the arrival time */
-	while (isdigit(c) || c =='.') 
+	while (isdigit(c) || c == '.')
 	{
-	  if (c == '.') flag = 1;	  
-	  else if (c != '.' && flag == 1) countdigit += 1;
-	  
-	  if (c != '.')
-	  {
-	    time *= 10;
-	    time += c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
-          }
+		if (c == '.')
+			flag = 1;
+		else if (c != '.' && flag == 1)
+			countdigit += 1;
 
-	  c = getchar();
+		if (c != '.')
+		{
+			time *= 10;
+			time += c - (isdigit(c) ? '0' : ((islower(c) ? 'a' : 'A') - 10));
+		}
+
+		c = getchar();
 	}
 
 	time /= pow(10, countdigit);
@@ -164,7 +171,7 @@ tracein_din()
 	while (c != '\n' && c != EOF)
 		c = getchar();
 	r.accesstype = atype;
-	r.address = addr & ~3;	/* dineroIII is pretty much word-oriented */
+	r.address = addr & ~3; /* dineroIII is pretty much word-oriented */
 	r.time = time;
 	r.size = 4;
 	tcount += 1;

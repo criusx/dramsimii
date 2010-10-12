@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# File to run the gups benchmark
+
+cd /gups
+echo "GUPS 25600000 30 64"
+#/sbin/m5 switchcpu
+/sbin/m5 dumpstats
+/sbin/m5 resetstats
+echo "25600000 30 64" | ./gups_parallel.r10k &
+echo "25600000 30 64" | ./gups_parallel.r10k &
+echo "25600000 30 64" | ./gups_parallel.r10k &
+echo "25600000 30 64" | ./gups_parallel.r10k &
+wait
+echo "Done with GUPS"
+/sbin/m5 exit 
