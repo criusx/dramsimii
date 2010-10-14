@@ -82,6 +82,14 @@ d4memref tracein_din()
 	do
 	{
 		c = getchar();
+		if (c == 0)
+		{
+			r.address = 0;
+			r.size = 0;
+			r.accesstype = D4TRACE_END;
+			return r; /* this will trigger normal termination */
+		}
+
 	} while (c == ' ' || c == '\t');
 	if (c == EOF)
 	{

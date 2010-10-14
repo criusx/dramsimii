@@ -64,10 +64,10 @@ CMD_SRC_LIST = $(D4_SRC)/cmdmain.c $(D4_SRC)/cmdargs.c $(D4_SRC)/tracein.c \
 CUSTOM_NAME = d4custom # this is really just a placeholder
 
 DEBUG=-DNDEBUG
-CFLAGS = -O3 -g -Wall -Wcast-qual -Wshadow -Wpointer-arith -Wmissing-prototypes $(DEBUG) -I$(D4_SRC) -march=k8-sse3
+CFLAGS =-O3 -g -Wall -Wcast-qual -Wshadow -Wpointer-arith -Wmissing-prototypes $(DEBUG) -I$(D4_SRC) -march=k8-sse3
 LDFLAGS = 
-LIBS = -lm 
-RANLIB = ranlib
+LIBS =-lm 
+RANLIB =ranlib
 
 all: libd4.a dineroIV-w-misstrace dineroIV
 

@@ -1,5 +1,5 @@
+#!/usr/bin/python -O
 #!/usr/bin/env python
-# #!/usr/bin/env python -O
 
 from subprocess import Popen, PIPE, STDOUT
 import sys, traceback
@@ -89,9 +89,6 @@ class L3Cache(Thread):
                 (channel, rank) = self.addressDecode(addr)
                 
                 workQueue[channel * 2 + rank / 2].put("%s %s 0\n" % (req, m.group(2)))
-                
-                #print "+%d %s %s 0" % (channel  * 2 + rank / 2, req, m.group(2))
-                           
         
     def addressDecode(self, addr):
         if self.AMP == 0:
@@ -246,62 +243,32 @@ class ThreadMonitor(Thread):
         self.p = None
         self.number = number
     def run(self):
-        #self.p = Popen(self.commandline, stdin=PIPE, stdout=PIPE, bufsize=1048576)
-        self.p = Popen(self.commandline, stdin=PIPE, stdout=open("%d.out" % self.number, 'w'))
-        #self.p = Popen(self.commandline, stdin=PIPE)
-        #output = self.p.communicate(None)[0]
-        #self.p.communicate(None)[0]
+        self.p = Popen(self.commandline, stdin=PIPE, stdout=PIPE, bufsize=131072)
         while True:
             try:
                 line = workQueue[self.number].get()
                 workQueue[self.number].task_done()
                 
                 if not line:
-                    outstream = self.p.communicate("")[0]
-                    #self.p.stdin.close()
-                    #self.p.stdin.flush()
+                    outstream = self.p.communicate("\x00")[0]
+                    fetch1 = '0'
+                    miss1 = '0'
+                    for line1 in outstream.split("\n"):
+                        if line1.find('Demand Fetches\t') != -1:
+                            fetch1 = line1[18:36].strip()
+                        if line1.find('Demand miss rate') != -1:
+                            miss1 = line1[25:32].strip()
                     
-                    #print "%d: %s" % (self.number, outstream)
-                    #sys.stdout.flush()
-                    #print self.number +self.p.poll()
-                    #sys.stdout.flush()
-                    #print "%d finishing" % self.number
-                    #sys.stdout.flush()
-                    #fetch1 = '0'
-                    #miss1 = '0'
-                    #while True:
-                    #    line1 = self.p.stdout.readline()
-                    #    print line1
-                    #    sys.stdout.flush()
-                    #    if not line1: break
-                    #print '+',
-                    #print output
-                    #for line1 in outstream:
-                    #    if line1.find('Demand Fetches\t') != -1:
-                            #print line1
-                    #        fetch1 = line1[18:36].strip()
-                    #    if line1.find('Demand miss rate') != -1:
-                            #print line1
-                   #         miss1 = line1[25:32].strip()
                     
-                    #print "%d: %s fetches, %s miss rate" % (self.number, fetch1, miss1)
-                    #sys.stdout.flush()
-                    print "%d waiting" % self.number
-                    sys.stdout.flush()
                     self.p.wait()
-                    #print output
+                    
+                    workQueue[self.number].put([fetch1, miss1])
                     break
                 
                 self.p.stdin.write(line)
-                #output = self.p.communicate(line)[0]
-                #self.p.communicate(line)
+         
             except Exception as errno:
-                #traceback.print_exc(file=sys.stdout)
-
-                print "."
                 print "error({0})".format(errno)
-                #print ".",
-                #print Exception.msg
                 pass
       
 workQueue = []
@@ -351,18 +318,18 @@ if __name__ == "__main__":
          basename = os.path.basename(benchmark)
          basename = basename[0:basename.find('.')]
          
-        
-         
          # === sweep block size ===
          csize = '8M'
          assoc = '16'
          for bsize in blockSize:
+              
+              #print '%s %s %s %s %s %s %s %s %s %s %s %s' % (addressmapping, cachesize, blocksize, assoc, miss0, miss1, miss2, miss3, fetch0, fetch1, fetch2, fetch3)
+
               for a in range(4):
                   workQueue.append(Queue())
 
               dineroPath = os.path.join(os.path.abspath("./dinero"), "dineroIV")
               dimmcache_config = [dineroPath, '-informat', 'd', '-l1-usize', csize, '-l1-ubsize', bsize, '-l1-uassoc', assoc]
-              #print dimmcache_config
               l3cache = L3Cache(basename, benchmark, addressmapping, workQueue)
               l3cache.start()
              
@@ -372,16 +339,15 @@ if __name__ == "__main__":
                   tm = ThreadMonitor(dimmcache_config, number)
                   dimm.append(tm)
                   tm.start()
+                  
               l3cache.join()
 
               for a in dimm:
-                   print "waiting"
                    a.join()
-    # 
-
-    #    print '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, miss0, miss1, miss2, miss3, fetch0, fetch1, fetch2, fetch3)
-
-       
-         print 'done'
-
-
+                   
+              val = 0
+              for a in workQueue:
+                  array = a.get()
+                  a.task_done()
+                  print "%d: %s fetches, %s miss rate" % (val, array[0], array[1])
+                  val += 1
