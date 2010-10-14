@@ -1,7 +1,8 @@
-#!/usr/bin/python -O
+#!/usr/bin/env python
+# #!/usr/bin/env python -O
 
 from subprocess import Popen, PIPE, STDOUT
-import sys
+import sys, traceback
 import os
 from threading import Thread
 import time
@@ -11,14 +12,14 @@ import re
 
 
 class L3Cache(Thread):
-    def __init__(self, benchmark, file,  addressmapping, workQueue):
+    def __init__(self, benchmark, file, addressmapping, workQueue):
         Thread.__init__(self)
         
         self.pattern = re.compile("([0-9]+) ([0-9a-fA-F]+) ([0-9]+)")
         self.freq = 5
         
         l3_config = 'zcat %s | ./dineroIV-w-misstrace -informat d -l1-usize 16M -l1-ubsize 64 -l1-uassoc 16 -l1-upfdist 3' % file
-        self.p = Popen([l3_config],  shell = True,  executable = "/bin/bash",  stdout=PIPE)
+        self.p = Popen([l3_config], shell=True, executable="/bin/bash", stdout=PIPE)
         
         if addressmapping == 'sdramhiperf': self.AMP = 0
         elif addressmapping == 'sdrambase': self.AMP = 1
@@ -75,22 +76,23 @@ class L3Cache(Thread):
             newLine = self.p.stdout.readline()
             if not newLine: 
                 # to signal the end of the file
-                for a in range(4):
-                    workQueue[a].put(None)
+                for a in workQueue:
+                    a.put(None)
                 break
-            
-            m = self.pattern.match(newLine)
+          
+            m = self.pattern.match(newLine)            
             
             if m is not None:
-                    req = m.group(1)
-                    addr = int(m.group(2),  16)
-                    time = float(m.group(3)) / self.freq
-                    (channel,  rank) = self.addressDecode(addr)
-                    
-                    workQueue[channel * 2 + rank / 2].put("%s %s 0" % (req, m.group(2)))
-                    
-                    print "+%d %s %s 0" % (channel  * 2 + rank / 2, req, m.group(2))
-    
+                req = m.group(1)
+                addr = int(m.group(2), 16)
+                time = float(m.group(3)) / self.freq
+                (channel, rank) = self.addressDecode(addr)
+                
+                workQueue[channel * 2 + rank / 2].put("%s %s 0\n" % (req, m.group(2)))
+                
+                #print "+%d %s %s 0" % (channel  * 2 + rank / 2, req, m.group(2))
+                           
+        
     def addressDecode(self, addr):
         if self.AMP == 0:
             channelid = (addr >> 6) & 0x01
@@ -244,17 +246,64 @@ class ThreadMonitor(Thread):
         self.p = None
         self.number = number
     def run(self):
-        self.p = Popen([self.commandline], shell = True, executable = '/bin/bash', stdin = PIPE, stdout = PIPE)
+        #self.p = Popen(self.commandline, stdin=PIPE, stdout=PIPE, bufsize=1048576)
+        self.p = Popen(self.commandline, stdin=PIPE, stdout=open("%d.out" % self.number, 'w'))
+        #self.p = Popen(self.commandline, stdin=PIPE)
+        #output = self.p.communicate(None)[0]
+        #self.p.communicate(None)[0]
         while True:
-            line = workQueue[self.number].get()
-            workQueue[self.number].task_done()
-            if not line: break
-            #do stuff here
-            print "-%d: %s" % (self.number, line)
-  
-    def close(self):
-        self.p.stdin.write("\003")
+            try:
+                line = workQueue[self.number].get()
+                workQueue[self.number].task_done()
+                
+                if not line:
+                    outstream = self.p.communicate("")[0]
+                    #self.p.stdin.close()
+                    #self.p.stdin.flush()
+                    
+                    #print "%d: %s" % (self.number, outstream)
+                    #sys.stdout.flush()
+                    #print self.number +self.p.poll()
+                    #sys.stdout.flush()
+                    #print "%d finishing" % self.number
+                    #sys.stdout.flush()
+                    #fetch1 = '0'
+                    #miss1 = '0'
+                    #while True:
+                    #    line1 = self.p.stdout.readline()
+                    #    print line1
+                    #    sys.stdout.flush()
+                    #    if not line1: break
+                    #print '+',
+                    #print output
+                    #for line1 in outstream:
+                    #    if line1.find('Demand Fetches\t') != -1:
+                            #print line1
+                    #        fetch1 = line1[18:36].strip()
+                    #    if line1.find('Demand miss rate') != -1:
+                            #print line1
+                   #         miss1 = line1[25:32].strip()
+                    
+                    #print "%d: %s fetches, %s miss rate" % (self.number, fetch1, miss1)
+                    #sys.stdout.flush()
+                    print "%d waiting" % self.number
+                    sys.stdout.flush()
+                    self.p.wait()
+                    #print output
+                    break
+                
+                self.p.stdin.write(line)
+                #output = self.p.communicate(line)[0]
+                #self.p.communicate(line)
+            except Exception as errno:
+                #traceback.print_exc(file=sys.stdout)
 
+                print "."
+                print "error({0})".format(errno)
+                #print ".",
+                #print Exception.msg
+                pass
+      
 workQueue = []
 
 if __name__ == "__main__":
@@ -293,9 +342,7 @@ if __name__ == "__main__":
     # associativity += ['32']
     # associativity += ['64']
     
-    for a in range(4):
-        workQueue.append(Queue())
-
+   
     # ----
     # main
     # ----
@@ -310,9 +357,13 @@ if __name__ == "__main__":
          csize = '8M'
          assoc = '16'
          for bsize in blockSize:
-              dimmcache_config = './dineroIV -informat d -l1-usize %s -l1-ubsize %s -l1-uassoc %s' % (csize, bsize, assoc)
+              for a in range(4):
+                  workQueue.append(Queue())
 
-              l3cache = L3Cache(basename, benchmark, addressmapping,  workQueue)
+              dineroPath = os.path.join(os.path.abspath("./dinero"), "dineroIV")
+              dimmcache_config = [dineroPath, '-informat', 'd', '-l1-usize', csize, '-l1-ubsize', bsize, '-l1-uassoc', assoc]
+              #print dimmcache_config
+              l3cache = L3Cache(basename, benchmark, addressmapping, workQueue)
               l3cache.start()
              
               dimm = []
@@ -321,25 +372,16 @@ if __name__ == "__main__":
                   tm = ThreadMonitor(dimmcache_config, number)
                   dimm.append(tm)
                   tm.start()
-
-              l3cache.close()
-              l3cache.wait()
+              l3cache.join()
 
               for a in dimm:
-                   a.close()
-                   a.wait()
-    #        if line0.find('Demand Fetches\t') != -1: fetch0 = line0[18:36]
-    #        if line1.find('Demand Fetches\t') != -1: fetch1 = line1[18:36]
-    #        if line2.find('Demand Fetches\t') != -1: fetch2 = line2[18:36]
-    #        if line3.find('Demand Fetches\t') != -1: fetch3 = line3[18:36]
-    #        if line0.find('Demand miss rate') != -1: miss0 = line0[25:32]
-    #        if line1.find('Demand miss rate') != -1: miss1 = line1[25:32]
-    #        if line2.find('Demand miss rate') != -1: miss2 = line2[25:32]
-    #        if line3.find('Demand miss rate') != -1: miss3 = line3[25:32]
+                   print "waiting"
+                   a.join()
+    # 
 
     #    print '%s %s %s %s %s %s %s %s %s %s %s %s' %(addressmapping, cachesize, blocksize, assoc, miss0, miss1, miss2, miss3, fetch0, fetch1, fetch2, fetch3)
 
-
+       
          print 'done'
 
 

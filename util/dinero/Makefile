@@ -63,28 +63,35 @@ CMD_SRC_LIST = $(D4_SRC)/cmdmain.c $(D4_SRC)/cmdargs.c $(D4_SRC)/tracein.c \
 	$(D4_SRC)/pixie32fmt.c $(D4_SRC)/pixie64fmt.c
 CUSTOM_NAME = d4custom # this is really just a placeholder
 
-CC = gcc
 DEBUG=-DNDEBUG
-CFLAGS = -O3 -g -Wall -Wcast-qual -Wshadow -Wpointer-arith -Wmissing-prototypes -march=k8-sse3 $(DEBUG) -I$(D4_SRC)
+CFLAGS = -O3 -g -Wall -Wcast-qual -Wshadow -Wpointer-arith -Wmissing-prototypes $(DEBUG) -I$(D4_SRC) -march=k8-sse3
 LDFLAGS = 
 LIBS = -lm 
 RANLIB = ranlib
 
-all: libd4.a dineroIV
+all: libd4.a dineroIV-w-misstrace dineroIV
 
 clean:
-	rm -f $(LIB_OBJ_LIST) $(CMD_OBJ_LIST)
+	rm -f $(LIB_OBJ_LIST) $(CMD_OBJ_LIST) ref-w-misstrace.o
 
 clobber: clean
-	rm -f libd4.a dineroIV d4custom
+	rm -f libd4.a dineroIV-w-misstrace d4custom dineroIV
 
 distclean: clobber
-	rm -f config.status config.cache config.log Makefile config.h core
+	rm -f config.status config.cache config.log config.h core
 
 libd4.a: $(LIB_OBJ_LIST)
 	rm -f libd4.a
 	$(AR) cq libd4.a $(LIB_OBJ_LIST)
 	$(RANLIB) libd4.a
+
+libd4-w-misstrace.a: ref-w-misstrace.o misc.o
+	rm -f libd4-w-misstrace.a
+	$(AR) cq libd4-w-misstrace.a ref-w-misstrace.o misc.o
+	$(RANLIB) libd4-w-misstrace.a
+
+dineroIV-w-misstrace: $(CMD_OBJ_LIST) libd4-w-misstrace.a d4.h
+	$(CC) $(CFLAGS) -o dineroIV-w-misstrace $(CMD_OBJ_LIST) libd4-w-misstrace.a $(LIBS)
 
 dineroIV: $(CMD_OBJ_LIST) libd4.a d4.h
 	$(CC) $(CFLAGS) -o dineroIV $(CMD_OBJ_LIST) libd4.a $(LIBS)
@@ -94,7 +101,9 @@ $(CUSTOM_NAME): $(CUSTOM_C) $(CMD_SRC_LIST) $(D4_SRC)/d4.h $(D4_SRC)/config.h
 	$(CC) $(CFLAGS) -DD4CUSTOM -o $(CUSTOM_NAME) \
 		$(CUSTOM_C) $(CMD_SRC_LIST) $(D4_LIB) $(LIBS)
 
-ref.o: ref.c d4.h config.h
+ref-w-misstrace.o: 
+	$(CC) $(CFLAGS) -o ref-w-misstrace.o -c -DMISS_TRACE ref.c 
+ref.o: ref.c d4.h
 misc.o: misc.c d4.h config.h
 cmdmain.o: cmdmain.c d4.h cmdd4.h cmdargs.h tracein.h config.h
 cmdargs.o: cmdargs.c d4.h cmdd4.h cmdargs.h config.h

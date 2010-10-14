@@ -622,10 +622,12 @@ void d4ref(d4cache *c, d4memref mr)
 		blockmiss = (ptr == NULL);
 		miss = blockmiss || (sbbits & ptr->valid) != sbbits;
 
+#ifdef MISS_TRACE
 		/* print cache misses */
 		if (miss)
 			printf("%d %llx %f\n", m.accesstype, m.address, m.time);
 		/* */
+#endif
 
 		/*
 		 * Prefetch on reads and instruction fetches, but not on
