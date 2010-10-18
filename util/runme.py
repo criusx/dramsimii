@@ -9,6 +9,8 @@ import gzip
 from Queue import Queue
 import re
 
+running = True
+
 class Results():
 
      def __init__(self, fetches, misses, cacheSize, blockSize, associativity):
@@ -19,13 +21,12 @@ class Results():
           self.associativity = associativity
 
 class L3Cache(Thread):
-    def __init__(self, benchmark, file, addressMappingPolicies, workQueue):
+    def __init__(self, benchmark, file, addressMappingPolicies, workQueue, dineroMissPath):
         Thread.__init__(self)
 
         self.workQueue = workQueue
         self.zcat = Popen(["/bin/zcat", file], shell = False, stdout = PIPE)
-        dineroMissratePath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dinero/dineroIV-w-misstrace")
-        self.dinero = Popen([dineroMissratePath, '-informat', 'd', '-l1-usize', '16M', '-l1-ubsize', '64', '-l1-uassoc', '16', '-l1-upfdist', '3'], shell = False, stdin = self.zcat.stdout, stdout = PIPE)
+        self.dinero = Popen([dineroMissPath, '-informat', 'd', '-l1-usize', '16M', '-l1-ubsize', '64', '-l1-uassoc', '16', '-l1-upfdist', '3'], shell = False, stdin = self.zcat.stdout, stdout = PIPE)
 
         self.AMP = []
 
@@ -86,10 +87,15 @@ class L3Cache(Thread):
         pattern = re.compile("\d ([0-9a-f]+) [\d.]+")
         freq = 5
 
-        count = 0
+        #count = 0
+        global running
+
         while True:
             newLine = self.dinero.stdout.readline()
-            if not newLine:
+            if not newLine or not running:
+                if not running:
+                     self.zcat.kill()
+                     self.dinero.kill()
                 # to signal the end of the file
                 for a in self.workQueue:
                     a.put(None)
@@ -98,9 +104,9 @@ class L3Cache(Thread):
             m = pattern.match(newLine)
 
             if m is not None:
-                count += 1
-                if count % 10000 == 0:
-                    print "%d\r" % count
+                #count += 1
+                #if count % 10000 == 0:
+                #    print "%d\r" % count
                 req = m.group(1)
                 addr = int(m.group(1), 16)
                 #addr = int(m.group(2), 16)
@@ -120,17 +126,16 @@ class L3Cache(Thread):
                elif newLine.find('Demand miss rate') != -1:
                     print newLine
 
-        self.dinero.wait()
+        if running:
+             self.dinero.wait()
 
 
 
 class ThreadMonitor(Thread):
-    def __init__(self, cacheSizes, blockSizes, associativities, queue):
+    def __init__(self, cacheSizes, blockSizes, associativities, queue, dineroPath):
         Thread.__init__(self)
         self.p = []
         self.workQueue = queue
-
-        dineroPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dinero/dineroIV")
 
         for a in cacheSizes:
              for b in blockSizes:
@@ -143,8 +148,9 @@ class ThreadMonitor(Thread):
             try:
                 line = self.workQueue.get()
                 self.workQueue.task_done()
+                global running
 
-                if not line:
+                if not line or not running:
                      multipleResult = []
 
                      for p in self.p:
@@ -171,7 +177,37 @@ class ThreadMonitor(Thread):
                 print "error({0})".format(errno)
                 pass
 
+def which(program, expectedDirectory):
+    import os
+    def is_exe(fpath):
+        return os.path.exists(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        array = os.environ["PATH"].split(os.pathsep)
+        array.append(expectedDirectory)
+        for path in array:
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
 def main():
+     #check for dinero to and make sure it is executable
+     dineroPath = which("dineroIV", os.path.join(os.path.dirname(os.path.abspath(__file__)), "dinero"))
+     if not dineroPath:
+          print "Cannot find dineroIV"
+          sys.exit(-1)
+
+     dineroMissPath = which("dineroIV-w-misstrace", os.path.join(os.path.dirname(os.path.abspath(__file__)), "dinero"))
+     if not dineroMissPath:
+          print "Cannot find dineroIV-w-misstrace"
+          sys.exit(-1)
+
      benchmark = sys.argv[1]
 
      addressMappingPolicies = []
@@ -215,15 +251,20 @@ def main():
      for a in range(4 * len(addressMappingPolicies)):
          queue = Queue()
          workQueue.append(queue)
-         tm = ThreadMonitor(cacheSizes, blockSizes, associativities, queue)
+         tm = ThreadMonitor(cacheSizes, blockSizes, associativities, queue, dineroPath)
          dimm.append(tm)
          tm.start()
 
-     l3cache = L3Cache(basename, benchmark, addressMappingPolicies, workQueue)
+     l3cache = L3Cache(basename, benchmark, addressMappingPolicies, workQueue, dineroMissPath)
 
      l3cache.start()
-
-     l3cache.join()
+     try:
+          l3cache.join()
+     except KeyboardInterrupt:
+          print "Caught"
+          global running
+          running = False
+          l3cache.join()
 
      for a in dimm:
           a.join()
@@ -242,6 +283,9 @@ def main():
               currentResult = resultsArray[a][b]
               print "%s: %s, %s B block, %s-way, dimm #%d: %s fetches, %s miss rate" % (addressMappingPolicies[val / 4], currentResult.cacheSize, currentResult.blockSize, currentResult.associativity, val, currentResult.fetches, currentResult.misses)
               val += 1
+
+
+
 
 
 # ----
