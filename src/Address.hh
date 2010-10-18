@@ -29,6 +29,7 @@ namespace DRAMsimII
 	class Address
 	{
 	public:
+		typedef bool (Address::*ampPointer)();
 		// This section defines the address mapping scheme
 		// The scheme dictates how a memory address is converted
 		// to rank, bank, row, col, byte
@@ -59,6 +60,7 @@ namespace DRAMsimII
 		static unsigned columnHighAddressDepth; ///< the number of bits to represent the upper portion of a column
 		static unsigned rankCount;				///< the number of ranks per DIMM
 		static AddressMappingPolicy mappingScheme;	///< the mapping scheme to convert physical to logical addresses
+		static ampPointer addressMappingScheme; ///< the function pointer to the current address mapping scheme
 
 		unsigned virtualAddress;			///< the virtual address
 		PhysicalAddress physicalAddress;	///< the physical address
@@ -96,6 +98,15 @@ namespace DRAMsimII
 		void setBank(const unsigned value) { bank = value; }
 		void setRow(const unsigned value) { row = value; }
 		void setColumn(const unsigned value) { column = value; }
+
+		// address mapping policies
+		bool sdramBase();
+		bool sdramHighPerf();
+		bool closePageBaseline();
+		bool closePageBaselineOpt();
+		bool closePageLowLocality();
+		bool closePageHighLocality();
+		bool intel845G();
 
 		// constructor
 		Address();						///< the no-arg constructor
