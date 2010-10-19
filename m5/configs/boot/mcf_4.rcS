@@ -1,15 +1,12 @@
 #!/bin/sh
 
-echo "MCF Test"
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-i=4
-while [ $i -gt 0 ]
-do
-	/benchmarks/429.mcf/exe/mcf.alpha /benchmarks/429.mcf/data/test/input/inp.in&
-	i=$(($i-1))
-done
+echo "running 429.mcf 4"
+/benchmarks/429.mcf/exe/mcf.alpha /benchmarks/429.mcf/data/test/input/inp.in &
+/benchmarks/429.mcf/exe/mcf.alpha /benchmarks/429.mcf/data/test/input/inp.in &
+/benchmarks/429.mcf/exe/mcf.alpha /benchmarks/429.mcf/data/test/input/inp.in &
+/benchmarks/429.mcf/exe/mcf.alpha /benchmarks/429.mcf/data/test/input/inp.in &
 wait
-
-echo Done.
+echo "429.mcf 4 done"
 /sbin/m5 exit
