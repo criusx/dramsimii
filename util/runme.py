@@ -31,7 +31,7 @@ class L3Cache(Thread):
         self.AMP = []
 
         for addressmapping in addressMappingPolicies:
-             # TODO switch these to lambda functions 
+             
              if addressmapping == 'sdramhiperf': self.AMP.append(lambda addr: ((addr >> 6) & 0x01, (addr >> 18) & 0x03))
              elif addressmapping == 'sdrambase': self.AMP.append(lambda addr: ((addr >> 6) & 0x01, (addr >> 32) & 0x03))
              elif addressmapping == 'closepagebaseline': self.AMP.append(lambda addr: ((addr >> 6) & 0x01, (addr >> 11) & 0x03))
@@ -78,6 +78,25 @@ class L3Cache(Thread):
              elif addressmapping == 'amp3h': self.append(lambda addr: ((addr >> 23) & 0x01, (addr >> 28) & 0x03))
              elif addressmapping == 'amp3i': self.append(lambda addr: ((addr >> 23) & 0x01, (addr >> 30) & 0x03))
              elif addressmapping == 'amp3j': self.append(lambda addr: ((addr >> 23) & 0x01, (addr >> 32) & 0x03))
+             # 1019 update amp -- don't break basic blocks; channel id < rank id
+             elif addressmapping == 'amp4a': self.AMP.append(lambda addr: ((addr >> 10) & 0x01, (addr >> 11) & 0x03))
+             elif addressmapping == 'amp4b': self.AMP.append(lambda addr: ((addr >> 10) & 0x01, (addr >> 18) & 0x03))
+             elif addressmapping == 'amp4c': self.AMP.append(lambda addr: ((addr >> 10) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp4d': self.AMP.append(lambda addr: ((addr >> 17) & 0x01, (addr >> 18) & 0x03))
+             elif addressmapping == 'amp4e': self.AMP.append(lambda addr: ((addr >> 17) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp4f': self.AMP.append(lambda addr: ((addr >> 28) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp4g': self.AMP.append(lambda addr: ((addr >> 10) & 0x01, (addr >> 22) & 0x03))
+             elif addressmapping == 'amp4h': self.AMP.append(lambda addr: ((addr >> 21) & 0x01, (addr >> 22) & 0x03))
+             elif addressmapping == 'amp4i': self.AMP.append(lambda addr: ((addr >> 21) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp5a': self.AMP.append(lambda addr: ((addr >> 13) & 0x01, (addr >> 14) & 0x03))
+             elif addressmapping == 'amp5b': self.AMP.append(lambda addr: ((addr >> 13) & 0x01, (addr >> 18) & 0x03))
+             elif addressmapping == 'amp5c': self.AMP.append(lambda addr: ((addr >> 13) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp5d': self.AMP.append(lambda addr: ((addr >> 13) & 0x01, (addr >> 25) & 0x03))
+             elif addressmapping == 'amp5e': self.AMP.append(lambda addr: ((addr >> 24) & 0x01, (addr >> 25) & 0x03))
+             elif addressmapping == 'amp5f': self.AMP.append(lambda addr: ((addr >> 24) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp6a': self.AMP.append(lambda addr: ((addr >> 17) & 0x01, (addr >> 22) & 0x03))
+             elif addressmapping == 'amp6b': self.AMP.append(lambda addr: ((addr >> 17) & 0x01, (addr >> 25) & 0x03))
+             # old
              else:
                  print "Unknown address mapping policy: %s" % addressmapping
                  system.exit(-1)
