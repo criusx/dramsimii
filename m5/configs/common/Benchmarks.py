@@ -29,7 +29,7 @@
 from SysPaths import *
 
 class SysConfig:
-    def __init__(self, script=None, mem=None, disk=None):
+    def __init__(self, script = None, mem = None, disk = None):
         self.scriptname = script
         self.diskname = disk
         self.memsize = mem
@@ -44,7 +44,7 @@ class SysConfig:
         if self.memsize:
             return self.memsize
         else:
-            return '1024MB'
+            return '128MB'
 
     def disk(self):
         if self.diskname:
@@ -56,26 +56,6 @@ class SysConfig:
 # The first defined machine is the test system, the others are driving systems
 
 Benchmarks = {
-    'astar_1_rivers':  [SysConfig('astar_1_rivers.rcS', '512MB')],
-    'astar_4_rivers':  [SysConfig('astar_4_rivers.rcS', '1536MB')],
-    'bzip2_1_combined':  [SysConfig('bzip2_1_combined.rcS', '512MB')],
-    'bzip2_4_combined':  [SysConfig('bzip2_4_combined.rcS', '1536MB')],
-    'mcf_1':  [SysConfig('mcf_1.rcS', '512MB')],
-    'mcf_4':  [SysConfig('mcf_4.rcS', '1536MB')],
-    'milc_1':  [SysConfig('milc_1.rcS', '512MB')],
-    'milc_4':  [SysConfig('milc_4.rcS', '1536MB')],
-    'xalancbmk_1':  [SysConfig('xalancbmk_1.rcS', '512MB')],
-    'xalancbmk_4':  [SysConfig('xalancbmk_4.rcS', '1536MB')],
-    'swaptions_1_small':  [SysConfig('swaptions_1c_simsmall.rcS', '512MB')],
-    'swaptions_4_small':  [SysConfig('swaptions_4c_simsmall.rcS', '1536MB')],
-    'ferret_1_small':  [SysConfig('ferret_1c_simsmall.rcS', '512MB')],
-    'ferret_4_small':  [SysConfig('ferret_4c_simsmall.rcS', '1536MB')],
-    'freqmine_1_small':  [SysConfig('freqmine_1c_simsmall.rcS', '512MB')],
-    'freqmine_4_small':  [SysConfig('freqmine_4c_simsmall.rcS', '1536MB')],
-
-    'perlbench_1':  [SysConfig('perlbench_1.rcS', '512MB')],
-    'perlbench_4':  [SysConfig('perlbench_4.rcS', '1536MB')],
-
     'PovrayBench':  [SysConfig('povray-bench.rcS', '512MB', 'povray.img')],
     'PovrayAutumn': [SysConfig('povray-autumn.rcS', '512MB', 'povray.img')],
 
@@ -123,7 +103,52 @@ Benchmarks = {
     'MutexTest':        [SysConfig('mutex-test.rcS', '128MB')],
 
     'bnAn': [SysConfig('/z/saidi/work/m5.newmem.head/configs/boot/bn-app.rcS',
-                       '128MB', '/z/saidi/work/bottleneck/bnimg.img')]
+                       '128MB', '/z/saidi/work/bottleneck/bnimg.img')],
+     # new benchmarks
+    'astar' :           [SysConfig('astar.rcS', '512MB')],
+    'astar_4':          [SysConfig('astar_4.rcS', '1024MB')],
+    'bzip2' :           [SysConfig('bzip2.rcS', '512MB')],
+    'bzip2_4':          [SysConfig('bzip2_4.rcS', '1024MB')],
+    'lbm':              [SysConfig('lbm.rcS', '512MB')],
+    'lbm_4':            [SysConfig('lbm_4.rcS', '2048MB')],
+    'mcf':              [SysConfig('mcf.rcS', '512MB')],
+    'mcf_4':            [SysConfig('mcf_4.rcS', '2048MB')],
+    'milc':             [SysConfig('milc.rcS', '768MB')],
+    'milc_4':           [SysConfig('milc_4.rcS', '2048MB')],
+    'hmmer':            [SysConfig('hmmer.rcS', '768MB')],
+    'hmmer_4':          [SysConfig('hmmer_4.rcS', '2048MB')],
+    'perl':             [SysConfig('perl.rcS', '768MB')],
+    'perl_4':           [SysConfig('perl_4.rcS', '1024MB')],
+    'shutdown':         [SysConfig('shutdown.rcS', '256MB')],
+    'blackscholes':     [SysConfig('blackscholes_1c_simmedium.rcS', '256MB')],
+    'bodytrack':        [SysConfig('bodytrack_1c_simmedium.rcS', '256MB')],
+    'canneal':          [SysConfig('canneal_1c_simmedium.rcS', '256MB')],
+    'dedup':            [SysConfig('dedup_1c_simmedium.rcS', '256MB')],
+    'facesim':          [SysConfig('facesim_1c_simmedium.rcS', '256MB')],
+    'ferret':           [SysConfig('ferret_1c_simmedium.rcS', '256MB')],
+    'fluidaniate':      [SysConfig('fluidanimate_1c_simmedium.rcS', '256MB')],
+    'freqmine':         [SysConfig('freqmine_1c_simlarge.rcS', '1024MB')],
+    'raytrace':         [SysConfig('raytrace_1c_simmedium.rcS', '256MB')],
+    'streamcluster':    [SysConfig('streamcluster_1c_simmedium.rcS', '256MB')],
+    'swaptions':        [SysConfig('swaptions_1c_simmedium.rcS', '256MB')],
+    'vips':             [SysConfig('vips_1c_simmedium.rcS', '256MB')],
+    'x264':             [SysConfig('x264_1c_simmedium.rcS', '256MB')],
+    'blackscholes_4':   [SysConfig('blackscholes_4c_simmedium.rcS', '1024MB')],
+    'bodytrack_4':      [SysConfig('bodytrack_4c_simmedium.rcS', '256MB')],
+    'canneal_4':        [SysConfig('canneal_4c_simmedium.rcS', '256MB')],
+    'dedup_4':          [SysConfig('dedup_4c_simmedium.rcS', '1024MB')],
+    'facesim_4':        [SysConfig('facesim_4c_simmedium.rcS', '256MB')],
+    'ferret_4':         [SysConfig('ferret_4c_simmedium.rcS', '1024MB')],
+    'fluidaniate_4':    [SysConfig('fluidanimate_4c_simmedium.rcS', '256MB')],
+    'freqmine_4':       [SysConfig('freqmine_4c_simlarge.rcS', '1536MB')],
+    'raytrace_4':       [SysConfig('raytrace_4c_simmedium.rcS', '256MB')],
+    'streamcluster_4':  [SysConfig('streamcluster_4c_simmedium.rcS', '256MB')],
+    'swaptions_4':      [SysConfig('swaptions_4c_simmedium.rcS', '256MB')],
+    'vips_4':           [SysConfig('vips_4c_simmedium.rcS', '256MB')],
+    'x264_4':           [SysConfig('x264_4c_simmedium.rcS', '256MB')],
+    'xalancbmk':        [SysConfig('xalancbmk.rcS', '512MB')],
+    'xalancbmk_4':      [SysConfig('xalancbmk_4.rcS', '1024MB')],
+    'blank':            [SysConfig('blank.rcS', '1024MB')]
 }
 
 benchs = Benchmarks.keys()
