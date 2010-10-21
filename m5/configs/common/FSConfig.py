@@ -1,15 +1,3 @@
-# Copyright (c) 2010 ARM Limited
-# All rights reserved.
-#
-# The license below extends only to copyright in the software and shall
-# not be construed as granting a license to any other intellectual
-# property including but not limited to intellectual property relating
-# to a hardware implementation of the functionality of the software
-# licensed hereunder.  You may use the software subject to the license
-# terms below provided that you ensure that this notice is replicated
-# unmodified and in its entirety in all distributions of the software,
-# modified or unmodified, in source code or in binary form.
-#
 # Copyright (c) 2006-2008 The Regents of The University of Michigan
 # All rights reserved.
 #
@@ -42,8 +30,8 @@ from m5.objects import *
 from Benchmarks import *
 
 class CowIdeDisk(IdeDisk):
-    image = CowDiskImage(child = RawDiskImage(read_only = True),
-                         read_only = False)
+    image = CowDiskImage(child=RawDiskImage(read_only=True),
+                         read_only=False)
 
     def childImage(self, ci):
         self.image.child.image_file = ci
@@ -52,19 +40,19 @@ class MemBus(Bus):
     badaddr_responder = BadAddr()
     default = Self.badaddr_responder.pio
 
-def makeDramSimLinuxAlphaSystem(mem_mode, mdesc = None, extraParameters = "", settingsFilename = "", benchmarkName = None):
+def makeDramSimLinuxAlphaSystem(mem_mode, mdesc=None, extraParameters="", settingsFilename="", benchmarkName=None):
     class BaseTsunami(Tsunami):
-        ethernet = NSGigE(pci_bus = 0, pci_dev = 1, pci_func = 0)
-        ide = IdeController(disks = [Parent.disk0, Parent.disk2],
-                            pci_func = 0, pci_dev = 0, pci_bus = 0)
+        ethernet = NSGigE(pci_bus=0, pci_dev=1, pci_func=0)
+        ide = IdeController(disks=[Parent.disk0, Parent.disk2],
+                            pci_func=0, pci_dev=0, pci_bus=0)
     self = LinuxAlphaSystem()
     if not mdesc:
         # generic system
         mdesc = SysConfig()
     self.readfile = mdesc.script()
-    self.iobus = Bus(bus_id = 0)
-    self.membus = MemBus(bus_id = 1, clock = '4000MHz')
-    self.bridge = Bridge(delay = '15ns', nack_delay = '2ns')
+    self.iobus = Bus(bus_id=0)
+    self.membus = MemBus(bus_id=1, clock='4000MHz')
+    self.bridge = Bridge(delay='2ns', nack_delay='1ns')
 
     if mdesc.scriptname != None:
         outFile = mdesc.scriptname.split('.')[0]
@@ -73,23 +61,24 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc = None, extraParameters = "", se
     else:
         outFile = ''
 
-    self.physmem = M5dramSystem(extraParameters = extraParameters,
-                                    settingsFile = settingsFilename,
-                                    outFilename = outFile,
-                                    commandLine = outFile,
-                                    range = AddrRange(mdesc.mem()))
+    self.physmem = M5dramSystem(extraParameters=extraParameters,
+                                    settingsFile=settingsFilename,
+                                    outFilename=outFile,
+                                    commandLine=outFile,
+                                    range=AddrRange(mdesc.mem()))
     self.bridge.side_a = self.iobus.port
     self.bridge.side_b = self.membus.port
     self.physmem.port = self.membus.port
-    self.disk0 = CowIdeDisk(driveID = 'master')
-    self.disk2 = CowIdeDisk(driveID = 'master')
+    self.disk0 = CowIdeDisk(driveID='master')
+    self.disk2 = CowIdeDisk(driveID='master')
+
     self.disk0.childImage(mdesc.disk())
     self.disk2.childImage(disk('linux-bigswap2.img'))
     self.tsunami = BaseTsunami()
     self.tsunami.attachIO(self.iobus)
     self.tsunami.ide.pio = self.iobus.port
     self.tsunami.ethernet.pio = self.iobus.port
-    self.simple_disk = SimpleDisk(disk = RawDiskImage(image_file = mdesc.disk(), read_only = True))
+    self.simple_disk = SimpleDisk(disk=RawDiskImage(image_file = mdesc.disk(),read_only = True))
     self.intrctrl = IntrControl()
     self.mem_mode = mem_mode
     self.terminal = Terminal()
@@ -103,31 +92,31 @@ def makeDramSimLinuxAlphaSystem(mem_mode, mdesc = None, extraParameters = "", se
 
 def makeLinuxAlphaSystem(mem_mode, mdesc = None):
     class BaseTsunami(Tsunami):
-        ethernet = NSGigE(pci_bus = 0, pci_dev = 1, pci_func = 0)
-        ide = IdeController(disks = [Parent.disk0, Parent.disk2],
-                            pci_func = 0, pci_dev = 0, pci_bus = 0)
+        ethernet = NSGigE(pci_bus=0, pci_dev=1, pci_func=0)
+        ide = IdeController(disks=[Parent.disk0, Parent.disk2],
+                            pci_func=0, pci_dev=0, pci_bus=0)
 
     self = LinuxAlphaSystem()
     if not mdesc:
         # generic system
         mdesc = SysConfig()
     self.readfile = mdesc.script()
-    self.iobus = Bus(bus_id = 0)
-    self.membus = MemBus(bus_id = 1)
-    self.bridge = Bridge(delay = '50ns', nack_delay = '4ns')
+    self.iobus = Bus(bus_id=0)
+    self.membus = MemBus(bus_id=1)
+    self.bridge = Bridge(delay='50ns', nack_delay='4ns')
     self.physmem = PhysicalMemory(range = AddrRange(mdesc.mem()))
     self.bridge.side_a = self.iobus.port
     self.bridge.side_b = self.membus.port
     self.physmem.port = self.membus.port
-    self.disk0 = CowIdeDisk(driveID = 'master')
-    self.disk2 = CowIdeDisk(driveID = 'master')
+    self.disk0 = CowIdeDisk(driveID='master')
+    self.disk2 = CowIdeDisk(driveID='master')
     self.disk0.childImage(mdesc.disk())
     self.disk2.childImage(disk('linux-bigswap2.img'))
     self.tsunami = BaseTsunami()
     self.tsunami.attachIO(self.iobus)
     self.tsunami.ide.pio = self.iobus.port
     self.tsunami.ethernet.pio = self.iobus.port
-    self.simple_disk = SimpleDisk(disk = RawDiskImage(image_file = mdesc.disk(),
+    self.simple_disk = SimpleDisk(disk=RawDiskImage(image_file = mdesc.disk(),
                                                read_only = True))
     self.intrctrl = IntrControl()
     self.mem_mode = mem_mode
@@ -141,9 +130,9 @@ def makeLinuxAlphaSystem(mem_mode, mdesc = None):
 
 def makeLinuxAlphaRubySystem(mem_mode, mdesc = None):
     class BaseTsunami(Tsunami):
-        ethernet = NSGigE(pci_bus = 0, pci_dev = 1, pci_func = 0)
-        ide = IdeController(disks = [Parent.disk0, Parent.disk2],
-                            pci_func = 0, pci_dev = 0, pci_bus = 0)
+        ethernet = NSGigE(pci_bus=0, pci_dev=1, pci_func=0)
+        ide = IdeController(disks=[Parent.disk0, Parent.disk2],
+                            pci_func=0, pci_dev=0, pci_bus=0)
 
     physmem = PhysicalMemory(range = AddrRange(mdesc.mem()))
     self = LinuxAlphaSystem(physmem = physmem)
@@ -153,7 +142,7 @@ def makeLinuxAlphaRubySystem(mem_mode, mdesc = None):
     self.readfile = mdesc.script()
 
     # Create pio bus to connect all device pio ports to rubymem's pio port
-    self.piobus = Bus(bus_id = 0)
+    self.piobus = Bus(bus_id=0)
 
     #
     # Pio functional accesses from devices need direct access to memory
@@ -162,8 +151,8 @@ def makeLinuxAlphaRubySystem(mem_mode, mdesc = None):
     #
     self.piobus.port = physmem.port
 
-    self.disk0 = CowIdeDisk(driveID = 'master')
-    self.disk2 = CowIdeDisk(driveID = 'master')
+    self.disk0 = CowIdeDisk(driveID='master')
+    self.disk2 = CowIdeDisk(driveID='master')
     self.disk0.childImage(mdesc.disk())
     self.disk2.childImage(disk('linux-bigswap2.img'))
     self.tsunami = BaseTsunami()
@@ -172,12 +161,11 @@ def makeLinuxAlphaRubySystem(mem_mode, mdesc = None):
     self.tsunami.ethernet.pio = self.piobus.port
 
     #
-    # Store the dma devices for later connection to dma ruby ports.
-    # Append an underscore to dma_devices to avoid the SimObjectVector check.
+    # store the dma devices for later connection to dma ruby ports
     #
-    self._dma_devices = [self.tsunami.ide, self.tsunami.ethernet]
+    self.dma_devices = [self.tsunami.ide, self.tsunami.ethernet]
 
-    self.simple_disk = SimpleDisk(disk = RawDiskImage(image_file = mdesc.disk(),
+    self.simple_disk = SimpleDisk(disk=RawDiskImage(image_file = mdesc.disk(),
                                                read_only = True))
     self.intrctrl = IntrControl()
     self.mem_mode = mem_mode
@@ -191,8 +179,8 @@ def makeLinuxAlphaRubySystem(mem_mode, mdesc = None):
 
 def makeSparcSystem(mem_mode, mdesc = None):
     class CowMmDisk(MmDisk):
-        image = CowDiskImage(child = RawDiskImage(read_only = True),
-                             read_only = False)
+        image = CowDiskImage(child=RawDiskImage(read_only=True),
+                             read_only=False)
 
         def childImage(self, ci):
             self.image.child.image_file = ci
@@ -202,14 +190,14 @@ def makeSparcSystem(mem_mode, mdesc = None):
         # generic system
         mdesc = SysConfig()
     self.readfile = mdesc.script()
-    self.iobus = Bus(bus_id = 0)
-    self.membus = MemBus(bus_id = 1)
-    self.bridge = Bridge(delay = '50ns', nack_delay = '4ns')
+    self.iobus = Bus(bus_id=0)
+    self.membus = MemBus(bus_id=1)
+    self.bridge = Bridge(delay='50ns', nack_delay='4ns')
     self.t1000 = T1000()
     self.t1000.attachOnChipIO(self.membus)
     self.t1000.attachIO(self.iobus)
     self.physmem = PhysicalMemory(range = AddrRange(Addr('1MB'), size = '64MB'), zero = True)
-    self.physmem2 = PhysicalMemory(range = AddrRange(Addr('2GB'), size = '256MB'), zero = True)
+    self.physmem2 = PhysicalMemory(range = AddrRange(Addr('2GB'), size ='256MB'), zero = True)
     self.bridge.side_a = self.iobus.port
     self.bridge.side_b = self.membus.port
     self.physmem.port = self.membus.port
@@ -231,79 +219,33 @@ def makeSparcSystem(mem_mode, mdesc = None):
 
     return self
 
-def makeLinuxArmSystem(mem_mode, mdesc = None, bare_metal = False,
-        machine_type = None):
-    if bare_metal:
-        self = ArmSystem()
-    else:
-        self = LinuxArmSystem()
-
-    if not mdesc:
-        # generic system
-        mdesc = SysConfig()
-
-    self.readfile = mdesc.script()
-    self.iobus = Bus(bus_id = 0)
-    self.membus = MemBus(bus_id = 1)
-    self.membus.badaddr_responder.warn_access = "warn"
-    self.bridge = Bridge(delay = '50ns', nack_delay = '4ns')
-    self.physmem = PhysicalMemory(range = AddrRange(mdesc.mem()), zero = True)
-    self.bridge.side_a = self.iobus.port
-    self.bridge.side_b = self.membus.port
-    self.physmem.port = self.membus.port
-
-    self.mem_mode = mem_mode
-
-    if machine_type == "RealView_PBX":
-        self.realview = RealViewPBX()
-    elif machine_type == "RealView_EB":
-        self.realview = RealViewEB()
-    else:
-        print "Unknown Machine Type"
-        sys.exit(1)
-
-    if not bare_metal and machine_type:
-        self.machine_type = machine_type
-    elif bare_metal:
-        self.realview.uart.end_on_eot = True
-
-    self.realview.attachOnChipIO(self.membus)
-    self.realview.attachIO(self.iobus)
-
-    self.intrctrl = IntrControl()
-    self.terminal = Terminal()
-    self.boot_osflags = 'earlyprintk mem=128MB console=ttyAMA0 lpj=19988480 norandmaps'
-
-    return self
-
-
 def makeLinuxMipsSystem(mem_mode, mdesc = None):
     class BaseMalta(Malta):
-        ethernet = NSGigE(pci_bus = 0, pci_dev = 1, pci_func = 0)
-        ide = IdeController(disks = [Parent.disk0, Parent.disk2],
-                            pci_func = 0, pci_dev = 0, pci_bus = 0)
+        ethernet = NSGigE(pci_bus=0, pci_dev=1, pci_func=0)
+        ide = IdeController(disks=[Parent.disk0, Parent.disk2],
+                            pci_func=0, pci_dev=0, pci_bus=0)
 
     self = LinuxMipsSystem()
     if not mdesc:
         # generic system
         mdesc = SysConfig()
     self.readfile = mdesc.script()
-    self.iobus = Bus(bus_id = 0)
-    self.membus = MemBus(bus_id = 1)
-    self.bridge = Bridge(delay = '50ns', nack_delay = '4ns')
+    self.iobus = Bus(bus_id=0)
+    self.membus = MemBus(bus_id=1)
+    self.bridge = Bridge(delay='50ns', nack_delay='4ns')
     self.physmem = PhysicalMemory(range = AddrRange('1GB'))
     self.bridge.side_a = self.iobus.port
     self.bridge.side_b = self.membus.port
     self.physmem.port = self.membus.port
-    self.disk0 = CowIdeDisk(driveID = 'master')
-    self.disk2 = CowIdeDisk(driveID = 'master')
+    self.disk0 = CowIdeDisk(driveID='master')
+    self.disk2 = CowIdeDisk(driveID='master')
     self.disk0.childImage(mdesc.disk())
     self.disk2.childImage(disk('linux-bigswap2.img'))
     self.malta = BaseMalta()
     self.malta.attachIO(self.iobus)
     self.malta.ide.pio = self.iobus.port
     self.malta.ethernet.pio = self.iobus.port
-    self.simple_disk = SimpleDisk(disk = RawDiskImage(image_file = mdesc.disk(),
+    self.simple_disk = SimpleDisk(disk=RawDiskImage(image_file = mdesc.disk(),
                                                read_only = True))
     self.intrctrl = IntrControl()
     self.mem_mode = mem_mode
@@ -331,13 +273,13 @@ def makeX86System(mem_mode, numCPUs = 1, mdesc = None, self = None):
     self.mem_mode = mem_mode
 
     # Physical memory
-    self.membus = MemBus(bus_id = 1)
+    self.membus = MemBus(bus_id=1)
     self.physmem = PhysicalMemory(range = AddrRange(mdesc.mem()))
     self.physmem.port = self.membus.port
 
     # North Bridge
-    self.iobus = Bus(bus_id = 0)
-    self.bridge = Bridge(delay = '50ns', nack_delay = '4ns')
+    self.iobus = Bus(bus_id=0)
+    self.bridge = Bridge(delay='50ns', nack_delay='4ns')
     self.bridge.side_a = self.iobus.port
     self.bridge.side_b = self.membus.port
 
@@ -348,8 +290,8 @@ def makeX86System(mem_mode, numCPUs = 1, mdesc = None, self = None):
     self.intrctrl = IntrControl()
 
     # Disks
-    disk0 = CowIdeDisk(driveID = 'master')
-    disk2 = CowIdeDisk(driveID = 'master')
+    disk0 = CowIdeDisk(driveID='master')
+    disk2 = CowIdeDisk(driveID='master')
     disk0.childImage(mdesc.disk())
     disk2.childImage(disk('linux-bigswap2.img'))
     self.pc.south_bridge.ide.disks = [disk0, disk2]
@@ -373,12 +315,12 @@ def makeX86System(mem_mode, numCPUs = 1, mdesc = None, self = None):
             address = 0xfec00000)
     self.pc.south_bridge.io_apic.apic_id = io_apic.id
     self.intel_mp_table.add_entry(io_apic)
-    isa_bus = X86IntelMPBus(bus_id = 0, bus_type = 'ISA')
+    isa_bus = X86IntelMPBus(bus_id = 0, bus_type='ISA')
     self.intel_mp_table.add_entry(isa_bus)
-    pci_bus = X86IntelMPBus(bus_id = 1, bus_type = 'PCI')
+    pci_bus = X86IntelMPBus(bus_id = 1, bus_type='PCI')
     self.intel_mp_table.add_entry(pci_bus)
-    connect_busses = X86IntelMPBusHierarchy(bus_id = 0,
-            subtractive_decode = True, parent_bus = 1)
+    connect_busses = X86IntelMPBusHierarchy(bus_id=0,
+            subtractive_decode=True, parent_bus=1)
     self.intel_mp_table.add_entry(connect_busses)
     pci_dev4_inta = X86IntelMPIOIntAssignment(
             interrupt_type = 'INT',
@@ -451,7 +393,7 @@ def makeDualRoot(testSystem, driveSystem, dumpfile):
     self.etherlink.int1 = Parent.drivesys.tsunami.ethernet.interface
 
     if dumpfile:
-        self.etherdump = EtherDump(file = dumpfile)
+        self.etherdump = EtherDump(file=dumpfile)
         self.etherlink.dump = Parent.etherdump
 
     return self

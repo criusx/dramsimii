@@ -72,7 +72,7 @@ RANLIB =ranlib
 all: libd4.a dineroIV-w-misstrace dineroIV
 
 clean:
-	rm -f $(LIB_OBJ_LIST) $(CMD_OBJ_LIST) ref-w-misstrace.o
+	rm -f $(LIB_OBJ_LIST) $(CMD_OBJ_LIST) ref-w-misstrace.o dineroIV dineroIV-w-misstrace
 
 clobber: clean
 	rm -f libd4.a dineroIV-w-misstrace d4custom dineroIV

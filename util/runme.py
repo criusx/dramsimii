@@ -37,6 +37,25 @@ class L3Cache(Thread):
              elif addressmapping == 'closepagebaselineopt': self.AMP.append(lambda addr: ((addr >> 6) & 0x01, (addr >> 14) & 0x03))
              elif addressmapping == 'closepagelowlocality': self.AMP.append(lambda addr: ((addr >> 3) & 0x01, (addr >> 4) & 0x03))
              elif addressmapping == 'closepagehighlocality': self.AMP.append(lambda addr: ((addr >> 27) & 0x01, (addr >> 32) & 0x03))
+             # 1019 update amp -- don't break basic blocks; channel id < rank id
+             elif addressmapping == 'amp4a': self.AMP.append(lambda addr: ((addr >> 10) & 0x01, (addr >> 11) & 0x03))
+             elif addressmapping == 'amp4b': self.AMP.append(lambda addr: ((addr >> 10) & 0x01, (addr >> 18) & 0x03))
+             elif addressmapping == 'amp4c': self.AMP.append(lambda addr: ((addr >> 10) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp4d': self.AMP.append(lambda addr: ((addr >> 17) & 0x01, (addr >> 18) & 0x03))
+             elif addressmapping == 'amp4e': self.AMP.append(lambda addr: ((addr >> 17) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp4f': self.AMP.append(lambda addr: ((addr >> 28) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp4g': self.AMP.append(lambda addr: ((addr >> 10) & 0x01, (addr >> 22) & 0x03))
+             elif addressmapping == 'amp4h': self.AMP.append(lambda addr: ((addr >> 21) & 0x01, (addr >> 22) & 0x03))
+             elif addressmapping == 'amp4i': self.AMP.append(lambda addr: ((addr >> 21) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp5a': self.AMP.append(lambda addr: ((addr >> 13) & 0x01, (addr >> 14) & 0x03))
+             elif addressmapping == 'amp5b': self.AMP.append(lambda addr: ((addr >> 13) & 0x01, (addr >> 18) & 0x03))
+             elif addressmapping == 'amp5c': self.AMP.append(lambda addr: ((addr >> 13) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp5d': self.AMP.append(lambda addr: ((addr >> 13) & 0x01, (addr >> 25) & 0x03))
+             elif addressmapping == 'amp5e': self.AMP.append(lambda addr: ((addr >> 24) & 0x01, (addr >> 25) & 0x03))
+             elif addressmapping == 'amp5f': self.AMP.append(lambda addr: ((addr >> 24) & 0x01, (addr >> 29) & 0x03))
+             elif addressmapping == 'amp6a': self.AMP.append(lambda addr: ((addr >> 17) & 0x01, (addr >> 22) & 0x03))
+             elif addressmapping == 'amp6b': self.AMP.append(lambda addr: ((addr >> 17) & 0x01, (addr >> 25) & 0x03))
+             # old
              elif addressmapping == 'amp0a': self.append(lambda addr: ((addr >> 11) & 0x01, (addr >> 8) & 0x03))
              elif addressmapping == 'amp0b': self.append(lambda addr: ((addr >> 11) & 0x01, (addr >> 12) & 0x03))
              elif addressmapping == 'amp0c': self.append(lambda addr: ((addr >> 11) & 0x01, (addr >> 16) & 0x03))
@@ -132,11 +151,23 @@ class ThreadMonitor(Thread):
 
         dineroPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dinero/dineroIV")
 
+        b = '64'
+        c = '16'
         for a in cacheSizes:
-             for b in blockSizes:
-                  for c in associativities:
-                       dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
-                       self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
+             dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
+             self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
+
+        a = '8M'
+        c = '16'
+        for b in blockSizes:
+             dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
+             self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
+
+        a = '8M'
+        b = '64'
+        for c in associativities:
+             dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
+             self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
 
     def run(self):
         while True:
@@ -175,36 +206,52 @@ def main():
      benchmark = sys.argv[1]
 
      addressMappingPolicies = []
-     addressMappingPolicies += ['sdramhiperf']
-     addressMappingPolicies += ['sdrambase']
-     #addressMappingPolicies += ['closepagebaseline']
-     #addressMappingPolicies += ['closepagebaselineopt']
-     #addressMappingPolicies += ['closepagelowlocality']
-     #addressMappingPolicies += ['closepagehighlocality']
+#     addressMappingPolicies += ['sdramhiperf']
+#     addressMappingPolicies += ['sdrambase']
+#     addressMappingPolicies += ['closepagebaseline']
+#     addressMappingPolicies += ['closepagebaselineopt']
+#     addressMappingPolicies += ['closepagelowlocality']
+     addressMappingPolicies += ['amp4a']
+     addressMappingPolicies += ['amp4b']
+     addressMappingPolicies += ['amp4c']
+     addressMappingPolicies += ['amp4d']
+     addressMappingPolicies += ['amp4e']
+#     addressMappingPolicies += ['amp4f']
+#     addressMappingPolicies += ['amp4g']
+#     addressMappingPolicies += ['amp4h']
+#     addressMappingPolicies += ['amp4i']
+#     addressMappingPolicies += ['amp5a']
+#     addressMappingPolicies += ['amp5b']
+#     addressMappingPolicies += ['amp5c']
+#     addressMappingPolicies += ['amp5d']
+#     addressMappingPolicies += ['amp5e']
+#     addressMappingPolicies += ['amp5f']
+#     addressMappingPolicies += ['amp6a']
+#     addressMappingPolicies += ['amp6b']
 
      cacheSizes = []
-     # cacheSizes += ['4M']
+     cacheSizes += ['4M']
      cacheSizes += ['8M']
      cacheSizes += ['16M']
-     # cacheSizes += ['32M']
-     # cacheSizes += ['64M']
+     cacheSizes += ['32M']
+     cacheSizes += ['64M']
 
      blockSizes = []
      blockSizes += ['64']
      blockSizes += ['128']
      blockSizes += ['256']
      blockSizes += ['512']
-     #blockSizes += ['1024']
-     #blockSizes += ['2048']
+     blockSizes += ['1024']
+     blockSizes += ['2048']
 
      associativities = []
-     # associativities += ['1']
-     # associativities += ['2']
-     # associativities += ['4']
+     associativities += ['1']
+     associativities += ['2']
+     associativities += ['4']
      associativities += ['8']
      associativities += ['16']
-     # associativities += ['32']
-     # associativities += ['64']
+     associativities += ['32']
+     associativities += ['64']
 
      basename = os.path.basename(benchmark)
      basename = basename[0:basename.find('.')]
@@ -235,13 +282,18 @@ def main():
           # append the list of results for this dimm/amp
           resultsArray.append(array)
 
-     for b in range(len(resultsArray[0])):
-          val = 0
 
-          for a in range(len(resultsArray)):
-              currentResult = resultsArray[a][b]
-              print "%s: %s, %s B block, %s-way, dimm #%d: %s fetches, %s miss rate" % (addressMappingPolicies[val / 4], currentResult.cacheSize, currentResult.blockSize, currentResult.associativity, val, currentResult.fetches, currentResult.misses)
-              val += 1
+     offset = 0
+     while offset < len(resultsArray):
+          for b in range(len(resultsArray[0])):
+               currentResult = []
+               for a in range(len(resultsArray)):
+                    currentResult.append(resultsArray[a][b])
+
+               # <addressMappingPolicy> <cacheSize> <blockSize> <associativity> <missRate 0> <missRate 1> <missRate 2> <missRate 3> <fetches 0> <fetches 1> <fetches 2> <fetches 3>
+               print "%s %s %s %s %s %s %s %s %s %s %s %s" %(addressMappingPolicies[offset/4], currentResult[offset+0].cacheSize, currentResult[offset+0].blockSize, currentResult[offset+0].associativity, currentResult[offset+0].misses, currentResult[offset+1].misses, currentResult[offset+2].misses, currentResult[offset+3].misses, currentResult[offset+0].fetches, currentResult[offset+1].fetches, currentResult[offset+2].fetches, currentResult[offset+3].fetches)
+
+          offset += 4
 
 
 # ----
