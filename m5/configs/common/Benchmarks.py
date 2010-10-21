@@ -44,7 +44,7 @@ class SysConfig:
         if self.memsize:
             return self.memsize
         else:
-            return '128MB'
+            return '1024MB'
 
     def disk(self):
         if self.diskname:
@@ -104,7 +104,27 @@ Benchmarks = {
 
     'bnAn': [SysConfig('/z/saidi/work/m5.newmem.head/configs/boot/bn-app.rcS',
                        '128MB', '/z/saidi/work/bottleneck/bnimg.img')],
-     # new benchmarks
+     # other benchmarks
+    'astar_1_rivers':   [SysConfig('astar_1_rivers.rcS', '512MB')],
+    'astar_4_rivers':   [SysConfig('astar_4_rivers.rcS', '1536MB')],
+    'bzip2_1_combined': [SysConfig('bzip2_1_combined.rcS', '512MB')],
+    'bzip2_4_combined': [SysConfig('bzip2_4_combined.rcS', '1536MB')],
+    'mcf_1':            [SysConfig('mcf_1.rcS', '512MB')],
+    'mcf_4':            [SysConfig('mcf_4.rcS', '1536MB')],
+    'milc_1':           [SysConfig('milc_1.rcS', '512MB')],
+    'milc_4':           [SysConfig('milc_4.rcS', '1536MB')],
+    'xalancbmk_1':      [SysConfig('xalancbmk_1.rcS', '512MB')],
+    'xalancbmk_4':      [SysConfig('xalancbmk_4.rcS', '1536MB')],
+    'swaptions_1_small':[SysConfig('swaptions_1c_simsmall.rcS', '512MB')],
+    'swaptions_4_small':[SysConfig('swaptions_4c_simsmall.rcS', '1536MB')],
+    'ferret_1_small':   [SysConfig('ferret_1c_simsmall.rcS', '512MB')],
+    'ferret_4_small':   [SysConfig('ferret_4c_simsmall.rcS', '1536MB')],
+    'freqmine_1_small': [SysConfig('freqmine_1c_simsmall.rcS', '512MB')],
+    'freqmine_4_small': [SysConfig('freqmine_4c_simsmall.rcS', '1536MB')],
+
+    'perlbench_1':      [SysConfig('perlbench_1.rcS', '512MB')],
+    'perlbench_4':      [SysConfig('perlbench_4.rcS', '1536MB')],
+    # new benchmarks
     'astar' :           [SysConfig('astar.rcS', '512MB')],
     'astar_4':          [SysConfig('astar_4.rcS', '1024MB')],
     'bzip2' :           [SysConfig('bzip2.rcS', '512MB')],

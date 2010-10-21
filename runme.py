@@ -29,7 +29,7 @@ linesToBuffer = 32768
 dramsimDirectory = os.path.join(os.path.expanduser("~"), 'dramsimii')
 m5directory = os.path.join(os.path.expanduser("~"), 'm5')
 m5binary = os.path.join(m5directory, 'build/ALPHA_FS/m5.opt')
-m5Script = os.path.join(dramsimDirectory, 'm5/configs/example/fsN.py')
+m5Script = os.path.join(dramsimDirectory, 'm5/configs/example/fs.py')
 
 #m5flags = '--trace-flags=Cache --trace-start=%d' % (starttime)
 m5flags = ''
@@ -48,7 +48,7 @@ if runtype == '-t':
 
 	print 'commandline: %s, tracefile: %s' % (commandline, benchmark)
 
-	p = Popen([commandline], shell = True, executable = "/bin/zsh", stdout = PIPE)
+	p = Popen([commandline], shell=True, executable="/bin/zsh", stdout=PIPE)
 	print "PID is %d" % p.pid
 
 	pattern = re.compile("([0-9]+): system.l3cache: (ReadReq \(ifetch\)|ReadExReq|ReadReq|Writeback) ([0-9a-f]+).*")
@@ -111,7 +111,7 @@ elif runtype == '-d':
 	# ---------------------
 	# run m5 with dramsimii
 	# ---------------------
-	run_commandline = '/home/mutien/m5/build/ALPHA_FS/m5.opt /home/mutien/dramsimii/m5/configs/example/fsN.py --detailed -b ' + benchmark + ' -n ' + numcore + ' --caches --l3cache -F 10000000000 --mp "channels 2 dimms 2 ranks 2 banks 16 postedCAS true physicaladdressmappingpolicy sdramhiperf commandorderingalgorithm firstAvailableAge perbankqueuedepth 12 readwritegrouping true rowBufferPolicy openpageaggressive outfiledir /home/mutien/dramsimii  blockSize 256 associativity 16 cacheSize 8192 usingCache true"'
+	run_commandline = '/home/mutien/Tools/m5/build/ALPHA_FS/m5.opt /home/mutien/Tools/dramsimii/m5/configs/example/fsN.py --detailed -b ' + benchmark + ' -n ' + numcore + ' --caches --l3cache -F 10000000000 --mp "channels 2 dimms 2 ranks 2 banks 16 postedCAS true physicaladdressmappingpolicy sdramhiperf commandorderingalgorithm firstAvailableAge perbankqueuedepth 12 readwritegrouping true rowBufferPolicy openpageaggressive outfiledir /home/mutien/Tools/dramsimii/benchmarks/' + benchmark + ' blockSize 256 associativity 16 cacheSize 8192 usingCache true"'
 
 	print 'commandline: %s' % run_commandline
 	print 'running %s...' % benchmark

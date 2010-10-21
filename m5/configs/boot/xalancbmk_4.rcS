@@ -1,13 +1,11 @@
 #!/bin/sh
 
-cd /benchmarks/483.xalancbmk/data/ref/input
+#cd /benchmarks/483.xalancbmk/data/test/input
+cd /benchmarks/483.xalancbmk/data/train/input
+echo "Xalan Test"
 /sbin/m5 resetstats
 /sbin/m5 switchcpu
-echo "running 483.xalancbmk 4"
-/benchmarks/483.xalancbmk/exe/xalan.alpha -v t5.xml xalanc.xsl &
-/benchmarks/483.xalancbmk/exe/xalan.alpha -v t5.xml xalanc.xsl &
-/benchmarks/483.xalancbmk/exe/xalan.alpha -v t5.xml xalanc.xsl &
-/benchmarks/483.xalancbmk/exe/xalan.alpha -v t5.xml xalanc.xsl &
-wait
-echo "483.xalancbmk 4 done"
+#/benchmarks/483.xalancbmk/exe/xalan.alpha -v test.xml xalanc.xsl
+/benchmarks/483.xalancbmk/exe/xalan.alpha -v allbooks.xml xalanc.xsl > /dev/null
+echo Done.
 /sbin/m5 exit
