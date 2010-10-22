@@ -48,7 +48,7 @@ if runtype == '-t':
 
 	print 'commandline: %s, tracefile: %s' % (commandline, benchmark)
 
-	p = Popen([commandline], shell=True, executable="/bin/zsh", stdout=PIPE)
+	p = Popen([commandline], shell = True, executable = "/bin/zsh", stdout = PIPE)
 	print "PID is %d" % p.pid
 
 	pattern = re.compile("([0-9]+): system.l3cache: (ReadReq \(ifetch\)|ReadExReq|ReadReq|Writeback) ([0-9a-f]+).*")

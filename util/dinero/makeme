@@ -1,5 +1,0 @@
-#!/bin/bash
-
-make -f Makefile
-rm *.o
-make -f Makefile-w-misstrace

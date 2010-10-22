@@ -8,8 +8,8 @@ import time
 import gzip
 from Queue import Queue
 import re
+import argparse
 
-running = True
 
 class Results():
 
@@ -21,17 +21,23 @@ class Results():
           self.associativity = associativity
 
 class L3Cache(Thread):
-    def __init__(self, benchmark, file, addressMappingPolicies, workQueue, dineroMissPath):
+    def __init__(self, benchmark, file, addressMappingPolicies, workQueue, dineroMissPath, prefetcher):
         Thread.__init__(self)
 
         self.workQueue = workQueue
-        self.zcat = Popen(["/bin/zcat", file], shell=False, stdout=PIPE)
-        self.dinero = Popen([dineroMissPath, '-informat', 'd', '-l1-usize', '16M', '-l1-ubsize', '64', '-l1-uassoc', '16', '-l1-upfdist', '3'], shell=False, stdin=self.zcat.stdout, stdout=PIPE)
+        if file.endswith("gz"):
+             self.zcat = Popen(["/bin/zcat", file], shell = False, stdout = PIPE)
+        else:
+             self.zcat = Popen(["/bin/cat", file], shell = False, stdout = PIPE)
+
+        d = prefetcher if prefetcher is not None else 'd'
+        print d
+        self.dinero = Popen([dineroMissPath, '-informat', 'd', '-l1-usize', '16M', '-l1-ubsize', '64', '-l1-uassoc', '16', '-l1-upfdist', '3', '-l1-ufetch', d], shell = False, stdin = self.zcat.stdout, stdout = PIPE)
 
         self.AMP = []
 
         for addressmapping in addressMappingPolicies:
-             
+
              if addressmapping == 'sdramhiperf': self.AMP.append(lambda addr: ((addr >> 6) & 0x01, (addr >> 18) & 0x03))
              elif addressmapping == 'sdrambase': self.AMP.append(lambda addr: ((addr >> 6) & 0x01, (addr >> 32) & 0x03))
              elif addressmapping == 'closepagebaseline': self.AMP.append(lambda addr: ((addr >> 6) & 0x01, (addr >> 11) & 0x03))
@@ -107,14 +113,11 @@ class L3Cache(Thread):
         freq = 5
 
         #count = 0
-        global running
 
         while True:
             newLine = self.dinero.stdout.readline()
-            if not newLine or not running:
-                if not running:
-                     self.zcat.kill()
-                     self.dinero.kill()
+
+            if not newLine:
                 # to signal the end of the file
                 for a in self.workQueue:
                     a.put(None)
@@ -123,7 +126,9 @@ class L3Cache(Thread):
             m = pattern.match(newLine)
 
             if m is not None:
-                #count += 1
+                if newLine[0] == '8':
+                     newLine = '0' + newLine[1:]
+                 #count += 1
                 #if count % 10000 == 0:
                 #    print "%d\r" % count
                 req = m.group(1)
@@ -136,17 +141,17 @@ class L3Cache(Thread):
                      (channel, rank) = a(addr)
 
                      #self.workQueue[ampNumber * 4 + channel * 2 + rank / 2].put("%s %s 0\n" % (req, m.group(2)))
+
                      self.workQueue[ampNumber * 4 + channel * 2 + rank / 2].put(newLine)
                      ampNumber += 1
             else:
-               print newLine
+               #print newLine
                if newLine.find('Demand Fetches\t') != -1:
                    print newLine
                elif newLine.find('Demand miss rate') != -1:
                     print newLine
 
-        if running:
-             self.dinero.wait()
+        self.dinero.wait()
 
 
 
@@ -160,16 +165,17 @@ class ThreadMonitor(Thread):
              for b in blockSizes:
                   for c in associativities:
                        dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
-                       self.p.append([Popen(dineroConfig, stdin=PIPE, stdout=PIPE, bufsize=131072), a, b, c])
+                       self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
+                       #self.p.append([Popen(dineroConfig, stdin = PIPE, bufsize = 131072), a, b, c])
 
     def run(self):
         while True:
-            try:
-                line = self.workQueue.get()
-                self.workQueue.task_done()
-                global running
+            line = self.workQueue.get()
 
-                if not line or not running:
+            try:
+                self.workQueue.task_done()
+
+                if not line:
                      multipleResult = []
 
                      for p in self.p:
@@ -193,8 +199,8 @@ class ThreadMonitor(Thread):
                      p[0].stdin.write(line)
 
             except Exception as errno:
-                print "error({0})".format(errno)
-                pass
+                print "error({0})".format(errno), "\"%s\"" % line
+                break
 
 def which(program, expectedDirectory):
     import os
@@ -216,6 +222,17 @@ def which(program, expectedDirectory):
     return None
 
 def main():
+
+     parser = argparse.ArgumentParser(description = "Process an output file to be used as the input for a simulated l3 cache")
+     parser.add_argument('-p', '--prefetcher', action = 'store')
+     #parser.add_argument('input files', metavar = 'F', type = string, nargs = "+", help = "The files to process")
+     parser.add_argument('inputFiles', action = "store", nargs = "+", type = argparse.FileType("rt"))
+
+     try:
+          options = parser.parse_args()
+     except IOError, msg:
+          parser.error(str(msg))
+
      #check for dinero to and make sure it is executable
      dineroPath = which("dineroIV", os.path.join(os.path.dirname(os.path.abspath(__file__)), "dinero"))
      if not dineroPath:
@@ -261,47 +278,42 @@ def main():
      # associativities += ['32']
      # associativities += ['64']
 
-     basename = os.path.basename(benchmark)
-     basename = basename[0:basename.find('.')]
+     for benchmark in options.inputFiles:
+          basename = os.path.basename(benchmark.name)
+          basename = basename[0:basename.find('.')]
 
-     workQueue = []
-     dimm = []
+          workQueue = []
+          dimm = []
 
-     for a in range(4 * len(addressMappingPolicies)):
-         queue = Queue()
-         workQueue.append(queue)
-         tm = ThreadMonitor(cacheSizes, blockSizes, associativities, queue, dineroPath)
-         dimm.append(tm)
-         tm.start()
+          for a in range(4 * len(addressMappingPolicies)):
+              queue = Queue()
+              workQueue.append(queue)
+              tm = ThreadMonitor(cacheSizes, blockSizes, associativities, queue, dineroPath)
+              dimm.append(tm)
+              tm.start()
 
-     l3cache = L3Cache(basename, benchmark, addressMappingPolicies, workQueue, dineroMissPath)
+          l3cache = L3Cache(basename, benchmark.name, addressMappingPolicies, workQueue, dineroMissPath, options.prefetcher)
 
-     l3cache.start()
-     try:
-          l3cache.join()
-     except KeyboardInterrupt:
-          print "Caught"
-          global running
-          running = False
+          l3cache.start()
           l3cache.join()
 
-     for a in dimm:
-          a.join()
+          for a in dimm:
+               a.join()
 
-     resultsArray = []
-     for a in workQueue:
-          array = a.get()
-          a.task_done()
-          # append the list of results for this dimm/amp
-          resultsArray.append(array)
+          resultsArray = []
+          for a in workQueue:
+               array = a.get()
+               a.task_done()
+               # append the list of results for this dimm/amp
+               resultsArray.append(array)
 
-     for b in range(len(resultsArray[0])):
-          val = 0
+          for b in range(len(resultsArray[0])):
+               val = 0
 
-          for a in range(len(resultsArray)):
-              currentResult = resultsArray[a][b]
-              print "%s: %s, %s B block, %s-way, dimm #%d: %s fetches, %s miss rate" % (addressMappingPolicies[val / 4], currentResult.cacheSize, currentResult.blockSize, currentResult.associativity, val, currentResult.fetches, currentResult.misses)
-              val += 1
+               for a in range(len(resultsArray)):
+                   currentResult = resultsArray[a][b]
+                   print "%s: %s, %s B block, %s-way, dimm #%d: %s fetches, %s miss rate" % (addressMappingPolicies[val / 4], currentResult.cacheSize, currentResult.blockSize, currentResult.associativity, val, currentResult.fetches, currentResult.misses)
+                   val += 1
 
 
 
