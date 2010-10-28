@@ -48,20 +48,24 @@ if runtype == '-t':
 
 	print 'commandline: %s, tracefile: %s' % (commandline, benchmark)
 
-	p = Popen([commandline], shell = True, executable = "/bin/zsh", stdout = PIPE)
-	print "PID is %d" % p.pid
-
+	
 	pattern = re.compile("([0-9]+): system.l3cache: (ReadReq \(ifetch\)|ReadExReq|ReadReq|Writeback) ([0-9a-f]+).*")
 	switchPattern = re.compile("Switched CPUS @ cycle = [0-9]+")
 
 	filename = "%s_%s.gz" % (benchmark, numcore)
+	dir = ""
 
 	if (os.path.isfile(filename) == True):
 		counter = 0
 		while (True):
 			filename = "%s_%s_%03d.gz" % (benchmark, numcore, counter)
-			if (os.path.isfile(filename) == False):
+			dirname = "%s_%s%03d" % (benchmark, numcore, counter)
+			dir = os.path.join(os.curdir, dirname)
+			if not os.path.isfile(filename) and not os.path.isdir(dir):
 				outfile = gzip.open(filename, 'wb')
+				if not os.mkdir(dirname):
+					print "Could not create directory %s" % dir
+					sys.exit(-1)
 				break
 			else:
 				counter = counter + 1
@@ -71,6 +75,10 @@ if runtype == '-t':
 
 	lines = []
 	switched = False
+	
+	p = Popen([commandline], shell=True, executable="/bin/zsh", stdout=PIPE, cwd=dir)
+	print "PID is %d" % p.pid
+
 
 	while True:
 		newLine = p.stdout.readline()
