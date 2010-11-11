@@ -4,10 +4,6 @@ import re
 
 conf = Configure(env)
 
-#if not conf.CheckLib('boost_serialization'):
-#	print 'Boost serialization library not found, please install this.'
-#	print 'e.g. sudo apt-get install "libboost-serialization*"'
-#	Exit(1)
 if not conf.CheckLib('boost_iostreams'):
 	print 'Boost iostreams library not found, please install this.'
 	print 'e.g. sudo apt-get install "libboost-iostreams*"'
