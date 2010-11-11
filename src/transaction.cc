@@ -24,10 +24,6 @@ using std::hex;
 using std::setw;
 using namespace DRAMsimII;
 
-// initialize the static members
-//Queue<Transaction> Transaction::freeTransactionPool(4*POOL_SIZE,true);
-boost::pool<> Transaction::freeTransactionPool(sizeof(Transaction));
-
 //////////////////////////////////////////////////////////////////////////
 /// @brief constructor to make a transaction with no values set
 //////////////////////////////////////////////////////////////////////////
