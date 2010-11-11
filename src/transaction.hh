@@ -21,14 +21,15 @@
 #include "Address.hh"
 #include "queue.hh"
 #include "event.hh"
+#include "base/fast_alloc.hh" // M5 fast allocator class
 
-#include <boost/pool/pool.hpp>
+
 #include <climits>
 
 namespace DRAMsimII
 {
 	/// @brief a request to read or write some portion of memory, atomically
-	class Transaction: public Event
+	class Transaction: public Event, public FastAlloc
 	{
 	public:
 		enum TransactionType
@@ -44,8 +45,6 @@ namespace DRAMsimII
 		};
 
 	protected:
-		//static Queue<Transaction> freeTransactionPool;	///< transactions are stored here to avoid allocating memory after initialization
-		static boost::pool<> freeTransactionPool;
 
 		const TransactionType type;				///< transaction type
 		const unsigned length;					///< the number of words requested

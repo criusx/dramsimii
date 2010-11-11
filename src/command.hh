@@ -22,11 +22,12 @@
 #include "queue.hh"
 #include "transaction.hh"
 #include "event.hh"
+#include "base/fast_alloc.hh"
 
 namespace DRAMsimII
 {
 	/// @brief represents a DRAM command from the memory controller to the DRAMs
-	class Command: public Event
+	class Command: public Event, public FastAlloc
 	{
 	public:
 		/// @brief available command types to send to DRAMs
@@ -53,7 +54,6 @@ namespace DRAMsimII
 		};
 
 	protected:
-		static Queue<Command> freeCommandPool; ///< command objects are stored here to avoid allocating memory after initialization
 
 		mutable CommandType commandType;///< what type of command this is
 		Transaction *hostTransaction;	///< backward pointer to the original transaction

@@ -299,7 +299,7 @@ void Channel::moveToTime(const tick currentTime)
 			nextTransaction->setDecodeTime(time);
 			// checkForAvailablecommandSlots() should not have returned true if there was not enough space
 
-			DEBUG_TRANSACTION_LOG("T->C [" << std::dec << time << "] Q[" << std::dec << getTransactionQueueCount() << "/" << std::dec << transactionQueue.depth() << "]->[" << std::dec <<
+			DPRINTF(MemoryAccess,"T->C [" << std::dec << time << "] Q[" << std::dec << getTransactionQueueCount() << "/" << std::dec << transactionQueue.depth() << "]->[" << std::dec <<
 				rank[nextTransaction->getAddress().getRank()].bank[nextTransaction->getAddress().getBank()].size() << "/" << std::dec <<
 				rank[nextTransaction->getAddress().getRank()].bank[nextTransaction->getAddress().getBank()].depth() << "] " << *nextTransaction);
 

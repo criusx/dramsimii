@@ -140,7 +140,7 @@ namespace DRAMsimII
 	//#define DEBUG_MIN_PROTOCOL_GAP
 
 	//#define DEBUG_FLAG_2
-#define NO_STREAMS
+//#define NO_STREAMS
 
 #if !defined(NO_STREAMS)
 #define STATS_LOG(X) systemConfig.statsOutStream << X << std::endl;
