@@ -15,6 +15,7 @@
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
+#include <cstdlib>
 #include "command.hh"
 
 using std::cerr;
@@ -176,26 +177,6 @@ void Command::setAutoPrecharge(const bool autoPrecharge) const
 
 	assert((isWrite() && hostTransaction->isWrite()) ||
 		(isRead() && hostTransaction->isRead()));
-}
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief new operator overload
-//////////////////////////////////////////////////////////////////////////
-void *Command::operator new(size_t size)
-{
-	assert(size == sizeof(Command));
-	return freeCommandPool.acquireItem();
-}
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief delete operator overload
-//////////////////////////////////////////////////////////////////////////
-void Command::operator delete(void *mem)
-{
-	Command *cmd = static_cast<Command*>(mem);
-	assert(!cmd->getHost());
-	cmd->~Command();
-	freeCommandPool.releaseItem(cmd);
 }
 
 //////////////////////////////////////////////////////////////////////////

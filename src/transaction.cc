@@ -90,30 +90,6 @@ originalTransaction(originalTrans)
 {}
 
 //////////////////////////////////////////////////////////////////////////
-/// @brief overloads the new operator to draw from the transaction pool instead
-/// @details avoids the system call for most of runtime by drawing from a pool
-//////////////////////////////////////////////////////////////////////////
-void *Transaction::operator new(size_t size)
-{
-	assert(size == sizeof(Transaction));
-	return freeTransactionPool.malloc();
-	//return freeTransactionPool.acquireItem();
-}
-
-//////////////////////////////////////////////////////////////////////////
-/// @brief override the delete operator to send transactions back to the pool
-/// @details return transactions to the transaction pool rather than to free memory
-//////////////////////////////////////////////////////////////////////////
-void Transaction::operator delete(void *mem)
-{
-	Transaction *trans = static_cast<Transaction*>(mem);
-	//trans->~Transaction();
-	freeTransactionPool.free(trans);
-	//freeTransactionPool.releaseItem(trans);
-	//::delete mem;
-}
-
-//////////////////////////////////////////////////////////////////////////
 /// @brief comparison operator definition
 //////////////////////////////////////////////////////////////////////////
 bool Transaction::operator==(const Transaction& rhs) const

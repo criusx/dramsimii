@@ -27,181 +27,247 @@
 
 namespace DRAMsimII
 {
-	/// @brief represents a logical rank 
-	class Rank
+/// @brief represents a logical rank
+class Rank
+{
+private:
+	class CircularBuffer
 	{
-	private:
-		class CircularBuffer
+	protected:
+		std::vector<tick> buffer;
+
+		std::vector<tick>::iterator _back, _front;
+		//const std::vector<tick>::iterator begin, end;
+	public:
+		void reset(const tick value)
 		{
-		protected:
-			std::vector<tick> buffer;
+			for (std::vector<tick>::iterator i = buffer.begin(), end =
+					buffer.end(); i < end; i++)
+				*i = value;
+		}
 
-			std::vector<tick>::iterator _back, _front;
-			//const std::vector<tick>::iterator begin, end;
-		public:
-			void reset(const tick value)
-			{
-				for (std::vector<tick>::iterator i = buffer.begin(), end = buffer.end(); i < end; i++)
-					*i = value;
-			}
-			tick back() const { return *_back; }
+		tick back() const
+		{
+			return *_back;
+		}
 
-			tick front() const { return *_front; }
+		tick front() const
+		{
+			return *_front;
+		}
 
-			void push_front(const tick value)
-			{
-				_front++;
+		void push_front(const tick value)
+		{
+			_front++;
 
-				if (_front == buffer.end())
-					_front = buffer.begin(); 
-
-				*_front = value;
-
-				_back++; 
-
-				if (_back == buffer.end()) 
-					_back = buffer.begin();
-			}
-
-			CircularBuffer():
-			buffer(4,-250),
-				_back(buffer.begin()),
-				_front(buffer.begin())
-			{
-				while (_front + 1 != buffer.end())
-					_front++;
-			}
-
-			tick operator[](const unsigned i) const { return buffer[i]; }
-
-			CircularBuffer &operator=(const CircularBuffer &rhs)
-			{
-				buffer = rhs.buffer;
-
-				//begin = buffer.begin();
-				//end = buffer.end();
+			if (_front == buffer.end())
 				_front = buffer.begin();
-				while (_front + 1 != buffer.end())
-					_front++;
+
+			*_front = value;
+
+			_back++;
+
+			if (_back == buffer.end())
 				_back = buffer.begin();
-				return *this;
-			}
+		}
 
-			CircularBuffer(const CircularBuffer &rhs):
-			buffer(rhs.buffer),
-				_front(buffer.begin()),
-				_back(buffer.begin())
-			{
-				while (_front + 1 != buffer.end())
-					_front++;
-			}
+		CircularBuffer() :
+			buffer(4, -250), _back(buffer.begin()), _front(buffer.begin())
+		{
+			while (_front + 1 != buffer.end())
+				_front++;
+		}
 
-			bool operator==(const CircularBuffer &rhs) const
-			{
-				for (unsigned i = 0; i < 4; i++)
-					if (buffer[i] != rhs[i])
-						return false;
+		tick operator[](const unsigned i) const
+		{
+			return buffer[i];
+		}
 
-				if (*_front != rhs.front() || *_back != rhs.back())
+		CircularBuffer &operator=(const CircularBuffer &rhs)
+		{
+			buffer = rhs.buffer;
+
+			//begin = buffer.begin();
+			//end = buffer.end();
+			_front = buffer.begin();
+			while (_front + 1 != buffer.end())
+				_front++;
+			_back = buffer.begin();
+			return *this;
+		}
+
+		CircularBuffer(const CircularBuffer &rhs) :
+			buffer(rhs.buffer), _back(buffer.begin()), _front(buffer.begin())
+		{
+			while (_front + 1 != buffer.end())
+				_front++;
+		}
+
+		bool operator==(const CircularBuffer &rhs) const
+		{
+			for (unsigned i = 0; i < 4; i++)
+				if (buffer[i] != rhs[i])
 					return false;
 
-				return true;
-			}
-		};
+			if (*_front != rhs.front() || *_back != rhs.back())
+				return false;
 
-		const TimingSpecification& timing;	///< reference to the timing information, used in calculations	
-		const SystemConfiguration& systemConfig; ///< reference to system configuration information
-		Statistics& statistics;				///< reference for collecting statistics
-
-	protected:
-
-		tick lastRefreshTime;				///< the time of the last refresh
-		tick lastPrechargeAnyBankTime;		///< the time of the last precharge
-		tick lastCASTime;					///< the time of the last CAS
-		tick lastCASWTime;					///< the time of the last CASW
-
-		tick otherLastCASTime;				///< the time of the most recent CAS from any other rank on this channel
-		tick otherLastCASWTime;				///< the time of the most recent CASW from any other rank on this channel
-
-		tick prechargeTime;					///< total time that all banks in this rank are precharged in this epoch
-		tick totalPrechargeTime;			///< total time that all banks are precharged, all time
-
-		tick nextActivateTime;				///< the time at which an ACT may be sent to this rank
-		tick nextReadTime;					///< the time at which a CAS may be sent to this rank
-		tick nextWriteTime;					///< the time at which a CASW may be sent to this rank
-		tick nextRefreshTime;				///< the time at which a Ref may be sent to this rank
-
-		tick lastCalculationTime;			///< the time at which the last power calculation was done
-
-		unsigned lastCASLength;				///< the length of the last CAS
-		unsigned lastCASWLength;			///< the length of the last CASW
-		unsigned otherLastCASLength;		///< the length of the last CAS on any other rank
-		unsigned otherLastCASWLength;		///< the length of the last CASW on any other rank
-		unsigned CASLength;					///< total cycles the bus spent sending data
-		unsigned CASWLength;				///< the total cycles the bus spent receiving data
-		unsigned rankID;					///< the ordinal number of this rank
-		unsigned lastBankID;				///< id of the last accessed bank of this rank
-		unsigned banksPrecharged;			///< the number of banks in the precharge state
-
-		std::pair<unsigned,unsigned> hits;		///< the number of read and write hits to this rank
-
-	public:
-
-		CircularBuffer lastActivateTimes;
-		std::vector<Bank> bank;							///< the banks within this rank
-
-		// functions
-		bool refreshAllReady() const;
-		Command *getCommand(const unsigned bank);
-		void issueRAS(const tick currentTime, const Command *currentCommand);
-		void issuePRE(const tick currentTime, const Command *currentCommand);
-		void issueCAS(const tick currentTime, const Command *currentCommand);
-		void issueCASW(const tick currentTime, const Command *currentCommand);
-		void issueREF(const tick currentTime);
-		void resetToTime(const tick time);
-		tick next(Command::CommandType nextCommandType) const;
-
-		// constructors
-		explicit Rank(const Rank &, const TimingSpecification &, const SystemConfiguration &, Statistics& stats);
-		explicit Rank(const Settings& settings, const TimingSpecification &timingVal, const SystemConfiguration &systemConfigVal, Statistics& stats);
-		Rank(const Rank &);
-
-		// accessors
-		unsigned getRankId() const { return rankID; }		
-		tick getTotalPrechargeTime(const tick currentTime) const;  
-		tick getPrechargeTime(const tick currentTime) const;
-		tick getLastRefreshTime() const { return lastRefreshTime; }
-		tick getLastCasTime() const { return lastCASTime; }
-		tick getLastCaswTime() const { return lastCASWTime; }
-		tick getOtherLastCasTime() const { return otherLastCASTime; }
-		tick getOtherLastCaswTime() const { return otherLastCASWTime; }
-		tick getLastPrechargeTime() const { return lastPrechargeAnyBankTime; }
-		unsigned getLastBankID() const { return lastBankID; }
-		unsigned getLastCasLength() const { return lastCASLength; }
-		unsigned getLastCaswLength() const { return lastCASWLength; }
-		unsigned getOtherLastCasLength() const { return otherLastCASLength; }
-		unsigned getOtherLastCaswLength() const { return otherLastCASWLength; }
-		unsigned getReadCycles() const { return CASLength; }
-		unsigned getWriteCycles() const { return CASWLength; }
-		unsigned getReadHits() const { return hits.first; }
-		unsigned getWriteHits() const { return hits.second; }
-		bool isEmpty() const;
-
-		// mutators
-		void setRankID(const unsigned channelID, const unsigned rankID);
-		void setLastBankID(const unsigned value) { lastBankID = value; }
-		void resetPrechargeTime(const tick time); 
-		void resetCycleCounts() { hits.first = hits.second = CASLength = CASWLength = 0; }
-
-		// overloads
-		Rank& operator=(const Rank &rs);
-		bool operator==(const Rank& right) const;
-		friend std::ostream& operator<<(std::ostream& os, const Rank& r);
-
-	private:
-		//serialization
-		explicit Rank(const TimingSpecification &timing, const std::vector<Bank> &newBank, Statistics &stats, SystemConfiguration &sysConfig);
-		explicit Rank();		
+			return true;
+		}
 	};
+
+	const TimingSpecification& timing; ///< reference to the timing information, used in calculations
+	const SystemConfiguration& systemConfig; ///< reference to system configuration information
+	Statistics& statistics; ///< reference for collecting statistics
+
+protected:
+
+	tick lastRefreshTime; ///< the time of the last refresh
+	tick lastPrechargeAnyBankTime; ///< the time of the last precharge
+	tick lastCASTime; ///< the time of the last CAS
+	tick lastCASWTime; ///< the time of the last CASW
+
+	tick otherLastCASTime; ///< the time of the most recent CAS from any other rank on this channel
+	tick otherLastCASWTime; ///< the time of the most recent CASW from any other rank on this channel
+
+	tick prechargeTime; ///< total time that all banks in this rank are precharged in this epoch
+	tick totalPrechargeTime; ///< total time that all banks are precharged, all time
+
+	tick nextActivateTime; ///< the time at which an ACT may be sent to this rank
+	tick nextReadTime; ///< the time at which a CAS may be sent to this rank
+	tick nextWriteTime; ///< the time at which a CASW may be sent to this rank
+	tick nextRefreshTime; ///< the time at which a Ref may be sent to this rank
+
+	tick lastCalculationTime; ///< the time at which the last power calculation was done
+
+	unsigned lastCASLength; ///< the length of the last CAS
+	unsigned lastCASWLength; ///< the length of the last CASW
+	unsigned otherLastCASLength; ///< the length of the last CAS on any other rank
+	unsigned otherLastCASWLength; ///< the length of the last CASW on any other rank
+	unsigned CASLength; ///< total cycles the bus spent sending data
+	unsigned CASWLength; ///< the total cycles the bus spent receiving data
+	unsigned rankID; ///< the ordinal number of this rank
+	unsigned lastBankID; ///< id of the last accessed bank of this rank
+	unsigned banksPrecharged; ///< the number of banks in the precharge state
+
+	std::pair<unsigned, unsigned> hits; ///< the number of read and write hits to this rank
+
+public:
+
+	CircularBuffer lastActivateTimes;
+	std::vector<Bank> bank; ///< the banks within this rank
+
+	// functions
+	bool refreshAllReady() const;
+	Command *getCommand(const unsigned bank);
+	void issueRAS(const tick currentTime, const Command *currentCommand);
+	void issuePRE(const tick currentTime, const Command *currentCommand);
+	void issueCAS(const tick currentTime, const Command *currentCommand);
+	void issueCASW(const tick currentTime, const Command *currentCommand);
+	void issueREF(const tick currentTime);
+	void resetToTime(const tick time);
+	tick next(Command::CommandType nextCommandType) const;
+
+	// constructors
+	explicit Rank(const Rank &, const TimingSpecification &,
+			const SystemConfiguration &, Statistics& stats);
+	explicit Rank(const Settings& settings,
+			const TimingSpecification &timingVal,
+			const SystemConfiguration &systemConfigVal, Statistics& stats);
+	Rank(const Rank &);
+
+	// accessors
+	unsigned getRankId() const
+	{
+		return rankID;
+	}
+	tick getTotalPrechargeTime(const tick currentTime) const;
+	tick getPrechargeTime(const tick currentTime) const;
+	tick getLastRefreshTime() const
+	{
+		return lastRefreshTime;
+	}
+	tick getLastCasTime() const
+	{
+		return lastCASTime;
+	}
+	tick getLastCaswTime() const
+	{
+		return lastCASWTime;
+	}
+	tick getOtherLastCasTime() const
+	{
+		return otherLastCASTime;
+	}
+	tick getOtherLastCaswTime() const
+	{
+		return otherLastCASWTime;
+	}
+	tick getLastPrechargeTime() const
+	{
+		return lastPrechargeAnyBankTime;
+	}
+	unsigned getLastBankID() const
+	{
+		return lastBankID;
+	}
+	unsigned getLastCasLength() const
+	{
+		return lastCASLength;
+	}
+	unsigned getLastCaswLength() const
+	{
+		return lastCASWLength;
+	}
+	unsigned getOtherLastCasLength() const
+	{
+		return otherLastCASLength;
+	}
+	unsigned getOtherLastCaswLength() const
+	{
+		return otherLastCASWLength;
+	}
+	unsigned getReadCycles() const
+	{
+		return CASLength;
+	}
+	unsigned getWriteCycles() const
+	{
+		return CASWLength;
+	}
+	unsigned getReadHits() const
+	{
+		return hits.first;
+	}
+	unsigned getWriteHits() const
+	{
+		return hits.second;
+	}
+	bool isEmpty() const;
+
+	// mutators
+	void setRankID(const unsigned channelID, const unsigned rankID);
+	void setLastBankID(const unsigned value)
+	{
+		lastBankID = value;
+	}
+	void resetPrechargeTime(const tick time);
+	void resetCycleCounts()
+	{
+		hits.first = hits.second = CASLength = CASWLength = 0;
+	}
+
+	// overloads
+	Rank& operator=(const Rank &rs);
+	bool operator==(const Rank& right) const;
+	friend std::ostream& operator<<(std::ostream& os, const Rank& r);
+
+private:
+	//serialization
+	explicit Rank(const TimingSpecification &timing,
+			const std::vector<Bank> &newBank, Statistics &stats,
+			SystemConfiguration &sysConfig);
+	explicit Rank();
+};
 }
 #endif

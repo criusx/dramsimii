@@ -18,6 +18,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <climits>
 
 #include "globals.hh"
 #include "Settings.hh"

@@ -23,7 +23,6 @@
 #include "Address.hh"
 #include "command.hh"
 #include "Statistics.hh"
-#include "InputStream.hh"
 #include "event.hh"
 #include "Channel.hh"
 #include "Rank.hh"

@@ -143,7 +143,8 @@ namespace DRAMsimII
 //#define NO_STREAMS
 
 #if !defined(NO_STREAMS)
-#define STATS_LOG(X) systemConfig.statsOutStream << X << std::endl;
+//#define STATS_LOG(X) systemConfig.statsOutStream << X << std::endl;
+#define STATS_LOG(X)
 #else
 #define STATS_LOG(X)
 #endif

@@ -15,6 +15,7 @@
 // along with DRAMsimII.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Bank.hh"
+#include <stdint.h>
 
 using std::max;
 using std::cerr;

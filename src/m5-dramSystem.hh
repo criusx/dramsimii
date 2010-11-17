@@ -10,6 +10,7 @@
 #include "base/statistics.hh"
 #include "base/callback.hh"
 #include "base/stats/types.hh"
+#include "base/trace.hh"
 
 #ifdef WIN32
 #include <unordered_map>

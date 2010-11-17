@@ -16,17 +16,15 @@ try:
 		env.Append(CCFLAGS = ['-fprefetch-loop-arrays','-ffast-math', '-funroll-all-loops', '-fomit-frame-pointer', '-Wuninitialized', '-Wno-conversion',
 			 '-finline-functions', '-Wno-unused-variable'],CPPDEFINES = ['M5', '__STDC_LIMIT_MACROS'])
 		
-	elif 'opt' in re.split('[/.]',COMMAND_LINE_TARGETS[0]):
-		env.Append(
-		CCFLAGS = ['-march=k8-sse3', '-mtune=k8-sse3'],
-		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5', '__STDC_LIMIT_MACROS'])
-	
 	else:
 		raise IndexError
 except IndexError:
 	# then this must be a debug build
-	env.Append(
-		CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5', '__STDC_LIMIT_MACROS'])
+	pass
+	#env.Append(
+	#	CPPDEFINES = ['M5DEBUG', 'DEBUG', 'M5', '__STDC_LIMIT_MACROS'])
+	
+env.Append(CPPDEFINES = ['__STDC_LIMIT_MACROS'])
 
 
 SimObject('M5dramSystem.py')

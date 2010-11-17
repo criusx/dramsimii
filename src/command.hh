@@ -93,8 +93,6 @@ namespace DRAMsimII
 		// overloads
 		bool operator==(const Command& right) const;
 		bool operator!=(const Command& right) const;
-		void *operator new(size_t size);
-		void operator delete(void *);
 	};
 
 	std::ostream& operator<<(std::ostream&, const DRAMsimII::Command::CommandType&);

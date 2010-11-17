@@ -69,8 +69,6 @@ namespace DRAMsimII
 		// mutators
 		void setDecodeTime(const tick value) { decodeTime = value; }
 		
-		static void release(const Transaction *trans) { freeTransactionPool.free((void * const)trans);}
-
 		// constructors
 		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, PhysicalAddress PC, int threadNumber, const unsigned originalTrans = UINT_MAX);		
 		explicit Transaction(const TransactionType transType, const tick arrivalTime, const unsigned burstLength, const Address &address, const unsigned originalTrans = UINT_MAX);
@@ -81,9 +79,6 @@ namespace DRAMsimII
 	public:
 		friend std::ostream &operator<<(std::ostream &, const Transaction &);
 
-		// overloads
-		void *operator new(size_t size);
-		void operator delete(void *);
 		bool operator==(const Transaction& right) const;
 		bool operator!=(const Transaction& right) const;	
 	};

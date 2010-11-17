@@ -18,6 +18,7 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
+#include <climits>
 
 #include "powerConfig.hh"
 

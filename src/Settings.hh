@@ -17,7 +17,6 @@
 #ifndef DRAMSETTINGS
 #define DRAMSETTINGS
 
-#include "InputStream.hh"
 #include "Address.hh"
 #include "enumTypes.hh"
 

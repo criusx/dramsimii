@@ -30,6 +30,7 @@
 #include <assert.h>
 
 #include "System.hh"
+#include "base/trace.hh"
 
 using std::setprecision;
 using std::string;
@@ -50,17 +51,15 @@ using namespace DRAMsimII;
 /// @author Joe Gross
 /// @param settings the settings that define what the system should look like
 //////////////////////////////////////////////////////////////////////
-System::System(const Settings &settings):
-systemConfig(settings),
-statistics(settings, channel),
-channel(systemConfig.getChannelCount(), Channel(settings, systemConfig, statistics)),
-time(0),
-nextStats(settings.epoch)
-{	
+System::System(const Settings &settings) :
+	systemConfig(settings), statistics(settings, channel), channel(
+			systemConfig.getChannelCount(), Channel(settings, systemConfig,
+					statistics)), time(0), nextStats(settings.epoch)
+{
 	// set the channelID so that each channel may know its ordinal value
 	for (unsigned i = 0; i < settings.channelCount; i++)
 	{
-		channel[i].setChannelID(i);		
+		channel[i].setChannelID(i);
 	}
 }
 
@@ -69,24 +68,22 @@ nextStats(settings.epoch)
 /// @details will copy channel 0 into all the other channels via copy constructor
 /// and then use the assignment operator to copy the contents over
 //////////////////////////////////////////////////////////////////////////
-System::System(const System &rhs):
-systemConfig(rhs.systemConfig),
-statistics(rhs.statistics),
-channel(systemConfig.getChannelCount(), Channel(rhs.channel[0],systemConfig, statistics)),
-time(0),
-nextStats(rhs.nextStats)
+System::System(const System &rhs) :
+	systemConfig(rhs.systemConfig), statistics(rhs.statistics), channel(
+			systemConfig.getChannelCount(), Channel(rhs.channel[0],
+					systemConfig, statistics)), time(0), nextStats(
+			rhs.nextStats)
 {
-	Address::initialize(systemConfig);
+	Address::initialize( systemConfig);
 	channel = rhs.channel;
 }
 
-
 System::~System()
-{	
+{
 	printStats();
-	STATS_LOG("----Runtime: {" << time / systemConfig.getDatarate() << "} duration{" << time - lastStatsTime << "}");
+	STATS_LOG("----Runtime: {" << time / systemConfig.getDatarate()
+			<< "} duration{" << time - lastStatsTime << "}");
 }
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief returns the time at which the next event happens
@@ -102,7 +99,8 @@ tick System::nextTick() const
 	tick nextEvent = nextStats;
 
 	// find the next time to wake from among all the channels
-	for (vector<Channel>::const_iterator currentChan = channel.begin(), end = channel.end(); currentChan != end; ++currentChan)
+	for (vector<Channel>::const_iterator currentChan = channel.begin(), end =
+			channel.end(); currentChan != end; ++currentChan)
 	{
 		tick channelNextWake = currentChan->nextTick();
 		assert(channelNextWake > currentChan->getTime());
@@ -124,7 +122,7 @@ tick System::nextTick() const
 void System::checkStats()
 {
 	if (time >= nextStats)
-	{		
+	{
 		printStats();
 		lastStatsTime = time;
 	}
@@ -133,14 +131,13 @@ void System::checkStats()
 		nextStats += systemConfig.getEpoch();
 }
 
-void System::printStats() 
+void System::printStats()
 {
-	DEBUG_TIMING_LOG("aggregate stats");
+	DPRINTF(MemoryAccess, "aggregate stats");
 	doPowerCalculation();
 
 	printStatistics();
 }
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief updates the system time to be the same as that of the oldest channel
@@ -152,7 +149,7 @@ void System::updateSystemTime()
 	time = currentChan->getTime();
 	currentChan++;
 
-	for (;currentChan != channel.end(); ++currentChan)
+	for (; currentChan != channel.end(); ++currentChan)
 	{
 		if (currentChan->getTime() < time)
 			time = currentChan->getTime();
@@ -172,9 +169,18 @@ bool System::enqueue(Transaction *currentTransaction)
 	assert(!currentTransaction->isRefresh());
 
 	// attempt to insert the transaction into the per-channel transaction queue
-	bool result = channel[currentTransaction->getAddress().getChannel()].enqueue(currentTransaction);
+	bool result =
+			channel[currentTransaction->getAddress().getChannel()].enqueue(
+					currentTransaction);
 
-	DEBUG_TRANSACTION_LOG((result ? "" : "!") << "+T ch[" << currentTransaction->getAddress().getChannel() << "](" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount() << "/" << channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth() << ") " << *currentTransaction);
+	DPRINTF(
+			MemoryAccess,
+			"%s+T ch[%d] (%d/%d) %s",
+			(result ? "" : "!"),
+			currentTransaction->getAddress().getChannel(),
+			channel[currentTransaction->getAddress().getChannel()].getTransactionQueueCount(),
+			channel[currentTransaction->getAddress().getChannel()].getTransactionQueueDepth(),
+			*currentTransaction);
 
 	return result;
 }
@@ -202,8 +208,8 @@ void System::resetToTime(const tick time)
 //////////////////////////////////////////////////////////////////////
 bool System::moveToTime(const tick endTime)
 {
-	for (vector<Channel>::iterator i = channel.begin(), end = channel.end();
-		i < end; i++)
+	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i
+			< end; i++)
 	{
 		i->moveToTime(endTime);
 	}
@@ -219,15 +225,14 @@ bool System::moveToTime(const tick endTime)
 
 	if (time >= nextStats)
 	{
-		std::pair<unsigned,unsigned> rwBytes = statistics.getReadWriteBytes();
-		result =  rwBytes.first + rwBytes.second > 0;
+		std::pair<unsigned, unsigned> rwBytes = statistics.getReadWriteBytes();
+		result = rwBytes.first + rwBytes.second > 0;
 	}
 
 	checkStats();
 
 	return result;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 /// @brief goes through each channel to find the channel whose time is the least
@@ -257,13 +262,13 @@ unsigned System::findOldestChannel() const
 //////////////////////////////////////////////////////////////////////
 void System::printStatistics()
 {
-	STATS_LOG(statistics);
+	STATS_LOG( statistics);
 	statistics.clear();
 
-	for (vector<Channel>::iterator h = channel.begin(), hEnd = channel.end();
-		h != hEnd; ++h)
+	for (vector<Channel>::iterator h = channel.begin(), hEnd = channel.end(); h
+			!= hEnd; ++h)
 	{
-		h->resetStats();		
+		h->resetStats();
 	}
 }
 
@@ -280,9 +285,12 @@ void System::doPowerCalculation()
 
 	//for_each(channel.begin(),channel.end(),bind2nd(mem_fun_ref(&Channel::doPowerCalculation),time, systemConfig.powerOutStream));
 
-	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i != end; ++i)
+	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i
+			!= end; ++i)
 	{
-		POWER_LOG(i->doPowerCalculation())
+		stringstream ss;
+		i->doPowerCalculation(ss);
+		DPRINTF(MemoryAccess, "%s", ss.str());
 	}
 }
 
@@ -293,7 +301,8 @@ void System::doPowerCalculation()
 unsigned System::pendingTransactionCount() const
 {
 	unsigned count = 0;
-	for (vector<Channel>::const_iterator i = channel.begin(), end = channel.end(); i != end; ++i)
+	for (vector<Channel>::const_iterator i = channel.begin(), end =
+			channel.end(); i != end; ++i)
 		count += i->pendingTransactionCount();
 	return count;
 }
@@ -301,9 +310,11 @@ unsigned System::pendingTransactionCount() const
 //////////////////////////////////////////////////////////////////////////
 /// @brief move all the pending, finished transactions into a new queue 
 //////////////////////////////////////////////////////////////////////////
-void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outputQueue)
+void System::getPendingTransactions(
+		std::queue<std::pair<unsigned, tick> > &outputQueue)
 {
-	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i != end; ++i)
+	for (vector<Channel>::iterator i = channel.begin(), end = channel.end(); i
+			!= end; ++i)
 		i->getPendingTransactions(outputQueue);
 }
 
@@ -313,7 +324,8 @@ void System::getPendingTransactions(std::queue<std::pair<unsigned,tick> > &outpu
 //////////////////////////////////////////////////////////////////////////
 bool System::isEmpty() const
 {
-	for (vector<Channel>::const_iterator i = channel.begin(), end = channel.end(); i != end; ++i)
+	for (vector<Channel>::const_iterator i = channel.begin(), end =
+			channel.end(); i != end; ++i)
 	{
 		if (!i->isEmpty())
 			return false;
@@ -327,9 +339,9 @@ bool System::isEmpty() const
 //////////////////////////////////////////////////////////////////////////
 bool System::operator==(const System &rhs) const
 {
-	return systemConfig == rhs.systemConfig && channel == rhs.channel &&
-		statistics == rhs.statistics && time == rhs.time &&
-		nextStats == rhs.nextStats;
+	return systemConfig == rhs.systemConfig && channel == rhs.channel
+			&& statistics == rhs.statistics && time == rhs.time && nextStats
+			== rhs.nextStats;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -344,7 +356,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 	os << "RC[" << thisSystem.systemConfig.getRankCount() << "] ";
 	os << "BC[" << thisSystem.systemConfig.getBankCount() << "] ";
 	os << "ALG[";
-	switch(thisSystem.systemConfig.getCommandOrderingAlgorithm())
+	switch (thisSystem.systemConfig.getCommandOrderingAlgorithm())
 	{
 	case STRICT_ORDER:
 		os << "STR ] ";
@@ -365,7 +377,7 @@ ostream &DRAMsimII::operator<<(ostream &os, const System &thisSystem)
 		os << "UNKN] ";
 		break;
 	}
-	
+
 	return os;
 }
 
@@ -393,7 +405,8 @@ ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::RefreshPolicy rp)
 	return os;
 }
 
-ostream& DRAMsimII::operator<<(ostream& os, const DRAMsimII::TransactionOrderingAlgorithm toa)
+ostream& DRAMsimII::operator<<(ostream& os,
+		const DRAMsimII::TransactionOrderingAlgorithm toa)
 {
 	switch (toa)
 	{
