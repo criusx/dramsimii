@@ -1,1 +1,3 @@
-sudo opcontrol --setup  -e L3_CACHE_MISSES:500:0xF7:0:1 -e DRAM_ACCESSES:500:0x3F:0:1 -e READ_REQUEST_L3_CACHE:500:0x07:0:1 --no-vmlinux  -e L3_EVICTIONS:500:0x0F:0:1 --session-dir=/tmp/joe/oprofile
+#sudo opcontrol --setup -e L3_CACHE_MISSES:100000:0xF7:0:1 -e DRAM_ACCESSES:100000:0x3F:0:1 -e READ_REQUEST_L3_CACHE:100000:0x07:0:1 --no-vmlinux  -e L3_EVICTIONS:100000:0x0F:0:1 --session-dir=/tmp/joe/oprofile
+#sudo opcontrol --setup -e LLC_MISSES:10000 -e LLC_REFS:10000 --no-vmlinux --session-dir=/tmp/joe/oprofile -e CPU_CLK_UNHALTED:10000
+sudo opcontrol --setup -e L2_RQSTS:10000:0xAA:0:1 -e L2_RQSTS:10000:0xFF:0:1 --no-vmlinux --session-dir=/tmp/joe/oprofile2 -e L1D_ALL_REF:10000:0x01:0:1
