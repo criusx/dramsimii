@@ -161,12 +161,23 @@ class ThreadMonitor(Thread):
         self.p = []
         self.workQueue = queue
 
+        b = '64'
+        c = '16'
         for a in cacheSizes:
-             for b in blockSizes:
-                  for c in associativities:
-                       dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
-                       self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
-                       #self.p.append([Popen(dineroConfig, stdin = PIPE, bufsize = 131072), a, b, c])
+             dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
+             self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
+
+        a = '8M'
+        c = '16'
+        for b in blockSizes:
+             dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
+             self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
+
+        a = '8M'
+        b = '64'
+        for c in associativities:
+             dineroConfig = [dineroPath, '-informat', 'd', '-l1-usize', a, '-l1-ubsize', b, '-l1-uassoc', c]
+             self.p.append([Popen(dineroConfig, stdin = PIPE, stdout = PIPE, bufsize = 131072), a, b, c])
 
     def run(self):
         while True:
@@ -247,36 +258,40 @@ def main():
      benchmark = sys.argv[1]
 
      addressMappingPolicies = []
-     addressMappingPolicies += ['sdramhiperf']
-     addressMappingPolicies += ['sdrambase']
+     #addressMappingPolicies +=['sdramhiperf']
+     #addressMappingPolicies += ['sdrambase']
      #addressMappingPolicies += ['closepagebaseline']
      #addressMappingPolicies += ['closepagebaselineopt']
      #addressMappingPolicies += ['closepagelowlocality']
-     #addressMappingPolicies += ['closepagehighlocality']
+     addressMappingPolicies += ['amp4a']
+     addressMappingPolicies += ['amp4b']
+     addressMappingPolicies += ['amp4d']
+     addressMappingPolicies += ['amp5a']
+     addressMappingPolicies += ['amp5b']
 
      cacheSizes = []
-     # cacheSizes += ['4M']
+     cacheSizes += ['4M']
      cacheSizes += ['8M']
      cacheSizes += ['16M']
-     # cacheSizes += ['32M']
-     # cacheSizes += ['64M']
+     cacheSizes += ['32M']
+     cacheSizes += ['64M']
 
      blockSizes = []
      blockSizes += ['64']
      blockSizes += ['128']
      blockSizes += ['256']
      blockSizes += ['512']
-     #blockSizes += ['1024']
-     #blockSizes += ['2048']
+     blockSizes += ['1024']
+     blockSizes += ['2048']
 
      associativities = []
-     # associativities += ['1']
-     # associativities += ['2']
-     # associativities += ['4']
+     associativities += ['1']
+     associativities += ['2']
+     associativities += ['4']
      associativities += ['8']
      associativities += ['16']
-     # associativities += ['32']
-     # associativities += ['64']
+     associativities += ['32']
+     associativities += ['64']
 
      for benchmark in options.inputFiles:
           basename = os.path.basename(benchmark.name)
@@ -300,22 +315,25 @@ def main():
           for a in dimm:
                a.join()
 
-          resultsArray = []
-          for a in workQueue:
-               array = a.get()
-               a.task_done()
-               # append the list of results for this dimm/amp
-               resultsArray.append(array)
+     resultsArray = []
+     for a in workQueue:
+          array = a.get()
+          a.task_done()
+          # append the list of results for this dimm/amp
+          resultsArray.append(array)
 
+
+     offset = 0
+     while offset < len(resultsArray):
           for b in range(len(resultsArray[0])):
-               val = 0
-
+               currentResult = []
                for a in range(len(resultsArray)):
-                   currentResult = resultsArray[a][b]
-                   print "%s: %s, %s B block, %s-way, dimm #%d: %s fetches, %s miss rate" % (addressMappingPolicies[val / 4], currentResult.cacheSize, currentResult.blockSize, currentResult.associativity, val, currentResult.fetches, currentResult.misses)
-                   val += 1
+                    currentResult.append(resultsArray[a][b])
 
+               # <addressMappingPolicy> <cacheSize> <blockSize> <associativity> <missRate 0> <missRate 1> <missRate 2> <missRate 3> <fetches 0> <fetches 1> <fetches 2> <fetches 3>
+               print "%s %s %s %s %s %s %s %s %s %s %s %s" %(addressMappingPolicies[offset/4], currentResult[offset+0].cacheSize, currentResult[offset+0].blockSize, currentResult[offset+0].associativity, currentResult[offset+0].misses, currentResult[offset+1].misses, currentResult[offset+2].misses, currentResult[offset+3].misses, currentResult[offset+0].fetches, currentResult[offset+1].fetches, currentResult[offset+2].fetches, currentResult[offset+3].fetches)
 
+          offset += 4
 
 
 
