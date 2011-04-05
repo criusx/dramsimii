@@ -54,6 +54,9 @@ public:
 	uint64_t withCacheRequestCount;
 	uint64_t withoutCacheRequestCount;
 	double averageActStbyPower;
+	double totalPower;
+	double averageDramPower;
+	double averageCachePower;
 
 	PowerParameters powerParameters;
 
@@ -115,6 +118,10 @@ public:
 	double getEnergyDifference() const { return energyUsed - energyUsedTheoretical; }
 
 	double getLatencyReduction() const { return averageTheoreticalLatency / averageLatency; }
+
+	double getAverageDramPower() const { return averageDramPower; }
+
+	double getAverageCachePower() const { return averageCachePower; }
 
 	std::string getCsvHeader() const { return csvHeader; }
 

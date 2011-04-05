@@ -218,6 +218,35 @@ public:
 #endif
 
 template<typename T>
+class SimpleAverage
+{
+protected:
+	T count;
+	T sum;
+public:
+	SimpleAverage(): count(0), sum(0)
+	{
+
+	}
+
+	void add(T value)
+	{
+		this->sum += value;
+		this->count++;
+	}
+
+	void clear()
+	{
+		sum = count = 0;
+	}
+
+	double average() const
+	{
+		return (double)sum / ((count > 0) ? (double) count : 1.0);
+	}
+};
+
+template<typename T>
 class WeightedAverage
 {
 	unsigned count;

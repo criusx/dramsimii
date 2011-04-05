@@ -1087,8 +1087,10 @@ void StatsScripts::processLine(char *newLine)
 			l3HitBuffer = atoi(secondOpeningBrace);
 		else if (strcmp(firstOpeningBrace, "system.l3cache.overall_misses") == 0)
 			l3MissBuffer = atoi(secondOpeningBrace);
+#ifndef NDEBUG
 		else
 			cerr << "missed something: " << newLine << endl;
+#endif
 	}
 	else if (starts_with(newLine, "----Epoch"))
 	{

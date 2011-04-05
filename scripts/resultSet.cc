@@ -6,7 +6,7 @@ using std::string;
 
 const string ResultSet::urlString = "<a href=\"%1/index.html\">%2</a>";
 
-const string ResultSet::csvHeader = "Benchmark,Channels,DIMMs,Ranks,Banks,Rows,Columns,DRAM Width,Posted CAS,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Replacement Policy,Runtime,Row Reuse Rate,Average IPC,Read Hit Rate,Hit Rate,Average Bandwidth, Average ACT_STBY Power, Average Latency,Average Theoretical Latency,Average Latency Change,Energy Used,Theoretical Energy Used,Energy Used Ratio (%),No Cache Runtime,Cache Runtime,Cache In Use (%),Energy Reduced Due to Latency, Difference in Total Latency\n";
+const string ResultSet::csvHeader = "Benchmark,Channels,DIMMs,Ranks,Banks,Rows,Columns,DRAM Width,Posted CAS,tRAS,tCAS,tRCD,tRC,Address Mapping Policy,Command Ordering Algorithm, Row Buffer Management Policy,Datarate,Per Bank Queue Depth,tFAW,Cache Size,Block Size,Associativity,Number of Sets,Replacement Policy,Runtime,Row Reuse Rate,Average IPC,Read Hit Rate,Hit Rate,Average Bandwidth, Average ACT_STBY Power, Average Latency,Average Theoretical Latency,Average Latency Change,Energy Used,Theoretical Energy Used,Energy Used Ratio (%),No Cache Runtime,Cache Runtime,Cache In Use (%),Energy Reduced Due to Latency, Difference in Total Latency, Average DRAM Power, Average Cache Power\n";
 
 void ResultSet::parseCommandLine(const char *commandLine, const string &filename)
 {
@@ -172,12 +172,14 @@ std::pair<string,string> ResultSet::generateResultLine() const
 
 	csvOutput += lexical_cast<string>(noCacheRuntime - cacheRuntime) + ",";
 	currentRow += generateTd((double)(noCacheRuntime - cacheRuntime));
-	//cerr << withCacheRequestCount << " " << withCacheRequestCount << endl;
-	//cerr << withCacheLatency << " " << with
-	///////////////////////////////////////////////////////////////////////
-	currentRow += "</tr>";
 
-	//cerr << fileList << endl;
+	csvOutput += lexical_cast<string>(averageDramPower) + ",";
+	currentRow += generateTd(averageDramPower);
+
+	csvOutput += lexical_cast<string>(averageCachePower) + ",";
+	currentRow += generateTd(averageCachePower);
+	
+	currentRow += "</tr>";
 
 	return pair<string,string>(csvOutput,currentRow);
 }
@@ -263,5 +265,8 @@ void ResultSet::setStats(const ResultSet &rs, const bool isStat)
 		energyUsedTheoretical = rs.energyUsedTheoretical;		
 		percentCacheTimeInUse = rs.percentCacheTimeInUse;	
 		averageActStbyPower = rs.averageActStbyPower;
+		totalPower = rs.totalPower;
+		averageDramPower = rs.getAverageDramPower();
+		averageCachePower = rs.getAverageCachePower();
 	}
 }

@@ -60,6 +60,10 @@ protected:
 
 	double runTime;
 
+	SimpleAverage<uint64_t> averageDramPower;
+
+	SimpleAverage<uint64_t> averageCachePower;
+
 
 public:
 	PowerScripts(list<pair<string, string> > &_powerParams):
@@ -74,8 +78,10 @@ public:
 		  foundCommandLine(false),
 		  epochTime(0.0),
 		  baseEpochTime(0.0),
-		usingCache(false),
-		runTime(0.0)
+		  usingCache(false),
+		  runTime(0.0),
+		  averageDramPower(),
+		  averageCachePower()
 	  {  powerParams = _powerParams; }
 
 	  double getAverageActStbyPower() const
@@ -125,6 +131,10 @@ public:
 	  const vector<unsigned> &getRasCounts() const { return rasCounts; }
 
 	  const vector<unsigned> &getReadCounts() const { return readCounts; }
+
+	  double getDramPower() const { return averageDramPower.average(); }
+
+	  double getCachePower() const { return averageCachePower.average(); }
 
 protected:
 	void processLine(char *newLine);

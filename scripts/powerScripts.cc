@@ -211,6 +211,9 @@ void PowerScripts::processLine(char *newLine)
 			//valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 8] += pc.PsysTermRoth + pc.PsysTermW + pc.PsysTermWoth;
 			valueBuffer[currentChannel * POWER_VALUES_PER_CHANNEL + 7] += pc.sramActivePower + pc.sramIdlePower;
 
+			averageDramPower.add(pc.PsysACT_STBY + pc.PsysACT+pc.PsysPRE_STBY+pc.PsysRD+pc.PsysWR+pc.PsysACT_PDN+pc.PsysPRE_PDN);
+			averageCachePower.add(pc.sramActivePower + pc.sramIdlePower);
+
 			averageInUseTime.add(pc.inUseTime, 1);
 			//cerr << pc.inUseTime << endl;
 
