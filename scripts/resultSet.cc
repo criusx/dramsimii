@@ -37,8 +37,8 @@ void ResultSet::parseCommandLine(const char *commandLine, const string &filename
 	blockSize = regexMatch<unsigned>(commandLine,"blkSz\\[([0-9]+)\\]");
 	associativity = regexMatch<unsigned>(commandLine,"assoc\\[([0-9]+)\\]");
 	numberOfSets = regexMatch<unsigned>(commandLine,"sets\\[([0-9]+)\\]");
-	title = regexMatch<string>(commandLine,": ([0-9A-Za-z-]+)");
-	basename = regexMatch<string>(filename.c_str(),"^([0-9A-Za-z-]+)(-stats|-power)");
+	title = regexMatch<string>(commandLine,": ([\\w-]+)");
+	basename = regexMatch<string>(filename.c_str(),"^([\\w-]+)(-stats|-power)"); 
 	//cerr << "bn: " << basename << endl;
 	//cerr << title << endl;
 }
